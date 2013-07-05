@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<link rel="canonical" href="http://www.jennyabrahamson.com/shiviz.html/">
+<title>ShiViz</title>
+<link href="style.css" type="text/css" rel="stylesheet">
+<script src="http://d3js.org/d3.v3.min.js"></script>
+
+<header>
+  <b><a href="shiviz.html">Home</a></b>
+  <a style="margin-left:1em;" href="javascript:void(0)" onclick="document.getElementById('help').style.display='block';document.getElementById('fade').style.display='block'">FAQ</a>
+  <a style="margin-left:1em;" href="https://code.google.com/p/synoptic/wiki/ShiVector">Documentation</a>
+  <a style="margin-left:1em;" href="https://code.google.com/p/synoptic/">Source</a>
+</header>
+
+<div id="fade" class="black_overlay"></div>
+
+<div id="help" class="overlay_content">
+  <div id="close_help">
+  <a href="javascript:void(0)" onclick="document.getElementById('help').style.display='none';document.getElementById('fade').style.display='none'"><b>X</b></a>
+  </div>
+  <h3 style="margin-top:0px;" id="helpsectiontitle">What am I looking at?</h3>
+  <hr align=left width=80%>
+  <p>
+
+    In the visualization:
+    <ul>
+      <li>
+        Time flows from top to bottom.
+      </li>
+      <li>
+        A vertical line with a box at the top is a <b>process
+          timeline</b>. This represents a single thread of execution
+          (e.g., a process).
+      </li>
+      <li>
+        Circles on a process timeline are <b>events</b> that were
+        executed by the process.
+      </li>
+      <li>
+        Diagonal lines connecting two events represent the
+        <a href="http://en.wikipedia.org/wiki/Happened-before">happened-before</a>
+        relation between the events: the higher of the two events
+        happened <i>before</i> the second event.
+      </li>
+    </ul>
+
+  </p>
+
+  <h3 id="helpsectiontitle">How do I interact with the visualization?</h3>
+  <hr align=left width=80%>
+
+  <p>
+    The visualization supports the following actions:
+    <ul>
+      <li>
+        <b>Hide a process timeline</b>: double click a process box. To
+        show the process timeline, double click on the process box in
+        the "hidden hosts" panel.
+      </li>
+      <li>
+        <b>Show event or process text</b>: hover over the event circle
+        or process box. The corresponding text will appear next to
+        "Current node:"
+      </li>
+    </ul>
+  </p>
+
+  <h3 id="helpsectiontitle">What is the input log format?</h3>
+  <hr align=left width=80%>
+
+  <p>TODO: describe log format with a short 2-event example.</p>
+
+  <h3 id="helpsectiontitle">How do I generate logs in this format?</h3>
+  <hr align=left width=80%>
+
+  <p>TODO: describe ShiVector</p>
+
+  <h3 id="helpsectiontitle">How is this useful?</h3>
+  <hr align=left width=80%>
+
+  <p>
+    ShiViz is useful for:
+    <ul>
+      <li>
+        <b>Understanding the communication graph.</b> For example, to
+        look for presence or absence of certain communication
+        patterns.
+      </li>
+      <li>
+        <b>Reasoning about ordering in a distributed setting</b>. For
+        example, to figure out whether two events occurred
+        concurrently, or if one happened before the other.
+      </li>
+    </ul>
+  </p>
+
+</div>
+
+
+
+<div id="body">
+  <h1>ShiViz</h1>
+  <p><b>ShiViz</b> is a visualization engine that generates high level
+  graphical summaries of distributed system execution logs.</p>
+
+  <p>Try out ShiViz below, or learn more on the <a
+  href="https://code.google.com/p/synoptic/wiki/ShiVector">project wiki</a>.
+  </p>
+
+  <div id="info">
+    <h2>Execution log</h2>
+    <textarea id='logField' ></textarea>
+    <p id=examplelogs>
+    Examples:
+    <a href="javascript:void(0)" onclick="loadExample('facebook.log')">Facebook data-center log</a>
+    <a style="margin-left:1em;" href="javascript:void(0)" onclick="loadExample('voldemort.log')">Voldemort log</a>
+    <a style="margin-left:1em;" href="javascript:void(0)" onclick="loadExample('simpledb.log')">SimpleDB log</a>
+    </p>
+    <input type='button' id='clearButton' value="clear" />
+    <input type='button' id='vizButton' value="visualize" />
+  </div>
+
+
+  <div id="graph" hidden=true>
+    <h2>Visualization</h2>
+    <div id=topBar>
+      <p>Current node: <span id='curNode'>(hover to view)</span></p>
+    </div>
+
+    <div id=sideBar></div>
+    <div id=hostBar></div>
+    <div id=vizContainer></div>
+    <div id=hosts></div>
+  </div>
+
+</div>
+<script type="text/javascript" src="shiviz.js" ></script>	
