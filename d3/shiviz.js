@@ -893,17 +893,23 @@ function unhide(e) {
 }
 
 function loadExample(filename) {
+  var file = 'http://bestchai.bitbucket.org/shiviz/' + filename;
   if (!devMode) {
     var textfile;
     if (window.XMLHttpRequest) {
       textfile = new XMLHttpRequest();
     }
     textfile.onreadystatechange = function() {
+
+      if (textfile.readyState == 4) {
+        console.log("4");
+      }
+
       if (textfile.readyState == 4 && textfile.status == 200) {
         get("logField").value = textfile.responseText;
       }
     }
-    textfile.open("GET", filename, true);
+    textfile.open("GET", file, true);
     textfile.send();
   }
 }
