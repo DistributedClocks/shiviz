@@ -1,0 +1,1018 @@
+Workers are: 
+24464 {"24464":1} 
+  localhost:24468
+24464 {"24464":2} 
+  localhost:24469
+24464 {"24464":3} 
+  localhost:24470
+24464 {"24464":4} 
+  localhost:24471
+24464 {"24464":5} 
+Server: localhost started. Listening on port 24464
+24464 {"24464":6} 
+Added table : Actor with schema id(INT_TYPE) fname(STRING_TYPE) lname(STRING_TYPE) gender(STRING_TYPE) 
+24464 {"24464":7} 
+Added table : Movie with schema id(INT_TYPE) name(STRING_TYPE) year(INT_TYPE) 
+24464 {"24464":8} 
+Added table : Director with schema id(INT_TYPE) fname(STRING_TYPE) lname(STRING_TYPE) 
+24464 {"24464":9} 
+Added table : Casts with schema pid(INT_TYPE) mid(INT_TYPE) role(STRING_TYPE) 
+24464 {"24464":10} 
+Added table : Movie_Director with schema did(INT_TYPE) mid(INT_TYPE) 
+24464 {"24464":11} 
+Added table : Genre with schema mid(INT_TYPE) genre(STRING_TYPE) 
+24464 {"24464":12} 
+Computing table stats.
+24464 {"24464":13} 
+Done.
+24464 {"24464":14} 
+Added scan of table m
+24464 {"24464":15} 
+Added scan of table d
+24464 {"24464":16} 
+Added scan of table g
+24464 {"24464":17} 
+Added scan of table md
+24464 {"24464":18} 
+Added join between d.id and md.did
+24464 {"24464":19} 
+Added join between md.mid and m.id
+24464 {"24464":20} 
+Added join between g.mid and m.id
+24464 {"24464":21} 
+Added select list field m.name
+24464 {"24464":22} 
+Added select list field m.year
+24464 {"24464":23} 
+Added select list field g.genre
+24464 {"24464":24} 
+The query plan is:
+24464 {"24464":25} 
+The sequential query plan is:
+24464 {"24464":26} 
+Master worker plan: 
+24464 {"24464":27} 
+Slave worker plan: 
+24464 {"24464":28} 
+Server plan: 
+24464 {"24464":29} 
+m.name	m.year	g.genre	
+24464 {"24464":30} 
+----------------------------------
+24464 {"24464":31} 
+Beginning to collection consumption of tuples
+24464 {"24464":32} 
+Query received by worker
+24464 {"24470":9, "24464":33} 
+Query received by worker
+24464 {"24470":9, "24471":9, "24464":34} 
+Query received by worker
+24464 {"24470":9, "24468":9, "24471":9, "24464":35} 
+Query received by worker
+24464 {"24469":9, "24470":9, "24468":9, "24471":9, "24464":36} 
+Broadcasting message
+24464 {"24469":9, "24470":9, "24468":9, "24471":9, "24464":37} 
+Broadcasting message
+24464 {"24469":9, "24470":9, "24468":9, "24471":9, "24464":38} 
+Broadcasting message
+24464 {"24469":9, "24470":9, "24468":9, "24471":9, "24464":39} 
+Broadcasting message
+24464 {"24469":9, "24470":9, "24468":9, "24471":9, "24464":40} 
+ 14 rows.
+24464 {"24469":106, "24470":106, "24468":110, "24471":106, "24464":41} 
+Finished collection consumption of tuples
+24464 {"24469":106, "24470":106, "24468":110, "24471":106, "24464":42} 
+SimpleDB is going to shutdown
+24464 {"24469":106, "24470":106, "24468":110, "24471":106, "24464":43} 
+Send shutdown requests to the workers, please wait
+24464 {"24469":106, "24470":106, "24468":110, "24471":106, "24464":44} 
+Shuting down localhost:24468
+24464 {"24469":106, "24470":106, "24468":110, "24471":106, "24464":45} 
+Done
+24464 {"24469":106, "24470":106, "24468":110, "24471":106, "24464":46} 
+Shuting down localhost:24469
+24464 {"24469":106, "24470":106, "24468":110, "24471":106, "24464":47} 
+Done
+24464 {"24469":106, "24470":106, "24468":110, "24471":106, "24464":48} 
+Shuting down localhost:24470
+24464 {"24469":106, "24470":106, "24468":110, "24471":106, "24464":49} 
+Done
+24464 {"24469":106, "24470":106, "24468":110, "24471":106, "24464":50} 
+Shuting down localhost:24471
+24464 {"24469":106, "24470":106, "24468":110, "24471":106, "24464":51} 
+Done
+24464 {"24469":106, "24470":106, "24468":110, "24471":106, "24464":52} 
+Bye
+24464 {"24469":106, "24470":106, "24468":110, "24471":106, "24464":53} 
+Added table : Actor with schema id(INT_TYPE) fname(STRING_TYPE) lname(STRING_TYPE) gender(STRING_TYPE) 
+24468 {"24468":1} 
+Added table : Movie with schema id(INT_TYPE) name(STRING_TYPE) year(INT_TYPE) 
+24468 {"24468":2} 
+Added table : Director with schema id(INT_TYPE) fname(STRING_TYPE) lname(STRING_TYPE) 
+24468 {"24468":3} 
+Added table : Casts with schema pid(INT_TYPE) mid(INT_TYPE) role(STRING_TYPE) 
+24468 {"24468":4} 
+Added table : Movie_Director with schema did(INT_TYPE) mid(INT_TYPE) 
+24468 {"24468":5} 
+Added table : Genre with schema mid(INT_TYPE) genre(STRING_TYPE) 
+24468 {"24468":6} 
+Worker started at port:24468
+24468 {"24468":7} 
+Query received
+24468 {"24468":8, "24464":29} 
+Ack query plan
+24468 {"24468":9, "24464":29} 
+Start received
+24468 {"24469":9, "24470":9, "24468":10, "24471":9, "24464":37} 
+Beginning collection production of tuples
+24468 {"24469":9, "24470":9, "24468":11, "24471":9, "24464":37} 
+Beginning project: m.name(STRING_TYPE) m.year(INT_TYPE) g.genre(STRING_TYPE) 
+24468 {"24469":9, "24470":9, "24468":12, "24471":9, "24464":37} 
+Beginning join of g.mid with m.id
+24468 {"24469":9, "24470":9, "24468":13, "24471":9, "24464":37} 
+Beginning shuffle consumption of tuples
+24468 {"24469":9, "24470":9, "24468":14, "24471":9, "24464":37} 
+Beginning shuffle production on: Attribute: g.mid
+24468 {"24469":9, "24470":9, "24468":15, "24471":9, "24464":37} 
+Starting seq scan of g
+24468 {"24469":9, "24470":9, "24468":16, "24471":9, "24464":37} 
+Beginning shuffle consumption of tuples
+24468 {"24469":9, "24470":9, "24468":17, "24471":9, "24464":37} 
+Beginning shuffle production on: Attribute: m.id
+24468 {"24469":9, "24470":9, "24468":18, "24471":9, "24464":37} 
+Beginning project: m.id(INT_TYPE) m.year(INT_TYPE) m.name(STRING_TYPE) 
+24468 {"24469":9, "24470":9, "24468":19, "24471":9, "24464":37} 
+Beginning join of md.mid with m.id
+24468 {"24469":9, "24470":9, "24468":20, "24471":9, "24464":37} 
+Beginning shuffle consumption of tuples
+24468 {"24469":9, "24470":9, "24468":21, "24471":9, "24464":37} 
+Beginning shuffle production on: Attribute: md.mid
+24468 {"24469":9, "24470":9, "24468":22, "24471":9, "24464":37} 
+Beginning project: md.mid(INT_TYPE) 
+24468 {"24469":9, "24470":9, "24468":23, "24471":9, "24464":37} 
+Beginning join of d.id with md.did
+24468 {"24469":9, "24470":9, "24468":24, "24471":9, "24464":37} 
+Beginning shuffle consumption of tuples
+24468 {"24469":9, "24470":9, "24468":25, "24471":9, "24464":37} 
+Beginning shuffle production on: Attribute: d.id
+24468 {"24469":9, "24470":9, "24468":26, "24471":9, "24464":37} 
+Beginning project: d.id(INT_TYPE) 
+24468 {"24469":9, "24470":9, "24468":27, "24471":9, "24464":37} 
+Beginning filter: f = 2, op = =, operand = Spielberg
+24468 {"24469":9, "24470":9, "24468":28, "24471":9, "24464":37} 
+Beginning filter: f = 1, op = =, operand = Steven
+24468 {"24469":9, "24470":9, "24468":29, "24471":9, "24464":37} 
+Starting seq scan of d
+24468 {"24469":9, "24470":9, "24468":30, "24471":9, "24464":37} 
+Beginning shuffle consumption of tuples
+24468 {"24469":9, "24470":9, "24468":31, "24471":9, "24464":37} 
+Beginning shuffle production on: Attribute: md.did
+24468 {"24469":9, "24470":9, "24468":32, "24471":9, "24464":37} 
+Starting seq scan of md
+24468 {"24469":9, "24470":9, "24468":33, "24471":9, "24464":37} 
+Beginning shuffle consumption of tuples
+24468 {"24469":9, "24470":9, "24468":34, "24471":9, "24464":37} 
+Beginning shuffle production on: Attribute: m.id
+24468 {"24469":9, "24470":9, "24468":35, "24471":9, "24464":37} 
+Starting seq scan of m
+24468 {"24469":9, "24470":9, "24468":36, "24471":9, "24464":37} 
+TupleBag received from localhost:24470 to Operator: simpledb.TransactionId@0.1
+24468 {"24469":9, "24470":37, "24468":37, "24471":9, "24464":39} 
+TupleBag received from localhost:24471 to Operator: simpledb.TransactionId@0.1
+24468 {"24469":9, "24470":37, "24468":38, "24471":37, "24464":40} 
+In shuffle producer, writing tuple bag to localhost/127.0.0.1:24468
+24468 {"24469":9, "24470":37, "24468":39, "24471":37, "24464":40} 
+In shuffle producer, writing tuple bag to localhost/127.0.0.1:24469
+24468 {"24469":9, "24470":37, "24468":40, "24471":37, "24464":40} 
+In shuffle producer, writing tuple bag to localhost/127.0.0.1:24470
+24468 {"24469":9, "24470":37, "24468":41, "24471":37, "24464":40} 
+TupleBag received from localhost:24469 to Operator: simpledb.TransactionId@0.1
+24468 {"24469":38, "24470":38, "24468":42, "24471":39, "24464":40} 
+In shuffle producer, writing tuple bag to localhost/127.0.0.1:24471
+24468 {"24469":38, "24470":38, "24468":43, "24471":39, "24464":40} 
+TupleBag received from localhost:24468 to Operator: simpledb.TransactionId@0.1
+24468 {"24469":38, "24470":38, "24468":44, "24471":39, "24464":40} 
+Ending seq scan of d
+24468 {"24469":38, "24470":38, "24468":45, "24471":39, "24464":40} 
+Ending filter: f = 1, op = =, operand = Steven
+24468 {"24469":38, "24470":38, "24468":46, "24471":39, "24464":40} 
+Ending filter: f = 2, op = =, operand = Spielberg
+24468 {"24469":38, "24470":38, "24468":47, "24471":39, "24464":40} 
+Ending project: d.id(INT_TYPE) 
+24468 {"24469":38, "24470":38, "24468":48, "24471":39, "24464":40} 
+Ending shuffle production on: Attribute: d.id
+24468 {"24469":38, "24470":38, "24468":49, "24471":39, "24464":40} 
+In shuffle producer, writing tuple bag to localhost/127.0.0.1:24468
+24468 {"24469":38, "24470":40, "24468":50, "24471":52, "24464":40} 
+In shuffle producer, writing tuple bag to localhost/127.0.0.1:24469
+24468 {"24469":38, "24470":40, "24468":51, "24471":52, "24464":40} 
+TupleBag received from localhost:24471 to Operator: simpledb.TransactionId@0.2
+24468 {"24469":50, "24470":54, "24468":52, "24471":52, "24464":40} 
+In shuffle producer, writing tuple bag to localhost/127.0.0.1:24470
+24468 {"24469":50, "24470":54, "24468":53, "24471":52, "24464":40} 
+In shuffle producer, writing tuple bag to localhost/127.0.0.1:24468
+24468 {"24469":51, "24470":54, "24468":54, "24471":52, "24464":40} 
+In shuffle producer, writing tuple bag to localhost/127.0.0.1:24469
+24468 {"24469":51, "24470":54, "24468":55, "24471":52, "24464":40} 
+TupleBag received from localhost:24469 to Operator: simpledb.TransactionId@0.2
+24468 {"24469":51, "24470":54, "24468":56, "24471":52, "24464":40} 
+TupleBag received from localhost:24470 to Operator: simpledb.TransactionId@0.2
+24468 {"24469":51, "24470":54, "24468":57, "24471":52, "24464":40} 
+In shuffle producer, writing tuple bag to localhost/127.0.0.1:24471
+24468 {"24469":51, "24470":54, "24468":58, "24471":52, "24464":40} 
+Ending seq scan of md
+24468 {"24469":51, "24470":54, "24468":59, "24471":52, "24464":40} 
+Ending shuffle production on: Attribute: md.did
+24468 {"24469":51, "24470":54, "24468":60, "24471":52, "24464":40} 
+TupleBag received from localhost:24469 to Operator: simpledb.TransactionId@0.4
+24468 {"24469":56, "24470":55, "24468":61, "24471":58, "24464":40} 
+TupleBag received from localhost:24471 to Operator: simpledb.TransactionId@0.3
+24468 {"24469":59, "24470":61, "24468":62, "24471":74, "24464":40} 
+TupleBag received from localhost:24470 to Operator: simpledb.TransactionId@0.4
+24468 {"24469":59, "24470":61, "24468":63, "24471":74, "24464":40} 
+TupleBag received from localhost:24471 to Operator: simpledb.TransactionId@0.5
+24468 {"24469":59, "24470":61, "24468":64, "24471":74, "24464":40} 
+TupleBag received from localhost:24470 to Operator: simpledb.TransactionId@0.5
+24468 {"24469":59, "24470":62, "24468":65, "24471":74, "24464":40} 
+TupleBag received from localhost:24471 to Operator: simpledb.TransactionId@0.4
+24468 {"24469":59, "24470":62, "24468":66, "24471":74, "24464":40} 
+TupleBag received from localhost:24469 to Operator: simpledb.TransactionId@0.3
+24468 {"24469":77, "24470":77, "24468":67, "24471":75, "24464":40} 
+In shuffle producer, writing tuple bag to localhost/127.0.0.1:24470
+24468 {"24469":77, "24470":77, "24468":68, "24471":75, "24464":40} 
+TupleBag received from localhost:24469 to Operator: simpledb.TransactionId@0.5
+24468 {"24469":77, "24470":77, "24468":69, "24471":75, "24464":40} 
+TupleBag received from localhost:24470 to Operator: simpledb.TransactionId@0.3
+24468 {"24469":77, "24470":77, "24468":70, "24471":75, "24464":40} 
+TupleBag received from localhost:24468 to Operator: simpledb.TransactionId@0.2
+24468 {"24469":77, "24470":77, "24468":71, "24471":75, "24464":40} 
+In shuffle producer, writing tuple bag to localhost/127.0.0.1:24468
+24468 {"24469":77, "24470":77, "24468":72, "24471":75, "24464":40} 
+In shuffle producer, writing tuple bag to localhost/127.0.0.1:24469
+24468 {"24469":77, "24470":77, "24468":73, "24471":75, "24464":40} 
+TupleBag received from localhost:24468 to Operator: simpledb.TransactionId@0.3
+24468 {"24469":77, "24470":77, "24468":74, "24471":75, "24464":40} 
+In shuffle producer, writing tuple bag to localhost/127.0.0.1:24470
+24468 {"24469":77, "24470":77, "24468":75, "24471":75, "24464":40} 
+In shuffle producer, writing tuple bag to localhost/127.0.0.1:24471
+24468 {"24469":77, "24470":77, "24468":76, "24471":75, "24464":40} 
+Finished shuffle consumption tuples
+24468 {"24469":77, "24470":77, "24468":77, "24471":75, "24464":40} 
+Finished shuffle consumption tuples
+24468 {"24469":77, "24470":77, "24468":78, "24471":75, "24464":40} 
+Ending join of d.id with md.did
+24468 {"24469":77, "24470":77, "24468":79, "24471":75, "24464":40} 
+Ending project: md.mid(INT_TYPE) 
+24468 {"24469":77, "24470":77, "24468":80, "24471":75, "24464":40} 
+Ending shuffle production on: Attribute: md.mid
+24468 {"24469":77, "24470":77, "24468":81, "24471":75, "24464":40} 
+TupleBag received from localhost:24470 to Operator: simpledb.TransactionId@0.6
+24468 {"24469":79, "24470":92, "24468":82, "24471":76, "24464":40} 
+TupleBag received from localhost:24468 to Operator: simpledb.TransactionId@0.4
+24468 {"24469":79, "24470":92, "24468":83, "24471":76, "24464":40} 
+In shuffle producer, writing tuple bag to localhost/127.0.0.1:24468
+24468 {"24469":79, "24470":92, "24468":84, "24471":76, "24464":40} 
+In shuffle producer, writing tuple bag to localhost/127.0.0.1:24469
+24468 {"24469":79, "24470":92, "24468":85, "24471":76, "24464":40} 
+In shuffle producer, writing tuple bag to localhost/127.0.0.1:24470
+24468 {"24469":79, "24470":92, "24468":86, "24471":76, "24464":40} 
+In shuffle producer, writing tuple bag to localhost/127.0.0.1:24471
+24468 {"24469":79, "24470":92, "24468":87, "24471":76, "24464":40} 
+Finished shuffle consumption tuples
+24468 {"24469":79, "24470":92, "24468":88, "24471":76, "24464":40} 
+Finished shuffle consumption tuples
+24468 {"24469":79, "24470":92, "24468":89, "24471":76, "24464":40} 
+Ending join of md.mid with m.id
+24468 {"24469":79, "24470":92, "24468":90, "24471":76, "24464":40} 
+Ending project: m.id(INT_TYPE) m.year(INT_TYPE) m.name(STRING_TYPE) 
+24468 {"24469":79, "24470":92, "24468":91, "24471":76, "24464":40} 
+Ending shuffle production on: Attribute: m.id
+24468 {"24469":79, "24470":92, "24468":92, "24471":76, "24464":40} 
+In shuffle producer, writing tuple bag to localhost/127.0.0.1:24468
+24468 {"24469":79, "24470":92, "24468":93, "24471":76, "24464":40} 
+In shuffle producer, writing tuple bag to localhost/127.0.0.1:24471
+24468 {"24469":79, "24470":92, "24468":94, "24471":76, "24464":40} 
+Ending seq scan of m
+24468 {"24469":79, "24470":92, "24468":95, "24471":76, "24464":40} 
+Ending shuffle production on: Attribute: m.id
+24468 {"24469":79, "24470":92, "24468":96, "24471":76, "24464":40} 
+In shuffle producer, writing tuple bag to localhost/127.0.0.1:24469
+24468 {"24469":79, "24470":92, "24468":97, "24471":76, "24464":40} 
+TupleBag received from localhost:24468 to Operator: simpledb.TransactionId@0.6
+24468 {"24469":79, "24470":92, "24468":98, "24471":76, "24464":40} 
+TupleBag received from localhost:24468 to Operator: simpledb.TransactionId@0.5
+24468 {"24469":79, "24470":92, "24468":99, "24471":76, "24464":40} 
+In shuffle producer, writing tuple bag to localhost/127.0.0.1:24470
+24468 {"24469":79, "24470":92, "24468":100, "24471":76, "24464":40} 
+TupleBag received from localhost:24469 to Operator: simpledb.TransactionId@0.6
+24468 {"24469":93, "24470":93, "24468":101, "24471":76, "24464":40} 
+TupleBag received from localhost:24471 to Operator: simpledb.TransactionId@0.6
+24468 {"24469":97, "24470":95, "24468":102, "24471":95, "24464":40} 
+In CollectProducer, writing tuple bag to localhost/127.0.0.1:24464
+24468 {"24469":97, "24470":95, "24468":103, "24471":95, "24464":40} 
+Finished shuffle consumption tuples
+24468 {"24469":97, "24470":95, "24468":104, "24471":95, "24464":40} 
+Finished shuffle consumption tuples
+24468 {"24469":97, "24470":95, "24468":105, "24471":95, "24464":40} 
+Ending join of g.mid with m.id
+24468 {"24469":97, "24470":95, "24468":106, "24471":95, "24464":40} 
+Ending project: m.name(STRING_TYPE) m.year(INT_TYPE) g.genre(STRING_TYPE) 
+24468 {"24469":97, "24470":95, "24468":107, "24471":95, "24464":40} 
+Finished collection production of tuples
+24468 {"24469":97, "24470":95, "24468":108, "24471":95, "24464":40} 
+My part of the query finished
+24468 {"24469":97, "24470":95, "24468":109, "24471":95, "24464":40} 
+In shuffle producer, writing tuple bag to localhost/127.0.0.1:24471
+24468 {"24469":97, "24470":95, "24468":110, "24471":95, "24464":40} 
+Ending seq scan of g
+24468 {"24469":97, "24470":95, "24468":111, "24471":95, "24464":40} 
+Ending shuffle production on: Attribute: g.mid
+24468 {"24469":97, "24470":95, "24468":112, "24471":95, "24464":40} 
+Shut down received
+24468 {"24469":106, "24470":106, "24468":113, "24471":106, "24464":45} 
+Shutdown requested. Please wait when cleaning up...
+24468 {"24469":106, "24470":106, "24468":114, "24471":106, "24464":45} 
+Added table : Actor with schema id(INT_TYPE) fname(STRING_TYPE) lname(STRING_TYPE) gender(STRING_TYPE) 
+24469 {"24469":1} 
+Added table : Movie with schema id(INT_TYPE) name(STRING_TYPE) year(INT_TYPE) 
+24469 {"24469":2} 
+Added table : Director with schema id(INT_TYPE) fname(STRING_TYPE) lname(STRING_TYPE) 
+24469 {"24469":3} 
+Added table : Casts with schema pid(INT_TYPE) mid(INT_TYPE) role(STRING_TYPE) 
+24469 {"24469":4} 
+Added table : Movie_Director with schema did(INT_TYPE) mid(INT_TYPE) 
+24469 {"24469":5} 
+Added table : Genre with schema mid(INT_TYPE) genre(STRING_TYPE) 
+24469 {"24469":6} 
+Worker started at port:24469
+24469 {"24469":7} 
+Query received
+24469 {"24469":8, "24464":29} 
+Ack query plan
+24469 {"24469":9, "24464":29} 
+Start received
+24469 {"24470":9, "24469":10, "24468":9, "24471":9, "24464":38} 
+Beginning collection production of tuples
+24469 {"24470":9, "24469":11, "24468":9, "24471":9, "24464":38} 
+Beginning project: m.name(STRING_TYPE) m.year(INT_TYPE) g.genre(STRING_TYPE) 
+24469 {"24470":9, "24469":12, "24468":9, "24471":9, "24464":38} 
+Beginning join of g.mid with m.id
+24469 {"24470":9, "24469":13, "24468":9, "24471":9, "24464":38} 
+Beginning shuffle consumption of tuples
+24469 {"24470":9, "24469":14, "24468":9, "24471":9, "24464":38} 
+Beginning shuffle production on: Attribute: g.mid
+24469 {"24470":9, "24469":15, "24468":9, "24471":9, "24464":38} 
+Starting seq scan of g
+24469 {"24470":9, "24469":16, "24468":9, "24471":9, "24464":38} 
+Beginning shuffle consumption of tuples
+24469 {"24470":9, "24469":17, "24468":9, "24471":9, "24464":38} 
+Beginning shuffle production on: Attribute: m.id
+24469 {"24470":9, "24469":18, "24468":9, "24471":9, "24464":38} 
+Beginning project: m.id(INT_TYPE) m.year(INT_TYPE) m.name(STRING_TYPE) 
+24469 {"24470":9, "24469":19, "24468":9, "24471":9, "24464":38} 
+Beginning join of md.mid with m.id
+24469 {"24470":9, "24469":20, "24468":9, "24471":9, "24464":38} 
+Beginning shuffle consumption of tuples
+24469 {"24470":9, "24469":21, "24468":9, "24471":9, "24464":38} 
+Beginning shuffle production on: Attribute: md.mid
+24469 {"24470":9, "24469":22, "24468":9, "24471":9, "24464":38} 
+Beginning project: md.mid(INT_TYPE) 
+24469 {"24470":9, "24469":23, "24468":9, "24471":9, "24464":38} 
+Beginning join of d.id with md.did
+24469 {"24470":9, "24469":24, "24468":9, "24471":9, "24464":38} 
+Beginning shuffle consumption of tuples
+24469 {"24470":9, "24469":25, "24468":9, "24471":9, "24464":38} 
+Beginning shuffle production on: Attribute: d.id
+24469 {"24470":9, "24469":26, "24468":9, "24471":9, "24464":38} 
+Beginning project: d.id(INT_TYPE) 
+24469 {"24470":9, "24469":27, "24468":9, "24471":9, "24464":38} 
+Beginning filter: f = 2, op = =, operand = Spielberg
+24469 {"24470":9, "24469":28, "24468":9, "24471":9, "24464":38} 
+Beginning filter: f = 1, op = =, operand = Steven
+24469 {"24470":9, "24469":29, "24468":9, "24471":9, "24464":38} 
+Starting seq scan of d
+24469 {"24470":9, "24469":30, "24468":9, "24471":9, "24464":38} 
+Beginning shuffle consumption of tuples
+24469 {"24470":9, "24469":31, "24468":9, "24471":9, "24464":38} 
+Beginning shuffle production on: Attribute: md.did
+24469 {"24470":9, "24469":32, "24468":9, "24471":9, "24464":38} 
+Starting seq scan of md
+24469 {"24470":9, "24469":33, "24468":9, "24471":9, "24464":38} 
+Beginning shuffle consumption of tuples
+24469 {"24470":9, "24469":34, "24468":9, "24471":9, "24464":38} 
+Beginning shuffle production on: Attribute: m.id
+24469 {"24470":9, "24469":35, "24468":9, "24471":9, "24464":38} 
+Starting seq scan of m
+24469 {"24470":9, "24469":36, "24468":9, "24471":9, "24464":38} 
+TupleBag received from localhost:24470 to Operator: simpledb.TransactionId@0.1
+24469 {"24470":38, "24469":37, "24468":9, "24471":9, "24464":39} 
+In shuffle producer, writing tuple bag to localhost/127.0.0.1:24468
+24469 {"24470":38, "24469":38, "24468":9, "24471":39, "24464":40} 
+TupleBag received from localhost:24471 to Operator: simpledb.TransactionId@0.1
+24469 {"24470":38, "24469":39, "24468":9, "24471":39, "24464":40} 
+In shuffle producer, writing tuple bag to localhost/127.0.0.1:24469
+24469 {"24470":38, "24469":40, "24468":9, "24471":39, "24464":40} 
+TupleBag received from localhost:24468 to Operator: simpledb.TransactionId@0.1
+24469 {"24470":38, "24469":41, "24468":40, "24471":39, "24464":40} 
+In shuffle producer, writing tuple bag to localhost/127.0.0.1:24470
+24469 {"24470":38, "24469":42, "24468":40, "24471":39, "24464":40} 
+TupleBag received from localhost:24469 to Operator: simpledb.TransactionId@0.1
+24469 {"24470":38, "24469":43, "24468":40, "24471":39, "24464":40} 
+In shuffle producer, writing tuple bag to localhost/127.0.0.1:24471
+24469 {"24470":47, "24469":44, "24468":40, "24471":40, "24464":40} 
+Ending seq scan of d
+24469 {"24470":47, "24469":45, "24468":40, "24471":47, "24464":40} 
+Ending filter: f = 1, op = =, operand = Steven
+24469 {"24470":47, "24469":46, "24468":40, "24471":47, "24464":40} 
+Ending filter: f = 2, op = =, operand = Spielberg
+24469 {"24470":47, "24469":47, "24468":40, "24471":47, "24464":40} 
+Ending project: d.id(INT_TYPE) 
+24469 {"24470":47, "24469":48, "24468":40, "24471":47, "24464":40} 
+Ending shuffle production on: Attribute: d.id
+24469 {"24470":47, "24469":49, "24468":40, "24471":47, "24464":40} 
+In shuffle producer, writing tuple bag to localhost/127.0.0.1:24468
+24469 {"24470":47, "24469":50, "24468":40, "24471":48, "24464":40} 
+In shuffle producer, writing tuple bag to localhost/127.0.0.1:24469
+24469 {"24470":50, "24469":51, "24468":41, "24471":48, "24464":40} 
+In shuffle producer, writing tuple bag to localhost/127.0.0.1:24470
+24469 {"24470":50, "24469":52, "24468":41, "24471":48, "24464":40} 
+In shuffle producer, writing tuple bag to localhost/127.0.0.1:24468
+24469 {"24470":50, "24469":53, "24468":41, "24471":48, "24464":40} 
+In shuffle producer, writing tuple bag to localhost/127.0.0.1:24471
+24469 {"24470":50, "24469":54, "24468":41, "24471":48, "24464":40} 
+Ending seq scan of md
+24469 {"24470":50, "24469":55, "24468":41, "24471":48, "24464":40} 
+Ending shuffle production on: Attribute: md.did
+24469 {"24470":50, "24469":56, "24468":41, "24471":48, "24464":40} 
+In shuffle producer, writing tuple bag to localhost/127.0.0.1:24469
+24469 {"24470":50, "24469":57, "24468":41, "24471":48, "24464":40} 
+In shuffle producer, writing tuple bag to localhost/127.0.0.1:24470
+24469 {"24470":50, "24469":58, "24468":41, "24471":48, "24464":40} 
+In shuffle producer, writing tuple bag to localhost/127.0.0.1:24471
+24469 {"24470":50, "24469":59, "24468":41, "24471":48, "24464":40} 
+Ending seq scan of m
+24469 {"24470":50, "24469":60, "24468":41, "24471":48, "24464":40} 
+Ending shuffle production on: Attribute: m.id
+24469 {"24470":50, "24469":61, "24468":41, "24471":48, "24464":40} 
+In shuffle producer, writing tuple bag to localhost/127.0.0.1:24468
+24469 {"24470":56, "24469":62, "24468":50, "24471":52, "24464":40} 
+In shuffle producer, writing tuple bag to localhost/127.0.0.1:24469
+24469 {"24470":56, "24469":63, "24468":50, "24471":52, "24464":40} 
+TupleBag received from localhost:24470 to Operator: simpledb.TransactionId@0.2
+24469 {"24470":56, "24469":64, "24468":50, "24471":52, "24464":40} 
+In shuffle producer, writing tuple bag to localhost/127.0.0.1:24470
+24469 {"24470":56, "24469":65, "24468":50, "24471":52, "24464":40} 
+In shuffle producer, writing tuple bag to localhost/127.0.0.1:24471
+24469 {"24470":56, "24469":66, "24468":50, "24471":52, "24464":40} 
+Ending seq scan of g
+24469 {"24470":56, "24469":67, "24468":50, "24471":52, "24464":40} 
+Ending shuffle production on: Attribute: g.mid
+24469 {"24470":56, "24469":68, "24468":50, "24471":52, "24464":40} 
+TupleBag received from localhost:24471 to Operator: simpledb.TransactionId@0.2
+24469 {"24470":56, "24469":69, "24468":50, "24471":52, "24464":40} 
+TupleBag received from localhost:24469 to Operator: simpledb.TransactionId@0.2
+24469 {"24470":56, "24469":70, "24468":50, "24471":52, "24464":40} 
+TupleBag received from localhost:24471 to Operator: simpledb.TransactionId@0.4
+24469 {"24470":56, "24469":71, "24468":50, "24471":57, "24464":40} 
+TupleBag received from localhost:24470 to Operator: simpledb.TransactionId@0.4
+24469 {"24470":57, "24469":72, "24468":50, "24471":57, "24464":40} 
+TupleBag received from localhost:24471 to Operator: simpledb.TransactionId@0.3
+24469 {"24470":57, "24469":73, "24468":58, "24471":75, "24464":40} 
+TupleBag received from localhost:24468 to Operator: simpledb.TransactionId@0.2
+24469 {"24470":57, "24469":74, "24468":58, "24471":75, "24464":40} 
+TupleBag received from localhost:24470 to Operator: simpledb.TransactionId@0.3
+24469 {"24470":77, "24469":75, "24468":58, "24471":75, "24464":40} 
+TupleBag received from localhost:24470 to Operator: simpledb.TransactionId@0.5
+24469 {"24470":77, "24469":76, "24468":58, "24471":75, "24464":40} 
+In shuffle producer, writing tuple bag to localhost/127.0.0.1:24468
+24469 {"24470":77, "24469":77, "24468":58, "24471":75, "24464":40} 
+In shuffle producer, writing tuple bag to localhost/127.0.0.1:24469
+24469 {"24470":77, "24469":78, "24468":58, "24471":75, "24464":40} 
+In shuffle producer, writing tuple bag to localhost/127.0.0.1:24470
+24469 {"24470":77, "24469":79, "24468":58, "24471":75, "24464":40} 
+In shuffle producer, writing tuple bag to localhost/127.0.0.1:24471
+24469 {"24470":77, "24469":80, "24468":58, "24471":75, "24464":40} 
+Finished shuffle consumption tuples
+24469 {"24470":77, "24469":81, "24468":58, "24471":75, "24464":40} 
+Finished shuffle consumption tuples
+24469 {"24470":77, "24469":82, "24468":58, "24471":75, "24464":40} 
+Ending join of d.id with md.did
+24469 {"24470":77, "24469":83, "24468":58, "24471":75, "24464":40} 
+Ending project: md.mid(INT_TYPE) 
+24469 {"24470":77, "24469":84, "24468":58, "24471":75, "24464":40} 
+Ending shuffle production on: Attribute: md.mid
+24469 {"24470":77, "24469":85, "24468":58, "24471":75, "24464":40} 
+TupleBag received from localhost:24469 to Operator: simpledb.TransactionId@0.5
+24469 {"24470":77, "24469":86, "24468":58, "24471":75, "24464":40} 
+TupleBag received from localhost:24469 to Operator: simpledb.TransactionId@0.3
+24469 {"24470":77, "24469":87, "24468":58, "24471":75, "24464":40} 
+TupleBag received from localhost:24469 to Operator: simpledb.TransactionId@0.4
+24469 {"24470":77, "24469":88, "24468":58, "24471":75, "24464":40} 
+TupleBag received from localhost:24468 to Operator: simpledb.TransactionId@0.4
+24469 {"24470":77, "24469":89, "24468":58, "24471":75, "24464":40} 
+TupleBag received from localhost:24471 to Operator: simpledb.TransactionId@0.5
+24469 {"24470":77, "24469":90, "24468":58, "24471":75, "24464":40} 
+TupleBag received from localhost:24470 to Operator: simpledb.TransactionId@0.6
+24469 {"24470":93, "24469":91, "24468":75, "24471":76, "24464":40} 
+TupleBag received from localhost:24468 to Operator: simpledb.TransactionId@0.3
+24469 {"24470":93, "24469":92, "24468":75, "24471":76, "24464":40} 
+In shuffle producer, writing tuple bag to localhost/127.0.0.1:24468
+24469 {"24470":93, "24469":93, "24468":75, "24471":76, "24464":40} 
+In shuffle producer, writing tuple bag to localhost/127.0.0.1:24469
+24469 {"24470":93, "24469":94, "24468":75, "24471":76, "24464":40} 
+TupleBag received from localhost:24468 to Operator: simpledb.TransactionId@0.6
+24469 {"24470":93, "24469":95, "24468":85, "24471":76, "24464":40} 
+In shuffle producer, writing tuple bag to localhost/127.0.0.1:24470
+24469 {"24470":93, "24469":96, "24468":93, "24471":76, "24464":40} 
+In shuffle producer, writing tuple bag to localhost/127.0.0.1:24471
+24469 {"24470":93, "24469":97, "24468":93, "24471":76, "24464":40} 
+Finished shuffle consumption tuples
+24469 {"24470":93, "24469":98, "24468":93, "24471":76, "24464":40} 
+Finished shuffle consumption tuples
+24469 {"24470":93, "24469":99, "24468":93, "24471":76, "24464":40} 
+Ending join of md.mid with m.id
+24469 {"24470":93, "24469":100, "24468":93, "24471":76, "24464":40} 
+Ending project: m.id(INT_TYPE) m.year(INT_TYPE) m.name(STRING_TYPE) 
+24469 {"24470":93, "24469":101, "24468":93, "24471":76, "24464":40} 
+Ending shuffle production on: Attribute: m.id
+24469 {"24470":93, "24469":102, "24468":93, "24471":76, "24464":40} 
+TupleBag received from localhost:24469 to Operator: simpledb.TransactionId@0.6
+24469 {"24470":93, "24469":103, "24468":93, "24471":76, "24464":40} 
+TupleBag received from localhost:24468 to Operator: simpledb.TransactionId@0.5
+24469 {"24470":93, "24469":104, "24468":97, "24471":76, "24464":40} 
+TupleBag received from localhost:24471 to Operator: simpledb.TransactionId@0.6
+24469 {"24470":95, "24469":105, "24468":97, "24471":96, "24464":40} 
+In CollectProducer, writing tuple bag to localhost/127.0.0.1:24464
+24469 {"24470":95, "24469":106, "24468":97, "24471":96, "24464":40} 
+Finished shuffle consumption tuples
+24469 {"24470":95, "24469":107, "24468":97, "24471":96, "24464":40} 
+Finished shuffle consumption tuples
+24469 {"24470":95, "24469":108, "24468":97, "24471":96, "24464":40} 
+Ending join of g.mid with m.id
+24469 {"24470":95, "24469":109, "24468":97, "24471":96, "24464":40} 
+Ending project: m.name(STRING_TYPE) m.year(INT_TYPE) g.genre(STRING_TYPE) 
+24469 {"24470":95, "24469":110, "24468":97, "24471":96, "24464":40} 
+Finished collection production of tuples
+24469 {"24470":95, "24469":111, "24468":97, "24471":96, "24464":40} 
+My part of the query finished
+24469 {"24470":95, "24469":112, "24468":97, "24471":96, "24464":40} 
+Shut down received
+24469 {"24470":106, "24469":113, "24468":110, "24471":106, "24464":47} 
+Shutdown requested. Please wait when cleaning up...
+24469 {"24470":106, "24469":114, "24468":110, "24471":106, "24464":47} 
+Added table : Actor with schema id(INT_TYPE) fname(STRING_TYPE) lname(STRING_TYPE) gender(STRING_TYPE)
+24470 {"24470":1} 
+Added table : Movie with schema id(INT_TYPE) name(STRING_TYPE) year(INT_TYPE) 
+24470 {"24470":2} 
+Added table : Director with schema id(INT_TYPE) fname(STRING_TYPE) lname(STRING_TYPE) 
+24470 {"24470":3} 
+Added table : Casts with schema pid(INT_TYPE) mid(INT_TYPE) role(STRING_TYPE) 
+24470 {"24470":4} 
+Added table : Movie_Director with schema did(INT_TYPE) mid(INT_TYPE) 
+24470 {"24470":5} 
+Added table : Genre with schema mid(INT_TYPE) genre(STRING_TYPE) 
+24470 {"24470":6} 
+Worker started at port:24470
+24470 {"24470":7} 
+Query received
+24470 {"24470":8, "24464":29} 
+Ack query plan
+24470 {"24470":9, "24464":29} 
+Start received
+24470 {"24469":9, "24470":10, "24468":9, "24471":9, "24464":39} 
+Beginning collection production of tuples
+24470 {"24469":9, "24470":11, "24468":9, "24471":9, "24464":39} 
+Beginning project: m.name(STRING_TYPE) m.year(INT_TYPE) g.genre(STRING_TYPE) 
+24470 {"24469":9, "24470":12, "24468":9, "24471":9, "24464":39} 
+Beginning join of g.mid with m.id
+24470 {"24469":9, "24470":13, "24468":9, "24471":9, "24464":39} 
+Beginning shuffle consumption of tuples
+24470 {"24469":9, "24470":14, "24468":9, "24471":9, "24464":39} 
+Beginning shuffle production on: Attribute: g.mid
+24470 {"24469":9, "24470":15, "24468":9, "24471":9, "24464":39} 
+Starting seq scan of g
+24470 {"24469":9, "24470":16, "24468":9, "24471":9, "24464":39} 
+Beginning shuffle consumption of tuples
+24470 {"24469":9, "24470":17, "24468":9, "24471":9, "24464":39} 
+Beginning shuffle production on: Attribute: m.id
+24470 {"24469":9, "24470":18, "24468":9, "24471":9, "24464":39} 
+Beginning project: m.id(INT_TYPE) m.year(INT_TYPE) m.name(STRING_TYPE) 
+24470 {"24469":9, "24470":19, "24468":9, "24471":9, "24464":39} 
+Beginning join of md.mid with m.id
+24470 {"24469":9, "24470":20, "24468":9, "24471":9, "24464":39} 
+Beginning shuffle consumption of tuples
+24470 {"24469":9, "24470":21, "24468":9, "24471":9, "24464":39} 
+Beginning shuffle production on: Attribute: md.mid
+24470 {"24469":9, "24470":22, "24468":9, "24471":9, "24464":39} 
+Beginning project: md.mid(INT_TYPE) 
+24470 {"24469":9, "24470":23, "24468":9, "24471":9, "24464":39} 
+Beginning join of d.id with md.did
+24470 {"24469":9, "24470":24, "24468":9, "24471":9, "24464":39} 
+Beginning shuffle consumption of tuples
+24470 {"24469":9, "24470":25, "24468":9, "24471":9, "24464":39} 
+Beginning shuffle production on: Attribute: d.id
+24470 {"24469":9, "24470":26, "24468":9, "24471":9, "24464":39} 
+Beginning project: d.id(INT_TYPE) 
+24470 {"24469":9, "24470":27, "24468":9, "24471":9, "24464":39} 
+Beginning filter: f = 2, op = =, operand = Spielberg
+24470 {"24469":9, "24470":28, "24468":9, "24471":9, "24464":39} 
+Beginning filter: f = 1, op = =, operand = Steven
+24470 {"24469":9, "24470":29, "24468":9, "24471":9, "24464":39} 
+Starting seq scan of d
+24470 {"24469":9, "24470":30, "24468":9, "24471":9, "24464":39} 
+Beginning shuffle consumption of tuples
+24470 {"24469":9, "24470":31, "24468":9, "24471":9, "24464":39} 
+Beginning shuffle production on: Attribute: md.did
+24470 {"24469":9, "24470":32, "24468":9, "24471":9, "24464":39} 
+Starting seq scan of md
+24470 {"24469":9, "24470":33, "24468":9, "24471":9, "24464":39} 
+Beginning shuffle consumption of tuples
+24470 {"24469":9, "24470":34, "24468":9, "24471":9, "24464":39} 
+Beginning shuffle production on: Attribute: m.id
+24470 {"24469":9, "24470":35, "24468":9, "24471":9, "24464":39} 
+Starting seq scan of m
+24470 {"24469":9, "24470":36, "24468":9, "24471":9, "24464":39} 
+In shuffle producer, writing tuple bag to localhost/127.0.0.1:24468
+24470 {"24469":9, "24470":37, "24468":9, "24471":9, "24464":39} 
+In shuffle producer, writing tuple bag to localhost/127.0.0.1:24469
+24470 {"24469":9, "24470":38, "24468":9, "24471":9, "24464":39} 
+In shuffle producer, writing tuple bag to localhost/127.0.0.1:24470
+24470 {"24469":9, "24470":39, "24468":9, "24471":9, "24464":39} 
+In shuffle producer, writing tuple bag to localhost/127.0.0.1:24471
+24470 {"24469":9, "24470":40, "24468":9, "24471":9, "24464":39} 
+TupleBag received from localhost:24470 to Operator: simpledb.TransactionId@0.1
+24470 {"24469":9, "24470":41, "24468":9, "24471":9, "24464":39} 
+Ending seq scan of d
+24470 {"24469":9, "24470":42, "24468":9, "24471":9, "24464":39} 
+Ending filter: f = 1, op = =, operand = Steven
+24470 {"24469":9, "24470":43, "24468":9, "24471":9, "24464":39} 
+Ending filter: f = 2, op = =, operand = Spielberg
+24470 {"24469":9, "24470":44, "24468":9, "24471":9, "24464":39} 
+Ending project: d.id(INT_TYPE) 
+24470 {"24469":9, "24470":45, "24468":9, "24471":9, "24464":39} 
+Ending shuffle production on: Attribute: d.id
+24470 {"24469":9, "24470":46, "24468":9, "24471":9, "24464":39} 
+TupleBag received from localhost:24471 to Operator: simpledb.TransactionId@0.1
+24470 {"24469":9, "24470":47, "24468":9, "24471":40, "24464":40} 
+TupleBag received from localhost:24469 to Operator: simpledb.TransactionId@0.1
+24470 {"24469":42, "24470":48, "24468":40, "24471":40, "24464":40} 
+TupleBag received from localhost:24468 to Operator: simpledb.TransactionId@0.1
+24470 {"24469":42, "24470":49, "24468":41, "24471":40, "24464":40} 
+In shuffle producer, writing tuple bag to localhost/127.0.0.1:24468
+24470 {"24469":42, "24470":50, "24468":41, "24471":40, "24464":40} 
+In shuffle producer, writing tuple bag to localhost/127.0.0.1:24469
+24470 {"24469":42, "24470":51, "24468":41, "24471":40, "24464":40} 
+In shuffle producer, writing tuple bag to localhost/127.0.0.1:24470
+24470 {"24469":42, "24470":52, "24468":43, "24471":50, "24464":40} 
+In shuffle producer, writing tuple bag to localhost/127.0.0.1:24471
+24470 {"24469":50, "24470":53, "24468":43, "24471":50, "24464":40} 
+Ending seq scan of md
+24470 {"24469":50, "24470":54, "24468":43, "24471":50, "24464":40} 
+Ending shuffle production on: Attribute: md.did
+24470 {"24469":50, "24470":55, "24468":43, "24471":50, "24464":40} 
+In shuffle producer, writing tuple bag to localhost/127.0.0.1:24468
+24470 {"24469":56, "24470":56, "24468":43, "24471":50, "24464":40} 
+In shuffle producer, writing tuple bag to localhost/127.0.0.1:24469
+24470 {"24469":56, "24470":57, "24468":43, "24471":50, "24464":40} 
+In shuffle producer, writing tuple bag to localhost/127.0.0.1:24470
+24470 {"24469":56, "24470":58, "24468":43, "24471":50, "24464":40} 
+In shuffle producer, writing tuple bag to localhost/127.0.0.1:24471
+24470 {"24469":56, "24470":59, "24468":43, "24471":50, "24464":40} 
+Ending seq scan of m
+24470 {"24469":56, "24470":60, "24468":43, "24471":50, "24464":40} 
+Ending shuffle production on: Attribute: m.id
+24470 {"24469":56, "24470":61, "24468":43, "24471":50, "24464":40} 
+In shuffle producer, writing tuple bag to localhost/127.0.0.1:24468
+24470 {"24469":56, "24470":62, "24468":43, "24471":50, "24464":40} 
+In shuffle producer, writing tuple bag to localhost/127.0.0.1:24469
+24470 {"24469":56, "24470":63, "24468":43, "24471":50, "24464":40} 
+TupleBag received from localhost:24469 to Operator: simpledb.TransactionId@0.2
+24470 {"24469":56, "24470":64, "24468":43, "24471":50, "24464":40} 
+TupleBag received from localhost:24471 to Operator: simpledb.TransactionId@0.2
+24470 {"24469":56, "24470":65, "24468":43, "24471":51, "24464":40} 
+In shuffle producer, writing tuple bag to localhost/127.0.0.1:24470
+24470 {"24469":57, "24470":66, "24468":43, "24471":63, "24464":40} 
+TupleBag received from localhost:24470 to Operator: simpledb.TransactionId@0.2
+24470 {"24469":57, "24470":67, "24468":43, "24471":63, "24464":40} 
+TupleBag received from localhost:24469 to Operator: simpledb.TransactionId@0.4
+24470 {"24469":58, "24470":68, "24468":43, "24471":63, "24464":40} 
+TupleBag received from localhost:24470 to Operator: simpledb.TransactionId@0.4
+24470 {"24469":58, "24470":69, "24468":43, "24471":63, "24464":40} 
+In shuffle producer, writing tuple bag to localhost/127.0.0.1:24471
+24470 {"24469":61, "24470":70, "24468":43, "24471":63, "24464":40} 
+Ending seq scan of g
+24470 {"24469":61, "24470":71, "24468":43, "24471":63, "24464":40} 
+Ending shuffle production on: Attribute: g.mid
+24470 {"24469":61, "24470":72, "24468":49, "24471":63, "24464":40} 
+TupleBag received from localhost:24471 to Operator: simpledb.TransactionId@0.5
+24470 {"24469":63, "24470":73, "24468":50, "24471":64, "24464":40} 
+TupleBag received from localhost:24469 to Operator: simpledb.TransactionId@0.5
+24470 {"24469":65, "24470":74, "24468":50, "24471":64, "24464":40} 
+TupleBag received from localhost:24468 to Operator: simpledb.TransactionId@0.2
+24470 {"24469":65, "24470":75, "24468":53, "24471":64, "24464":40} 
+In shuffle producer, writing tuple bag to localhost/127.0.0.1:24468
+24470 {"24469":65, "24470":76, "24468":53, "24471":64, "24464":40} 
+In shuffle producer, writing tuple bag to localhost/127.0.0.1:24469
+24470 {"24469":65, "24470":77, "24468":53, "24471":64, "24464":40} 
+In shuffle producer, writing tuple bag to localhost/127.0.0.1:24470
+24470 {"24469":65, "24470":78, "24468":53, "24471":64, "24464":40} 
+In shuffle producer, writing tuple bag to localhost/127.0.0.1:24471
+24470 {"24469":65, "24470":79, "24468":53, "24471":64, "24464":40} 
+Finished shuffle consumption tuples
+24470 {"24469":65, "24470":80, "24468":53, "24471":64, "24464":40} 
+Finished shuffle consumption tuples
+24470 {"24469":65, "24470":81, "24468":53, "24471":64, "24464":40} 
+Ending join of d.id with md.did
+24470 {"24469":65, "24470":82, "24468":53, "24471":64, "24464":40} 
+Ending project: md.mid(INT_TYPE) 
+24470 {"24469":65, "24470":83, "24468":53, "24471":64, "24464":40} 
+TupleBag received from localhost:24470 to Operator: simpledb.TransactionId@0.3
+24470 {"24469":65, "24470":84, "24468":53, "24471":64, "24464":40} 
+Ending shuffle production on: Attribute: md.mid
+24470 {"24469":65, "24470":85, "24468":53, "24471":64, "24464":40} 
+TupleBag received from localhost:24471 to Operator: simpledb.TransactionId@0.4
+24470 {"24469":65, "24470":86, "24468":53, "24471":64, "24464":40} 
+TupleBag received from localhost:24471 to Operator: simpledb.TransactionId@0.3
+24470 {"24469":65, "24470":87, "24468":58, "24471":76, "24464":40} 
+TupleBag received from localhost:24470 to Operator: simpledb.TransactionId@0.5
+24470 {"24469":65, "24470":88, "24468":58, "24471":76, "24464":40} 
+TupleBag received from localhost:24469 to Operator: simpledb.TransactionId@0.3
+24470 {"24469":79, "24470":89, "24468":58, "24471":76, "24464":40} 
+TupleBag received from localhost:24468 to Operator: simpledb.TransactionId@0.4
+24470 {"24469":79, "24470":90, "24468":68, "24471":76, "24464":40} 
+TupleBag received from localhost:24468 to Operator: simpledb.TransactionId@0.3
+24470 {"24469":79, "24470":91, "24468":75, "24471":76, "24464":40} 
+In shuffle producer, writing tuple bag to localhost/127.0.0.1:24468
+24470 {"24469":79, "24470":92, "24468":75, "24471":76, "24464":40} 
+In shuffle producer, writing tuple bag to localhost/127.0.0.1:24469
+24470 {"24469":79, "24470":93, "24468":75, "24471":76, "24464":40} 
+In shuffle producer, writing tuple bag to localhost/127.0.0.1:24470
+24470 {"24469":79, "24470":94, "24468":75, "24471":76, "24464":40} 
+In shuffle producer, writing tuple bag to localhost/127.0.0.1:24471
+24470 {"24469":79, "24470":95, "24468":75, "24471":76, "24464":40} 
+Finished shuffle consumption tuples
+24470 {"24469":79, "24470":96, "24468":75, "24471":76, "24464":40} 
+Finished shuffle consumption tuples
+24470 {"24469":79, "24470":97, "24468":75, "24471":76, "24464":40} 
+Ending join of md.mid with m.id
+24470 {"24469":79, "24470":98, "24468":75, "24471":76, "24464":40} 
+Ending project: m.id(INT_TYPE) m.year(INT_TYPE) m.name(STRING_TYPE) 
+24470 {"24469":79, "24470":99, "24468":75, "24471":76, "24464":40} 
+Ending shuffle production on: Attribute: m.id
+24470 {"24469":79, "24470":100, "24468":75, "24471":76, "24464":40} 
+TupleBag received from localhost:24470 to Operator: simpledb.TransactionId@0.6
+24470 {"24469":79, "24470":101, "24468":75, "24471":76, "24464":40} 
+TupleBag received from localhost:24468 to Operator: simpledb.TransactionId@0.6
+24470 {"24469":79, "24470":102, "24468":86, "24471":76, "24464":40} 
+TupleBag received from localhost:24468 to Operator: simpledb.TransactionId@0.5
+24470 {"24469":79, "24470":103, "24468":100, "24471":76, "24464":40} 
+TupleBag received from localhost:24469 to Operator: simpledb.TransactionId@0.6
+24470 {"24469":96, "24470":104, "24468":100, "24471":76, "24464":40} 
+TupleBag received from localhost:24471 to Operator: simpledb.TransactionId@0.6
+24470 {"24469":97, "24470":105, "24468":100, "24471":97, "24464":40} 
+In CollectProducer, writing tuple bag to localhost/127.0.0.1:24464
+24470 {"24469":97, "24470":106, "24468":100, "24471":97, "24464":40} 
+Finished shuffle consumption tuples
+24470 {"24469":97, "24470":107, "24468":100, "24471":97, "24464":40} 
+Finished shuffle consumption tuples
+24470 {"24469":97, "24470":108, "24468":100, "24471":97, "24464":40} 
+Ending join of g.mid with m.id
+24470 {"24469":97, "24470":109, "24468":100, "24471":97, "24464":40} 
+Ending project: m.name(STRING_TYPE) m.year(INT_TYPE) g.genre(STRING_TYPE) 
+24470 {"24469":97, "24470":110, "24468":100, "24471":97, "24464":40} 
+Finished collection production of tuples
+24470 {"24469":97, "24470":111, "24468":100, "24471":97, "24464":40} 
+My part of the query finished
+24470 {"24469":97, "24470":112, "24468":100, "24471":97, "24464":40} 
+Shut down received
+24470 {"24469":106, "24470":113, "24468":110, "24471":106, "24464":49} 
+Shutdown requested. Please wait when cleaning up...
+24470 {"24469":106, "24470":114, "24468":110, "24471":106, "24464":49} 
+Added table : Actor with schema id(INT_TYPE) fname(STRING_TYPE) lname(STRING_TYPE) gender(STRING_TYPE) 
+24471 {"24471":1} 
+Added table : Movie with schema id(INT_TYPE) name(STRING_TYPE) year(INT_TYPE) 
+24471 {"24471":2} 
+Added table : Director with schema id(INT_TYPE) fname(STRING_TYPE) lname(STRING_TYPE) 
+24471 {"24471":3} 
+Added table : Casts with schema pid(INT_TYPE) mid(INT_TYPE) role(STRING_TYPE) 
+24471 {"24471":4} 
+Added table : Movie_Director with schema did(INT_TYPE) mid(INT_TYPE) 
+24471 {"24471":5} 
+Added table : Genre with schema mid(INT_TYPE) genre(STRING_TYPE) 
+24471 {"24471":6} 
+Worker started at port:24471
+24471 {"24471":7} 
+Query received
+24471 {"24471":8, "24464":29} 
+Ack query plan
+24471 {"24471":9, "24464":29} 
+Start received
+24471 {"24469":9, "24470":9, "24468":9, "24471":10, "24464":40} 
+Beginning collection production of tuples
+24471 {"24469":9, "24470":9, "24468":9, "24471":11, "24464":40} 
+Beginning project: m.name(STRING_TYPE) m.year(INT_TYPE) g.genre(STRING_TYPE) 
+24471 {"24469":9, "24470":9, "24468":9, "24471":12, "24464":40} 
+Beginning join of g.mid with m.id
+24471 {"24469":9, "24470":9, "24468":9, "24471":13, "24464":40} 
+Beginning shuffle consumption of tuples
+24471 {"24469":9, "24470":9, "24468":9, "24471":14, "24464":40} 
+Beginning shuffle production on: Attribute: g.mid
+24471 {"24469":9, "24470":9, "24468":9, "24471":15, "24464":40} 
+Starting seq scan of g
+24471 {"24469":9, "24470":9, "24468":9, "24471":16, "24464":40} 
+Beginning shuffle consumption of tuples
+24471 {"24469":9, "24470":9, "24468":9, "24471":17, "24464":40} 
+Beginning shuffle production on: Attribute: m.id
+24471 {"24469":9, "24470":9, "24468":9, "24471":18, "24464":40} 
+Beginning project: m.id(INT_TYPE) m.year(INT_TYPE) m.name(STRING_TYPE) 
+24471 {"24469":9, "24470":9, "24468":9, "24471":19, "24464":40} 
+Beginning join of md.mid with m.id
+24471 {"24469":9, "24470":9, "24468":9, "24471":20, "24464":40} 
+Beginning shuffle consumption of tuples
+24471 {"24469":9, "24470":9, "24468":9, "24471":21, "24464":40} 
+Beginning shuffle production on: Attribute: md.mid
+24471 {"24469":9, "24470":9, "24468":9, "24471":22, "24464":40} 
+Beginning project: md.mid(INT_TYPE) 
+24471 {"24469":9, "24470":9, "24468":9, "24471":23, "24464":40} 
+Beginning join of d.id with md.did
+24471 {"24469":9, "24470":9, "24468":9, "24471":24, "24464":40} 
+Beginning shuffle consumption of tuples
+24471 {"24469":9, "24470":9, "24468":9, "24471":25, "24464":40} 
+Beginning shuffle production on: Attribute: d.id
+24471 {"24469":9, "24470":9, "24468":9, "24471":26, "24464":40} 
+Beginning project: d.id(INT_TYPE) 
+24471 {"24469":9, "24470":9, "24468":9, "24471":27, "24464":40} 
+Beginning filter: f = 2, op = =, operand = Spielberg
+24471 {"24469":9, "24470":9, "24468":9, "24471":28, "24464":40} 
+Beginning filter: f = 1, op = =, operand = Steven
+24471 {"24469":9, "24470":9, "24468":9, "24471":29, "24464":40} 
+Starting seq scan of d
+24471 {"24469":9, "24470":9, "24468":9, "24471":30, "24464":40} 
+Beginning shuffle consumption of tuples
+24471 {"24469":9, "24470":9, "24468":9, "24471":31, "24464":40} 
+Beginning shuffle production on: Attribute: md.did
+24471 {"24469":9, "24470":9, "24468":9, "24471":32, "24464":40} 
+Starting seq scan of md
+24471 {"24469":9, "24470":9, "24468":9, "24471":33, "24464":40} 
+Beginning shuffle consumption of tuples
+24471 {"24469":9, "24470":9, "24468":9, "24471":34, "24464":40} 
+Beginning shuffle production on: Attribute: m.id
+24471 {"24469":9, "24470":9, "24468":9, "24471":35, "24464":40} 
+Starting seq scan of m
+24471 {"24469":9, "24470":9, "24468":9, "24471":36, "24464":40} 
+In shuffle producer, writing tuple bag to localhost/127.0.0.1:24468
+24471 {"24469":9, "24470":9, "24468":9, "24471":37, "24464":40} 
+In shuffle producer, writing tuple bag to localhost/127.0.0.1:24469
+24471 {"24469":9, "24470":9, "24468":9, "24471":38, "24464":40} 
+TupleBag received from localhost:24470 to Operator: simpledb.TransactionId@0.1
+24471 {"24469":9, "24470":40, "24468":9, "24471":39, "24464":40} 
+In shuffle producer, writing tuple bag to localhost/127.0.0.1:24470
+24471 {"24469":9, "24470":40, "24468":9, "24471":40, "24464":40} 
+In shuffle producer, writing tuple bag to localhost/127.0.0.1:24471
+24471 {"24469":9, "24470":40, "24468":9, "24471":41, "24464":40} 
+Ending seq scan of d
+24471 {"24469":9, "24470":40, "24468":9, "24471":42, "24464":40} 
+Ending filter: f = 1, op = =, operand = Steven
+24471 {"24469":9, "24470":40, "24468":9, "24471":43, "24464":40} 
+Ending filter: f = 2, op = =, operand = Spielberg
+24471 {"24469":9, "24470":40, "24468":9, "24471":44, "24464":40} 
+Ending project: d.id(INT_TYPE) 
+24471 {"24469":9, "24470":40, "24468":9, "24471":45, "24464":40} 
+Ending shuffle production on: Attribute: d.id
+24471 {"24469":9, "24470":40, "24468":9, "24471":46, "24464":40} 
+TupleBag received from localhost:24471 to Operator: simpledb.TransactionId@0.1
+24471 {"24469":9, "24470":40, "24468":9, "24471":47, "24464":40} 
+In shuffle producer, writing tuple bag to localhost/127.0.0.1:24468
+24471 {"24469":9, "24470":40, "24468":9, "24471":48, "24464":40} 
+TupleBag received from localhost:24468 to Operator: simpledb.TransactionId@0.1
+24471 {"24469":38, "24470":40, "24468":43, "24471":49, "24464":40} 
+In shuffle producer, writing tuple bag to localhost/127.0.0.1:24469
+24471 {"24469":38, "24470":40, "24468":43, "24471":50, "24464":40} 
+In shuffle producer, writing tuple bag to localhost/127.0.0.1:24470
+24471 {"24469":38, "24470":40, "24468":43, "24471":51, "24464":40} 
+In shuffle producer, writing tuple bag to localhost/127.0.0.1:24468
+24471 {"24469":38, "24470":40, "24468":43, "24471":52, "24464":40} 
+In shuffle producer, writing tuple bag to localhost/127.0.0.1:24471
+24471 {"24469":38, "24470":40, "24468":43, "24471":53, "24464":40} 
+Ending seq scan of md
+24471 {"24469":38, "24470":40, "24468":43, "24471":54, "24464":40} 
+Ending shuffle production on: Attribute: md.did
+24471 {"24469":38, "24470":40, "24468":43, "24471":55, "24464":40} 
+TupleBag received from localhost:24469 to Operator: simpledb.TransactionId@0.1
+24471 {"24469":44, "24470":47, "24468":43, "24471":56, "24464":40} 
+In shuffle producer, writing tuple bag to localhost/127.0.0.1:24469
+24471 {"24469":44, "24470":47, "24468":43, "24471":57, "24464":40} 
+In shuffle producer, writing tuple bag to localhost/127.0.0.1:24470
+24471 {"24469":50, "24470":52, "24468":43, "24471":58, "24464":40} 
+In shuffle producer, writing tuple bag to localhost/127.0.0.1:24471
+24471 {"24469":50, "24470":52, "24468":43, "24471":59, "24464":40} 
+Ending seq scan of m
+24471 {"24469":50, "24470":52, "24468":43, "24471":60, "24464":40} 
+Ending shuffle production on: Attribute: m.id
+24471 {"24469":50, "24470":52, "24468":43, "24471":61, "24464":40} 
+In shuffle producer, writing tuple bag to localhost/127.0.0.1:24468
+24471 {"24469":50, "24470":52, "24468":43, "24471":62, "24464":40} 
+In shuffle producer, writing tuple bag to localhost/127.0.0.1:24469
+24471 {"24469":50, "24470":52, "24468":43, "24471":63, "24464":40} 
+In shuffle producer, writing tuple bag to localhost/127.0.0.1:24470
+24471 {"24469":50, "24470":52, "24468":43, "24471":64, "24464":40} 
+In shuffle producer, writing tuple bag to localhost/127.0.0.1:24471
+24471 {"24469":50, "24470":52, "24468":43, "24471":65, "24464":40} 
+Ending seq scan of g
+24471 {"24469":50, "24470":52, "24468":43, "24471":66, "24464":40} 
+Ending shuffle production on: Attribute: g.mid
+24471 {"24469":50, "24470":52, "24468":43, "24471":67, "24464":40} 
+TupleBag received from localhost:24471 to Operator: simpledb.TransactionId@0.2
+24471 {"24469":58, "24470":52, "24468":50, "24471":68, "24464":40} 
+TupleBag received from localhost:24470 to Operator: simpledb.TransactionId@0.2
+24471 {"24469":58, "24470":53, "24468":50, "24471":69, "24464":40} 
+TupleBag received from localhost:24469 to Operator: simpledb.TransactionId@0.4
+24471 {"24469":59, "24470":53, "24468":50, "24471":70, "24464":40} 
+TupleBag received from localhost:24469 to Operator: simpledb.TransactionId@0.2
+24471 {"24469":59, "24470":53, "24468":50, "24471":71, "24464":40} 
+TupleBag received from localhost:24471 to Operator: simpledb.TransactionId@0.5
+24471 {"24469":59, "24470":53, "24468":50, "24471":72, "24464":40} 
+TupleBag received from localhost:24468 to Operator: simpledb.TransactionId@0.2
+24471 {"24469":59, "24470":54, "24468":58, "24471":73, "24464":40} 
+In shuffle producer, writing tuple bag to localhost/127.0.0.1:24468
+24471 {"24469":59, "24470":54, "24468":58, "24471":74, "24464":40} 
+In shuffle producer, writing tuple bag to localhost/127.0.0.1:24469
+24471 {"24469":59, "24470":54, "24468":58, "24471":75, "24464":40} 
+In shuffle producer, writing tuple bag to localhost/127.0.0.1:24470
+24471 {"24469":59, "24470":54, "24468":58, "24471":76, "24464":40} 
+In shuffle producer, writing tuple bag to localhost/127.0.0.1:24471
+24471 {"24469":59, "24470":54, "24468":58, "24471":77, "24464":40} 
+TupleBag received from localhost:24471 to Operator: simpledb.TransactionId@0.4
+24471 {"24469":59, "24470":54, "24468":58, "24471":78, "24464":40} 
+Finished shuffle consumption tuples
+24471 {"24469":59, "24470":54, "24468":58, "24471":79, "24464":40} 
+Finished shuffle consumption tuples
+24471 {"24469":59, "24470":54, "24468":58, "24471":80, "24464":40} 
+Ending join of d.id with md.did
+24471 {"24469":59, "24470":54, "24468":58, "24471":81, "24464":40} 
+Ending project: md.mid(INT_TYPE) 
+24471 {"24469":59, "24470":54, "24468":58, "24471":82, "24464":40} 
+Ending shuffle production on: Attribute: md.mid
+24471 {"24469":59, "24470":54, "24468":58, "24471":83, "24464":40} 
+TupleBag received from localhost:24470 to Operator: simpledb.TransactionId@0.3
+24471 {"24469":65, "24470":79, "24468":58, "24471":84, "24464":40} 
+TupleBag received from localhost:24470 to Operator: simpledb.TransactionId@0.4
+24471 {"24469":65, "24470":79, "24468":58, "24471":85, "24464":40} 
+TupleBag received from localhost:24471 to Operator: simpledb.TransactionId@0.3
+24471 {"24469":65, "24470":79, "24468":58, "24471":86, "24464":40} 
+TupleBag received from localhost:24469 to Operator: simpledb.TransactionId@0.3
+24471 {"24469":80, "24470":79, "24468":58, "24471":87, "24464":40} 
+TupleBag received from localhost:24470 to Operator: simpledb.TransactionId@0.5
+24471 {"24469":80, "24470":79, "24468":58, "24471":88, "24464":40} 
+TupleBag received from localhost:24469 to Operator: simpledb.TransactionId@0.5
+24471 {"24469":80, "24470":79, "24468":58, "24471":89, "24464":40} 
+TupleBag received from localhost:24468 to Operator: simpledb.TransactionId@0.3
+24471 {"24469":80, "24470":79, "24468":76, "24471":90, "24464":40} 
+TupleBag received from localhost:24470 to Operator: simpledb.TransactionId@0.6
+24471 {"24469":80, "24470":95, "24468":76, "24471":91, "24464":40} 
+TupleBag received from localhost:24468 to Operator: simpledb.TransactionId@0.6
+24471 {"24469":80, "24470":95, "24468":87, "24471":92, "24464":40} 
+TupleBag received from localhost:24469 to Operator: simpledb.TransactionId@0.6
+24471 {"24469":97, "24470":95, "24468":93, "24471":93, "24464":40} 
+TupleBag received from localhost:24468 to Operator: simpledb.TransactionId@0.4
+24471 {"24469":97, "24470":95, "24468":94, "24471":94, "24464":40} 
+In shuffle producer, writing tuple bag to localhost/127.0.0.1:24468
+24471 {"24469":97, "24470":95, "24468":94, "24471":95, "24464":40} 
+In shuffle producer, writing tuple bag to localhost/127.0.0.1:24469
+24471 {"24469":97, "24470":95, "24468":94, "24471":96, "24464":40} 
+In shuffle producer, writing tuple bag to localhost/127.0.0.1:24470
+24471 {"24469":97, "24470":95, "24468":94, "24471":97, "24464":40} 
+In shuffle producer, writing tuple bag to localhost/127.0.0.1:24471
+24471 {"24469":97, "24470":95, "24468":94, "24471":98, "24464":40} 
+Finished shuffle consumption tuples
+24471 {"24469":97, "24470":95, "24468":94, "24471":99, "24464":40} 
+Finished shuffle consumption tuples
+24471 {"24469":97, "24470":95, "24468":94, "24471":100, "24464":40} 
+Ending join of md.mid with m.id
+24471 {"24469":97, "24470":95, "24468":94, "24471":101, "24464":40} 
+Ending project: m.id(INT_TYPE) m.year(INT_TYPE) m.name(STRING_TYPE) 
+24471 {"24469":97, "24470":95, "24468":94, "24471":102, "24464":40} 
+Ending shuffle production on: Attribute: m.id
+24471 {"24469":97, "24470":95, "24468":94, "24471":103, "24464":40} 
+TupleBag received from localhost:24471 to Operator: simpledb.TransactionId@0.6
+24471 {"24469":97, "24470":95, "24468":94, "24471":104, "24464":40} 
+TupleBag received from localhost:24468 to Operator: simpledb.TransactionId@0.5
+24471 {"24469":97, "24470":95, "24468":110, "24471":105, "24464":40} 
+In CollectProducer, writing tuple bag to localhost/127.0.0.1:24464
+24471 {"24469":97, "24470":95, "24468":110, "24471":106, "24464":40} 
+Finished shuffle consumption tuples
+24471 {"24469":97, "24470":95, "24468":110, "24471":107, "24464":40} 
+Finished shuffle consumption tuples
+24471 {"24469":97, "24470":95, "24468":110, "24471":108, "24464":40} 
+Ending join of g.mid with m.id
+24471 {"24469":97, "24470":95, "24468":110, "24471":109, "24464":40} 
+Ending project: m.name(STRING_TYPE) m.year(INT_TYPE) g.genre(STRING_TYPE) 
+24471 {"24469":97, "24470":95, "24468":110, "24471":110, "24464":40} 
+Finished collection production of tuples
+24471 {"24469":97, "24470":95, "24468":110, "24471":111, "24464":40} 
+My part of the query finished
+24471 {"24469":97, "24470":95, "24468":110, "24471":112, "24464":40} 
+Shut down received
+24471 {"24469":106, "24470":106, "24468":110, "24471":113, "24464":51} 
+Shutdown requested. Please wait when cleaning up...
+24471 {"24469":106, "24470":106, "24468":110, "24471":114, "24464":51} 
