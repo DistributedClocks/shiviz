@@ -286,7 +286,7 @@ Graph.prototype.parseLog = function(logLines) {
     }
   }catch (err) {
     alert("Error parsing input, malformed logs: " + i);
-    clearText();
+    resetView();
     return false;
   }
 
@@ -597,19 +597,26 @@ spaceTimeLayout = function () {
   return spaceTime;
 };
 
-function clearText() {
-  get("logField").value = "";
-  get("logField").disabled = false;
-  get("vizButton").disabled = false;
+function resetView() {
   get("curNode").innerHTML = "(click to view)"
-
   get("graph").hidden = true;
   d3.selectAll("svg").remove();
+  
+  // Reset the color of all of the log-links.
+  var links = document.getElementsByClassName("log-link");
+  for (var i = 0; i < links.length; i++) {
+      links[i].style.color="";
+  }
 }
 
-get("clearButton").onclick = function() {
-  clearText();
-}
+$('#logField').keydown(function(){
+    resetView();
+});
+
+$('#logField').change(function(){
+    resetView();
+});
+
 
 var spaceGraph;
 var collapsedNodes;
@@ -631,8 +638,6 @@ get("vizButton").onclick = function() {
     return;
   }
 
-  get("logField").disabled=true;
-  get("vizButton").disabled=true;
   get("graph").hidden = false;
 
   var graphObj = spaceGraph.generateEdges().toLiteral();
@@ -892,10 +897,17 @@ function unhide(e) {
   draw();
 }
 
-function loadExample(filename) {
+function loadExample(filename, linkObj) {
   var file = 'http://www.corsproxy.com/bestchai.bitbucket.org/shiviz/' + filename;
   $.get(file, function(response) {
     get("logField").value = response;
+    resetView();
+    linkObj.style.color="grey";
+
+    // TODO 1: set linkObj's href to none to eliminate unnecessary
+    // network traffic. But, need to have a way to reset this back.
+    
+    // TODO 2: remove linkObj's hover effect.
   });
 }
 
