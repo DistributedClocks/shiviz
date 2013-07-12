@@ -1,7 +1,7 @@
-var spaceGraph;
 var collapsedNodes;
 var hiddenHosts;
 var hostColors;
+var spaceGraph;
 
 var get = function (id) {
   return document.getElementById(id);
@@ -44,12 +44,12 @@ get("vizButton").onclick = function() {
   var lines = textBox.value.split('\n');
 
   // Initialize state 
-  spaceGraph = new Graph();
   collapsedNodes = [];
   hiddenHosts = [];
   hostColors = {};
 
-  if (!spaceGraph.parseLog(lines)) {
+  spaceGraph = generateGraphFromLog(lines);
+  if (spaceGraph == null) {
     // TODO: display error message
     return;
   }
@@ -74,17 +74,28 @@ function draw(graphObj) {
   drawHiddenHosts();
 }
 
+function handleLogFileResponse(response, linkObj) {
+  get("logField").value = response;
+  resetView();
+  linkObj.style.color = "grey";
+  // TODO 1: set linkObj's href to none to eliminate unnecessary
+  // network traffic. But, need to have a way to reset this back.
+
+  // TODO 2: remove linkObj's hover effect.
+}
+
 function loadExample(filename, linkObj) {
-  var file = 'http://www.corsproxy.com/bestchai.bitbucket.org/shiviz/' + filename;
-  $.get(file, function(response) {
-    get("logField").value = response;
-    resetView();
-    linkObj.style.color="grey";
-
-    // TODO 1: set linkObj's href to none to eliminate unnecessary
-    // network traffic. But, need to have a way to reset this back.
-
-    // TODO 2: remove linkObj's hover effect.
+  var root = 'http://';
+  var proxy = 'www.corsproxy.com/'
+  var url = 'bestchai.bitbucket.org/shiviz/' + filename;
+  $.get(root + url, function(response) {
+    handleLogFileResponse(response, linkObj);
+  })
+  .fail(function() {
+    // Dev environment, fall back to proxy to load log
+    $.get(root + proxy + url, function(response) {
+      handleLogFileResponse(response, linkObj);
+    });
   });
 }
 
