@@ -7,54 +7,6 @@ function Graph() {
   this.hasEdges = false;
 }
 
-Graph.prototype.parseLog = function(logLines) {
-  if (this.hasEdges) {
-    console.log("error, cannot parse log, edges already generated");
-    return;
-  }
-
-  // assumes log lines come in pairs of log, timestamp
-  // and that timestamp format is hostId {hostId_1:time_1, ... ,
-  // hostId_n:time_n}
-
-  if (logLines.length <= 1) {
-    alert("No logs to display :(");
-    return false;
-  }
-
-  var i;
-  try {
-    for (i = 0; i < logLines.length; i+=2) {
-      var log = logLines[i];
-      if (log.length == 0) {
-        i -= 1;
-        continue;
-      }
-      var stamp = logLines[i+1];
-      var spacer = stamp.indexOf(" ");
-      var host = stamp.substring(0, spacer);
-      var clock = JSON.parse(stamp.substring(spacer));
-      
-/*      var index = log.indexOf("INFO");
-      if (index == -1) {
-        index = log.indexOf("WARN");
-      }
-      var displayLog = log.substring(index + 4);
-      this.nodes.add(new Node(displayLog, host, clock));
-    */
-      this.nodes.add(new Node(log, host, clock, i));
-    }
-  }catch (err) {
-    alert("Error parsing input, malformed logs: " + i);
-    resetView();
-    return false;
-  }
-
-//  this.generateEdges();
-//  this.nodes.computeCollapsible();
-  return true;
-}
-
 Graph.prototype.toLiteral = function(hiddenHosts) {
   if (!this.hasEdges) {
     console.log("error, cannot return literal -- edges not generated"); 
@@ -73,10 +25,6 @@ Graph.prototype.toLiteral = function(hiddenHosts) {
   literal["hosts"] = sortedHosts; 
   return literal;
 }
-
-
-
-
 
 Graph.prototype.generateEdges = function() {
   if (this.hasEdges) {

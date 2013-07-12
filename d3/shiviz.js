@@ -1,7 +1,7 @@
-var spaceGraph;
 var collapsedNodes;
 var hiddenHosts;
 var hostColors;
+var spaceGraph;
 
 var get = function (id) {
   return document.getElementById(id);
@@ -32,12 +32,12 @@ get("vizButton").onclick = function() {
   var lines = textBox.value.split('\n');
 
   // Initialize state 
-  spaceGraph = new Graph();
   collapsedNodes = [];
   hiddenHosts = [];
   hostColors = {};
 
-  if (!spaceGraph.parseLog(lines)) {
+  spaceGraph = generateGraphFromLog(lines);
+  if (spaceGraph == null) {
     // TODO: display error message
     return;
   }
