@@ -1,8 +1,3 @@
-var collapsedNodes;
-var hiddenHosts;
-var hostColors;
-var spaceGraph;
-
 var get = function (id) {
   return document.getElementById(id);
 };
@@ -43,36 +38,10 @@ get("vizButton").onclick = function() {
   var textBox = get("logField");
   var lines = textBox.value.split('\n');
 
-  // Initialize state 
-  collapsedNodes = [];
-  hiddenHosts = [];
-  hostColors = {};
-
-  spaceGraph = generateGraphFromLog(lines);
-  if (spaceGraph == null) {
-    // TODO: display error message
-    return;
-  }
-
+  var view = new View(generateGraphFromLog(lines));
   get("graph").hidden = false;
-
-  var graphObj = spaceGraph.generateEdges().toLiteral();
-
-  var color = d3.scale.category20();
-  for (var i = 0; i < graphObj.hosts.length; i++) {
-    var host = graphObj.hosts[i];
-    hostColors[host] = color(host);
-  }
-  draw(graphObj);
+  view.draw();
 };
-
-function draw(graphObj) {
-  graphObj = graphObj || spaceGraph.toLiteral(hiddenHosts);
-  d3.selectAll("svg").remove();
-  makeModel(graphObj);
-  makeArrow();
-  drawHiddenHosts();
-}
 
 function handleLogFileResponse(response, linkObj) {
   get("logField").value = response;
