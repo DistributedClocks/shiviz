@@ -11,11 +11,23 @@ $("#logField").keydown(function() {
   resetView();
 });
 
+$("#logField").keyup(function() {
+  resetView();
+});
+
 $("#logField").change(function() {
   resetView();
 });
 
 function resetView() {
+  // Enable/disable the visualize button depending on whether or not
+  // the text area is empty.
+  if (get("logField").value == '') {
+    get("vizButton").disabled = true;
+  } else {
+    get("vizButton").disabled = false;
+  }
+
   get("curNode").innerHTML = "(click to view)"
   get("graph").hidden = true;
   d3.selectAll("svg").remove();
