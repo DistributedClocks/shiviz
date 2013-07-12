@@ -88,8 +88,11 @@ def main():
     # Add any files that are new.
     runcmd("cd " + dist_dir + " && hg add *")
 
-    # Commit and push the deployed dir.
-    runcmd("hg commit -m 'auto-deployment' && hg push")
+    # Commit the deployed dir.
+    runcmd("cd " + dist_dir + " && hg commit -m 'auto-deployment'")
+    
+    # Push the deployed dir.
+    runcmd("cd " + dist_dir + " && hg push")
 
     print
     print "Done."
