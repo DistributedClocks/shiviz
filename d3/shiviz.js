@@ -85,17 +85,15 @@ function handleLogFileResponse(response, linkObj) {
 }
 
 function loadExample(filename, linkObj) {
-  var root = 'http://';
-  var proxy = 'www.corsproxy.com/'
-  var url = 'bestchai.bitbucket.org/shiviz/' + filename;
-  $.get(root + url, function(response) {
+  // logUrlPrefix is defined in dev.js && deployed.js
+  var url = logUrlPrefix + filename;
+  $.get(url, function(response) {
     handleLogFileResponse(response, linkObj);
   })
   .fail(function() {
-    // Dev environment, fall back to proxy to load log
-    $.get(root + proxy + url, function(response) {
-      handleLogFileResponse(response, linkObj);
-    });
+    var errText = 'Unable to retrieve example log: ' + url;
+    console.log(errText);
+    alert(errText);
   });
 }
 
