@@ -4,14 +4,9 @@
 function Graph() {
   this.nodes = new Nodes();
   this.edges = new Edges();
-  this.hasEdges = false;
 }
 
 Graph.prototype.toLiteral = function(hiddenHosts) {
-  if (!this.hasEdges) {
-    console.log("error, cannot return literal -- edges not generated"); 
-    return {}; 
-  }
   hiddenHosts = hiddenHosts || [];
 
   var literal = {};
@@ -24,77 +19,6 @@ Graph.prototype.toLiteral = function(hiddenHosts) {
   }
   literal["hosts"] = sortedHosts; 
   return literal;
-}
-
-Graph.prototype.generateEdges = function() {
-  if (this.hasEdges) {
-    console.log("error, edges should not be generated twice");
-    return;
-  }
-  this.hasEdges = true;
-
-  var hosts = this.nodes.getHosts();
-  for (var i = 0; i < hosts.length; i++) {
-    var host = hosts[i];
-    //var name = "Host: " + host.substring(host.indexOf("[") + 1, host.indexOf("]"));
-    var name = "Host: " + host;
-    var startClock = {};
-    startClock[host] = 0;
-    var startNode = new Node(name, host, startClock);
-    this.nodes.add(startNode);
-  }
-
-  for (var i = 0; i < hosts.length; i++) {
-    var host = hosts[i];
-    var clock = {};
-    var curNode = this.nodes.get(host, 0);
-    var prevNode = null;
-    while (curNode != null) {
-      if (prevNode != null) {
-        // curNode has a parent on this host
-        prevNode.addChild(curNode);
-        curNode.addParent(prevNode);
-      }
-      clock[host] = curNode.getTime();
-      var candidates = [];
-      var curClock = curNode.getClock();
-      for (var otherHost in curClock) {
-        var time = curClock[otherHost];
-        if (!clock.hasOwnProperty(otherHost) || clock[otherHost] < time) {
-          // This otherHost may be a parent
-          clock[otherHost] = time;
-          var candidate = this.nodes.get(otherHost, time);
-          candidates.push(candidate);
-        }
-      }
-
-      // Determine which of candidates are 'necessary'
-      var sourceNodes = {}; 
-      for (var j = 0; j < candidates.length; j++) {
-        var candidate = candidates[j];
-        sourceNodes[candidate.id()] = candidate;
-      }
-
-      for (var j = 0; j < candidates.length; j++) {
-        canClock = candidates[j].getClock();
-        for (var otherHost in canClock) {
-          if (otherHost != candidates[j].getHostId()) {
-            var id = otherHost + ":" + canClock[otherHost];
-            delete sourceNodes[id];
-          }
-        }
-      }
-
-      for (var id in sourceNodes) {
-        sourceNodes[id].addChild(curNode);
-        curNode.addParent(sourceNodes[id]);
-      }
-
-      prevNode = curNode;
-      curNode = this.nodes.getNext(host, curNode.getTime() + 1);
-    }
-  }
-  return this;
 }
 
 /**

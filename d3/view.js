@@ -1,10 +1,39 @@
-function makeModel(graph) {
+function View(model) {
+  this.initialModel = model;
+  this.currentModel = model;
+  this.transformations = [];
+  this.hiddenHosts = [];
+  this.hostColors = {};
+
+  this.setColors();
+}
+
+View.prototype.toLiteral = function() {
+  return this.currentModel.toLiteral(this.hiddenHosts);
+}
+
+View.prototype.setColors = function() {
+  var hosts = this.initialModel.nodes.getHosts();
+  var color = d3.scale.category20();
+  for (var i = 0; i < hosts.length; i++) {
+    var host = hosts[i];
+    this.hostColors[host] = color(host);
+  }
+}
+
+View.prototype.draw = function() {
+  d3.selectAll("svg").remove();
+  var graphLiteral = this.toLiteral();
+
+  // Define locally so that we can use in lambdas below
+  var view = this;
+
   var spaceTime = spaceTimeLayout();
 
   spaceTime
-      .hosts(graph.hosts)
-      .nodes(graph.nodes)
-      .links(graph.links)
+      .hosts(graphLiteral.hosts)
+      .nodes(graphLiteral.nodes)
+      .links(graphLiteral.links)
       .start();
 
   var svg = d3.select("#vizContainer").append("svg");
@@ -12,7 +41,7 @@ function makeModel(graph) {
   var delta = 45;
 
   var link = svg.selectAll(".link")
-      .data(graph.links)
+      .data(graphLiteral.links)
       .enter().append("line")
       .attr("class", "link")
       .style("stroke-width", function(d) { return 1; });
@@ -29,7 +58,7 @@ function makeModel(graph) {
       .attr("y2", function(d) { return d.target.y - delta; });
 
   var node = svg.selectAll(".node")
-    .data(graph.nodes).enter().append("g");
+    .data(graphLiteral.nodes).enter().append("g");
 
   node.append("title")
       .text(function(d) { return d.name; });
@@ -44,7 +73,7 @@ function makeModel(graph) {
       selectTextareaLine(get("logField"), e.line); 
     })
     .attr("class", "node")
-    .style("fill", function(d) { return hostColors[d.group]; })
+    .style("fill", function(d) { return view.hostColors[d.group]; })
     .attr("cx", function(d) { return d.x; })
     .attr("cy", function(d) { return d.y - delta; })
     .attr("r", function(d) { return 5; });
@@ -56,7 +85,7 @@ function makeModel(graph) {
   svg.attr("height", spaceTime.height());
   svg.attr("width", spaceTime.width());
 
-  var starts = graph.nodes.filter(function(d) { 
+  var starts = graphLiteral.nodes.filter(function(d) { 
       return d.hasOwnProperty("startNode"); });
   var hostSvg = d3.select("#hostBar").append("svg");
 
@@ -75,17 +104,20 @@ function makeModel(graph) {
     .attr("y", function(d) { return 15; })
     .on("mouseover", function(e) { get("curNode").innerHTML = e.name; })
     .on("dblclick", function(e) { 
-      hiddenHosts.push(e.group);
-      draw();
+      view.hiddenHosts.push(e.group);
+      view.draw();
     })
     .attr("class", "node")
-    .style("fill", function(d) { return hostColors[d.group]; });
+    .style("fill", function(d) { return view.hostColors[d.group]; });
 
   hostSvg.attr("width", 760);
   hostSvg.attr("height", 55);
+
+  this.drawArrow();
+  this.drawHiddenHosts();
 }
 
-function makeArrow() {
+View.prototype.drawArrow = function() {
   var width = 40;
   var height = 200;
   var svg = d3.select("#sideBar").append("svg");
@@ -114,10 +146,13 @@ function makeArrow() {
     .text("Time");
 }
 
-function drawHiddenHosts() {
-  if (hiddenHosts.length <= 0) {
+View.prototype.drawHiddenHosts = function() {
+  if (this.hiddenHosts.length <= 0) {
     return;
   }
+
+  // Define locally so that we can use in lambdas below
+  var view = this;
 
   var svg = d3.select("#hosts").append("svg");
   svg.attr("width", 120);
@@ -137,16 +172,16 @@ function drawHiddenHosts() {
   var count = 0;
 
   var rect = svg.selectAll()
-      .data(hiddenHosts)
+      .data(this.hiddenHosts)
       .enter().append("rect")
       .on("dblclick", function(e) { 
-        hiddenHosts.splice(hiddenHosts.indexOf(e), 1);
-        draw();
+        view.hiddenHosts.splice(view.hiddenHosts.indexOf(e), 1);
+        view.draw();
       })
       .on("mouseover", function(e) { get("curNode").innerHTML = e; })
       .style("stroke", "#fff")
       .attr("width", 25).attr("height", 25)
-      .style("fill", function(host) { return hostColors[host]; })
+      .style("fill", function(host) { return view.hostColors[host]; })
       .attr("y", function(host) {
         if (count == 3) {
           y += 30;
@@ -167,4 +202,3 @@ function drawHiddenHosts() {
   text.append("title").text("Double click to view");
   rect.append("title").text("Double click to view");
 }
-
