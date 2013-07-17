@@ -1,3 +1,8 @@
+/**
+ * A View for some ShiViz graphs. A View knows how to draw itself. A view
+ * accepts an initial model in construction and collects Tranformations that
+ * generate new iterations of the initial model.
+ */
 function View(model) {
   this.initialModel = model;
   this.currentModel = model;
@@ -8,12 +13,13 @@ function View(model) {
   this.setColors();
 }
 
-View.prototype.toLiteral = function() {
-  return this.currentModel.toLiteral(this.hiddenHosts);
-}
-
+/**
+ * Called during construction to ensure that all hosts in the initial model have
+ * a stable color throughout iterations of this View. Uses d3 to assign a color
+ * per host.
+ */
 View.prototype.setColors = function() {
-  var hosts = this.initialModel.nodes.getHosts();
+  var hosts = this.initialModel.getHosts();
   var color = d3.scale.category20();
   for (var i = 0; i < hosts.length; i++) {
     var host = hosts[i];
@@ -21,9 +27,78 @@ View.prototype.setColors = function() {
   }
 }
 
+/**
+ * Adds the given Transformation to this View's (ordered) collection of
+ * Transformations and uses it to update the currentModel.
+ */
+View.prototype.addTransformation = function(transformation) {
+  this.transformations.push(transformation);
+  this.currentModel = transformation.transform(this.currentModel);
+}
+
+/**
+ * Hides the given host by initiating TransitiveEdges and HideHost
+ * transformations.
+ */
+View.prototype.hideHost = function(hostId) {
+  this.hiddenHosts.push(hostId);
+  this.addTransformation(new TransitiveEdgesTransformation(hostId));
+  this.addTransformation(new HideHostTransformation(hostId));
+  this.draw();
+}
+
+/**
+ * Unhides the given host by removing the TransitiveEdges and HideHost
+ * transformations from this View's collection. Then applys all remaining
+ * transformations to the initial model.
+ * 
+ * TODO: This logic should really be an additional Transformation.
+ */
+View.prototype.unhideHost = function(hostId) {
+  this.hiddenHosts.splice(this.hiddenHosts.indexOf(hostId), 1);
+  this.removeHidingTransformations(hostId); 
+  this.applyTransformations();
+  this.draw();
+}
+
+/**
+ * Finds and removes the hiding transformations for the given host from this
+ * View's collection of Transformations.
+ * 
+ * TODO: As noted above, this logic should be moved into an additional
+ * Transformation.
+ */
+View.prototype.removeHidingTransformations = function(hostId) {
+  var trans = [];
+  for (var i = 0; i < this.transformations.length; i++) {
+    var t = this.transformations[i];
+    if (t.hasOwnProperty('hostToHide') && t.hostToHide == hostId) {
+      continue;
+    }
+    trans.push(t);
+  }
+  this.transformations = trans;
+}
+
+/**
+ * Applies all transformations in the current collection to the initial model
+ * and updates the current model.
+ */
+View.prototype.applyTransformations = function() {
+  this.currentModel = this.initialModel;
+  for (var i = 0; i < this.transformations.length; i++) {
+    var t = this.transformations[i];
+    this.currentModel = t.transform(this.currentModel);
+  }
+}
+
+/**
+ * Clears the current visualization and re-draws the current model.
+ */
 View.prototype.draw = function() {
+
   d3.selectAll("svg").remove();
-  var graphLiteral = this.toLiteral();
+  var graphLiteral = this.currentModel.toLiteral();
 
   // Define locally so that we can use in lambdas below
   var view = this;
@@ -103,10 +178,7 @@ View.prototype.draw = function() {
     .attr("x", function(d) { return d.x - (25/2); })
     .attr("y", function(d) { return 15; })
     .on("mouseover", function(e) { get("curNode").innerHTML = e.name; })
-    .on("dblclick", function(e) { 
-      view.hiddenHosts.push(e.group);
-      view.draw();
-    })
+    .on("dblclick", function(e) { view.hideHost(e.group); })
     .attr("class", "node")
     .style("fill", function(d) { return view.hostColors[d.group]; });
 
@@ -117,6 +189,9 @@ View.prototype.draw = function() {
   this.drawHiddenHosts();
 }
 
+/**
+ * Draws the time arrow.
+ */
 View.prototype.drawArrow = function() {
   var width = 40;
   var height = 200;
@@ -146,6 +221,9 @@ View.prototype.drawArrow = function() {
     .text("Time");
 }
 
+/**
+ * Draws the hidden hosts, if any exist.
+ */
 View.prototype.drawHiddenHosts = function() {
   if (this.hiddenHosts.length <= 0) {
     return;
@@ -174,10 +252,7 @@ View.prototype.drawHiddenHosts = function() {
   var rect = svg.selectAll()
       .data(this.hiddenHosts)
       .enter().append("rect")
-      .on("dblclick", function(e) { 
-        view.hiddenHosts.splice(view.hiddenHosts.indexOf(e), 1);
-        view.draw();
-      })
+      .on("dblclick", function(e) { view.unhideHost(e); })
       .on("mouseover", function(e) { get("curNode").innerHTML = e; })
       .style("stroke", "#fff")
       .attr("width", 25).attr("height", 25)

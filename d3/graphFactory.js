@@ -28,7 +28,7 @@ function generateGraphFromLog(logLines) {
       var host = stamp.substring(0, spacer);
       var clock = JSON.parse(stamp.substring(spacer));
 
-      model.nodes.add(new Node(log, host, clock, i));
+      model.addNode(new Node(log, host, clock, i));
     }
   }catch (err) {
     alert("Error parsing input, malformed logs: " + i);
@@ -42,37 +42,40 @@ function generateGraphFromLog(logLines) {
 }
 
 
+/**
+ * Generates an initial set of edges for the given model from each Node's vector
+ * clock.
+ */
 function generateEdges (model) {
-  var hosts = model.nodes.getHosts();
+  var hosts = model.getHosts();
   for (var i = 0; i < hosts.length; i++) {
     var host = hosts[i];
     var name = "Host: " + host;
     var startClock = {};
     startClock[host] = 0;
     var startNode = new Node(name, host, startClock);
-    model.nodes.add(startNode);
+    model.addNode(startNode);
   }
 
   for (var i = 0; i < hosts.length; i++) {
     var host = hosts[i];
     var clock = {};
-    var curNode = model.nodes.get(host, 0);
+    var curNode = model.getNode(host, 0);
     var prevNode = null;
     while (curNode != null) {
       if (prevNode != null) {
         // curNode has a parent on this host
-        prevNode.addChild(curNode);
-        curNode.addParent(prevNode);
+        model.addEdge(prevNode, curNode);
       }
-      clock[host] = curNode.getTime();
+      clock[host] = curNode.time;
       var candidates = [];
-      var curClock = curNode.getClock();
+      var curClock = curNode.clock;
       for (var otherHost in curClock) {
         var time = curClock[otherHost];
         if (!clock.hasOwnProperty(otherHost) || clock[otherHost] < time) {
           // This otherHost may be a parent
           clock[otherHost] = time;
-          var candidate = model.nodes.get(otherHost, time);
+          var candidate = model.getNode(otherHost, time);
           candidates.push(candidate);
         }
       }
@@ -85,9 +88,9 @@ function generateEdges (model) {
       }
 
       for (var j = 0; j < candidates.length; j++) {
-        canClock = candidates[j].getClock();
+        canClock = candidates[j].clock;
         for (var otherHost in canClock) {
-          if (otherHost != candidates[j].getHostId()) {
+          if (otherHost != candidates[j].hostId) {
             var id = otherHost + ":" + canClock[otherHost];
             delete sourceNodes[id];
           }
@@ -95,12 +98,11 @@ function generateEdges (model) {
       }
 
       for (var id in sourceNodes) {
-        sourceNodes[id].addChild(curNode);
-        curNode.addParent(sourceNodes[id]);
+        model.addEdge(sourceNodes[id], curNode);
       }
 
       prevNode = curNode;
-      curNode = model.nodes.getNext(host, curNode.getTime() + 1);
+      curNode = model.getNextNode(host, curNode.time + 1);
     }
   }
   return model;
