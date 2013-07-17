@@ -1,79 +1,33 @@
 /**
- * Graph class
+ * The model. Consists of a mapping from hostId --> time --> Node.
  */
 function Graph() {
-  this.nodes = new Nodes();
-  this.edges = new Edges();
-}
+  this.hosts = {};
+  this.edges = {};
 
-Graph.prototype.toLiteral = function(hiddenHosts) {
-  hiddenHosts = hiddenHosts || [];
-
-  var literal = {};
-  literal["nodes"] = this.nodes.toLiteral(hiddenHosts);
-  literal["links"] = this.edges.toLiteral(hiddenHosts, this.nodes);
- 
-  var sortedHosts = this.nodes.getSortedHosts();
-  for (var i = 0; i < hiddenHosts.length; i++) {
-    sortedHosts.splice(sortedHosts.indexOf(hiddenHosts[i]), 1);
-  }
-  literal["hosts"] = sortedHosts; 
-  return literal;
+  this.sortedHosts = null;
 }
 
 /**
- * Nodes container
+ * Clones this Graph object. Maintains references to the original (static) Node
+ * objects but performs a deep copy of the (dynamic) edge objects.
  */
-function Nodes() {
-  this.hosts = {};
+Graph.prototype.clone = function() {
+  var other = new Graph();
+  other.hosts = clone(this.hosts);
+  other.edges = deepCopy(this.edges);
+  return other;
 }
 
-Nodes.prototype.toLiteral = function(hiddenHosts) {
-  var literal = [];
-  var index = 0;
-  for (var host in this.hosts) {
-    var curNode = this.get(host, 0);
-    while (curNode != null) {
-      curNode.clearLayoutState();
-      curNode = this.get(host, curNode.getTime() + 1);
-    }
+/**
+ * Returns the node that occurred on the given host at the given (local) time,
+ * or null if no such node exists.
+ */
+Graph.prototype.getNode = function(hostId, time) {
+  if (!this.hosts.hasOwnProperty(hostId)) {
+    return null;
   }
-  for (var host in this.hosts) {
-    if (hiddenHosts.indexOf(host) >= 0) {
-      continue;
-    }
-    var arr = this.hosts[host]['times'];
-    for (var i = 0; i < arr.length; i++) {
-      var obj = this.get(host, arr[i]);
-/*      if (obj.isCollapsed()) {
-        continue;
-      }*/
-      var node = {};
-      node["name"] = obj.getLog();
-      node["group"] = host;
-      if (obj.getTime() == 0) {
-        node["startNode"] = true;
-      }
-      node["line"] = obj.getLine();
-      obj.setIndex(index);
-      index += 1;
-      literal.push(node);
-    }
-  }
-  return literal;
-}
 
-/*
-Nodes.prototype.computeCollapsible = function() {
-  for (var host in this.hosts) {
-    var arr = this.hosts[host]['times'];
-    for (var i = 0; i < arr.length; i++) {
-      this.get(host, arr[i]).assignCollapsible(this);
-    }
-  }
-}*/
-
-Nodes.prototype.get = function(hostId, time) {
   var node = this.hosts[hostId][time];
   if (node === undefined) {
     return null;
@@ -81,9 +35,16 @@ Nodes.prototype.get = function(hostId, time) {
   return node;
 }
 
-Nodes.prototype.getNext = function(hostId, startTime) {
-  var candidate = this.get(hostId, startTime);
+/**
+ * Returns the next node that occurred at the (local) start time or later on the
+ * given host, or null if no such node exists.
+ */
+Graph.prototype.getNextNode = function(hostId, startTime) {
+  if (!this.hosts.hasOwnProperty(hostId)) {
+    return null;
+  }
 
+  var candidate = this.getNode(hostId, startTime);
   if (candidate == null) {
     var arr = this.hosts[hostId]['times'];
     if (!this.hosts[hostId]['sorted']) {
@@ -92,16 +53,19 @@ Nodes.prototype.getNext = function(hostId, startTime) {
     }
     for (var i = 0; i < arr.length; i++) {
       if (arr[i] > startTime) {
-        return this.get(hostId, arr[i]);
+        return this.getNode(hostId, arr[i]);
       }
     }
   }
   return candidate;
 }
 
-Nodes.prototype.add = function(node) {
-  var hostId = node.getHostId();
-  var time = node.getTime();
+/**
+ * Adds a Node to this Graph.
+ */
+Graph.prototype.addNode = function(node) {
+  var hostId = node.hostId;
+  var time = node.time;
   if (!this.hosts.hasOwnProperty(hostId)) {
     this.hosts[hostId] = {};
     this.hosts[hostId]['times'] = [];
@@ -109,16 +73,161 @@ Nodes.prototype.add = function(node) {
   this.hosts[hostId][time] = node;
   this.hosts[hostId]['times'].push(time);
   this.hosts[hostId]['sorted'] = false;
+
+  this.edges[node.id()] = {};
+  this.edges[node.id()]['parents'] = {};
+  this.edges[node.id()]['children'] = {};
 }
 
-Nodes.prototype.getSortedHosts = function () {
-  /* var hostCopy = this.hosts;
-  return this.getHosts().sort(function(a, b) {
-    return hostCopy[b]['times'].length - hostCopy[a]['times'].length;
-  });*/
-  return this.getHosts();
+/**
+ * Returns an array of the hosts in this Graph sorted by decreasing number of events.
+ */
+Graph.prototype.getSortedHosts = function () {
+  if (this.sortedHosts == null) {
+    var hostCopy = this.hosts;
+    this.sortedHosts = this.getHosts().sort(function(a, b) {
+      return hostCopy[b]['times'].length - hostCopy[a]['times'].length;
+    });
+  }
+  return this.sortedHosts;
 }
 
-Nodes.prototype.getHosts = function() {
+Graph.prototype.getHosts = function() {
   return Object.keys(this.hosts);
+}
+
+
+/**
+ * Generates an object literal for this model, required by d3 for visualization.
+ */
+Graph.prototype.toLiteral = function() {
+  var literal = {};
+
+  // d3 assumes that edges will be represented by src, dest pairs identifying
+  // indices defined by the order in which nodes appear in the nodes literal. To
+  // make this happen, we'll track the index of each node while building the
+  // nodes literal and use those indices while building the links literal.
+  var indices = {};
+  literal["nodes"] = this.getNodeLiteral(indices);
+  literal["links"] = this.getEdgeLiteral(indices);
+  literal["hosts"] = this.getSortedHosts(); 
+  return literal;
+}
+
+/**
+ * Generates a set of literal nodes
+ */
+Graph.prototype.getNodeLiteral = function(indices) {
+  var literal = [];
+  var index = 0;
+  for (var host in this.hosts) {
+    var arr = this.hosts[host]['times'];
+    for (var i = 0; i < arr.length; i++) {
+      var obj = this.getNode(host, arr[i]);
+      var node = {};
+      node["name"] = obj.logEvent;
+      node["group"] = host;
+      if (obj.time == 0) {
+        node["startNode"] = true;
+      }
+      node["line"] = obj.lineNum;
+      indices[obj.id()] = index;
+      index += 1;
+      literal.push(node);
+    }
+  }
+  return literal;
+}
+
+/**
+ * Generates a set of literal edges
+ */
+Graph.prototype.getEdgeLiteral = function(indices) {
+  var literal = [];
+
+  for (var nodeId in this.edges) {
+    for (var host in this.edges[nodeId]['children']) {
+      var edge = {};
+      edge["source"] = indices[nodeId];
+      edge["target"] = indices[host + ":" + this.edges[nodeId]['children'][host]];
+      literal.push(edge);
+    }
+  }
+  return literal;
+}
+
+/**
+ * Node class
+ */
+function Node(logEvent, hostId, clock, lineNum) {
+  this.logEvent = logEvent;    // Log line this node represents
+  this.hostId = hostId;        // Id of the host on which this event occurred
+  this.clock = clock;          // Timestamp mapping from hostId to logical time
+  this.lineNum = lineNum || 0; // Line number of our log event
+  this.time = clock[hostId]    // Local time for this event
+}
+
+/**
+ * Returns a unique id for this Node, in the form hostId:localTime.
+ */
+Node.prototype.id = function() {
+  return this.hostId + ":" + this.time;
+}
+
+/**
+ * Adds an edge from src to dest with the condition that src is the latest
+ * possible parent for dest from the src host and dest is the earliest possible
+ * child for src from dest's host.
+ *
+ * Edges is a map nodeId --> 'parents' --> host --> time and
+ *                nodeId --> 'children' --> host --> time
+ */
+Graph.prototype.addEdge = function(src, dest) {
+  // Add child to src's children object
+  var childHost = dest.hostId;
+  var children = this.edges[src.id()]['children'];
+  if (!children.hasOwnProperty(childHost) ||
+      children[childHost] > dest.time) {
+    children[childHost] = dest.time;
+  }
+
+  // Add parent to dest's parents object
+  var parentHost = src.hostId;
+  var parents = this.edges[dest.id()]['parents'];
+  if (!parents.hasOwnProperty(parentHost) ||
+      parents[parentHost] < src.time) {
+    parents[parentHost] = src.time;
+  }
+}
+
+/**
+ * Superficial copy of obj, keeps references to obj's object properties.
+ */
+function clone(obj) {
+    if (null == obj || "object" != typeof obj) {
+      return obj;
+    }
+    var copy = obj.constructor();
+    for (var attr in obj) {
+        if (obj.hasOwnProperty(attr)) {
+          copy[attr] = obj[attr];
+        }
+    }
+    return copy;
+}
+
+/**
+ * Deep copy (recursive) of obj.
+ */
+function deepCopy(obj) {
+    if (null == obj || "object" != typeof obj) {
+      return obj;
+    }
+    var copy = obj.constructor();
+    for (var attr in obj) {
+        if (obj.hasOwnProperty(attr)) {
+          copy[attr] = deepCopy(obj[attr]);
+        }
+    }
+    return copy;
 }

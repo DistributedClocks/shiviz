@@ -25,6 +25,7 @@ function resetView() {
 
   get("curNode").innerHTML = "(click to view)"
   get("graph").hidden = true;
+
   d3.selectAll("svg").remove();
 
   // Reset the color of all of the log-links.
