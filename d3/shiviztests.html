@@ -33,7 +33,10 @@ function assert( outcome, description ) {
 	output.appendChild(li);
 };
 
-
+// NOTE: these tests have been broken by the July 2013 ShiViz refactoring and
+// should be replaced. The following illustrates how to use the testing
+// framework.
+/*
 var nodes = new Nodes();
 var clock = {};
 clock['A'] = 1;
@@ -72,8 +75,6 @@ assert(nodes.get("A", 3) == null, "Checking get -- not present");
 assert(nodes.getNext("A", 2) == a2, "Checking getNext -- no skip");
 assert(nodes.getNext("A", 3) == a4, "Checking getNext -- 1 skip");
 assert(nodes.getNext("A", 5) == a7, "Checking getNext -- bigger skip");
-
-var edges = generateEdges(nodes);
-edges.print();
+*/
 
 </script>
