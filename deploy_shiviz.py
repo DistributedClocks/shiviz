@@ -95,6 +95,9 @@ def main():
     runcmd("sed -i '' 's/revision: ZZZ/revision: " + revid
            + "/g' " + dist_dir + "deployed.js")
 
+    # Remove any files ending with ~
+    runcmd("cd " + dist_dir + " && rm *~")
+
     # Add any files that are new.
     runcmd("cd " + dist_dir + " && hg add *")
 
