@@ -14,6 +14,8 @@ $("#logField").change(function() {
   resetView();
 });
 
+get("versionContainer").innerHTML = versionText;
+
 function resetView() {
   // Enable/disable the visualize button depending on whether or not
   // the text area is empty.

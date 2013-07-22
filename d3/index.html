@@ -11,6 +11,11 @@
   <a style="margin-left:1em;" href="javascript:void(0)" onclick="document.getElementById('help').style.display='block';document.getElementById('fade').style.display='block'">FAQ</a>
   <a style="margin-left:1em;" href="http://bitbucket.org/bestchai/shiviz/wiki/Home">Documentation</a>
   <a style="margin-left:1em;" href="http://bitbucket.org/bestchai/shiviz/src">Source</a>
+
+  <div id=versionContainer>
+    <!-- Filled in with versionText in shiviz.js -->
+  </div>
+
 </header>
 
 <div id="fade" class="black_overlay"></div>
@@ -131,13 +136,14 @@
   </div>
 
 </div>
+
+<!-- REPLACED DURING DEPLOYMENT: -->
+<script type="text/javascript" src="dev.js" ></script>
+<!-- -->
+
 <script type="text/javascript" src="model.js" ></script>	
 <script type="text/javascript" src="layout.js" ></script>	
 <script type="text/javascript" src="graphFactory.js" ></script>	
 <script type="text/javascript" src="transform.js" ></script>	
 <script type="text/javascript" src="view.js" ></script>	
 <script type="text/javascript" src="shiviz.js" ></script>	
-
-<!-- REPLACED DURING DEPLOYMENT: -->
-<script type="text/javascript" src="dev.js" ></script>
-<!-- -->

@@ -9,3 +9,8 @@ var logUrlPrefix='http://bestchai.bitbucket.org/shiviz/';
 ga('create', 'UA-42254712-3', 'bitbucket.org');
 ga('send', 'pageview');
 ////////////////////
+
+// NOTE: the string ZZZ below is replaced with the current revision id
+// during deployment. Do not change the value of version without
+// updating the deploy_shiviz.py script.
+var versionText='revision: ZZZ';
