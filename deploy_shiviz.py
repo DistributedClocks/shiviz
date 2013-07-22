@@ -85,6 +85,16 @@ def main():
     # of index.html.
     runcmd("sed -i '' 's/dev.js/deployed.js/g' " + dist_dir + "index.html")
 
+    # Find out the current revision id:
+    revid = get_cmd_output('hg', ['id', '-i']);
+    revid = revid.rstrip()
+
+    print "Revid is : " + revid;
+
+    # Replace the place-holder revision with the actual revision id:
+    runcmd("sed -i '' 's/revision: ZZZ/revision: " + revid
+           + "/g' " + dist_dir + "deployed.js")
+
     # Add any files that are new.
     runcmd("cd " + dist_dir + " && hg add *")
 

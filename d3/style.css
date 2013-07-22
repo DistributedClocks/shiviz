@@ -159,3 +159,16 @@ a:not(:hover) {
 .node text {
   stroke: black;
 }
+
+
+#versionContainer{
+    float:right;
+    left:80%;
+    top:0px;
+    height:30px;
+    width:19%;
+    text-align:right;
+    color:grey;
+    font-size: 10px;   
+    font-family: monospace;
+}
