@@ -2,6 +2,7 @@ var get = function (id) {
   return document.getElementById(id);
 };
 
+/*
 $("#logField").keydown(function() {
   resetView();
 });
@@ -9,6 +10,7 @@ $("#logField").keydown(function() {
 $("#logField").keyup(function() {
   resetView();
 });
+*/
 
 $("#logField").change(function() {
   resetView();
