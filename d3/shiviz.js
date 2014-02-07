@@ -2,22 +2,6 @@ var get = function (id) {
   return document.getElementById(id);
 };
 
-/*
-$("#logField").keydown(function() {
-  resetView();
-});
-
-$("#logField").keyup(function() {
-  resetView();
-});
-*/
-
-/*
-$("#logField").change(function() {
-  resetView();
-});
-*/
-
 $("#logField").on('input propertychange', function(e) {
   resetView();
 });
