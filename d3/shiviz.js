@@ -12,9 +12,13 @@ $("#logField").keyup(function() {
 });
 */
 
+/*
 $("#logField").change(function() {
   resetView();
 });
+*/
+
+
 
 get("versionContainer").innerHTML = versionText;
 
