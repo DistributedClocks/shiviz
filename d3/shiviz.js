@@ -18,7 +18,9 @@ $("#logField").change(function() {
 });
 */
 
-
+$("#logField").on('input propertychange', function(e) {
+  resetView();
+});
 
 get("versionContainer").innerHTML = versionText;
 
