@@ -2,6 +2,8 @@ var get = function (id) {
   return document.getElementById(id);
 };
 
+//an alternative to the above commented out code. This resolves issue 18
+//and prevents the innocuos keys such as 'ctrl' from resetting the view 
 $("#logField").on('input propertychange', function(e) {
   resetView();
 });
@@ -17,7 +19,7 @@ function resetView() {
     get("vizButton").disabled = false;
   }
 
-  get("curNode").innerHTML = "(click to view)"
+  get("curNode").innerHTML = "(click to view)";
   get("graph").hidden = true;
 
   d3.selectAll("svg").remove();
