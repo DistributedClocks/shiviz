@@ -58,11 +58,13 @@ def main():
     Workhorse method to execute all the of the steps described in the file header.
     '''
     
-    src_dir = "./d3/"
+    src_dir = "./"
     dist_dir = "../bestchai.bitbucket.org/shiviz/"
 
     print "Deploying to: " + dist_dir
     print "from: " + src_dir
+
+    # TODO: add a confirmation yes/no dialog, before going ahead with rm.
 
     # Remove previously deployed version of shiviz.
     if (os.path.exists(dist_dir)):
@@ -73,13 +75,13 @@ def main():
 
     # Copy over the source.
     if (os.path.exists(src_dir)):
-        runcmd("cp " + src_dir + "* " + dist_dir)
+        runcmd("cp -R " + src_dir + "* " + dist_dir)
     else:
         print "Error: source dir is not where it is expected."
         sys.exit(-1)
 
     # Remove the unnecessary dev.js that was copied over.
-    runcmd("rm " + dist_dir + "dev.js")
+    runcmd("rm " + dist_dir + "js/dev.js")
 
     # Replace reference to dev.js with deployed.js in deployed version
     # of index.html.
@@ -93,16 +95,19 @@ def main():
 
     # Replace the place-holder revision with the actual revision id:
     runcmd("sed -i '' 's/revision: ZZZ/revision: " + revid
-           + "/g' " + dist_dir + "deployed.js")
+           + "/g' " + dist_dir + "js/deployed.js")
 
-    # Remove any files ending with ~
-    runcmd("cd " + dist_dir + " && rm *~")
+    # Remove any files containing '#'
+    runcmd("cd " + dist_dir + " && find . | grep '#' | xargs rm")
 
-    # Add any files that are new.
-    runcmd("cd " + dist_dir + " && hg add *")
+    # Remove any files containing '~'
+    runcmd("cd " + dist_dir + " && find . | grep '~' | xargs rm")
+
+    # Add any files that are new and remove any files that no longer exist
+    runcmd("cd " + dist_dir + " && hg addremove")
 
     # Commit the deployed dir.
-    runcmd("cd " + dist_dir + " && hg commit -m 'auto-deployment'")
+    runcmd("cd " + dist_dir + " && hg commit -m 'shiviz auto-deployment'")
     
     # Push the deployed dir.
     runcmd("cd " + dist_dir + " && hg push")
