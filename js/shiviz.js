@@ -99,7 +99,7 @@ window.onscroll=function () {
 
         get("vizContainer").style.marginLeft = "0px";
     }
-}
+};
 
 function selectTextareaLine(tarea,lineNum) {
     var lineLength = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa".length;

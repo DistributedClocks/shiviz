@@ -25,7 +25,7 @@ View.prototype.setColors = function() {
     var host = hosts[i];
     this.hostColors[host] = color(host);
   }
-}
+};
 
 /**
  * Adds the given Transformation to this View's (ordered) collection of
@@ -99,6 +99,7 @@ View.prototype.draw = function() {
 
   d3.selectAll("svg").remove();
   var graphLiteral = this.currentModel.toLiteral();
+  console.log(graphLiteral);
 
   // Define locally so that we can use in lambdas below
   var view = this;
@@ -187,7 +188,7 @@ View.prototype.draw = function() {
 
   this.drawArrow();
   this.drawHiddenHosts();
-}
+};
 
 /**
  * Draws the time arrow.
