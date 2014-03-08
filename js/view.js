@@ -25,6 +25,7 @@ View.prototype.setColors = function() {
     var host = hosts[i];
     this.hostColors[host] = color(host);
   }
+  
 };
 
 /**
