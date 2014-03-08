@@ -93,8 +93,10 @@ Graph.prototype.getSortedHosts = function () {
 }
 
 Graph.prototype.getHosts = function() {
+  console.log(Object.keys(this.hosts));
+  console.log(this.hosts);
   return Object.keys(this.hosts);
-}
+};
 
 
 /**
@@ -231,3 +233,5 @@ function deepCopy(obj) {
     }
     return copy;
 }
+
+
