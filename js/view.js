@@ -9,7 +9,8 @@ function View(model) {
   this.transformations = [];
   this.hiddenHosts = [];
   this.hostColors = {};
-
+  this.hosts = this.getHostId();
+  
   this.setColors();
 }
 
@@ -25,6 +26,19 @@ View.prototype.setColors = function() {
     var host = hosts[i];
     this.hostColors[host] = color(host);
   }
+}
+
+View.prototype.getHostColors = function() {
+  return this.hostColors; 
+}
+
+View.prototype.getHostId = function() {
+  return this.initialModel.getHosts();
+}
+
+
+View.prototype.getLastNodeId = function() {
+	return this.initialModel.getLastNodeOfAllHosts();	
 }
 
 /**
@@ -149,6 +163,7 @@ View.prototype.draw = function() {
     })
     .attr("class", "node")
     .style("fill", function(d) { return view.hostColors[d.group]; })
+    .attr("id", function(d) {return d.group;})
     .attr("cx", function(d) { return d.x; })
     .attr("cy", function(d) { return d.y - delta; })
     .attr("r", function(d) { return 5; });
@@ -178,6 +193,7 @@ View.prototype.draw = function() {
     .attr("x", function(d) { return d.x - (25/2); })
     .attr("y", function(d) { return 15; })
     .on("mouseover", function(e) { get("curNode").innerHTML = e.name; })
+    .attr("id", function(d) {return d.group;})
     .on("dblclick", function(e) { view.hideHost(e.group); })
     .attr("class", "node")
     .style("fill", function(d) { return view.hostColors[d.group]; });
