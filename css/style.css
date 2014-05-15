@@ -130,6 +130,12 @@ a:not(:hover) {
   font-family: monospace;
 }
 
+#regexField {
+  width: 920px;
+  height: 100px;
+  font-family: monospace;
+}
+
 #sideBar {
   width: 40px;
   float: left;
