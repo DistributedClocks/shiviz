@@ -92,9 +92,23 @@ Graph.prototype.getSortedHosts = function () {
   return this.sortedHosts;
 }
 
+/**
+ * returns an array of ids of all the hosts 
+ */
 Graph.prototype.getHosts = function() {
   return Object.keys(this.hosts);
 }
+
+/**
+ * returns array of all the final node for each process 
+ */
+Graph.prototype.getLastNodeOfAllHosts = function() {
+  var lastnodes = {};
+  for(var key in this.hosts) {
+    lastnodes[key] = this.hosts[key][this.hosts[key].times.length-1];
+  }
+  return lastnodes;
+};
 
 
 /**
