@@ -173,12 +173,13 @@ Graph.prototype.getEdgeLiteral = function(indices) {
 /**
  * Node class
  */
-function Node(logEvent, hostId, clock, lineNum) {
+function Node(logEvent, hostId, clock, lineNum, data) {
   this.logEvent = logEvent;    // Log line this node represents
   this.hostId = hostId;        // Id of the host on which this event occurred
   this.clock = clock;          // Timestamp mapping from hostId to logical time
   this.lineNum = lineNum || 0; // Line number of our log event
-  this.time = clock[hostId]    // Local time for this event
+  this.time = clock[hostId];    // Local time for this event
+  this.data = data;	// data from capture groups
 }
 
 /**
