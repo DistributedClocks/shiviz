@@ -28,15 +28,24 @@ View.prototype.setColors = function() {
   }
 }
 
+/**
+ * returns an array of key value pairs with host 
+ * being the key and the value being its color
+ */
 View.prototype.getHostColors = function() {
   return this.hostColors; 
 }
 
+/**
+ * returns an array of ids of all the hosts 
+ */
 View.prototype.getHostId = function() {
   return this.initialModel.getHosts();
 }
 
-
+/**
+ * gets the Id of the final node in each process
+ */
 View.prototype.getLastNodeId = function() {
 	return this.initialModel.getLastNodeOfAllHosts();	
 }
