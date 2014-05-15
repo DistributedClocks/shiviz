@@ -182,30 +182,36 @@ function loadExample(filename, linkObj) {
 }
 
 window.onscroll=function () {
-    var top = window.pageXOffset ? window.pageXOffset : document.documentElement.scrollTop ? document.documentElement.scrollTop : document.body.scrollTop;
-    if(top > 630){
+    var top = window.pageYOffset ? window.pageYOffset : document.documentElement.scrollTop ? document.documentElement.scrollTop : document.body.scrollTop;
+    var left = parseInt($("body").css("margin-left")) - $(document).scrollLeft() + "px";
+    if($('#topBar').height() && top > $('#topBar').css('position', 'relative').offset().top - parseInt($('#topBar p').css('margin-top'))){
         get("topBar").style.position = "fixed";
         get("topBar").style.top="0px";
 
         // Time flow div.
         get("sideBar").style.position = "fixed";
-        get("sideBar").style.top="85px";
+        get("sideBar").style.top = $("#topBar").height() + "px";
+        get("sideBar").style.left = left;
 
         // Hidden hosts div
         get("hosts").style.position = "fixed";
-        get("hosts").style.top="85px";
+        get("hosts").style.top = $("#topBar").height() + $("#hostBar").height() + "px";
         get("hosts").style.marginLeft="800px";
         
         get("hostBar").style.position = "fixed";
         get("hostBar").style.top= "50px";
+        get("hostBar").style.left = left;
         get("hostBar").style.marginLeft="40px";
 
         get("vizContainer").style.marginLeft="40px";
+        get("vizContainer").style.marginTop = $("#topBar").height() - parseInt($("#topBar p").css("margin-top")) + 55 + "px";
 
     } else {
         get("topBar").style.position = "relative";
 
         get("sideBar").style.position = "relative";
+        get("sideBar").style.top = "";
+        get("sideBar").style.left = "";
 
         get("hosts").style.position = "relative";
         get("hosts").style.marginLeft="0px";
@@ -213,9 +219,11 @@ window.onscroll=function () {
 
         get("hostBar").style.position = "relative";
         get("hostBar").style.marginLeft="0px";
+        get("hostBar").style.left = "";
         get("hostBar").style.top= "0px";
 
         get("vizContainer").style.marginLeft = "0px";
+        get("vizContainer").style.marginTop = "";
     }
 }
 
