@@ -72,7 +72,7 @@ function parseRegexes(regex) {
 	var ret = [];
 	var regexArray = regex.split("\n");
 	for(var i = 0; i < regexArray.length; i++) {
-		var captureGroupStart = /\(\?<(.+)>/g;
+		var captureGroupStart = /\(\?<(.+?)>/g;
 		var groupNumToName = [];
 		var match = null;
 		while((match = captureGroupStart.exec(regex)) != null) {
