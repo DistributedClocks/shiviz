@@ -41,8 +41,10 @@ function resetView() {
 get("vizButton").onclick = function() {
   var textBox = get("logField");
   var lines = textBox.value.split('\n');
+  
+  var regexTextBox = get("regexField");
 
-  var view = new View(generateGraphFromLog(lines));
+  var view = new View(generateGraphFromLog(lines, regexTextBox.value));
   console.log(view.getHostColors());
   hostColors = view.getHostColors(); 
   hosts = view.hosts;
