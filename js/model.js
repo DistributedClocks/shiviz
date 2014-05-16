@@ -77,9 +77,6 @@ Graph.prototype.addNode = function(node) {
   this.edges[node.id()] = {};
   this.edges[node.id()]['parents'] = {};
   this.edges[node.id()]['children'] = {};
-  
-  console.log(JSON.stringify(this.edges));
-
 }
 
 Graph.prototype.removeNode = function(node) {
@@ -92,20 +89,39 @@ Graph.prototype.removeNode = function(node) {
     this.hosts[hostId]['times'].splice(index, 1);
   }
   this.hosts[hostId]['sorted'] = false;
+  
+  var parent = this.edges[node.id()]['parents'][hostId];
+  var child = this.edges[node.id()]['children'][hostId];
+  
+  if(child == undefined && parent != undefined) {
+    delete this.edges[hostId + ":" + parent]['children'][hostId];
+  }
+  else if(parent == undefined && child != undefined) {
+    delete this.edges[hostId + ":" + child]['parents'][hostId];
+  }
+  else if(parent != undefined && child != undefined) {
+    this.edges[hostId + ":" + parent]['children'][hostId] = child;
+    this.edges[hostId + ":" + child]['parents'][hostId] = parent;
+  }
 
   for(var host in this.edges[node.id()]['parents']) {
+    if(host == hostId) {
+      continue;
+    }
     var id = this.edges[node.id()]['parents'][host];
     delete this.edges[host + ":" + id]['children'][hostId];
   }
   
   for(var host in this.edges[node.id()]['children']) {
+    if(host == hostId) {
+      continue;
+    }
     var id = this.edges[node.id()]['children'][host];
     delete this.edges[host + ":" + id]['parents'][hostId];
   }
 
   delete this.edges[node.id()];
 
-  console.log(JSON.stringify(this.edges));
 };
 
 /**
