@@ -80,6 +80,59 @@ Graph.prototype.addNode = function(node) {
 }
 
 /**
+ * Removes a node from this graph
+ * @param node The node to be removed
+ */
+Graph.prototype.removeNode = function(node) {
+  var hostId = node.hostId;
+  var time = node.time;
+
+  // delete relevant parts of the hosts array
+  delete this.hosts[hostId][time];
+  var index = this.hosts[hostId]['times'].indexOf(time);
+  if (index > -1) {
+    this.hosts[hostId]['times'].splice(index, 1);
+  }
+  this.hosts[hostId]['sorted'] = false;
+  
+  // the graph is connected as follows: parent -> node -> child. We need to
+  // change it to parent -> child, handling edge cases where parent or child is undefined
+  var parent = this.edges[node.id()]['parents'][hostId];
+  var child = this.edges[node.id()]['children'][hostId];
+  
+  if(child == undefined && parent != undefined) {
+    delete this.edges[hostId + ":" + parent]['children'][hostId];
+  }
+  else if(parent == undefined && child != undefined) {
+    delete this.edges[hostId + ":" + child]['parents'][hostId];
+  }
+  else if(parent != undefined && child != undefined) {
+    this.edges[hostId + ":" + parent]['children'][hostId] = child;
+    this.edges[hostId + ":" + child]['parents'][hostId] = parent;
+  }
+
+  // remove edges to other nodes that aren't this node's parent or child
+  for(var host in this.edges[node.id()]['parents']) {
+    if(host == hostId) {
+      continue;
+    }
+    var id = this.edges[node.id()]['parents'][host];
+    delete this.edges[host + ":" + id]['children'][hostId];
+  }
+  
+  for(var host in this.edges[node.id()]['children']) {
+    if(host == hostId) {
+      continue;
+    }
+    var id = this.edges[node.id()]['children'][host];
+    delete this.edges[host + ":" + id]['parents'][hostId];
+  }
+
+  delete this.edges[node.id()];
+
+};
+
+/**
  * Returns an array of the hosts in this Graph sorted by decreasing number of events.
  */
 Graph.prototype.getSortedHosts = function () {
@@ -139,6 +192,7 @@ Graph.prototype.getNodeLiteral = function(indices) {
     for (var i = 0; i < arr.length; i++) {
       var obj = this.getNode(host, arr[i]);
       var node = {};
+      node["modelNode"] = obj; 
       node["name"] = obj.logEvent;
       node["group"] = host;
       if (obj.time == 0) {
@@ -178,7 +232,7 @@ function Node(logEvent, hostId, clock, lineNum) {
   this.hostId = hostId;        // Id of the host on which this event occurred
   this.clock = clock;          // Timestamp mapping from hostId to logical time
   this.lineNum = lineNum || 0; // Line number of our log event
-  this.time = clock[hostId]    // Local time for this event
+  this.time = clock[hostId];    // Local time for this event
 }
 
 /**
