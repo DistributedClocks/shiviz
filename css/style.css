@@ -138,11 +138,17 @@ a:not(:hover) {
 #vizContainer {
   width: 760px; 
   float: left;
+  white-space: nowrap;
+}
+
+#vizContainer svg {
+  vertical-align: top;
 }
 
 #hostBar {
   width: 760px;
   float: left;
+  white-space: nowrap;
 }
 
 #hosts {
@@ -151,7 +157,7 @@ a:not(:hover) {
 }
 
 #topBar {
-  width: 920px;
+  width: 100%;
   position: relative;
   background-color: white;
 }
