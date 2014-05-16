@@ -79,10 +79,15 @@ Graph.prototype.addNode = function(node) {
   this.edges[node.id()]['children'] = {};
 }
 
+/**
+ * Removes a node from this graph
+ * @param node The node to be removed
+ */
 Graph.prototype.removeNode = function(node) {
   var hostId = node.hostId;
   var time = node.time;
 
+  // delete relevant parts of the hosts array
   delete this.hosts[hostId][time];
   var index = this.hosts[hostId]['times'].indexOf(time);
   if (index > -1) {
@@ -90,6 +95,8 @@ Graph.prototype.removeNode = function(node) {
   }
   this.hosts[hostId]['sorted'] = false;
   
+  // the graph is connected as follows: parent -> node -> child. We need to
+  // change it to parent -> child, handling edge cases where parent or child is undefined
   var parent = this.edges[node.id()]['parents'][hostId];
   var child = this.edges[node.id()]['children'][hostId];
   
@@ -104,6 +111,7 @@ Graph.prototype.removeNode = function(node) {
     this.edges[hostId + ":" + child]['parents'][hostId] = parent;
   }
 
+  // remove edges to other nodes that aren't this node's parent or child
   for(var host in this.edges[node.id()]['parents']) {
     if(host == hostId) {
       continue;

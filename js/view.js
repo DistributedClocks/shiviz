@@ -59,6 +59,10 @@ View.prototype.addTransformation = function(transformation) {
   this.currentModel = transformation.transform(this.currentModel);
 }
 
+/**
+ * Hides an array of nodes using HideNodesTransformation
+ * @param nodes an array of nodes that are to be hidden
+ */
 View.prototype.hideNodes = function(nodes) {
   this.addTransformation(new HideNodesTransformation(nodes));
   this.draw();
@@ -173,8 +177,8 @@ View.prototype.draw = function() {
   standardNodes.append("circle")
     .on("mouseover", function(e) { get("curNode").innerHTML = e.name; })
     .on("click", function(e) { 
-//      selectTextareaLine(get("logField"), e.line); 
-      view.hideNodes([e.modelNode]);
+      selectTextareaLine(get("logField"), e.line); 
+//      view.hideNodes([e.modelNode]);
     })
     .attr("class", "node")
     .style("fill", function(d) { return view.hostColors[d.group]; })
