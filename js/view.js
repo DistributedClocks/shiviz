@@ -7,11 +7,12 @@ function View(model, global) {
   this.initialModel = model;
   this.currentModel = model;
 
-  this.global = global;
+  this.transformations = [];
 
-  this.transformations = global.transformations;
+  this.global = global;
   this.hiddenHosts = global.hiddenHosts;
   this.hostColors = global.hostColors;
+
   this.hosts = this.getHostId();
 }
 
@@ -56,7 +57,7 @@ View.prototype.getLastNodeId = function() {
  * Transformations and uses it to update the currentModel.
  */
 View.prototype.addTransformation = function(transformation) {
-  this.transformations.push(transformation);
+  this.global.transformations.push(transformation);
   this.global.applyTransformations();
 }
 
@@ -93,15 +94,15 @@ View.prototype.unhideHost = function(hostId) {
  * Transformation.
  */
 View.prototype.removeHidingTransformations = function(hostId) {
-  var length = this.transformations.length;
+  var length = this.global.transformations.length;
   for (var i = 0; i < length; i++) {
-    var t = this.transformations[i];
+    var t = this.global.transformations[i];
     if (t.hasOwnProperty('hostToHide') && t.hostToHide == hostId) {
       continue;
     }
-    this.transformations.push(t);
+    this.global.transformations.push(t);
   }
-  this.transformations.splice(0,length);
+  this.global.transformations.splice(0,length);
 }
 
 /**
@@ -110,8 +111,8 @@ View.prototype.removeHidingTransformations = function(hostId) {
  */
 View.prototype.applyTransformations = function() {
   this.currentModel = this.initialModel;
-  for (var i = 0; i < this.transformations.length; i++) {
-    var t = this.transformations[i];
+  for (var i = 0; i < this.global.transformations.length; i++) {
+    var t = this.global.transformations[i];
     this.currentModel = t.transform(this.currentModel);
   }
 }
