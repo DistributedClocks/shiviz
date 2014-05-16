@@ -136,11 +136,13 @@ View.prototype.draw = function() {
   var view = this;
 
   var spaceTime = spaceTimeLayout();
+  var width = Math.max(graphLiteral.hosts.length * 40, $("body").width() * graphLiteral.hosts.length / (this.global.hosts.length + this.global.views.length - 1))
 
   spaceTime
       .hosts(graphLiteral.hosts)
       .nodes(graphLiteral.nodes)
       .links(graphLiteral.links)
+      .width(width)
       .start();
 
   var svg = d3.select("#vizContainer").append("svg");
@@ -191,7 +193,7 @@ View.prototype.draw = function() {
   });
 
   svg.attr("height", spaceTime.height())
-     .attr("width", spaceTime.width())
+     .attr("width", spaceTime.width() + 40)
      .attr("class", this.id);
 
   var starts = graphLiteral.nodes.filter(function(d) { 
@@ -200,7 +202,7 @@ View.prototype.draw = function() {
 
   hostSvg.append("rect")
     .style("stroke", "#fff")
-    .attr("width", 760).attr("height", 60)
+    .attr("width", spaceTime.width()).attr("height", 60)
     .attr("x", 0)
     .attr("y", 0)
     .style("fill", "#fff");
@@ -217,7 +219,7 @@ View.prototype.draw = function() {
     .attr("class", "node")
     .style("fill", function(d) { return view.hostColors[d.group]; });
 
-  hostSvg.attr("width", 760)
+  hostSvg.attr("width", spaceTime.width() + 40)
          .attr("height", 55)
          .attr("class", this.id);
 

@@ -169,6 +169,18 @@ svg {
   background-color: white;
 }
 
+#topBar:before {
+  content: "";
+  display: block;
+  height: calc(3em + 55px);
+  position: fixed;
+  width: 100%;
+  left: 0;
+  top: 0;
+  background: white;
+  z-index: -1;
+}
+
 .node text {
   stroke: black;
 }
