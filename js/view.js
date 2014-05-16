@@ -126,11 +126,6 @@ View.prototype.draw = function() {
   if (this.id == null)
     this.id = "view" + d3.selectAll("#vizContainer > svg").size();
 
-  // Remove old diagrams, but only the ones with the same ID
-  // so we don't remove the other executions
-  d3.selectAll("." + this.id).remove();
-  d3.selectAll("#hosts svg").remove();
-
   var graphLiteral = this.currentModel.toLiteral();
 
   // Define locally so that we can use in lambdas below
@@ -147,6 +142,11 @@ View.prototype.draw = function() {
       .start();
 
   var svg = d3.select("#vizContainer").append("svg");
+
+  // Remove old diagrams, but only the ones with the same ID
+  // so we don't remove the other executions
+  d3.selectAll("." + this.id).remove();
+  d3.selectAll("#hosts svg").remove();
 
   var delta = 45;
 
