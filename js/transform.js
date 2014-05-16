@@ -72,6 +72,10 @@ HideHostTransformation.prototype.removeHostEdges = function(model, hostToHide) {
   }
 }
 
+/**
+ * Transformation to hide a set of nodes form the visualization
+ * @param nodesToHide an array of nodes that are to be hidden.
+ */
 function HideNodesTransformation(nodesToHide) {
   this.nodesToHide = nodesToHide;
 }
