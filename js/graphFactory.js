@@ -45,7 +45,7 @@ function generateGraphFromLog(logLines, regex) {
         return null;
       }
 
-      model.addNode(new Node(log + " " + JSON.stringify(data), host, clock, i, data));
+      model.addNode(new Node(log, host, clock, i, data));
     }
   }catch (err) {
     alert("Error parsing input, malformed logs on line: " + i);
@@ -79,7 +79,10 @@ function MyRegex(string, groupNumToName) {
  * @throws Descriptive string if an error occurs during parsing.
  */
 function parseRegexes(regex) {
-  var reservedCaptureGroups = ["text", "matchedText"];
+  
+  // Declare reserved capture group names below!
+  var reservedCaptureGroups = ["text"];
+  
   var isReserved = {};
   for(var i = 0; i < reservedCaptureGroups.length; i++) {
     isReserved[reservedCaptureGroups[i]] = true;
@@ -154,7 +157,6 @@ function parseLogText(text, myRegexes) {
 		var execResult = currentRegex.exec(text);
 		if(execResult == null) continue;
 		
-		ret["matchedText"] = execResult[0];
 		for(var j = 1; j < execResult.length; j++) {
 			ret[myRegexes[i].groupNumToName[j-1]] = execResult[j];
 		}
