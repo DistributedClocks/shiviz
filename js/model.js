@@ -77,7 +77,36 @@ Graph.prototype.addNode = function(node) {
   this.edges[node.id()] = {};
   this.edges[node.id()]['parents'] = {};
   this.edges[node.id()]['children'] = {};
+  
+  console.log(JSON.stringify(this.edges));
+
 }
+
+Graph.prototype.removeNode = function(node) {
+  var hostId = node.hostId;
+  var time = node.time;
+
+  delete this.hosts[hostId][time];
+  var index = this.hosts[hostId]['times'].indexOf(time);
+  if (index > -1) {
+    this.hosts[hostId]['times'].splice(index, 1);
+  }
+  this.hosts[hostId]['sorted'] = false;
+
+  for(var host in this.edges[node.id()]['parents']) {
+    var id = this.edges[node.id()]['parents'][host];
+    delete this.edges[host + ":" + id]['children'][hostId];
+  }
+  
+  for(var host in this.edges[node.id()]['children']) {
+    var id = this.edges[node.id()]['children'][host];
+    delete this.edges[host + ":" + id]['parents'][hostId];
+  }
+
+  delete this.edges[node.id()];
+
+  console.log(JSON.stringify(this.edges));
+};
 
 /**
  * Returns an array of the hosts in this Graph sorted by decreasing number of events.
@@ -139,6 +168,7 @@ Graph.prototype.getNodeLiteral = function(indices) {
     for (var i = 0; i < arr.length; i++) {
       var obj = this.getNode(host, arr[i]);
       var node = {};
+      node["modelNode"] = obj; 
       node["name"] = obj.logEvent;
       node["group"] = host;
       if (obj.time == 0) {
@@ -178,7 +208,7 @@ function Node(logEvent, hostId, clock, lineNum) {
   this.hostId = hostId;        // Id of the host on which this event occurred
   this.clock = clock;          // Timestamp mapping from hostId to logical time
   this.lineNum = lineNum || 0; // Line number of our log event
-  this.time = clock[hostId]    // Local time for this event
+  this.time = clock[hostId];    // Local time for this event
 }
 
 /**
