@@ -59,6 +59,11 @@ View.prototype.addTransformation = function(transformation) {
   this.currentModel = transformation.transform(this.currentModel);
 }
 
+View.prototype.hideNodes = function(nodes) {
+  this.addTransformation(new HideNodesTransformation(nodes));
+  this.draw();
+};
+
 /**
  * Hides the given host by initiating TransitiveEdges and HideHost
  * transformations.
@@ -168,7 +173,8 @@ View.prototype.draw = function() {
   standardNodes.append("circle")
     .on("mouseover", function(e) { get("curNode").innerHTML = e.name; })
     .on("click", function(e) { 
-      selectTextareaLine(get("logField"), e.line); 
+//      selectTextareaLine(get("logField"), e.line); 
+      view.hideNodes([e.modelNode]);
     })
     .attr("class", "node")
     .style("fill", function(d) { return view.hostColors[d.group]; })
