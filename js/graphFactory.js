@@ -90,9 +90,10 @@ function parseRegexes(regex) {
 		regex = ".*";
 	}
 	
-	var captureGroupStart = /\(\?<(\w+?)>/g;
+	var captureGroupStart = /\(\?<(.+?)>/g;
+	var badCaptureGroupName = /\W/;
 	var ret = [];
-	var isReservedNameError = false;
+	var hasErrorMessage = false;
 	
 	var regexArray = regex.split("\n");
 	for(var i = 0; i < regexArray.length; i++) {
@@ -104,10 +105,16 @@ function parseRegexes(regex) {
   	try {
   		var groupNumToName = [];
   		var match = null;
+  		
   		while((match = captureGroupStart.exec(curr)) != null) {
   		  var name = match[1];
+  		  if(badCaptureGroupName.test(name)) {
+  		    hasErrorMessage = true;
+          throw "Error. \"" + name + "\" is not a valid capture group name. Alphanumeric characters only." +
+          		"\nRegex on line " + (i+1) + ":\n" + curr;
+  		  }
         if(isReserved[name]) {
-          isReservedNameError = true;
+          hasErrorMessage = true;
           throw "Error. \"" + name + "\" is a reserved capture group name.\nRegex on line " + (i+1) + ":\n" + curr;
         }
   			groupNumToName.push(name);
@@ -120,7 +127,7 @@ function parseRegexes(regex) {
   		ret.push(new MyRegex(finalRegex, groupNumToName));
 	  }
 	  catch (err) {
-	    if(isReservedNameError) {
+	    if( hasErrorMessage) {
 	      throw err;
 	    }
 	    throw "Invalid regex on line " + (i+1) + ":\n" + curr;
