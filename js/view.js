@@ -216,8 +216,9 @@ View.prototype.draw = function() {
     .attr("class", "node")
     .style("fill", function(d) { return view.hostColors[d.group]; });
 
-  hostSvg.attr("width", 760);
-  hostSvg.attr("height", 55);
+  hostSvg.attr("width", 760)
+         .attr("height", 55)
+         .attr("class", this.id);
 
   this.drawArrow();
   this.drawHiddenHosts();

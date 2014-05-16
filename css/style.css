@@ -130,6 +130,13 @@ a:not(:hover) {
   font-family: monospace;
 }
 
+svg {
+  user-select: none;
+  -ms-user-select: none;
+  -moz-user-select: none;
+  -webkit-user-select: none;
+}
+
 #sideBar {
   width: 40px;
   float: left;
