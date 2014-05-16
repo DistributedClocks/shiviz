@@ -44,14 +44,28 @@ get("vizButton").onclick = function() {
   var textBox = get("logField");
   var executions = textBox.value.split('\n\n\n');
 
+
+  // We need a variable share across all views/executions to keep them in sync.
+  var global = new Global();
+
   // Make a view for each execution, then draw it
-  executions.forEach(function (v) {
+  var views = executions.map(function (v) {
     var lines = v.split('\n');
     var model = generateGraphFromLog(lines);
-    var view = new View(model);
+    var view = new View(model, global);
 
-    view.draw();
+    global.addHosts(model.getHosts());
+    global.addView(view);
+
+    return view;
   });
+
+  global.setColors();
+
+  views.forEach(function (v) {
+    v.draw();
+  })
+
 
   get("graph").hidden = false;
 

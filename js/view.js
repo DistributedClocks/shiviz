@@ -3,15 +3,16 @@
  * accepts an initial model in construction and collects Tranformations that
  * generate new iterations of the initial model.
  */
-function View(model) {
+function View(model, global) {
   this.initialModel = model;
   this.currentModel = model;
-  this.transformations = [];
-  this.hiddenHosts = [];
-  this.hostColors = {};
+
+  this.global = global;
+
+  this.transformations = global.transformations;
+  this.hiddenHosts = global.hiddenHosts;
+  this.hostColors = global.hostColors;
   this.hosts = this.getHostId();
-  
-  this.setColors();
 }
 
 /**
@@ -20,7 +21,7 @@ function View(model) {
  * per host.
  */
 View.prototype.setColors = function() {
-  var hosts = this.initialModel.getHosts();
+  var hosts = this.global.hosts;
   var color = d3.scale.category20();
   for (var i = 0; i < hosts.length; i++) {
     var host = hosts[i];
@@ -56,7 +57,7 @@ View.prototype.getLastNodeId = function() {
  */
 View.prototype.addTransformation = function(transformation) {
   this.transformations.push(transformation);
-  this.currentModel = transformation.transform(this.currentModel);
+  this.global.applyTransformations();
 }
 
 /**
@@ -67,7 +68,7 @@ View.prototype.hideHost = function(hostId) {
   this.hiddenHosts.push(hostId);
   this.addTransformation(new TransitiveEdgesTransformation(hostId));
   this.addTransformation(new HideHostTransformation(hostId));
-  this.draw();
+  this.global.drawAll();
 }
 
 /**
@@ -80,8 +81,8 @@ View.prototype.hideHost = function(hostId) {
 View.prototype.unhideHost = function(hostId) {
   this.hiddenHosts.splice(this.hiddenHosts.indexOf(hostId), 1);
   this.removeHidingTransformations(hostId); 
-  this.applyTransformations();
-  this.draw();
+  this.global.applyTransformations();
+  this.global.drawAll();
 }
 
 /**
@@ -92,15 +93,15 @@ View.prototype.unhideHost = function(hostId) {
  * Transformation.
  */
 View.prototype.removeHidingTransformations = function(hostId) {
-  var trans = [];
-  for (var i = 0; i < this.transformations.length; i++) {
+  var length = this.transformations.length;
+  for (var i = 0; i < length; i++) {
     var t = this.transformations[i];
     if (t.hasOwnProperty('hostToHide') && t.hostToHide == hostId) {
       continue;
     }
-    trans.push(t);
+    this.transformations.push(t);
   }
-  this.transformations = trans;
+  this.transformations.splice(0,length);
 }
 
 /**
