@@ -194,9 +194,13 @@ function loadExample(filename, linkObj) {
     handleLogFileResponse(response, linkObj);
   })
   .fail(function() {
-    var errText = 'Unable to retrieve example log: ' + url;
-    console.log(errText);
-    alert(errText);
+    $.get(filename, function (response) {
+      handleLogFileResponse(response, linkObj);
+    }).fail(function () {
+      var errText = 'Unable to retrieve example log: ' + url;
+      console.log(errText);
+      alert(errText);
+    });
   });
 }
 
