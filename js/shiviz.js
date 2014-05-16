@@ -39,9 +39,12 @@ function resetView() {
 };
 
 get("vizButton").onclick = function() {
+  d3.selectAll("svg").remove();
+
   var textBox = get("logField");
   var executions = textBox.value.split('\n\n\n');
 
+  // Make a view for each execution, then draw it
   executions.forEach(function (v) {
     var lines = v.split('\n');
     var model = generateGraphFromLog(lines);

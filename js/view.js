@@ -119,6 +119,16 @@ View.prototype.applyTransformations = function() {
  * Clears the current visualization and re-draws the current model.
  */
 View.prototype.draw = function() {
+  // Assign a unique ID to each execution so we can distinguish
+  // them
+  if (this.id == null)
+    this.id = "view" + d3.selectAll("#vizContainer > svg").size();
+
+  // Remove old diagrams, but only the ones with the same ID
+  // so we don't remove the other executions
+  d3.selectAll("." + this.id).remove();
+  d3.selectAll("#hosts svg").remove();
+
   var graphLiteral = this.currentModel.toLiteral();
 
   // Define locally so that we can use in lambdas below
@@ -179,8 +189,9 @@ View.prototype.draw = function() {
     return d.hasOwnProperty("startNode");
   });
 
-  svg.attr("height", spaceTime.height());
-  svg.attr("width", spaceTime.width());
+  svg.attr("height", spaceTime.height())
+     .attr("width", spaceTime.width())
+     .attr("class", this.id);
 
   var starts = graphLiteral.nodes.filter(function(d) { 
       return d.hasOwnProperty("startNode"); });
@@ -218,7 +229,13 @@ View.prototype.draw = function() {
 View.prototype.drawArrow = function() {
   var width = 40;
   var height = 200;
-  var svg = d3.select("#sideBar").append("svg");
+  var sideBar = d3.select("#sideBar");
+
+  // Don't draw the arrow twice
+  if (sideBar.selectAll("svg").size())
+    return;
+
+  var svg = sideBar.append("svg");
   svg.attr("width", width);
   svg.attr("height", height);
 
