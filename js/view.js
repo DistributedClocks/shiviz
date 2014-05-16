@@ -119,8 +119,6 @@ View.prototype.applyTransformations = function() {
  * Clears the current visualization and re-draws the current model.
  */
 View.prototype.draw = function() {
-
-  d3.selectAll("svg").remove();
   var graphLiteral = this.currentModel.toLiteral();
 
   // Define locally so that we can use in lambdas below
