@@ -12,7 +12,7 @@
   <a style="margin-left:1em;" href="http://bitbucket.org/bestchai/shiviz/wiki/Home">Documentation</a>
   <a style="margin-left:1em;" href="http://bitbucket.org/bestchai/shiviz/src">Source</a>
 
-  <div id=versionContainer>
+  <div id="versionContainer">
     <!-- Filled in with versionText in shiviz.js -->
   </div>
 
@@ -113,11 +113,12 @@
   <div id="info">
     <h2>Execution log</h2>
     <textarea id='logField' ></textarea>
-    <p id=examplelogs>
+    <p id="examplelogs">
     Examples:
-    <a class="log-link"                          href="javascript:void(0)" onclick="loadExample('log/facebook.log', this)">Facebook data-center log</a>
+    <a class="log-link" href="javascript:void(0)" onclick="loadExample('log/facebook.log', this)">Facebook data-center log</a>
     <a class="log-link" style="margin-left:1em;" href="javascript:void(0)" onclick="loadExample('log/voldemort.log', this)">Voldemort log</a>
-    <a class="log-link"  style="margin-left:1em;" href="javascript:void(0)" onclick="loadExample('log/simpledb.log', this)">SimpleDB log</a>
+    <a class="log-link" style="margin-left:1em;" href="javascript:void(0)" onclick="loadExample('log/simpledb.log', this)">SimpleDB log</a>
+    <a class="log-link" style="margin-left:1em;" href="javascript:void(0)" onclick="loadExample('log/facebook-multiple.log', this)">Facebook log with multiple executions</a>
     </p>
     <input type='button' id='vizButton' disabled=true value="visualize" />
   </div>
@@ -125,14 +126,14 @@
 
   <div id="graph" hidden=true>
     <h2>Visualization</h2>
-    <div id=topBar>
+    <div id="topBar">
       <p>Current node: <span id='curNode'>(hover to view)</span></p>
     </div>
 
-    <div id=sideBar></div>
-    <div id=hostBar></div>
-    <div id=vizContainer></div>
-    <div id=hosts></div>
+    <div id="sideBar"></div>
+    <div id="hostBar"></div>
+    <div id="vizContainer"></div>
+    <div id="hosts"></div>
   </div>
 
 </div>
@@ -145,5 +146,6 @@
 <script type="text/javascript" src="js/layout.js" ></script>	
 <script type="text/javascript" src="js/graphFactory.js" ></script>	
 <script type="text/javascript" src="js/transform.js" ></script>	
+<script type="text/javascript" src="js/global.js"></script>
 <script type="text/javascript" src="js/view.js" ></script>	
 <script type="text/javascript" src="js/shiviz.js" ></script>

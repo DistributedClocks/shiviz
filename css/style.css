@@ -130,6 +130,13 @@ a:not(:hover) {
   font-family: monospace;
 }
 
+svg {
+  user-select: none;
+  -ms-user-select: none;
+  -moz-user-select: none;
+  -webkit-user-select: none;
+}
+
 #sideBar {
   width: 40px;
   float: left;
@@ -138,11 +145,17 @@ a:not(:hover) {
 #vizContainer {
   width: 760px; 
   float: left;
+  white-space: nowrap;
+}
+
+#vizContainer svg {
+  vertical-align: top;
 }
 
 #hostBar {
   width: 760px;
   float: left;
+  white-space: nowrap;
 }
 
 #hosts {
@@ -151,9 +164,21 @@ a:not(:hover) {
 }
 
 #topBar {
-  width: 920px;
+  width: 100%;
   position: relative;
   background-color: white;
+}
+
+#topBar:before {
+  content: "";
+  display: block;
+  height: calc(3em + 55px);
+  position: fixed;
+  width: 100%;
+  left: 0;
+  top: 0;
+  background: white;
+  z-index: -1;
 }
 
 .node text {
