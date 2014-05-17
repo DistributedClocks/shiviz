@@ -39,19 +39,36 @@ function resetView() {
 };
 
 get("vizButton").onclick = function() {
-  var textBox = get("logField");
-  var lines = textBox.value.split('\n');
+  d3.selectAll("svg").remove();
 
-  var view = new View(generateGraphFromLog(lines));
-  console.log(view.getHostColors());
-  hostColors = view.getHostColors(); 
-  hosts = view.hosts;
-  lastNodesId = view.getLastNodeId();
-  
+  var textBox = get("logField");
+  var executions = textBox.value.split('\n\n\n');
+
+
+  // We need a variable share across all views/executions to keep them in sync.
+  var global = new Global();
+
+  // Make a view for each execution, then draw it
+  var views = executions.map(function (v) {
+    var lines = v.split('\n');
+    var model = generateGraphFromLog(lines);
+    var view = new View(model, global);
+
+    global.addHosts(model.getHosts());
+    global.addView(view);
+
+    return view;
+  });
+
+  global.setColors();
+
+  views.forEach(function (v) {
+    v.draw();
+  })
+
+
   get("graph").hidden = false;
-  view.draw();
-  
-  createLastNodeElements();
+
   
   /*
   The following snippet of code is an attempt to address issue #14: Grey out process boxes 
@@ -78,6 +95,8 @@ get("vizButton").onclick = function() {
 
   
   /*
+  createLastNodeElements();
+  
   for(n in lastNodesElements) {
   	// binds the inview event to each final node 
   	$(lastNodesElements[n]).bind("inview",  function(event, isInView, visiblePartX, visiblePartY) {
@@ -183,7 +202,7 @@ function loadExample(filename, linkObj) {
 
 window.onscroll=function () {
     var top = window.pageYOffset ? window.pageYOffset : document.documentElement.scrollTop ? document.documentElement.scrollTop : document.body.scrollTop;
-    var left = parseInt($("body").css("margin-left")) - $(document).scrollLeft() + "px";
+    var left = ($(window).width() - $("body").width()) / 2 - $(document).scrollLeft() + "px";
     if($('#topBar').height() && top > $('#topBar').css('position', 'relative').offset().top - parseInt($('#topBar p').css('margin-top'))){
         get("topBar").style.position = "fixed";
         get("topBar").style.top="0px";

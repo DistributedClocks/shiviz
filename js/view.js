@@ -3,15 +3,17 @@
  * accepts an initial model in construction and collects Tranformations that
  * generate new iterations of the initial model.
  */
-function View(model) {
+function View(model, global) {
   this.initialModel = model;
   this.currentModel = model;
+
   this.transformations = [];
-  this.hiddenHosts = [];
-  this.hostColors = {};
+
+  this.global = global;
+  this.hiddenHosts = global.hiddenHosts;
+  this.hostColors = global.hostColors;
+
   this.hosts = this.getHostId();
-  
-  this.setColors();
 }
 
 /**
@@ -20,7 +22,7 @@ function View(model) {
  * per host.
  */
 View.prototype.setColors = function() {
-  var hosts = this.initialModel.getHosts();
+  var hosts = this.global.hosts;
   var color = d3.scale.category20();
   for (var i = 0; i < hosts.length; i++) {
     var host = hosts[i];
@@ -55,8 +57,8 @@ View.prototype.getLastNodeId = function() {
  * Transformations and uses it to update the currentModel.
  */
 View.prototype.addTransformation = function(transformation) {
-  this.transformations.push(transformation);
-  this.currentModel = transformation.transform(this.currentModel);
+  this.global.transformations.push(transformation);
+  this.global.applyTransformations();
 }
 
 /**
@@ -76,7 +78,7 @@ View.prototype.hideHost = function(hostId) {
   this.hiddenHosts.push(hostId);
   this.addTransformation(new TransitiveEdgesTransformation(hostId));
   this.addTransformation(new HideHostTransformation(hostId));
-  this.draw();
+  this.global.drawAll();
 }
 
 /**
@@ -89,8 +91,8 @@ View.prototype.hideHost = function(hostId) {
 View.prototype.unhideHost = function(hostId) {
   this.hiddenHosts.splice(this.hiddenHosts.indexOf(hostId), 1);
   this.removeHidingTransformations(hostId); 
-  this.applyTransformations();
-  this.draw();
+  this.global.applyTransformations();
+  this.global.drawAll();
 }
 
 /**
@@ -101,15 +103,15 @@ View.prototype.unhideHost = function(hostId) {
  * Transformation.
  */
 View.prototype.removeHidingTransformations = function(hostId) {
-  var trans = [];
-  for (var i = 0; i < this.transformations.length; i++) {
-    var t = this.transformations[i];
+  var length = this.global.transformations.length;
+  for (var i = 0; i < length; i++) {
+    var t = this.global.transformations[i];
     if (t.hasOwnProperty('hostToHide') && t.hostToHide == hostId) {
       continue;
     }
-    trans.push(t);
+    this.global.transformations.push(t);
   }
-  this.transformations = trans;
+  this.global.transformations.splice(0,length);
 }
 
 /**
@@ -118,8 +120,8 @@ View.prototype.removeHidingTransformations = function(hostId) {
  */
 View.prototype.applyTransformations = function() {
   this.currentModel = this.initialModel;
-  for (var i = 0; i < this.transformations.length; i++) {
-    var t = this.transformations[i];
+  for (var i = 0; i < this.global.transformations.length; i++) {
+    var t = this.global.transformations[i];
     this.currentModel = t.transform(this.currentModel);
   }
 }
@@ -128,22 +130,32 @@ View.prototype.applyTransformations = function() {
  * Clears the current visualization and re-draws the current model.
  */
 View.prototype.draw = function() {
+  // Assign a unique ID to each execution so we can distinguish
+  // them
+  if (this.id == null)
+    this.id = "view" + d3.selectAll("#vizContainer > svg").size();
 
-  d3.selectAll("svg").remove();
   var graphLiteral = this.currentModel.toLiteral();
 
   // Define locally so that we can use in lambdas below
   var view = this;
 
   var spaceTime = spaceTimeLayout();
+  var width = Math.max(graphLiteral.hosts.length * 40, $("body").width() * graphLiteral.hosts.length / (this.global.hosts.length + this.global.views.length - 1))
 
   spaceTime
       .hosts(graphLiteral.hosts)
       .nodes(graphLiteral.nodes)
       .links(graphLiteral.links)
+      .width(width)
       .start();
 
   var svg = d3.select("#vizContainer").append("svg");
+
+  // Remove old diagrams, but only the ones with the same ID
+  // so we don't remove the other executions
+  d3.selectAll("." + this.id).remove();
+  d3.selectAll("#hosts svg").remove();
 
   var delta = 45;
 
@@ -191,8 +203,9 @@ View.prototype.draw = function() {
     return d.hasOwnProperty("startNode");
   });
 
-  svg.attr("height", spaceTime.height());
-  svg.attr("width", spaceTime.width());
+  svg.attr("height", spaceTime.height())
+     .attr("width", spaceTime.width() + 40)
+     .attr("class", this.id);
 
   var starts = graphLiteral.nodes.filter(function(d) { 
       return d.hasOwnProperty("startNode"); });
@@ -200,7 +213,7 @@ View.prototype.draw = function() {
 
   hostSvg.append("rect")
     .style("stroke", "#fff")
-    .attr("width", 760).attr("height", 60)
+    .attr("width", spaceTime.width()).attr("height", 60)
     .attr("x", 0)
     .attr("y", 0)
     .style("fill", "#fff");
@@ -217,8 +230,9 @@ View.prototype.draw = function() {
     .attr("class", "node")
     .style("fill", function(d) { return view.hostColors[d.group]; });
 
-  hostSvg.attr("width", 760);
-  hostSvg.attr("height", 55);
+  hostSvg.attr("width", spaceTime.width() + 40)
+         .attr("height", 55)
+         .attr("class", this.id);
 
   this.drawArrow();
   this.drawHiddenHosts();
@@ -230,7 +244,13 @@ View.prototype.draw = function() {
 View.prototype.drawArrow = function() {
   var width = 40;
   var height = 200;
-  var svg = d3.select("#sideBar").append("svg");
+  var sideBar = d3.select("#sideBar");
+
+  // Don't draw the arrow twice
+  if (sideBar.selectAll("svg").size())
+    return;
+
+  var svg = sideBar.append("svg");
   svg.attr("width", width);
   svg.attr("height", height);
 
