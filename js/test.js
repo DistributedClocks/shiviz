@@ -1,6 +1,25 @@
-function assert (outcome, description) {
+function assert (description, outcome) {
+  var result;
+
+  try {
+    result = outcome();
+  } catch (e) {
+    var li = document.createElement('li');
+    li.className = 'fail';
+    li.appendChild(document.createTextNode(description));
+
+    var err = document.createElement('pre');
+    err.className = 'err';
+    err.appendChild(document.createTextNode(e.stack.replace(/(^|\n)/g, '$1      ')));
+
+    li.appendChild(err);
+    document.getElementById('output').appendChild(li);
+
+    return;
+  }
+
   var li = document.createElement('li');
-  li.className = outcome ? 'pass' : 'fail';
+  li.className = result ? 'pass' : 'fail';
   li.appendChild(document.createTextNode(description));
   document.getElementById('output').appendChild(li);
 };
@@ -33,12 +52,32 @@ graph.addNode(a1);
 graph.addNode(b4);
 graph.addNode(b1);
 
-assert(graph.getHosts().length == 2, "Checking getHosts - size");
-assert(graph.getHosts().indexOf("A") > -1, "Checking getHosts - contents");
-assert(graph.getHosts().indexOf("B"), "Checking getHosts - contents");
+/**
+ * model.js
+ */
 
-assert(graph.getNode("A", 1) === a1, "Checking getNode");
-assert(graph.getNode("A", 3) == null, "Checking getNode - not present");
-assert(graph.getNextNode("A", 2) == a2, "Checking getNextNode - no skip");
-assert(graph.getNextNode("A", 3) == a4, "Checking getNextNode - 1 skip");
-assert(graph.getNextNode("A", 5) == a7, "Checking getNextNode - bigger skip");
+assert("Checking getHosts - size", function () {
+  return graph.getHosts().length == 2; 
+});
+assert("Checking getHosts - contents", function () {
+  return graph.getHosts().indexOf("A") > -1;
+});
+assert("Checking getHosts - contents", function () {
+  return graph.getHosts().indexOf("B");
+});
+
+assert("Checking getNode", function () {
+  return graph.getNode("A", 1) === a1;
+});
+assert("Checking getNode - not present", function () {
+  return graph.getNode("A", 3) == null;
+});
+assert("Checking getNextNode - no skip", function () {
+  return graph.getNextNode("A", 2) == a2;
+});
+assert("Checking getNextNode - 1 skip", function () {
+  return graph.getNextNode("A", 3) == a4;
+});
+assert("Checking getNextNode - bigger skip", function () {
+  return graph.getNextNode("A", 5) == a7;
+});
