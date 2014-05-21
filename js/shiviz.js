@@ -42,8 +42,12 @@ get("vizButton").onclick = function() {
   d3.selectAll("svg").remove();
 
   var textBox = get("logField");
-  var executions = textBox.value.split('\n\n\n');
+  var delimiter = new RegExp(get("delimiter").value);
+  var executions = textBox.value.split(delimiter);
 
+  // Ignore empty "executions" (only whitespace)
+  if (executions[0].trim().length == 0)
+    executions.splice(0, 1);
 
   // We need a variable share across all views/executions to keep them in sync.
   var global = new Global();

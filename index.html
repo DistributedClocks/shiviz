@@ -118,8 +118,10 @@
     <a class="log-link" href="javascript:void(0)" onclick="loadExample('log/facebook.log', this)">Facebook data-center log</a>
     <a class="log-link" style="margin-left:1em;" href="javascript:void(0)" onclick="loadExample('log/voldemort.log', this)">Voldemort log</a>
     <a class="log-link" style="margin-left:1em;" href="javascript:void(0)" onclick="loadExample('log/simpledb.log', this)">SimpleDB log</a>
-    <a class="log-link" style="margin-left:1em;" href="javascript:void(0)" onclick="loadExample('log/facebook-multiple.log', this)">Facebook log with multiple executions</a>
+    <a class="log-link" style="margin-left:1em;" href="javascript:void(0)" onclick="loadExample('log/facebook-multiple.log', this),get('delimiter').value='\\n\\n\\n'">Facebook log with multiple executions</a>
     </p>
+    <label>Multiple execution delimiter: <input type='text' id='delimiter'></label>
+    <br>
     <input type='button' id='vizButton' disabled=true value="visualize" />
   </div>
 
