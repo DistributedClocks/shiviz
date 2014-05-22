@@ -42,7 +42,7 @@ get("vizButton").onclick = function() {
   d3.selectAll("svg").remove();
 
   var textBox = get("logField");
-  var executions = textBox.value.split('\n\n\n');
+  var executions = textBox.value.split(/^======$/m);
 
 
   // We need a variable share across all views/executions to keep them in sync.
