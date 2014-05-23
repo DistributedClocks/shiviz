@@ -13,7 +13,6 @@ function View(model, global) {
   this.hiddenHosts = global.hiddenHosts;
   this.hostColors = global.hostColors;
 
-//  this.hosts = this.getHostId();
 }
 
 /**
@@ -38,20 +37,6 @@ View.prototype.getHostColors = function() {
   return this.hostColors; 
 }
 
-///**
-// * returns an array of ids of all the hosts 
-// */
-//View.prototype.getHostId = function() {
-//  return this.initialModel.getHosts();
-//}
-
-/**
- * gets the Id of the final node in each process
- */
-View.prototype.getLastNodeId = function() {
-	return this.initialModel.getLastNodeOfAllHosts();	
-}
-
 /**
  * Adds the given Transformation to this View's (ordered) collection of
  * Transformations and uses it to update the currentModel.
@@ -62,21 +47,11 @@ View.prototype.addTransformation = function(transformation) {
 }
 
 /**
- * Hides an array of nodes using HideNodesTransformation
- * @param nodes an array of nodes that are to be hidden
- */
-View.prototype.hideNodes = function(nodes) {
-  this.addTransformation(new HideNodesTransformation(nodes));
-  this.draw();
-};
-
-/**
  * Hides the given host by initiating TransitiveEdges and HideHost
  * transformations.
  */
 View.prototype.hideHost = function(hostId) {
   this.hiddenHosts.push(hostId);
-  this.addTransformation(new TransitiveEdgesTransformation(hostId));
   this.addTransformation(new HideHostTransformation(hostId));
   this.global.drawAll();
 }
@@ -119,10 +94,10 @@ View.prototype.removeHidingTransformations = function(hostId) {
  * and updates the current model.
  */
 View.prototype.applyTransformations = function() {
-  this.currentModel = this.initialModel;
+  this.currentModel = this.initialModel.clone();
   for (var i = 0; i < this.global.transformations.length; i++) {
     var t = this.global.transformations[i];
-    this.currentModel = t.transform(this.currentModel);
+    t.transform(this.currentModel);
   }
 }
 
@@ -136,8 +111,10 @@ View.prototype.convertToLiteral = function(graph) {
   var nodeToIndex = {};
   var index = 0;
   
-  for(var key in graph.hostToHead) {
-    var node = graph.hostToHead[key];
+  var hosts = graph.getHosts();
+  for(var i = 0; i < hosts.length; i++) {
+    var host = hosts[i];
+    var node = graph.getHead(host);
     nodeToIndex[node.id] = index++;
     
     literal.nodes.push({
@@ -149,8 +126,9 @@ View.prototype.convertToLiteral = function(graph) {
     });
   }
   
-  for(var key in graph.nodes) {
-    var node = graph.nodes[key];
+  var nodes = graph.getNodes();
+  for(var i = 0; i < nodes.length; i++) {
+    var node = nodes[i];
     nodeToIndex[node.id] = index++;
     
     literal.nodes.push({
@@ -161,12 +139,12 @@ View.prototype.convertToLiteral = function(graph) {
     });
   }
   
-  for(var key in graph.nodes) {
-    var node = graph.nodes[key];
+  for(var i = 0; i < nodes.length; i++) {
+    var node = nodes[i];
     
     literal.links.push({
       target: nodeToIndex[node.id],
-      source: nodeToIndex[node.parent.id]
+      source: nodeToIndex[node.prev.id]
     });
     
     if(node.beforeNode != null) {
