@@ -1,301 +1,214 @@
-/**
- * The model. Consists of a mapping from hostId --> time --> Node.
- */
-function Graph() {
-  this.hosts = {};
-  this.edges = {};
+Node.number = 0;
 
-  this.sortedHosts = null;
-}
-
-/**
- * Clones this Graph object. Maintains references to the original (static) Node
- * objects but performs a deep copy of the (dynamic) edge objects.
- */
-Graph.prototype.clone = function() {
-  var other = new Graph();
-  other.hosts = clone(this.hosts);
-  other.edges = deepCopy(this.edges);
-  return other;
-}
-
-/**
- * Returns the node that occurred on the given host at the given (local) time,
- * or null if no such node exists.
- */
-Graph.prototype.getNode = function(hostId, time) {
-  if (!this.hosts.hasOwnProperty(hostId)) {
-    return null;
-  }
-
-  var node = this.hosts[hostId][time];
-  if (node === undefined) {
-    return null;
-  }
-  return node;
-}
-
-/**
- * Returns the next node that occurred at the (local) start time or later on the
- * given host, or null if no such node exists.
- */
-Graph.prototype.getNextNode = function(hostId, startTime) {
-  if (!this.hosts.hasOwnProperty(hostId)) {
-    return null;
-  }
-
-  var candidate = this.getNode(hostId, startTime);
-  if (candidate == null) {
-    var arr = this.hosts[hostId]['times'];
-    if (!this.hosts[hostId]['sorted']) {
-      this.hosts[hostId]['sorted'] = true;
-      arr.sort();
-    }
-    for (var i = 0; i < arr.length; i++) {
-      if (arr[i] > startTime) {
-        return this.getNode(hostId, arr[i]);
-      }
-    }
-  }
-  return candidate;
-}
-
-/**
- * Adds a Node to this Graph.
- */
-Graph.prototype.addNode = function(node) {
-  var hostId = node.hostId;
-  var time = node.time;
-  if (!this.hosts.hasOwnProperty(hostId)) {
-    this.hosts[hostId] = {};
-    this.hosts[hostId]['times'] = [];
-  }
-  this.hosts[hostId][time] = node;
-  this.hosts[hostId]['times'].push(time);
-  this.hosts[hostId]['sorted'] = false;
-
-  this.edges[node.id()] = {};
-  this.edges[node.id()]['parents'] = {};
-  this.edges[node.id()]['children'] = {};
-}
-
-/**
- * Removes a node from this graph
- * @param node The node to be removed
- */
-Graph.prototype.removeNode = function(node) {
-  var hostId = node.hostId;
-  var time = node.time;
-
-  // delete relevant parts of the hosts array
-  delete this.hosts[hostId][time];
-  var index = this.hosts[hostId]['times'].indexOf(time);
-  if (index > -1) {
-    this.hosts[hostId]['times'].splice(index, 1);
-  }
-  this.hosts[hostId]['sorted'] = false;
+function Node(logEvents, host) {
+  this.id = Node.number++;
+  this.parent = null;
+  this.child = null;
+  this.afterNode = null;
+  this.beforeNode = null;
   
-  // the graph is connected as follows: parent -> node -> child. We need to
-  // change it to parent -> child, handling edge cases where parent or child is undefined
-  var parent = this.edges[node.id()]['parents'][hostId];
-  var child = this.edges[node.id()]['children'][hostId];
-  
-  if(child == undefined && parent != undefined) {
-    delete this.edges[hostId + ":" + parent]['children'][hostId];
-  }
-  else if(parent == undefined && child != undefined) {
-    delete this.edges[hostId + ":" + child]['parents'][hostId];
-  }
-  else if(parent != undefined && child != undefined) {
-    this.edges[hostId + ":" + parent]['children'][hostId] = child;
-    this.edges[hostId + ":" + child]['parents'][hostId] = parent;
-  }
+  this.logEvents = logEvents;
+  this.host = host;
+}
 
-  // remove edges to other nodes that aren't this node's parent or child
-  for(var host in this.edges[node.id()]['parents']) {
-    if(host == hostId) {
-      continue;
-    }
-    var id = this.edges[node.id()]['parents'][host];
-    delete this.edges[host + ":" + id]['children'][hostId];
-  }
-  
-  for(var host in this.edges[node.id()]['children']) {
-    if(host == hostId) {
-      continue;
-    }
-    var id = this.edges[node.id()]['children'][host];
-    delete this.edges[host + ":" + id]['parents'][hostId];
-  }
-
-  delete this.edges[node.id()];
-
+Node.prototype.getConnections = function() {
+  return [this.parent, this.child, this.afterNode, this.beforeNode];
 };
 
-/**
- * Returns an array of the hosts in this Graph sorted by decreasing number of events.
- */
-Graph.prototype.getSortedHosts = function () {
-  if (this.sortedHosts == null) {
-    var hostCopy = this.hosts;
-    this.sortedHosts = this.getHosts().sort(function(a, b) {
-      return hostCopy[b]['times'].length - hostCopy[a]['times'].length;
+
+function Graph(logEvents) {
+  this.nodes = {};
+  this.hosts = [];
+  
+//  this.dummyNodes = [];
+  this.hostToHead = {};
+  this.hostToTail = {};
+  
+  this.previousGraph = null;
+  
+  var hostToNodes = {};
+  var hostSet = {};
+  
+  for(var i = 0; i < logEvents.length; i++) {
+    var logEvent = logEvents[i];
+    var host = logEvent.host;
+    var node = new Node([logEvent], host);
+    this.nodes[node.id] = node;
+    
+    if(hostSet[host] == undefined) {
+      hostSet[host] = true;
+      this.hosts.push(host);
+      hostToNodes[host] = [];
+      
+      var head = new Node([], host);
+      var tail = new Node([], host);
+      head.child = tail;
+      tail.parent = head;
+      
+//      dummyNodes.push(head);
+//      dummyNodes.push(tail);
+      this.hostToHead[host] = head;
+      this.hostToTail[host] = tail;
+    }
+    
+    hostToNodes[host].push(node);
+  }
+  
+  this.hosts.sort(function(a, b) {
+    return hostToNodes[a].length - hostToNodes[b].length;
+  });
+  
+  for(var host in hostToNodes) {
+    var array = hostToNodes[host];
+    array.sort(function(a, b) {
+      return a.logEvents[0].vectorTimestamp.compareToLocal(b.logEvents[0].vectorTimestamp);
     });
+    
+    for(var i = 0; i < array.length; i++) {
+      if(array[i].logEvents[0].vectorTimestamp.ownTime != i + 1) {
+        throw "Bad vector clock";
+      }
+    }
+
+    var lastNode = this.hostToHead[host];
+    for(var i = 0; i < array.length; i++) {
+      var newNode = array[i];
+      newNode.parent = lastNode;
+      newNode.child = lastNode.child;
+      
+      newNode.parent.child = newNode;
+      newNode.child.parent = newNode;
+      
+      lastNode = newNode;
+    }
   }
-  return this.sortedHosts;
+  
+  for(var host in hostSet) {
+    var clock = {};
+    var currNode = this.hostToHead[host].child;
+    var tail = this.hostToTail[host];
+    while(currNode != tail) {
+      
+      var candidates = [];
+      var currVT = currNode.logEvents[0].vectorTimestamp;
+      clock[host] = currVT.ownTime;
+      
+      for(var otherHost in currVT.clock) {
+        var time = currVT.clock[otherHost];
+        
+        if(clock[otherHost] == undefined || clock[otherHost] < time) {
+          clock[otherHost] = time;
+          
+          if(hostSet[otherHost] == undefined) {
+            throw "Unrecognized host: " + otherHost;
+          }
+          
+          if(time < 1 || time > hostToNodes[otherHost].length) {
+            throw "Invalid vector clock time value";
+          }
+          
+          candidates.push(hostToNodes[otherHost][time - 1]);
+        }
+      }
+      
+      var connections = {};
+      for(var i = 0; i < candidates.length; i++) {
+        var vt = candidates[i].logEvents[0].vectorTimestamp;
+        var id = vt.host + ":" + vt.ownTime;
+        connections[id] = candidates[i];
+      }
+      
+      for(var i = 0; i < candidates.length; i++) {
+        var vt = candidates[i].logEvents[0].vectorTimestamp;
+        for(var otherHost in vt.clock) {
+          if(otherHost != vt.host) {
+            var id = otherHost + ":" + vt.clock[otherHost];
+            delete connections[id];
+          }
+        }
+      }
+      
+      var finalConnections = [];
+      for(var key in connections) {
+        finalConnections.push(connections[key]);
+      }
+      
+      if(finalConnections.length > 1) {
+        throw "Node has too many connections";
+      }
+      
+      if(finalConnections.length == 1) {
+        currNode.beforeNode = finalConnections[0];
+        finalConnections[0].afterNode = currNode;
+      }
+      
+      currNode = currNode.child;
+    }
+  }
+  
+  // step through and validate
+  
 }
 
-/**
- * returns an array of ids of all the hosts 
- */
-Graph.prototype.getHosts = function() {
-  return Object.keys(this.hosts);
-}
-
-/**
- * returns array of all the final node for each process 
- */
-Graph.prototype.getLastNodeOfAllHosts = function() {
-  var lastnodes = {};
-  for(var key in this.hosts) {
-    lastnodes[key] = this.hosts[key][this.hosts[key].times.length-1];
+Graph.prototype.removeNode = function(node) {
+  if(node.parent == null || node.child == null) {
+    return;
   }
-  return lastnodes;
+  
+  node.parent.child = node.child;
+  node.child.parent = node.parent;
+  delete nodes[node.id];
 };
 
+Graph.prototype.applyTransform = function(transform) {
+  var newGraph = this.clone();
+  newGraph.previousGraph = this;
+  transform.transform(newGraph);
+};
 
-/**
- * Generates an object literal for this model, required by d3 for visualization.
- */
-Graph.prototype.toLiteral = function() {
-  var literal = {};
-
-  // d3 assumes that edges will be represented by src, dest pairs identifying
-  // indices defined by the order in which nodes appear in the nodes literal. To
-  // make this happen, we'll track the index of each node while building the
-  // nodes literal and use those indices while building the links literal.
-  var indices = {};
-  literal["nodes"] = this.getNodeLiteral(indices);
-  literal["links"] = this.getEdgeLiteral(indices);
-  literal["hosts"] = this.getSortedHosts(); 
-  return literal;
-}
-
-/**
- * Generates a set of literal nodes
- */
-Graph.prototype.getNodeLiteral = function(indices) {
-  var literal = [];
-  var index = 0;
-  for (var host in this.hosts) {
-    var arr = this.hosts[host]['times'];
-    for (var i = 0; i < arr.length; i++) {
-      var obj = this.getNode(host, arr[i]);
-      var node = {};
-      node["modelNode"] = obj; 
-      node["name"] = obj.logEvent;
-      node["group"] = host;
-      if (obj.time == 0) {
-        node["startNode"] = true;
-      }
-      node["line"] = obj.lineNum;
-      indices[obj.id()] = index;
-      index += 1;
-      literal.push(node);
+Graph.prototype.clone = function() {
+  var newGraph = new Graph([]);
+  newGraph.hosts = this.hosts;
+  
+  var oldToNewNode = {};
+  for(var node in this.nodes) {
+    oldToNewNode[node.id] = new Node(node.logEvents, node.host);
+  }
+  
+  for(var node in this.nodes) {
+    var newNode = oldToNewNode[node.id];
+    newNode.parent = oldToNewNode[node.parent.id];
+    newNode.child = oldToNewNode[node.child.id];
+    
+    if(node.beforeNode != null) {
+      newNode.beforeNode = oldToNewNode[node.beforeNode.id];
+    }
+    
+    if(node.afterNode != null) {
+      newNode.afterNode = oldToNewNode[node.afterNode.id];
     }
   }
-  return literal;
-}
-
-/**
- * Generates a set of literal edges
- */
-Graph.prototype.getEdgeLiteral = function(indices) {
-  var literal = [];
-
-  for (var nodeId in this.edges) {
-    for (var host in this.edges[nodeId]['children']) {
-      var edge = {};
-      edge["source"] = indices[nodeId];
-      edge["target"] = indices[host + ":" + this.edges[nodeId]['children'][host]];
-      literal.push(edge);
-    }
+  
+  for(var host in this.hostToHead) {
+    var curr = this.hostToHead[host];
+    var newNode = new Node(curr.logEvents, curr.host);
+    newNode.child = oldToNewNode[curr.child.id];
+    newGraph.hostToHead[host] = newNode;
   }
-  return literal;
-}
-
-/**
- * Node class
- */
-function Node(logEvent, hostId, clock, lineNum) {
-  this.logEvent = logEvent;    // Log line this node represents
-  this.hostId = hostId;        // Id of the host on which this event occurred
-  this.clock = clock;          // Timestamp mapping from hostId to logical time
-  this.lineNum = lineNum || 0; // Line number of our log event
-  this.time = clock[hostId];    // Local time for this event
-}
-
-/**
- * Returns a unique id for this Node, in the form hostId:localTime.
- */
-Node.prototype.id = function() {
-  return this.hostId + ":" + this.time;
-}
-
-/**
- * Adds an edge from src to dest with the condition that src is the latest
- * possible parent for dest from the src host and dest is the earliest possible
- * child for src from dest's host.
- *
- * Edges is a map nodeId --> 'parents' --> host --> time and
- *                nodeId --> 'children' --> host --> time
- */
-Graph.prototype.addEdge = function(src, dest) {
-  // Add child to src's children object
-  var childHost = dest.hostId;
-  var children = this.edges[src.id()]['children'];
-  if (!children.hasOwnProperty(childHost) ||
-      children[childHost] > dest.time) {
-    children[childHost] = dest.time;
+  
+  for(var host in this.hostToHead) {
+    var curr = this.hostToHead[host];
+    var newNode = new Node(curr.logEvents, curr.host);
+    newNode.child = oldToNewNode[curr.child.id];
+    newGraph.hostToHead[host] = newNode;
   }
-
-  // Add parent to dest's parents object
-  var parentHost = src.hostId;
-  var parents = this.edges[dest.id()]['parents'];
-  if (!parents.hasOwnProperty(parentHost) ||
-      parents[parentHost] < src.time) {
-    parents[parentHost] = src.time;
+  
+  for(var host in this.hostToTail) {
+    var curr = this.hostToTail[host];
+    var newNode = new Node(curr.logEvents, curr.host);
+    newNode.parent = oldToNewNode[curr.parent.id];
+    newGraph.hostToTail[host] = newNode;
   }
-}
-
-/**
- * Superficial copy of obj, keeps references to obj's object properties.
- */
-function clone(obj) {
-    if (null == obj || "object" != typeof obj) {
-      return obj;
-    }
-    var copy = obj.constructor();
-    for (var attr in obj) {
-        if (obj.hasOwnProperty(attr)) {
-          copy[attr] = obj[attr];
-        }
-    }
-    return copy;
-}
-
-/**
- * Deep copy (recursive) of obj.
- */
-function deepCopy(obj) {
-    if (null == obj || "object" != typeof obj) {
-      return obj;
-    }
-    var copy = obj.constructor();
-    for (var attr in obj) {
-        if (obj.hasOwnProperty(attr)) {
-          copy[attr] = deepCopy(obj[attr]);
-        }
-    }
-    return copy;
-}
+  
+  newGraph.previousGraph = this.previousGraph;
+};
