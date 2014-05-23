@@ -135,7 +135,7 @@ View.prototype.convertToLiteral = function(graph) {
       node: node,
       name: node.logEvents[0].text, //Todo: fix
       group: node.host,
-      line: node.lineNum,
+      line: node.logEvents[0].lineNum,
     });
   }
   
@@ -228,7 +228,7 @@ View.prototype.draw = function() {
     .on("mouseover", function(e) { get("curNode").innerHTML = e.name; })
     .on("click", function(e) { 
       selectTextareaLine(get("logField"), e.line); 
-//      view.hideNodes([e.modelNode]);
+      // view.hideNodes([e.modelNode]);
     })
     .attr("class", "node")
     .style("fill", function(d) { return view.hostColors[d.group]; })
