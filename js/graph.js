@@ -107,18 +107,9 @@ function Graph(logEvents) {
         }
       }
       
-      var finalConnections = [];
       for(var key in connections) {
-        finalConnections.push(connections[key]);
-      }
-      
-      if(finalConnections.length > 1) {
-        throw "Node has too many connections";
-      }
-      
-      if(finalConnections.length == 1) {
-        currNode.beforeNode = finalConnections[0];
-        finalConnections[0].afterNode = currNode;
+        currNode.addParent(connections[key]);
+        connections[key].addChild(currNode);
       }
       
       currNode = currNode.next;
@@ -160,14 +151,15 @@ Graph.prototype.removeNode = function(node) {
     node.next.prev = node.prev;
   }
   
-  if(node.beforeNode != null && node.beforeNode.afterNode == node) {
-    node.beforeNode.afterNode = null;
+  for (var j = 0; j < node.parents.length; j++) {
+    var parents = node.parents[j].children;
+    parents.splice(parents.indexOf(node), 1);
   }
   
-  if(node.afterNode != null && node.afterNode.beforeNode == node) {
-    node.afterNode.beforeNode = null;
+  for (var j = 0; j < node.children.length; j++) {
+    var children = node.children[j].parents;
+    children.splice(children.indexOf(node), 1);
   }
-
 };
 
 Graph.prototype.removeHost = function(host) {
@@ -251,12 +243,12 @@ Graph.prototype.clone = function() {
       newNode.next = oldToNewNode[node.next.id];
     }
     
-    if(node.beforeNode != null) {
-      newNode.beforeNode = oldToNewNode[node.beforeNode.id];
+    for (var j = 0; j < node.parents.length; j++) {
+      newNode.addParent(oldToNewNode[node.parents[j].id]);
     }
-    
-    if(node.afterNode != null) {
-      newNode.afterNode = oldToNewNode[node.afterNode.id];
+
+    for (var j = 0; j < node.children.length; j++) {
+      newNode.addChild(oldToNewNode[node.children[j].id]);
     }
   }
 
