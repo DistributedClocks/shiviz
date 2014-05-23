@@ -1,30 +1,8 @@
-Node.number = 0;
-
-function Node(logEvents, host) {
-  this.id = Node.number++;
-  this.parent = null;
-  this.child = null;
-  this.afterNode = null;
-  this.beforeNode = null;
-  
-  this.logEvents = logEvents;
-  this.host = host;
-}
-
-Node.prototype.getConnections = function() {
-  return [this.parent, this.child, this.afterNode, this.beforeNode];
-};
-
-
 function Graph(logEvents) {
-  this.nodes = {};
   this.hosts = [];
   
-//  this.dummyNodes = [];
   this.hostToHead = {};
   this.hostToTail = {};
-  
-  this.previousGraph = null;
   
   var hostToNodes = {};
   var hostSet = {};
@@ -33,7 +11,6 @@ function Graph(logEvents) {
     var logEvent = logEvents[i];
     var host = logEvent.host;
     var node = new Node([logEvent], host);
-    this.nodes[node.id] = node;
     
     if(hostSet[host] == undefined) {
       hostSet[host] = true;
@@ -41,12 +18,14 @@ function Graph(logEvents) {
       hostToNodes[host] = [];
       
       var head = new Node([], host);
-      var tail = new Node([], host);
-      head.child = tail;
-      tail.parent = head;
+      head.isHeadInner = true;
       
-//      dummyNodes.push(head);
-//      dummyNodes.push(tail);
+      var tail = new Node([], host);
+      tail.isTailInner = true;
+      
+      head.next = tail;
+      tail.prev = head;
+      
       this.hostToHead[host] = head;
       this.hostToTail[host] = tail;
     }
@@ -73,11 +52,11 @@ function Graph(logEvents) {
     var lastNode = this.hostToHead[host];
     for(var i = 0; i < array.length; i++) {
       var newNode = array[i];
-      newNode.parent = lastNode;
-      newNode.child = lastNode.child;
+      newNode.prev = lastNode;
+      newNode.next = lastNode.next;
       
-      newNode.parent.child = newNode;
-      newNode.child.parent = newNode;
+      newNode.prev.next = newNode;
+      newNode.next.prev = newNode;
       
       lastNode = newNode;
     }
@@ -85,7 +64,7 @@ function Graph(logEvents) {
   
   for(var host in hostSet) {
     var clock = {};
-    var currNode = this.hostToHead[host].child;
+    var currNode = this.hostToHead[host].next;
     var tail = this.hostToTail[host];
     while(currNode != tail) {
       
@@ -142,7 +121,7 @@ function Graph(logEvents) {
         finalConnections[0].afterNode = currNode;
       }
       
-      currNode = currNode.child;
+      currNode = currNode.next;
     }
   }
   
@@ -150,35 +129,127 @@ function Graph(logEvents) {
   
 }
 
+Graph.prototype.getHead = function(host) {
+  if(!this.hostToHead[host]) {
+    return null;
+  }
+  return this.hostToHead[host];
+};
+
+Graph.prototype.getTail = function(host) {
+  if(!this.hostToTail[host]) {
+    return null;
+  }
+  return this.hostToTail[host];
+};
+
+Graph.prototype.getHosts = function() {
+  return this.hosts.slice(0);
+};
+
 Graph.prototype.removeNode = function(node) {
-  if(node.parent == null || node.child == null) {
+  if(node.prev == null || node.next == null) {
     return;
   }
   
-  node.parent.child = node.child;
-  node.child.parent = node.parent;
-  delete nodes[node.id];
+  if(node.prev.next == node) {
+    node.prev.next = node.next;
+  }
+  
+  if(node.next.prev == node) {
+    node.next.prev = node.prev;
+  }
+  
+  if(node.beforeNode != null && node.beforeNode.afterNode == node) {
+    node.beforeNode.afterNode = null;
+  }
+  
+  if(node.afterNode != null && node.afterNode.beforeNode == node) {
+    node.afterNode.beforeNode = null;
+  }
+
 };
 
-Graph.prototype.applyTransform = function(transform) {
-  var newGraph = this.clone();
-  newGraph.previousGraph = this;
-  transform.transform(newGraph);
+Graph.prototype.removeHost = function(host) {
+  var index = this.hosts.indexOf(host);
+  if (index > -1) {
+    this.hosts.splice(index, 1);
+  }
+  
+  var curr = this.hostToHead[host].next;
+  var tail = this.hostToTail[host];
+  
+  while(curr != tail) {
+    this.removeNode(curr);
+    curr = curr.next;
+  }
+  
+  delete this.hostToHead[host];
+  delete this.hostToTail[host];
+};
+
+Graph.prototype.getNodes = function() {
+  var nodes = [];
+  for(var i = 0; i < this.hosts.length; i++) {
+    var curr = this.getHead(this.hosts[i]).getNext();
+
+    while(!curr.isTail()) {
+      nodes.push(curr);
+      curr = curr.getNext();
+    }
+  }
+  return nodes;
+};
+
+Graph.prototype.getDummyNodes = function() {
+  var nodes = [];
+  for(var host in this.hostToHead) {
+    nodes.push(this.hostToHead[host]);
+  }
+  
+  for(var host in this.hostToTail) {
+    nodes.push(this.hostToTail[host]);
+  }
+  return nodes;
+};
+
+Graph.prototype.getAllNodes = function() {
+  return this.getNodes().concat(this.getDummyNodes());
 };
 
 Graph.prototype.clone = function() {
   var newGraph = new Graph([]);
-  newGraph.hosts = this.hosts;
+  newGraph.hosts = [].concat(this.hosts);
+  
+  var allNodes = this.getAllNodes();
   
   var oldToNewNode = {};
-  for(var node in this.nodes) {
-    oldToNewNode[node.id] = new Node(node.logEvents, node.host);
+  for(var i = 0; i < allNodes.length; i++) {
+    var node = allNodes[i];
+    oldToNewNode[node.id] = node.clone();
   }
   
-  for(var node in this.nodes) {
+  for(var host in this.hostToHead) {
+    var node = this.hostToHead[host];
+    newGraph.hostToHead[host] = oldToNewNode[node.id];
+  }
+  
+  for(var host in this.hostToTail) {
+    var node = this.hostToTail[host];
+    newGraph.hostToTail[host] = oldToNewNode[node.id];
+  }
+  
+  for(var i = 0; i < allNodes.length; i++) {
+    var node = allNodes[i];
     var newNode = oldToNewNode[node.id];
-    newNode.parent = oldToNewNode[node.parent.id];
-    newNode.child = oldToNewNode[node.child.id];
+    
+    if(node.prev != null) {
+      newNode.prev = oldToNewNode[node.prev.id];
+    }
+    
+    if(node.next != null) {
+      newNode.next = oldToNewNode[node.next.id];
+    }
     
     if(node.beforeNode != null) {
       newNode.beforeNode = oldToNewNode[node.beforeNode.id];
@@ -188,27 +259,6 @@ Graph.prototype.clone = function() {
       newNode.afterNode = oldToNewNode[node.afterNode.id];
     }
   }
-  
-  for(var host in this.hostToHead) {
-    var curr = this.hostToHead[host];
-    var newNode = new Node(curr.logEvents, curr.host);
-    newNode.child = oldToNewNode[curr.child.id];
-    newGraph.hostToHead[host] = newNode;
-  }
-  
-  for(var host in this.hostToHead) {
-    var curr = this.hostToHead[host];
-    var newNode = new Node(curr.logEvents, curr.host);
-    newNode.child = oldToNewNode[curr.child.id];
-    newGraph.hostToHead[host] = newNode;
-  }
-  
-  for(var host in this.hostToTail) {
-    var curr = this.hostToTail[host];
-    var newNode = new Node(curr.logEvents, curr.host);
-    newNode.parent = oldToNewNode[curr.parent.id];
-    newGraph.hostToTail[host] = newNode;
-  }
-  
-  newGraph.previousGraph = this.previousGraph;
+
+  return newGraph;
 };
