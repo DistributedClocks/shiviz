@@ -54,7 +54,7 @@ get("vizButton").onclick = function() {
     var model = generateGraphFromLog(lines);
     var view = new View(model, global);
 
-    global.addHosts(model.getHosts());
+    global.addHosts(model.hosts);
     global.addView(view);
 
     return view;

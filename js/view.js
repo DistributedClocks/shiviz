@@ -13,7 +13,7 @@ function View(model, global) {
   this.hiddenHosts = global.hiddenHosts;
   this.hostColors = global.hostColors;
 
-  this.hosts = this.getHostId();
+//  this.hosts = this.getHostId();
 }
 
 /**
@@ -38,12 +38,12 @@ View.prototype.getHostColors = function() {
   return this.hostColors; 
 }
 
-/**
- * returns an array of ids of all the hosts 
- */
-View.prototype.getHostId = function() {
-  return this.initialModel.getHosts();
-}
+///**
+// * returns an array of ids of all the hosts 
+// */
+//View.prototype.getHostId = function() {
+//  return this.initialModel.getHosts();
+//}
 
 /**
  * gets the Id of the final node in each process
@@ -126,6 +126,66 @@ View.prototype.applyTransformations = function() {
   }
 }
 
+View.prototype.convertToLiteral = function(graph) {
+  var literal = {
+      nodes: [],
+      links: [],
+      hosts: []
+  };
+  
+  var nodeToIndex = {};
+  var index = 0;
+  
+  for(var key in graph.hostToHead) {
+    var node = graph.hostToHead[key];
+    nodeToIndex[node.id] = index++;
+    
+    literal.nodes.push({
+      node: node,
+      name: node.host, //Todo: fix
+      group: node.host,
+      startNode: true,
+      line: 0,
+    });
+  }
+  
+  for(var key in graph.nodes) {
+    var node = graph.nodes[key];
+    nodeToIndex[node.id] = index++;
+    
+    literal.nodes.push({
+      node: node,
+      name: node.logEvents[0].text, //Todo: fix
+      group: node.host,
+      line: node.lineNum,
+    });
+  }
+  
+  for(var key in graph.nodes) {
+    var node = graph.nodes[key];
+    
+    literal.links.push({
+      target: nodeToIndex[node.id],
+      source: nodeToIndex[node.parent.id]
+    });
+    
+    if(node.beforeNode != null) {
+      literal.links.push({
+        target: nodeToIndex[node.id],
+        source: nodeToIndex[node.beforeNode.id]
+      });
+    }
+  }
+
+  literal.hosts = graph.hosts;
+  
+  return literal;
+  
+};
+
+
+
+
 /**
  * Clears the current visualization and re-draws the current model.
  */
@@ -135,13 +195,13 @@ View.prototype.draw = function() {
   if (this.id == null)
     this.id = "view" + d3.selectAll("#vizContainer > svg").size();
 
-  var graphLiteral = this.currentModel.toLiteral();
+  var graphLiteral = this.convertToLiteral(this.currentModel);
 
   // Define locally so that we can use in lambdas below
   var view = this;
 
   var spaceTime = spaceTimeLayout();
-  var width = Math.max(graphLiteral.hosts.length * 40, $("body").width() * graphLiteral.hosts.length / (this.global.hosts.length + this.global.views.length - 1))
+  var width = Math.max(graphLiteral.hosts.length * 40, $("body").width() * graphLiteral.hosts.length / (this.global.hosts.length + this.global.views.length - 1));
 
   spaceTime
       .hosts(graphLiteral.hosts)
