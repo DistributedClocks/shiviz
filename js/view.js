@@ -147,11 +147,11 @@ View.prototype.convertToLiteral = function(graph) {
       source: nodeToIndex[node.prev.id]
     });
     
-    if(node.beforeNode != null) {
+    for (var j = 0; j < node.parents.length; j++) {
       literal.links.push({
         target: nodeToIndex[node.id],
-        source: nodeToIndex[node.beforeNode.id]
-      });
+        source: nodeToIndex[node.parents[j].id]
+      })
     }
   }
 

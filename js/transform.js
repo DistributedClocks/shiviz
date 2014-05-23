@@ -17,13 +17,15 @@ HideHostTransformation.prototype.transform = function(graph) {
   
   var candidate = null;
   while(!curr.isTail()) {
-    if(curr.hasBeforeNode()) {
-      candidate = curr.getBeforeNode();
-    }
-    if(curr.hasAfterNode() && candidate != null) {
-      candidate.setAfterNode(curr.getAfterNode);
-      curr.getAfterNode().setBeforeNode(candidate);
-      candidate = null;
+    for (var i = 0; i < curr.parents.length; i++) {
+      for (var j = 0; j < curr.children.length; j++) {
+        var parent = curr.parents[i];
+        var child = curr.children[j];
+        if (child.host != parent.host) {
+          parent.addChild(child);
+          child.addParent(parent);
+        }
+      }
     }
     curr = curr.getNext();
   }

@@ -2,8 +2,8 @@ function Node(logEvents, host) {
   this.id = Node.number++;
   this.prev = null;
   this.next = null;
-  this.afterNode = null;
-  this.beforeNode = null;
+  this.children = [];
+  this.parents = [];
   
   this.logEvents = logEvents;
   this.host = host;
@@ -18,15 +18,15 @@ Node.prototype.clone = function() {
   var newNode = new Node(this.logEvents, this.host);
   newNode.prev = this.prev;
   newNode.next = this.next;
-  newNode.afterNode = this.afterNode;
-  newNode.beforeNode = this.beforeNode;
+  newNode.children = [];
+  newNode.parents = [];
   newNode.isHeadInner = this.isHeadInner;
   newNode.isTailInner = this.isTailInner;
   return newNode;
 };
 
 Node.prototype.getConnections = function() {
-  return [this.prev, this.next, this.afterNode, this.beforeNode];
+  return [this.prev, this.next, this.children, this.parents];
 };
 
 Node.prototype.isHead = function() {
@@ -49,31 +49,30 @@ Node.prototype.getPrev = function() {
   return this.prev;
 };
 
-Node.prototype.hasAfterNode = function() {
-  return this.afterNode != null;
+Node.prototype.hasChildren = function() {
+  return this.children.length > 0;
 };
 
-Node.prototype.hasBeforeNode = function() {
-  return this.beforeNode != null;
+Node.prototype.hasParents = function() {
+  return this.parents.lenght > 0;
 };
 
 //change to auto set link. Also for set and get prev
-Node.prototype.getAfterNode = function() {
-  return this.afterNode;
+Node.prototype.getChildren = function() {
+  return this.children;
 };
 
-Node.prototype.getBeforeNode = function() {
-  return this.beforeNode;
+Node.prototype.getParents = function() {
+  return this.parents;
 };
 
-Node.prototype.setAfterNode = function(node) {
-  this.afterNode = node;
+Node.prototype.addChild = function(node) {
+  this.children.push(node);
 };
 
-Node.prototype.setBeforeNode = function(node) {
-  this.beforeNode = node;
+Node.prototype.addParent = function(node) {
+  this.parents.push(node);
 };
-
 
 Node.prototype.getLogEvents = function() {
   return this.logEvents;
