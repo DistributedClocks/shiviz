@@ -67,12 +67,56 @@ Node.prototype.getParents = function() {
 };
 
 Node.prototype.addChild = function(node) {
-  this.children.push(node);
+  var earliest = true;
+  var sameHost = this.children.filter(function (n) {
+    return n.host == node.host;
+  });
+
+  for (var i in sameHost) {
+    var n = sameHost[i];
+    if (n.logEvents[0].time > node.logEvents[0].time) {
+      n.removeParent(this);
+      this.removeChild(n);
+    } else {
+      earliest = false;
+    }
+  }
+
+  if (earliest) {
+    this.children.push(node);
+    node.addParent(this);
+  }
 };
 
 Node.prototype.addParent = function(node) {
-  this.parents.push(node);
+  var latest = true;
+  var sameHost = this.parents.filter(function (n) {
+    return n.host == node.host;
+  });
+
+  for (var i in sameHost) {
+    var n = sameHost[i];
+    if (n.logEvents[0].time < node.logEvents[0].time) {
+      n.removeChild(this);
+      this.removeParent(n);
+    } else {
+      latest = false;
+    }
+  }
+  
+  if (latest) {
+    this.parents.push(node);
+    node.addChild(this);
+  }
 };
+
+Node.prototype.removeChild = function (node) {
+  this.children.splice(this.children.indexOf(node), 1);
+}
+
+Node.prototype.removeParent = function (node) {
+  this.parents.splice(this.parents.indexOf(node), 1);
+}
 
 Node.prototype.getLogEvents = function() {
   return this.logEvents;

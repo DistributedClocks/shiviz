@@ -18,13 +18,16 @@ HideHostTransformation.prototype.transform = function(graph) {
   var candidate = null;
   while(!curr.isTail()) {
     for (var i = 0; i < curr.parents.length; i++) {
+      var parent = curr.parents[i];
       for (var j = 0; j < curr.children.length; j++) {
-        var parent = curr.parents[i];
         var child = curr.children[j];
         if (child.host != parent.host) {
           parent.addChild(child);
-          child.addParent(parent);
         }
+      }
+
+      if (!curr.getNext().isTail()) {
+        curr.getNext().addParent(parent);
       }
     }
     curr = curr.getNext();
