@@ -1,6 +1,6 @@
 /**
- * Transformation to hide a host from the model. Assumes transitive edges have
- * already been added to the model if desired.
+ * Transformation to hide a host from the model.
+ * Adds transitive edges to the model.
  */
 function HideHostTransformation(hostToHide) {
   this.hostToHide = hostToHide;
@@ -9,7 +9,7 @@ function HideHostTransformation(hostToHide) {
 /**
  * Generates a transformed model by removing this Transformation's hostToHide
  * from the provided model. Removes all nodes for the hostToHide and any edges
- * touching a node for the hostToHide.
+ * touching a node for the hostToHide and adds transitive edges.
  */
 HideHostTransformation.prototype.transform = function(graph) {
   

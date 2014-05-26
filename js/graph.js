@@ -1,12 +1,27 @@
+/**
+ * A Graph contains the hosts and nodes tha make up
+ * the model.
+ * @param {LogEvent} logEvents an array of log events
+ *                             extracted from the raw log
+ *                             input
+ */
 function Graph(logEvents) {
   this.hosts = [];
   
+  // Dictionaries linking the host name
+  // to the head/tail dummy node for that host
   this.hostToHead = {};
   this.hostToTail = {};
   
+  // Dictionary linking host name to array of
+  // nodes
   var hostToNodes = {};
+  // Set of existing hosts
   var hostSet = {};
   
+  // Create and add nodes to host arrays.
+  // Initialize hosts if undefined by adding them to hostSet
+  // and assigning head and tail dummy nodes
   for(var i = 0; i < logEvents.length; i++) {
     var logEvent = logEvents[i];
     var host = logEvent.host;
@@ -33,10 +48,13 @@ function Graph(logEvents) {
     hostToNodes[host].push(node);
   }
   
+  // Sort the hosts by number of nodes descending
   this.hosts.sort(function(a, b) {
     return hostToNodes[b].length - hostToNodes[a].length;
   });
   
+  // Generate linear model among nodes in same host;
+  // links adjacent nodes together using prev/next fields
   for(var host in hostToNodes) {
     var array = hostToNodes[host];
     array.sort(function(a, b) {
@@ -62,34 +80,42 @@ function Graph(logEvents) {
     }
   }
   
+  // Generates parent/child connections
   for(var host in hostSet) {
+    // Latest clock
     var clock = {};
     var currNode = this.hostToHead[host].next;
     var tail = this.hostToTail[host];
+
     while(currNode != tail) {
-      
+      // Candidates is array of potential parents for
+      // currNode
       var candidates = [];
       var currVT = currNode.logEvents[0].vectorTimestamp;
       clock[host] = currVT.ownTime;
       
+      // Looks to see if a timestamp for a host in the
+      // vector clock has been updated from the last one
       for(var otherHost in currVT.clock) {
         var time = currVT.clock[otherHost];
         
+        // If the timestamp for the host has been updated
+        // then add the node in otherHost with timestamp
+        // time to the list of candidates
         if(clock[otherHost] == undefined || clock[otherHost] < time) {
           clock[otherHost] = time;
           
-          if(hostSet[otherHost] == undefined) {
+          if(hostSet[otherHost] == undefined)
             throw "Unrecognized host: " + otherHost;
-          }
           
-          if(time < 1 || time > hostToNodes[otherHost].length) {
+          if(time < 1 || time > hostToNodes[otherHost].length)
             throw "Invalid vector clock time value";
-          }
           
           candidates.push(hostToNodes[otherHost][time - 1]);
         }
       }
       
+      // Gather all candiates into connections
       var connections = {};
       for(var i = 0; i < candidates.length; i++) {
         var vt = candidates[i].logEvents[0].vectorTimestamp;
@@ -97,6 +123,15 @@ function Graph(logEvents) {
         connections[id] = candidates[i];
       }
       
+      // Remove unnecessary connections (implicit
+      // connections) e.g.
+      //      a
+      //     / \
+      //    X  ,b
+      //   / ,'
+      //  c '
+      // Where connection from a to c is implicit
+      // (marked with an X)
       for(var i = 0; i < candidates.length; i++) {
         var vt = candidates[i].logEvents[0].vectorTimestamp;
         for(var otherHost in vt.clock) {
@@ -107,6 +142,7 @@ function Graph(logEvents) {
         }
       }
       
+      // Add the parents
       for(var key in connections) {
         currNode.addParent(connections[key]);
       }
@@ -119,6 +155,12 @@ function Graph(logEvents) {
   
 }
 
+/**
+ * Gets the head node for a host
+ * @param  {String} host the name of the host
+ * @return {Node}        the head node, or null if
+ *                       none is found
+ */
 Graph.prototype.getHead = function(host) {
   if(!this.hostToHead[host]) {
     return null;
@@ -126,6 +168,12 @@ Graph.prototype.getHead = function(host) {
   return this.hostToHead[host];
 };
 
+/**
+ * Gets the tail node for a host
+ * @param  {String} host the name of the host
+ * @return {Node}        the tail node, or null if
+ *                       none is found
+ */
 Graph.prototype.getTail = function(host) {
   if(!this.hostToTail[host]) {
     return null;
@@ -133,10 +181,18 @@ Graph.prototype.getTail = function(host) {
   return this.hostToTail[host];
 };
 
+/**
+ * Gets the hosts
+ * @return {[String]} a copy of the array of host names
+ */
 Graph.prototype.getHosts = function() {
   return this.hosts.slice(0);
 };
 
+/**
+ * Removes a node from the model
+ * @param  {Node} node the node to remove
+ */
 Graph.prototype.removeNode = function(node) {
   if(node.prev == null || node.next == null) {
     return;
@@ -161,6 +217,12 @@ Graph.prototype.removeNode = function(node) {
   }
 };
 
+/**
+ * Removes a host from the model.
+ * Does not add transitive edges (see
+ * HideHostTransformation instead)
+ * @param  {String} host the name of the host to hide
+ */
 Graph.prototype.removeHost = function(host) {
   var index = this.hosts.indexOf(host);
   if (index > -1) {
@@ -179,6 +241,10 @@ Graph.prototype.removeHost = function(host) {
   delete this.hostToTail[host];
 };
 
+/**
+ * Gets the non-dummy nodes
+ * @return {[Node]} an array of all non-dummy nodes
+ */
 Graph.prototype.getNodes = function() {
   var nodes = [];
   for(var i = 0; i < this.hosts.length; i++) {
@@ -192,6 +258,10 @@ Graph.prototype.getNodes = function() {
   return nodes;
 };
 
+/**
+ * Gets the dummy (head/tail) nodes
+ * @return {[Node]} an array of all dummy nodes
+ */
 Graph.prototype.getDummyNodes = function() {
   var nodes = [];
   for(var host in this.hostToHead) {
@@ -204,10 +274,18 @@ Graph.prototype.getDummyNodes = function() {
   return nodes;
 };
 
+/**
+ * Gets all nodes including dummy nodes
+ * @return {[Node]} an array of all nodes in the model
+ */
 Graph.prototype.getAllNodes = function() {
   return this.getNodes().concat(this.getDummyNodes());
 };
 
+/**
+ * Clones the graph
+ * @return {Graph} a clone of the graph
+ */
 Graph.prototype.clone = function() {
   var newGraph = new Graph([]);
   newGraph.hosts = [].concat(this.hosts);
