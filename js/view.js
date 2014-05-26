@@ -99,7 +99,7 @@ View.prototype.applyTransformations = function() {
     var t = this.global.transformations[i];
     t.transform(this.currentModel);
   }
-}
+};
 
 View.prototype.convertToLiteral = function(graph) {
   var literal = {
@@ -139,6 +139,8 @@ View.prototype.convertToLiteral = function(graph) {
     });
   }
   
+  var set = {};
+  
   for(var i = 0; i < nodes.length; i++) {
     var node = nodes[i];
     
@@ -147,11 +149,22 @@ View.prototype.convertToLiteral = function(graph) {
       source: nodeToIndex[node.prev.id]
     });
     
-    for (var j = 0; j < node.parents.length; j++) {
+    var connect = node.getConnections();
+    console.log(connect.length);
+    for (var j = 0; j < connect.length; j++) {
+      var t = nodeToIndex[node.id];
+      var s = nodeToIndex[connect[j].id];
+      var c = Math.max(t, s) + ":" + Math.min(t, s);
+      c = c.toString();
+
+      if(set[c]) {
+        continue;
+      }
+      set[c] = true;
       literal.links.push({
-        target: nodeToIndex[node.id],
-        source: nodeToIndex[node.parents[j].id]
-      })
+        target: t,
+        source: s
+      });
     }
   }
 

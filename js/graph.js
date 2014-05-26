@@ -1,5 +1,5 @@
 /**
- * A Graph contains the hosts and nodes tha make up
+ * A Graph contains the hosts and nodes that makes up
  * the model.
  * @param {LogEvent} logEvents an array of log events
  *                             extracted from the raw log
@@ -70,12 +70,7 @@ function Graph(logEvents) {
     var lastNode = this.hostToHead[host];
     for(var i = 0; i < array.length; i++) {
       var newNode = array[i];
-      newNode.prev = lastNode;
-      newNode.next = lastNode.next;
-      
-      newNode.prev.next = newNode;
-      newNode.next.prev = newNode;
-      
+      lastNode.insertNext(newNode);
       lastNode = newNode;
     }
   }
@@ -142,9 +137,8 @@ function Graph(logEvents) {
         }
       }
       
-      // Add the parents
       for(var key in connections) {
-        currNode.addParent(connections[key]);
+        currNode.addConnection(connections[key]);
       }
       
       currNode = currNode.next;
@@ -187,34 +181,6 @@ Graph.prototype.getTail = function(host) {
  */
 Graph.prototype.getHosts = function() {
   return this.hosts.slice(0);
-};
-
-/**
- * Removes a node from the model
- * @param  {Node} node the node to remove
- */
-Graph.prototype.removeNode = function(node) {
-  if(node.prev == null || node.next == null) {
-    return;
-  }
-  
-  if(node.prev.next == node) {
-    node.prev.next = node.next;
-  }
-  
-  if(node.next.prev == node) {
-    node.next.prev = node.prev;
-  }
-  
-  for (var j = 0; j < node.parents.length; j++) {
-    var parents = node.parents[j].children;
-    parents.splice(parents.indexOf(node), 1);
-  }
-  
-  for (var j = 0; j < node.children.length; j++) {
-    var children = node.children[j].parents;
-    children.splice(children.indexOf(node), 1);
-  }
 };
 
 /**
@@ -320,12 +286,8 @@ Graph.prototype.clone = function() {
       newNode.next = oldToNewNode[node.next.id];
     }
     
-    for (var j = 0; j < node.parents.length; j++) {
-      newNode.addParent(oldToNewNode[node.parents[j].id]);
-    }
-
-    for (var j = 0; j < node.children.length; j++) {
-      newNode.addChild(oldToNewNode[node.children[j].id]);
+    for (var connect in node.connections) {
+      newNode.addConnection(oldToNewNode[connect.id]);
     }
   }
 

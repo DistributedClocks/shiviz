@@ -8,11 +8,18 @@
  * @param {String}     host      the host of the node
  */
 function Node(logEvents, host) {
+  /*
+   * Below are the fields of the Node class. They should
+   * not be modified directly; you should interact with the
+   * node class only through its methods.
+   * 
+   * IMPORTANT: If you ever decide to add or remove a field,
+   * make sure the clone() function is updated accordingly
+   */
   this.id = Node.number++;
   this.prev = null;
   this.next = null;
-  this.children = [];
-  this.parents = [];
+  this.connections = {};
   
   this.logEvents = logEvents;
   this.host = host;
@@ -28,32 +35,34 @@ Node.number = 0;
 
 /**
  * Clones the node
- * @return {Node} a copy of the current node. Does not
- *                contain proper references to adjacent
- *                nodes or parents/children
+ * @return {Node} a shallow copy of the node. All fields of the copy
+ * will have the same value as the original node, EXCEPT the id field,
+ * which is guaranteed to be globally unique.
  */
 Node.prototype.clone = function() {
   var newNode = new Node(this.logEvents, this.host);
   newNode.prev = this.prev;
   newNode.next = this.next;
-  newNode.children = [];
-  newNode.parents = [];
+  newNode.children = this.children;
+  newNode.parents = this.parents;
   newNode.isHeadInner = this.isHeadInner;
   newNode.isTailInner = this.isTailInner;
   return newNode;
 };
 
 /**
- * Gets the connected nodes
+ * Gets the nodes this one is connected to. A node is said to be 
+ * connected to this one if it's the previous node, the next node,
+ * or 
  * @return {[Node]} an array of connected nodes (adjacent
  * nodes, parent nodes, child nodes)
  */
-Node.prototype.getConnections = function() {
-  return [this.prev, this.next].concat(this.children).concat(this.parents);
+Node.prototype.getAllConnections = function() {
+  return [this.prev, this.next].concat(this.getConnections());
 };
 
 /**
- * Determines whether the node is a head node
+ * Determines whether the node is a dummy head node
  * @return {Boolean} whether the node is a head
  */
 Node.prototype.isHead = function() {
@@ -61,7 +70,7 @@ Node.prototype.isHead = function() {
 };
 
 /**
- * Determines whether the node is a tail node
+ * Determines whether the node is a dummy tail node
  * @return {Boolean} whether the node is a tail
  */
 Node.prototype.isTail = function() {
@@ -69,7 +78,7 @@ Node.prototype.isTail = function() {
 };
 
 /**
- * Gets the ID of the node
+ * Gets the unique ID of the node
  * @return {Number} the ID
  */
 Node.prototype.getId = function() {
@@ -77,15 +86,20 @@ Node.prototype.getId = function() {
 };
 
 /**
- * Gets the next adjacent node
+ * Gets the next node. The next node is the node having the
+ * same host as the current one that comes directly after the 
+ * current node. Returns null if there is no next node.
  * @return {Node} the next node
  */
 Node.prototype.getNext = function() {
   return this.next;
 };
 
+
 /**
- * Gets the previous adjacent node
+ * Gets the previous node. The previous node is the node
+ * having the same host as the current one that comes directly
+ * before the current node. Returns null if there is no previous node
  * @return {Node} the previous node
  */
 Node.prototype.getPrev = function() {
@@ -93,7 +107,55 @@ Node.prototype.getPrev = function() {
 };
 
 /**
- * Determines whether the node has children
+ * connections same
+ */
+Node.prototype.insertNext = function(node) {
+  if(!node || this.isTail() || this.next == node) { //check
+    return;
+  }
+  node.remove();
+  node.prev = this;
+  node.next = this.next;
+  node.prev.next = node;
+  node.next.prev = node;
+};
+
+/**
+ * 
+ */
+Node.prototype.insertPrev = function(node) {
+  if(!node || this.isHead() || this.prev == node) {
+    return;
+  }
+  node.remove();
+  node.next = this;
+  node.prev = this.prev;
+  node.next.prev = node;
+  node.prev.next = node;
+};
+
+/**
+ * 
+ */
+Node.prototype.remove = function() {
+  if(this.isHead() || this.isTail() || !this.prev || !this.next) {
+    return;
+  }
+  
+  this.prev.next = this.next;
+  this.next.prev = this.prev;
+  this.prev = null;
+  this.next = null;
+  
+  for(var id in this.connections) {
+    delete this.connections[id].connections[this.id];
+  }
+  this.connections = {};
+  
+};
+
+/**
+ * Determines whether the node has children. 
  * @return {Boolean} whether the node has children
  */
 Node.prototype.hasChildren = function() {
@@ -105,100 +167,42 @@ Node.prototype.hasChildren = function() {
  * @return {Boolean} whether the node has parents
  */
 Node.prototype.hasParents = function() {
-  return this.parents.lenght > 0;
+  return this.parents.length > 0;
 };
 
-// TODO: change to auto set link. Also for set and get prev
 /**
- * Gets the children of the node
+ * Gets the connections of the node
  * @return {[Node]} the node's children
  */
-Node.prototype.getChildren = function() {
-  return this.children;
+Node.prototype.getConnections = function() {
+  var result = [];
+  for(var key in this.connections) {
+    result.push(this.connections[key]);
+  }
+  return result;
 };
 
 /**
- * Gets the parents of the node
- * @return {[Node]} the node's parents
+ * if already added, then don't add
  */
-Node.prototype.getParents = function() {
-  return this.parents;
+Node.prototype.addConnection = function(node) {
+  if(this.connections[node.id]) {
+    return;
+  }
+  this.connections[node.id] = node;
+  node.connections[this.id] = this;
 };
 
 /**
- * Adds a child to the node.
- * This also adds the corresponding parent link from the
- * child to the current node.
- * Removes later children in the same host that would be
- * implicit, and does not add the child if there is an
- * earlier one in the same host
- * @param {Node} node the node to add as a child
+ * 
  */
-Node.prototype.addChild = function(node) {
-  var earliest = true;
-  var sameHost = this.children.filter(function (n) {
-    return n.host == node.host;
-  });
-
-  for (var i in sameHost) {
-    var n = sameHost[i];
-    if (n.logEvents[0].time > node.logEvents[0].time) {
-      n.removeParent(this);
-      this.removeChild(n);
-    } else {
-      earliest = false;
-    }
+Node.prototype.removeConnection = function(node) {
+  if(!this.connections[node.id]) {
+    return;
   }
-
-  if (earliest) {
-    this.children.push(node);
-    node.addParent(this);
-  }
+  delete this.connections[node.id];
+  delete node.connections[this.id];
 };
-
-/**
- * Adds a parent to the node.
- * Also adds corresponding child link to parent node.
- * Removes implicit connections (see addChild description)
- * @param {Node} node the node to add as parent
- */
-Node.prototype.addParent = function(node) {
-  var latest = true;
-  var sameHost = this.parents.filter(function (n) {
-    return n.host == node.host;
-  });
-
-  for (var i in sameHost) {
-    var n = sameHost[i];
-    if (n.logEvents[0].time < node.logEvents[0].time) {
-      n.removeChild(this);
-      this.removeParent(n);
-    } else {
-      latest = false;
-    }
-  }
-  
-  if (latest) {
-    this.parents.push(node);
-    node.addChild(this);
-  }
-};
-
-/**
- * Removes a child from the node
- * @param  {Node} node the node to remove
- */
-Node.prototype.removeChild = function (node) {
-  this.children.splice(this.children.indexOf(node), 1);
-}
-
-/**
- * Removes a parent from the node
- * @param  {Node} node the node to remove
- */
-Node.prototype.removeParent = function (node) {
-  this.parents.splice(this.parents.indexOf(node), 1);
-}
 
 /**
  * Gets the log events associated with the node
