@@ -34,7 +34,7 @@ function Graph(logEvents) {
   }
   
   this.hosts.sort(function(a, b) {
-    return hostToNodes[a].length - hostToNodes[b].length;
+    return hostToNodes[b].length - hostToNodes[a].length;
   });
   
   for(var host in hostToNodes) {
@@ -109,7 +109,6 @@ function Graph(logEvents) {
       
       for(var key in connections) {
         currNode.addParent(connections[key]);
-        connections[key].addChild(currNode);
       }
       
       currNode = currNode.next;
