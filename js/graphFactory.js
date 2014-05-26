@@ -13,9 +13,9 @@ function generateGraphFromLog(logLines) {
     return false;
   }
 
-  model = new Graph();
+  var logEvents = [];
 
-  var i;
+  var i = 0;
   try {
     for (i = 0; i < logLines.length; i+=2) {
       var log = logLines[i];
@@ -27,83 +27,16 @@ function generateGraphFromLog(logLines) {
       var spacer = stamp.indexOf(" ");
       var host = stamp.substring(0, spacer);
       var clock = JSON.parse(stamp.substring(spacer));
+      var vt = new VectorTimestamp(clock, host);
 
-      model.addNode(new Node(log, host, clock, i));
+      logEvents.push(new LogEvent(log, host, vt, i));
     }
   }catch (err) {
-    alert("Error parsing input, malformed logs: " + i);
+    alert("Error parsing input, malformed logs: " + i + err);
     resetView();
     return null;
   }
 
-  generateEdges(model);
-
-  return model;
+  return new Graph(logEvents);
 }
 
-
-/**
- * Generates an initial set of edges for the given model from each Node's vector
- * clock.
- */
-function generateEdges (model) {
-  var hosts = model.getHosts();
-  for (var i = 0; i < hosts.length; i++) {
-    var host = hosts[i];
-    var name = "Host: " + host;
-    var startClock = {};
-    startClock[host] = 0;
-    var startNode = new Node(name, host, startClock);
-    model.addNode(startNode);
-  }
-
-  for (var i = 0; i < hosts.length; i++) {
-    var host = hosts[i];
-    var clock = {};
-    var curNode = model.getNode(host, 0);
-    var prevNode = null;
-    while (curNode != null) {
-      if (prevNode != null) {
-        // curNode has a parent on this host
-        model.addEdge(prevNode, curNode);
-      }
-      clock[host] = curNode.time;
-      var candidates = [];
-      var curClock = curNode.clock;
-      for (var otherHost in curClock) {
-        var time = curClock[otherHost];
-        if (!clock.hasOwnProperty(otherHost) || clock[otherHost] < time) {
-          // This otherHost may be a parent
-          clock[otherHost] = time;
-          var candidate = model.getNode(otherHost, time);
-          candidates.push(candidate);
-        }
-      }
-
-      // Determine which of candidates are 'necessary'
-      var sourceNodes = {}; 
-      for (var j = 0; j < candidates.length; j++) {
-        var candidate = candidates[j];
-        sourceNodes[candidate.id()] = candidate;
-      }
-
-      for (var j = 0; j < candidates.length; j++) {
-        canClock = candidates[j].clock;
-        for (var otherHost in canClock) {
-          if (otherHost != candidates[j].hostId) {
-            var id = otherHost + ":" + canClock[otherHost];
-            delete sourceNodes[id];
-          }
-        }
-      }
-
-      for (var id in sourceNodes) {
-        model.addEdge(sourceNodes[id], curNode);
-      }
-
-      prevNode = curNode;
-      curNode = model.getNextNode(host, curNode.time + 1);
-    }
-  }
-  return model;
-}
