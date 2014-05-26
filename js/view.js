@@ -13,7 +13,6 @@ function View(model, global) {
   this.hiddenHosts = global.hiddenHosts;
   this.hostColors = global.hostColors;
 
-  this.hosts = this.getHostId();
 }
 
 /**
@@ -39,20 +38,6 @@ View.prototype.getHostColors = function() {
 }
 
 /**
- * returns an array of ids of all the hosts 
- */
-View.prototype.getHostId = function() {
-  return this.initialModel.getHosts();
-}
-
-/**
- * gets the Id of the final node in each process
- */
-View.prototype.getLastNodeId = function() {
-	return this.initialModel.getLastNodeOfAllHosts();	
-}
-
-/**
  * Adds the given Transformation to this View's (ordered) collection of
  * Transformations and uses it to update the currentModel.
  */
@@ -62,21 +47,11 @@ View.prototype.addTransformation = function(transformation) {
 }
 
 /**
- * Hides an array of nodes using HideNodesTransformation
- * @param nodes an array of nodes that are to be hidden
- */
-View.prototype.hideNodes = function(nodes) {
-  this.addTransformation(new HideNodesTransformation(nodes));
-  this.draw();
-};
-
-/**
  * Hides the given host by initiating TransitiveEdges and HideHost
  * transformations.
  */
 View.prototype.hideHost = function(hostId) {
   this.hiddenHosts.push(hostId);
-  this.addTransformation(new TransitiveEdgesTransformation(hostId));
   this.addTransformation(new HideHostTransformation(hostId));
   this.global.drawAll();
 }
@@ -119,12 +94,75 @@ View.prototype.removeHidingTransformations = function(hostId) {
  * and updates the current model.
  */
 View.prototype.applyTransformations = function() {
-  this.currentModel = this.initialModel;
+  this.currentModel = this.initialModel.clone();
   for (var i = 0; i < this.global.transformations.length; i++) {
     var t = this.global.transformations[i];
-    this.currentModel = t.transform(this.currentModel);
+    t.transform(this.currentModel);
   }
 }
+
+View.prototype.convertToLiteral = function(graph) {
+  var literal = {
+      nodes: [],
+      links: [],
+      hosts: []
+  };
+  
+  var nodeToIndex = {};
+  var index = 0;
+  
+  var hosts = graph.getHosts();
+  for(var i = 0; i < hosts.length; i++) {
+    var host = hosts[i];
+    var node = graph.getHead(host);
+    nodeToIndex[node.id] = index++;
+    
+    literal.nodes.push({
+      node: node,
+      name: node.host, //Todo: fix
+      group: node.host,
+      startNode: true,
+      line: 0,
+    });
+  }
+  
+  var nodes = graph.getNodes();
+  for(var i = 0; i < nodes.length; i++) {
+    var node = nodes[i];
+    nodeToIndex[node.id] = index++;
+    
+    literal.nodes.push({
+      node: node,
+      name: node.logEvents[0].text, //Todo: fix
+      group: node.host,
+      line: node.logEvents[0].lineNum,
+    });
+  }
+  
+  for(var i = 0; i < nodes.length; i++) {
+    var node = nodes[i];
+    
+    literal.links.push({
+      target: nodeToIndex[node.id],
+      source: nodeToIndex[node.prev.id]
+    });
+    
+    for (var j = 0; j < node.parents.length; j++) {
+      literal.links.push({
+        target: nodeToIndex[node.id],
+        source: nodeToIndex[node.parents[j].id]
+      })
+    }
+  }
+
+  literal.hosts = graph.hosts;
+  
+  return literal;
+  
+};
+
+
+
 
 /**
  * Clears the current visualization and re-draws the current model.
@@ -135,13 +173,13 @@ View.prototype.draw = function() {
   if (this.id == null)
     this.id = "view" + d3.selectAll("#vizContainer > svg").size();
 
-  var graphLiteral = this.currentModel.toLiteral();
+  var graphLiteral = this.convertToLiteral(this.currentModel);
 
   // Define locally so that we can use in lambdas below
   var view = this;
 
   var spaceTime = spaceTimeLayout();
-  var width = Math.max(graphLiteral.hosts.length * 40, $("body").width() * graphLiteral.hosts.length / (this.global.hosts.length + this.global.views.length - 1))
+  var width = Math.max(graphLiteral.hosts.length * 40, $("body").width() * graphLiteral.hosts.length / (this.global.hosts.length + this.global.views.length - 1));
 
   spaceTime
       .hosts(graphLiteral.hosts)
@@ -190,7 +228,7 @@ View.prototype.draw = function() {
     .on("mouseover", function(e) { get("curNode").innerHTML = e.name; })
     .on("click", function(e) { 
       selectTextareaLine(get("logField"), e.line); 
-//      view.hideNodes([e.modelNode]);
+      // view.hideNodes([e.modelNode]);
     })
     .attr("class", "node")
     .style("fill", function(d) { return view.hostColors[d.group]; })
