@@ -137,9 +137,9 @@ View.prototype.convertToLiteral = function(graph) {
       group: node.host,
       line: node.logEvents[0].lineNum,
     });
+    
   }
   
-
   for(var i = 0; i < nodes.length; i++) {
     var node = nodes[i];
     
@@ -150,11 +150,9 @@ View.prototype.convertToLiteral = function(graph) {
     
     var connect = node.getChildren();
     for (var j = 0; j < connect.length; j++) {
-      var t = nodeToIndex[node.id];
-      var s = nodeToIndex[connect[j].id];
       literal.links.push({
-        target: t,
-        source: s
+        target: nodeToIndex[node.id],
+        source: nodeToIndex[connect[j].id]
       });
     }
   }

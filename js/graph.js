@@ -129,6 +129,7 @@ function Graph(logEvents) {
         }
       }
       
+      // figure out which child to keep
       for(var key in connections) {
         var node = connections[key];
         var currChildOnHost = currNode.hostToChild[node.getHost()];
