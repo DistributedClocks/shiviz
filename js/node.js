@@ -1,8 +1,59 @@
 /**
  * A Node represents an event in the model and contains references to the
  * corresponding log event, its parents and children, as well as the previous
- * and next adjacent nodes. For definitions of "parent", "child", "previous" and
- * "next", see graph.js
+ * and next adjacent nodes.
+ * 
+ * Definitions of specific terms:
+ * 
+ * parent: x is a parent of y if and only if:
+ * <ul>
+ * <li>x happens before y and</li>
+ * <li>their hosts are not the same and</li>
+ * <li>there does not exist any node with x's host that happens after x and
+ * before y</li>
+ * </ul>
+ * 
+ * child: x is a child of y if and only if:
+ * <ul>
+ * <li>x happens after y and</li>
+ * <li>their hosts are not the same and</li>
+ * <li>there does not exist any node with x's host that happens before x and
+ * after y</li>
+ * </ul>
+ * 
+ * next node: x is the next node of y if and only if:
+ * <ul>
+ * <li>x happens after y and</li>
+ * <li>their hosts are the same and</li>
+ * <li>there does not exist any node that has the same host that happens before
+ * x and after y</li>
+ * </ul>
+ * 
+ * prev/previous node: x is the previous node of y is and only if:
+ * <ul>
+ * <li>x happens before y and</li>
+ * <li>their hosts are the same and</li>
+ * <li>there does not exist and node that has the same host that happens after
+ * x and before y</li>
+ * </ul>
+ * 
+ * "happens before" and "happens after": A node x happens before y if and only
+ * if x preceeds y in time. When the nodes are first generated in the graph,
+ * this temporal relation is based on the nodes' LogEvents' vector clocks, but
+ * this may change as graph transformations are applied
+ * 
+ * <pre>
+ * Pictorially:
+ * |  |  |     -- C is a parent of X
+ * A  C  E     -- X is a child of C
+ * | /|  |     -- A is the previous node of X. A is NOT a parent of X
+ * |/ |  |     -- B is the next node of X. B is NOT the child of X
+ * X  D  F     -- C is NOT a parent of G nor is G a child of C
+ * |  |\ |
+ * |  | \|
+ * B  |  G
+ * |  |  |
+ * </pre>
  * 
  * The following invariants hold for all nodes:
  * <ul>
@@ -18,6 +69,7 @@
  */
 
 /**
+ * @constructor
  * @param {[LogEvent]} logEvents an array of corresponding log events
  * @param {String} host the host of the node
  */
@@ -129,10 +181,9 @@ Node.prototype.clone = function() {
 
 /**
  * Gets the next node. The next node is the node having the same host as the
- * current one that comes directly after the current node. Returns null if there
- * is no next node.
+ * current one that comes directly after the current node.
  * 
- * @return {Node} the next node
+ * @return {Node} the next node or null if there is no next node.
  */
 Node.prototype.getNext = function() {
   return this.next;
@@ -140,10 +191,9 @@ Node.prototype.getNext = function() {
 
 /**
  * Gets the previous node. The previous node is the node having the same host as
- * the current one that comes directly before the current node. Returns null if
- * there is no previous node
+ * the current one that comes directly before the current node.
  * 
- * @return {Node} the previous node
+ * @return {Node} the previous node or null if there is no previous node
  */
 Node.prototype.getPrev = function() {
   return this.prev;
@@ -314,11 +364,10 @@ Node.prototype.getChildren = function() {
 };
 
 /**
- * Returns the parent of this node that belongs to a specific host. Returns null
- * if no parent belongs to host.
+ * Returns the parent of this node that belongs to a specific host.
  * 
  * @param {String} host The target host
- * @return {Node} The parent node
+ * @return {Node} The parent node or null if no parent belongs to host.
  */
 Node.prototype.getParentByHost = function(host) {
   var result = this.hostToParent[host];
@@ -326,11 +375,10 @@ Node.prototype.getParentByHost = function(host) {
 };
 
 /**
- * Returns the child of this node that belongs to a specific host. Returns null
- * if no child belongs to host.
+ * Returns the child of this node that belongs to a specific host.
  * 
  * @param {String} host The target host
- * @return {Node} The child node
+ * @return {Node} The child node or null if no child belongs to host.
  */
 Node.prototype.getChildByHost = function(host) {
   var result = this.hostToChild[host];
