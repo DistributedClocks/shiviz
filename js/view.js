@@ -135,7 +135,7 @@ View.prototype.convertToLiteral = function(graph) {
       node: node,
       name: node.logEvents[0].getText(), //Todo: fix
       group: node.host,
-      line: node.logEvents[0].getLineNum(),
+      line: node.logEvents[0].getLineNumber(),
     });
     
   }
