@@ -13,26 +13,36 @@ function HideHostTransformation(hostToHide) {
  */
 HideHostTransformation.prototype.transform = function(graph) {
   
-  var curr = graph.getHead(this.hostToHide);
-  
-  var candidate = null;
+  var curr = graph.getHead(this.hostToHide).getNext();
+
+  var parents = null;
   while(!curr.isTail()) {
-    for (var i = 0; i < curr.parents.length; i++) {
-      var parent = curr.parents[i];
-      for (var j = 0; j < curr.children.length; j++) {
-        var child = curr.children[j];
-        if (child.host != parent.host) {
-          parent.addChild(child);
+    if(curr.hasParents()) {
+      parents = curr.getParents();
+    }
+    
+    if(curr.hasChildren() && parents != null) {
+      var children = curr.getChildren();
+
+      for(var i = 0; i < parents.length; i++) {
+        for(var j = 0; j < children.length; j++) {
+          if(parents[i].getHost() != children[j].getHost()) {
+            parents[i].addChild(children[j]);
+          }
         }
       }
 
-      if (!curr.getNext().isTail()) {
-        curr.getNext().addParent(parent);
-      }
+      parents = null;
     }
+    
     curr = curr.getNext();
   }
-
+  
   graph.removeHost(this.hostToHide);
+
   
 };
+
+
+
+

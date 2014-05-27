@@ -89,12 +89,6 @@ function Node(logEvents, host) {
   this.next = null;
 
   /** @private */
-  this.children = {};
-
-  /** @private */
-  this.parents = {};
-
-  /** @private */
   this.hostToChild = {};
 
   /** @private */
@@ -163,17 +157,13 @@ Node.prototype.isTail = function() {
 
 /**
  * Creates a shallow copy of the the node. All fields of the copy will have the
- * same value as the original node, EXCEPT the id field, which is guaranteed to
- * be globally unique.
+ * same value as the original node, EXCEPT field regarding node connectivity
+ * (i.e parent, child, next, prev)
  * 
  * @return {Node} The copy
  */
 Node.prototype.clone = function() {
   var newNode = new Node(this.logEvents, this.host);
-  newNode.prev = this.prev;
-  newNode.next = this.next;
-  newNode.hostToChild = this.hostToChild;
-  newNode.hostToParent = this.hostToParent;
   newNode.isHeadInner = this.isHeadInner;
   newNode.isTailInner = this.isTailInner;
   return newNode;
@@ -282,6 +272,18 @@ Node.prototype.insertPrev = function(node) {
  * Removes a node, preserving the invariants described at the top of this
  * document. Head and tail nodes cannot be removed. This function does nothing
  * if it is called on a node that had already been removed.
+ * 
+ * Because this method essentially removes all links to and from the node, be
+ * careful when using this inside a loop. For example, consider the following
+ * code:
+ * 
+ * <pre>
+ * var node = this.getHead(host).getNext();
+ * while (!curr.isTail()) {
+ *   curr.remove();
+ *   curr = curr.getNext(); // sets curr to null! curr.getNext() == null after removal
+ * }
+ * </pre>
  */
 Node.prototype.remove = function() {
   if (this.isHead() || this.isTail()) {
@@ -468,7 +470,7 @@ Node.prototype.addParent = function(node) {
   this.hostToParent[node.host] = node;
 
   node.removeChildByHost(this.host);
-  node.hostToParent[this.host] = this;
+  node.hostToChild[this.host] = this;
 };
 
 /**

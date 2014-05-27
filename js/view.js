@@ -151,8 +151,8 @@ View.prototype.convertToLiteral = function(graph) {
     var connect = node.getChildren();
     for (var j = 0; j < connect.length; j++) {
       literal.links.push({
-        target: nodeToIndex[node.id],
-        source: nodeToIndex[connect[j].id]
+        target: nodeToIndex[connect[j].id],
+        source: nodeToIndex[node.id]
       });
     }
   }
