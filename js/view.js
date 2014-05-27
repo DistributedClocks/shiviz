@@ -139,8 +139,7 @@ View.prototype.convertToLiteral = function(graph) {
     });
   }
   
-  var set = {};
-  
+
   for(var i = 0; i < nodes.length; i++) {
     var node = nodes[i];
     
@@ -149,18 +148,10 @@ View.prototype.convertToLiteral = function(graph) {
       source: nodeToIndex[node.prev.id]
     });
     
-    var connect = node.getConnections();
-    console.log(connect.length);
+    var connect = node.getChildren();
     for (var j = 0; j < connect.length; j++) {
       var t = nodeToIndex[node.id];
       var s = nodeToIndex[connect[j].id];
-      var c = Math.max(t, s) + ":" + Math.min(t, s);
-      c = c.toString();
-
-      if(set[c]) {
-        continue;
-      }
-      set[c] = true;
       literal.links.push({
         target: t,
         source: s

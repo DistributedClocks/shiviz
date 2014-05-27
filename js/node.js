@@ -19,7 +19,10 @@ function Node(logEvents, host) {
   this.id = Node.number++;
   this.prev = null;
   this.next = null;
-  this.connections = {};
+  this.children = {};
+  this.parents = {};
+  this.hostToChild = {};
+  this.hostToParent = {};
   
   this.logEvents = logEvents;
   this.host = host;
@@ -43,8 +46,10 @@ Node.prototype.clone = function() {
   var newNode = new Node(this.logEvents, this.host);
   newNode.prev = this.prev;
   newNode.next = this.next;
-  newNode.children = this.children;
-  newNode.parents = this.parents;
+//  newNode.children = this.children;
+//  newNode.parents = this.parents;
+  newNode.hostToChild = this.hostToChild;
+  newNode.hostToParent = this.hostToParent;
   newNode.isHeadInner = this.isHeadInner;
   newNode.isTailInner = this.isTailInner;
   return newNode;
@@ -58,7 +63,7 @@ Node.prototype.clone = function() {
  * nodes, parent nodes, child nodes)
  */
 Node.prototype.getAllConnections = function() {
-  return [this.prev, this.next].concat(this.getConnections());
+  return [this.prev, this.next].concat(this.getParents()).concat(this.getChildren());
 };
 
 /**
@@ -147,10 +152,18 @@ Node.prototype.remove = function() {
   this.prev = null;
   this.next = null;
   
-  for(var id in this.connections) {
-    delete this.connections[id].connections[this.id];
+  for(var host in this.hostToParent) {
+    var otherNode = this.hostToParent[host];
+    delete otherNode.hostToChild[this.host];
   }
-  this.connections = {};
+  
+  for(var host in this.hostToChild) {
+    var otherNode = this.hostToChild[host];
+    delete otherNode.hostToParent[this.host];
+  }
+
+  this.hostToChild = {};
+  this.hostToParent = {};
   
 };
 
@@ -159,7 +172,10 @@ Node.prototype.remove = function() {
  * @return {Boolean} whether the node has children
  */
 Node.prototype.hasChildren = function() {
-  return this.children.length > 0;
+  for(key in this.hostToChild) {
+    return true;
+  }
+  return false;
 };
 
 /**
@@ -167,7 +183,32 @@ Node.prototype.hasChildren = function() {
  * @return {Boolean} whether the node has parents
  */
 Node.prototype.hasParents = function() {
-  return this.parents.length > 0;
+  for(key in this.hostToParent) {
+    return true;
+  }
+  return false;
+};
+
+/**
+ * 
+ */
+Node.prototype.getParents = function() {
+  var result = [];
+  for(var key in this.hostToParent) {
+    result.push(this.hostToParent[key]);
+  }
+  return result;
+};
+
+/**
+ * 
+ */
+Node.prototype.getChildren = function() {
+  var result = [];
+  for(var key in this.hostToChild) {
+    result.push(this.hostToChild[key]);
+  }
+  return result;
 };
 
 /**
@@ -175,34 +216,64 @@ Node.prototype.hasParents = function() {
  * @return {[Node]} the node's children
  */
 Node.prototype.getConnections = function() {
-  var result = [];
-  for(var key in this.connections) {
-    result.push(this.connections[key]);
-  }
-  return result;
-};
-
-/**
- * if already added, then don't add
- */
-Node.prototype.addConnection = function(node) {
-  if(this.connections[node.id]) {
-    return;
-  }
-  this.connections[node.id] = node;
-  node.connections[this.id] = this;
+  return this.getParents().concat(this.getChildren());
 };
 
 /**
  * 
  */
-Node.prototype.removeConnection = function(node) {
-  if(!this.connections[node.id]) {
+Node.prototype.addChild = function(node) {
+  if(this.hostToChild[node.host] == node) {
     return;
   }
-  delete this.connections[node.id];
-  delete node.connections[this.id];
+  
+  if(this.hostToChild[node.host] != undefined) {
+    oldChild = this.hostToChild[node.host];
+    delete oldChild.hostToParent[this.host];
+  }
+  this.hostToChild[node.host] = node;
+  
+  if(node.hostToParent[this.host] != undefined) {
+    oldParent = node.hostToParent[this.host];
+    delete oldParent.hostToChild[node.host];
+  }
+  node.hostToParent[this.host] = this;
 };
+
+/**
+ * 
+ */
+Node.prototype.addParent = function(node) {
+//todo
+};
+
+/**
+ * 
+ */
+Node.prototype.removeChild = function(node) {
+  if(this.hostToChild[node.host] != node) {
+    return;
+  }
+  
+  delete this.hostToChild[node.host];
+  delete node.hostToParent[this.host];
+};
+
+
+/**
+ * 
+ */
+Node.prototype.removeParent = function(node) {
+  if(this.hostToParent[node.host] != node) {
+    return;
+  }
+  delete this.parents[node.id];
+  delete node.children[this.id];
+  
+  delete this.hostToParent[node.host];
+  delete node.hostToChild[this.host];
+};
+
 
 /**
  * Gets the log events associated with the node

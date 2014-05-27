@@ -75,6 +75,7 @@ function Graph(logEvents) {
     }
   }
   
+  
   // Generates parent/child connections
   for(var host in hostSet) {
     // Latest clock
@@ -110,7 +111,7 @@ function Graph(logEvents) {
         }
       }
       
-      // Gather all candiates into connections
+      // Gather all candidates into connections
       var connections = {};
       for(var i = 0; i < candidates.length; i++) {
         var vt = candidates[i].logEvents[0].vectorTimestamp;
@@ -118,15 +119,6 @@ function Graph(logEvents) {
         connections[id] = candidates[i];
       }
       
-      // Remove unnecessary connections (implicit
-      // connections) e.g.
-      //      a
-      //     / \
-      //    X  ,b
-      //   / ,'
-      //  c '
-      // Where connection from a to c is implicit
-      // (marked with an X)
       for(var i = 0; i < candidates.length; i++) {
         var vt = candidates[i].logEvents[0].vectorTimestamp;
         for(var otherHost in vt.clock) {
@@ -138,7 +130,18 @@ function Graph(logEvents) {
       }
       
       for(var key in connections) {
-        currNode.addConnection(connections[key]);
+        var node = connections[key];
+        var currChildOnHost = currNode.hostToChild[node.getHost()];
+        if(!currChildOnHost) {
+          currNode.addChild(node);
+          continue;
+        }
+        var newTime = node.getLogEvents()[0].vectorTimestamp.ownTime;
+        var oldTime = currChildOnHost.getLogEvents()[0].vectorTimestamp.ownTime;
+        if(newTime < oldTime) {
+          currNode.addChild(node);
+        }
+       
       }
       
       currNode = currNode.next;
