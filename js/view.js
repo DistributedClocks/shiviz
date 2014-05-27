@@ -133,9 +133,9 @@ View.prototype.convertToLiteral = function(graph) {
     
     literal.nodes.push({
       node: node,
-      name: node.logEvents[0].text, //Todo: fix
+      name: node.logEvents[0].getText(), //Todo: fix
       group: node.host,
-      line: node.logEvents[0].lineNum,
+      line: node.logEvents[0].getLineNum(),
     });
     
   }
@@ -157,7 +157,7 @@ View.prototype.convertToLiteral = function(graph) {
     }
   }
 
-  literal.hosts = graph.hosts;
+  literal.hosts = graph.getHosts();
   
   return literal;
   
