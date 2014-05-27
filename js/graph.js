@@ -155,15 +155,15 @@ function Graph(logEvents) {
       // figure out which child to keep
       for ( var key in connections) {
         var node = connections[key];
-        var currChildOnHost = currNode.hostToChild[node.getHost()];
-        if (!currChildOnHost) {
-          currNode.addChild(node);
+        var currParentOnHost = currNode.hostToParent[node.getHost()];
+        if (!currParentOnHost) {
+          currNode.addParent(node);
           continue;
         }
         var newTime = node.getLogEvents()[0].vectorTimestamp.ownTime;
-        var oldTime = currChildOnHost.getLogEvents()[0].vectorTimestamp.ownTime;
-        if (newTime < oldTime) {
-          currNode.addChild(node);
+        var oldTime = currParentOnHost.getLogEvents()[0].vectorTimestamp.ownTime;
+        if (newTime > oldTime) {
+          currNode.addParent(node);
         }
 
       }
@@ -210,23 +210,25 @@ Graph.prototype.getHosts = function() {
 };
 
 /**
- * Removes a host from the model. Does not add transitive edges (see
- * HideHostTransformation instead)
+ * Removes a host from the model. All connections to and from this host will be
+ * removed. The host must be a valid host in the current Graph.
  * 
  * @param {String} host the name of the host to hide
  */
 Graph.prototype.removeHost = function(host) {
   var index = this.hosts.indexOf(host);
-  if (index > -1) {
-    this.hosts.splice(index, 1);
+  if (index < 0) {
+    throw "Host not found: " + host;
   }
 
-  var curr = this.hostToHead[host].next;
-  var tail = this.hostToTail[host];
+  this.hosts.splice(index, 1);
 
-  while (curr != tail) {
-    this.removeNode(curr);
-    curr = curr.next;
+  var curr = this.getHead(host).getNext();
+  while (!curr.isTail()) {
+    var next = curr.getNext();
+    curr.remove();
+    curr = next;
+
   }
 
   delete this.hostToHead[host];
@@ -284,10 +286,9 @@ Graph.prototype.getAllNodes = function() {
  */
 Graph.prototype.clone = function() {
   var newGraph = new Graph([]);
-  newGraph.hosts = [].concat(this.hosts);
+  newGraph.hosts = this.getHosts();
 
   var allNodes = this.getAllNodes();
-
   var oldToNewNode = {};
   for ( var i = 0; i < allNodes.length; i++) {
     var node = allNodes[i];
@@ -316,9 +317,12 @@ Graph.prototype.clone = function() {
       newNode.next = oldToNewNode[node.next.id];
     }
 
-    for ( var connect in node.connections) {
-      newNode.addConnection(oldToNewNode[connect.id]);
+    var children = node.getChildren();
+    for(var j = 0; j < children.length; j++) {
+      var child = children[j];
+      newNode.addChild(oldToNewNode[child.id]);
     }
+
   }
 
   return newGraph;
