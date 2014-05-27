@@ -82,10 +82,10 @@ function Node(logEvents, host) {
   /** @private */
   this.id = Node.number++;
 
-  /** @private */
+  /** @protected */
   this.prev = null;
 
-  /** @private */
+  /** @protected */
   this.next = null;
 
   /** @private */

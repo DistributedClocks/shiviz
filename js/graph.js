@@ -81,12 +81,12 @@ function Graph(logEvents) {
   for ( var host in hostToNodes) {
     var array = hostToNodes[host];
     array.sort(function(a, b) {
-      return a.logEvents[0].vectorTimestamp
-          .compareToLocal(b.logEvents[0].vectorTimestamp);
+      return a.logEvents[0].getVectorTimestamp()
+          .compareToLocal(b.logEvents[0].getVectorTimestamp());
     });
 
     for ( var i = 0; i < array.length; i++) {
-      if (array[i].logEvents[0].vectorTimestamp.ownTime != i + 1) {
+      if (array[i].logEvents[0].getVectorTimestamp().getOwnTime() != i + 1) {
         throw "Bad vector clock";
       }
     }
@@ -110,7 +110,7 @@ function Graph(logEvents) {
       // Candidates is array of potential parents for
       // currNode
       var candidates = [];
-      var currVT = currNode.logEvents[0].vectorTimestamp;
+      var currVT = currNode.logEvents[0].getVectorTimestamp();
       clock[host] = currVT.ownTime;
 
       // Looks to see if a timestamp for a host in the
@@ -137,15 +137,15 @@ function Graph(logEvents) {
       // Gather all candidates into connections
       var connections = {};
       for ( var i = 0; i < candidates.length; i++) {
-        var vt = candidates[i].logEvents[0].vectorTimestamp;
-        var id = vt.host + ":" + vt.ownTime;
+        var vt = candidates[i].logEvents[0].getVectorTimestamp();
+        var id = vt.getHost() + ":" + vt.getOwnTime;
         connections[id] = candidates[i];
       }
 
       for ( var i = 0; i < candidates.length; i++) {
-        var vt = candidates[i].logEvents[0].vectorTimestamp;
+        var vt = candidates[i].logEvents[0].getVectorTimestamp();
         for ( var otherHost in vt.clock) {
-          if (otherHost != vt.host) {
+          if (otherHost != vt.getHost()) {
             var id = otherHost + ":" + vt.clock[otherHost];
             delete connections[id];
           }
@@ -160,8 +160,8 @@ function Graph(logEvents) {
           currNode.addParent(node);
           continue;
         }
-        var newTime = node.getLogEvents()[0].vectorTimestamp.ownTime;
-        var oldTime = currParentOnHost.getLogEvents()[0].vectorTimestamp.ownTime;
+        var newTime = node.getLogEvents()[0].getVectorTimestamp().ownTime;
+        var oldTime = currParentOnHost.getLogEvents()[0].getVectorTimestamp().ownTime;
         if (newTime > oldTime) {
           currNode.addParent(node);
         }
@@ -280,9 +280,11 @@ Graph.prototype.getAllNodes = function() {
 };
 
 /**
- * Returns a shallow
+ * Returns a copy of the graph. The new graph has nodes connected in exactly the
+ * same way as the original. The new graph has exactly the same set of hosts.
+ * The node themselves are shallow copies provided by node.clone()
  * 
- * @return {Graph} a shallow copy of the graph
+ * @return {Graph} The copy of the graph
  */
 Graph.prototype.clone = function() {
   var newGraph = new Graph([]);
@@ -292,35 +294,35 @@ Graph.prototype.clone = function() {
   var oldToNewNode = {};
   for ( var i = 0; i < allNodes.length; i++) {
     var node = allNodes[i];
-    oldToNewNode[node.id] = node.clone();
+    oldToNewNode[node.getId()] = node.clone();
   }
 
   for ( var host in this.hostToHead) {
     var node = this.hostToHead[host];
-    newGraph.hostToHead[host] = oldToNewNode[node.id];
+    newGraph.hostToHead[host] = oldToNewNode[node.getId()];
   }
 
   for ( var host in this.hostToTail) {
     var node = this.hostToTail[host];
-    newGraph.hostToTail[host] = oldToNewNode[node.id];
+    newGraph.hostToTail[host] = oldToNewNode[node.getId()];
   }
 
   for ( var i = 0; i < allNodes.length; i++) {
     var node = allNodes[i];
-    var newNode = oldToNewNode[node.id];
+    var newNode = oldToNewNode[node.getId()];
 
     if (node.prev != null) {
-      newNode.prev = oldToNewNode[node.prev.id];
+      newNode.prev = oldToNewNode[node.prev.getId()];
     }
 
     if (node.next != null) {
-      newNode.next = oldToNewNode[node.next.id];
+      newNode.next = oldToNewNode[node.next.getId()];
     }
 
     var children = node.getChildren();
-    for(var j = 0; j < children.length; j++) {
+    for ( var j = 0; j < children.length; j++) {
       var child = children[j];
-      newNode.addChild(oldToNewNode[child.id]);
+      newNode.addChild(oldToNewNode[child.getId()]);
     }
 
   }
