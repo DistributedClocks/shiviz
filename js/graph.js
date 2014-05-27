@@ -138,7 +138,7 @@ function Graph(logEvents) {
       var connections = {};
       for ( var i = 0; i < candidates.length; i++) {
         var vt = candidates[i].logEvents[0].getVectorTimestamp();
-        var id = vt.getHost() + ":" + vt.getOwnTime;
+        var id = vt.getHost() + ":" + vt.getOwnTime();
         connections[id] = candidates[i];
       }
 
