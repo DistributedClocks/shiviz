@@ -240,10 +240,6 @@ View.prototype.draw = function() {
         return 5;
     });
 
-    var startNodes = node.filter(function(d) {
-        return d.hasOwnProperty("startNode");
-    });
-
     svg.attr("height", spaceTime.height())
             .attr("width", spaceTime.width() + 40).attr("class", this.id);
 

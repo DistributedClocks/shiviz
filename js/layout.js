@@ -44,7 +44,7 @@ spaceTimeLayout = function() {
         var n = nodes.length, m = links.length, o;
 
         // Assign each node an index
-        for (i = 0; i < n; ++i) {
+        for (var i = 0; i < n; ++i) {
             o = nodes[i];
             o.index = i;
             o.y = delta;
@@ -58,7 +58,7 @@ spaceTimeLayout = function() {
         // Give each link the source/target node objects based on indices
         // computed
         // above
-        for (i = 0; i < m; ++i) {
+        for (var i = 0; i < m; ++i) {
             o = links[i];
             if (typeof o.source == "number")
                 o.source = nodes[o.source];
@@ -73,7 +73,7 @@ spaceTimeLayout = function() {
         // them in a priority queue
         var remainingNodes = [];
 
-        for (i = 0; i < n; ++i) {
+        for (var i = 0; i < n; ++i) {
             remainingNodes.push(nodes[i]);
         }
 
@@ -87,7 +87,7 @@ spaceTimeLayout = function() {
             horizontalPos = width / hosts.length * hosts.indexOf(o.group)
                     + (width / hosts.length / 2);
             o.x = horizontalPos;
-            for (i = 0; i < o.children.length; ++i) {
+            for (var i = 0; i < o.children.length; ++i) {
                 o.children[i].parents--;
                 // Increment child position by delta
                 if (o.y + delta > o.children[i].y) {
