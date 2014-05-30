@@ -260,7 +260,7 @@ function selectTextareaLine(tarea, lineNum) {
 
     var numLines = 0;
     // calculate start/end
-    var startPos = 0, endPos = tarea.value.length;
+    var startPos = 0;
     for (var x = 0; x < lines.length; x++) {
         if (x == lineNum) {
             break;
