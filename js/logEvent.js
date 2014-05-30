@@ -2,7 +2,7 @@
  * A LogEvent represents a single event from the raw log and contains the text
  * of the log, a reference to the vector timestamp, and other contextual
  * information.
-*/
+ */
 
 /**
  * @constructor
@@ -12,17 +12,17 @@
  * @param {Number} lineNum the line number of the event in the log
  */
 function LogEvent(text, host, vectorTimestamp, lineNum) {
-  /** @private */
-  this.text = text;
+    /** @private */
+    this.text = text;
 
-  /** @private */
-  this.host = host;
-  
-  /** @private */
-  this.vectorTimestamp = vectorTimestamp;
-  
-  /** @private */
-  this.lineNum = lineNum;
+    /** @private */
+    this.host = host;
+
+    /** @private */
+    this.vectorTimestamp = vectorTimestamp;
+
+    /** @private */
+    this.lineNum = lineNum;
 }
 
 /**
@@ -31,7 +31,7 @@ function LogEvent(text, host, vectorTimestamp, lineNum) {
  * @returns {String} the log text
  */
 LogEvent.prototype.getText = function() {
-  return this.text;
+    return this.text;
 };
 
 /**
@@ -40,7 +40,7 @@ LogEvent.prototype.getText = function() {
  * @returns {String} the name of the host
  */
 LogEvent.prototype.getHost = function() {
-  return this.host;
+    return this.host;
 };
 
 /**
@@ -49,7 +49,7 @@ LogEvent.prototype.getHost = function() {
  * @returns {VectorTimestamp}
  */
 LogEvent.prototype.getVectorTimestamp = function() {
-  return this.vectorTimestamp;
+    return this.vectorTimestamp;
 };
 
 /**
@@ -59,5 +59,5 @@ LogEvent.prototype.getVectorTimestamp = function() {
  * @returns {Number}
  */
 LogEvent.prototype.getLineNumber = function() {
-  return this.lineNum;
+    return this.lineNum;
 };
