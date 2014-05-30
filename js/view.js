@@ -179,8 +179,9 @@ View.prototype.draw = function() {
 
     var spaceTime = spaceTimeLayout();
     var width = Math.max(graphLiteral.hosts.length * 40, $("body").width()
-            * graphLiteral.hosts.length
-            / (this.global.hosts.length + this.global.views.length - 1));
+                         * graphLiteral.hosts.length
+                         / (this.global.hosts.length
+                            + this.global.views.length - 1));
 
     spaceTime.hosts(graphLiteral.hosts).nodes(graphLiteral.nodes).links(
             graphLiteral.links).width(width).start();
@@ -194,10 +195,12 @@ View.prototype.draw = function() {
 
     var delta = 45;
 
-    var link = svg.selectAll(".link").data(graphLiteral.links).enter().append(
-            "line").attr("class", "link").style("stroke-width", function(d) {
-        return 1;
-    });
+    var link = svg.selectAll(".link")
+                  .data(graphLiteral.links)
+                  .enter()
+                  .append("line")
+                  .attr("class", "link")
+                  .style("stroke-width", function(d) {return 1;});
 
     link.attr("x1", function(d) {
         return d.source.x;
@@ -212,8 +215,10 @@ View.prototype.draw = function() {
         return d.target.y - delta;
     });
 
-    var node = svg.selectAll(".node").data(graphLiteral.nodes).enter().append(
-            "g");
+    var node = svg.selectAll(".node")
+                  .data(graphLiteral.nodes)
+                  .enter()
+                  .append("g");
 
     node.append("title").text(function(d) {
         return d.name;
@@ -224,9 +229,9 @@ View.prototype.draw = function() {
     });
 
     standardNodes.append("circle").on("mouseover", function(e) {
-        get("curNode").innerHTML = e.name;
+        $("#curNode").text(e.name);
     }).on("click", function(e) {
-        selectTextareaLine(get("logField"), e.line);
+        selectTextareaLine($("#logField")[0], e.line);
         // view.hideNodes([e.modelNode]);
     }).attr("class", "node").style("fill", function(d) {
         return view.hostColors[d.group];
@@ -241,16 +246,21 @@ View.prototype.draw = function() {
     });
 
     svg.attr("height", spaceTime.height())
-            .attr("width", spaceTime.width() + 40).attr("class", this.id);
+       .attr("width", spaceTime.width() + 40)
+       .attr("class", this.id);
 
     var starts = graphLiteral.nodes.filter(function(d) {
         return d.hasOwnProperty("startNode");
     });
     var hostSvg = d3.select("#hostBar").append("svg");
 
-    hostSvg.append("rect").style("stroke", "#fff").attr("width",
-            spaceTime.width()).attr("height", 60).attr("x", 0).attr("y", 0)
-            .style("fill", "#fff");
+    hostSvg.append("rect")
+           .style("stroke", "#fff")
+           .attr("width", spaceTime.width())
+           .attr("height", 60)
+           .attr("x", 0)
+           .attr("y", 0)
+           .style("fill", "#fff");
 
     hostSvg.selectAll().data(starts).enter().append("rect").style("stroke",
             "#fff").attr("width", 25).attr("height", 25).attr("x", function(d) {
@@ -258,7 +268,7 @@ View.prototype.draw = function() {
     }).attr("y", function(d) {
         return 15;
     }).on("mouseover", function(e) {
-        get("curNode").innerHTML = e.name;
+        $("#curNode").text(e.name);
     }).attr("id", function(d) {
         return d.group;
     }).on("dblclick", function(e) {
@@ -294,16 +304,24 @@ View.prototype.drawArrow = function() {
     var x = width / 2;
     var y1 = 85;
     var y2 = height - 30;
-    svg.append("line").attr("class", "time").attr("x1", x).attr("y1", y1 + 15)
-            .attr("x2", x).attr("y2", y2).style("stroke-width", 3);
+    
+    svg.append("line")
+       .attr("class", "time")
+       .attr("x1", x)
+       .attr("y1", y1 + 15)
+       .attr("x2", x)
+       .attr("y2", y2)
+       .style("stroke-width", 3);
 
-    svg.append("path").attr("class", "time").attr(
-            "d",
-            "M " + (x - 5) + " " + y2 + " L " + (x + 5) + " " + y2 + " L " + x
-                    + " " + (y2 + 10) + " z");
+    svg.append("path")
+       .attr("class", "time")
+       .attr("d", "M " + (x - 5) + " " + y2 + " L " + (x + 5) + " " + y2
+             + " L " + x + " " + (y2 + 10) + " z");
 
-    svg.append("text").attr("class", "time").attr("x", x - 20)
-            .attr("y", y1 - 5).text("Time");
+    svg.append("text")
+       .attr("class", "time")
+       .attr("x", x - 20)
+       .attr("y", y1 - 5).text("Time");
 };
 
 /**
@@ -336,7 +354,7 @@ View.prototype.drawHiddenHosts = function() {
             .on("dblclick", function(e) {
                 view.unhideHost(e);
             }).on("mouseover", function(e) {
-                get("curNode").innerHTML = e;
+                $("#curNode").innerHTML = e;
             }).style("stroke", "#fff").attr("width", 25).attr("height", 25)
             .style("fill", function(host) {
                 return view.hostColors[host];

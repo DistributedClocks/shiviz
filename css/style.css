@@ -1,17 +1,15 @@
 html {
-  min-width: 1000px;
+    min-width: 1000px;
 }
 
 body {
-  font-family: "Helvetica Neue", Helvetica, sans-serif;
-  margin: 1em auto 4em auto;
-  width: 920px;
+    font-family: "Helvetica Neue", Helvetica, sans-serif;
+    margin: 1em auto 4em auto;
+    width: 920px;
 }
 
-/**
- * Help pop-up
- */
-.black_overlay{
+/* Help popup */
+.black_overlay {
     display: none;
     position: fixed;
     top: 0%;
@@ -19,9 +17,9 @@ body {
     width: 100%;
     height: 100%;
     background-color: black;
-    z-index:1001;
+    z-index: 1001;
     -moz-opacity: 0.5;
-    opacity:.50;
+    opacity: .50;
     filter: alpha(opacity=50);
 }
 
@@ -32,7 +30,7 @@ body {
     left: 25%;
     width: 50%;
     height: 75%;
-    z-index:1002;
+    z-index: 1002;
     overflow: auto;
     background-color: white;
     font-family: "Helvetica Neue", Helvetica, sans-serif;
@@ -42,158 +40,160 @@ body {
     border: 1px #ccc solid;
 }
 
-#close_help{
-    position:fixed;
-    margin-left:475px;
+#close_help {
+    position: fixed;
+    margin-left: 475px;
     margin-top: -10px;
-    background:white;
-    padding:4px;
+    background: white;
+    padding: 4px;
     border: 1px steelblue solid;
 }
 
-/**
- * Main
- */
-#body {
-  position: relative;
+/* Main */
+#content {
+    position: relative;
 }
 
 #helpsectiontitle {
-  margin-bottom: 3px;
+    margin-bottom: 3px;
 }
 
 #examplelogs {
-  font-size: 15px;
-  font-weight: 350;
-  margin-top: 0px;
+    font-size: 15px;
+    font-weight: 350;
+    margin-top: 0px;
 }
 
 h1 {
-  font-size: 64px;
-  font-weight: 300;
-  letter-spacing: -2px;
-  margin: .3em 0 .1em 0;
+    font-size: 64px;
+    font-weight: 300;
+    letter-spacing: -2px;
+    margin: .3em 0 .1em 0;
 }
 
 h2 {
-  margin-top: 2em;
+    margin-top: 2em;
 }
 
 h1, h2 {
-  text-rendering: optimizeLegibility;
+    text-rendering: optimizeLegibility;
 }
 
 h2 a {
-  color: #ccc;
-  left: -20px;
-  position: absolute;
-  width: 740px;
+    color: #ccc;
+    left: -20px;
+    position: absolute;
+    width: 740px;
 }
 
 #body > p, li > p {
-  line-height: 1.5em;
+    line-height: 1.5em;
 }
 
 a {
-  color: steelblue;
+    color: steelblue;
 }
 
 a:not(:hover) {
-  text-decoration: none;
+    text-decoration: none;
+}
+
+header > a,
+#examplelogs a:not(:first-child) {
+    margin-left: 1em;
 }
 
 .node {
-  stroke: #fff;
-  stroke-width: 1.5px;
+    stroke: #fff;
+    stroke-width: 1.5px;
 }
 
 .link {
-  stroke: #999;
-  stroke-opacity: .6;
+    stroke: #999;
+    stroke-opacity: .6;
 }
 
 .time {
-  stroke: #999;
-  stroke-opacity: .6;
-  fill: #999;
-  fill-opacity: .6;
+    stroke: #999;
+    stroke-opacity: .6;
+    fill: #999;
+    fill-opacity: .6;
 }
 
 #curNode {
-  color: steelblue;
-  background-color: #fff;
+    color: steelblue;
+    background-color: #fff;
 }
 
 #logField {
-  width: 920px;
-  height: 200px;
-  font-family: monospace;
+    width: 920px;
+    height: 200px;
+    font-family: monospace;
 }
 
 svg {
-  user-select: none;
-  -ms-user-select: none;
-  -moz-user-select: none;
-  -webkit-user-select: none;
+    user-select: none;
+    -ms-user-select: none;
+    -moz-user-select: none;
+    -webkit-user-select: none;
 }
 
 #sideBar {
-  width: 40px;
-  float: left;
+    width: 40px;
+    float: left;
 }
 
 #vizContainer {
-  width: 760px; 
-  float: left;
-  white-space: nowrap;
+    width: 760px;
+    float: left;
+    white-space: nowrap;
 }
 
 #vizContainer svg {
-  vertical-align: top;
+    vertical-align: top;
 }
 
 #hostBar {
-  width: 760px;
-  float: left;
-  white-space: nowrap;
+    width: 760px;
+    float: left;
+    white-space: nowrap;
 }
 
 #hosts {
-  width: 120px;
-  float: left;
+    width: 120px;
+    float: left;
 }
 
 #topBar {
-  width: 100%;
-  position: relative;
-  background-color: white;
+    width: 100%;
+    position: relative;
+    background-color: white;
 }
 
 #topBar:before {
-  content: "";
-  display: block;
-  height: calc(3em + 55px);
-  position: fixed;
-  width: 100%;
-  left: 0;
-  top: 0;
-  background: white;
-  z-index: -1;
+    content: "";
+    display: block;
+    height: calc(3em + 55px);
+    position: fixed;
+    width: 100%;
+    left: 0;
+    top: 0;
+    background: white;
+    z-index: -1;
 }
 
 .node text {
-  stroke: black;
+    stroke: black;
 }
 
-
-#versionContainer{
-    float:right;
-    left:80%;
-    top:0px;
-    height:30px;
-    width:19%;
-    text-align:right;
-    color:grey;
-    font-size: 10px;   
+#versionContainer {
+    float: right;
+    left: 80%;
+    top: 0px;
+    height: 30px;
+    width: 19%;
+    text-align: right;
+    color: grey;
+    font-size: 10px;
     font-family: monospace;
 }
