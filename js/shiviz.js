@@ -1,14 +1,10 @@
-var get = function(id) {
-    return document.getElementById(id);
-};
-
 // an alternative to the above commented out code. This resolves issue 18
 // and prevents the innocuos keys such as 'ctrl' from resetting the view
 $("#logField").on('input propertychange', function(e) {
     resetView();
 });
 
-get("versionContainer").innerHTML = versionText;
+$("#versionContainer").html(versionText);
 
 // variables to store last node in a process
 var lastNodesElements = {};
@@ -20,30 +16,30 @@ var hosts = {};
 function resetView() {
     // Enable/disable the visualize button depending on whether or not
     // the text area is empty.
-    if (get("logField").value == '') {
-        get("vizButton").disabled = true;
+    if ($("#logField").val() == "") {
+        $("#vizButton").prop("disabled", true);
     }
     else {
-        get("vizButton").disabled = false;
+        $("#vizButton").prop("disabled", false);
     }
 
-    get("curNode").innerHTML = "(click to view)";
-    get("graph").hidden = true;
+    $("#curNode").html("(click to view)");
+    $("#graph").hide();
 
     d3.selectAll("svg").remove();
 
     // Reset the color of all of the log-links.
-    var links = document.getElementsByClassName("log-link");
-    for (var i = 0; i < links.length; i++) {
-        links[i].style.color = "";
-    }
+    $(".log-link").css({
+        "color": "",
+        "pointer-events": "initial"
+    });
 };
 
-get("vizButton").onclick = function() {
+$("#vizButton").on("click", function() {
     d3.selectAll("svg").remove();
 
-    var textBox = get("logField");
-    var executions = textBox.value.split(/^======$/m);
+    var textBox = $("#logField");
+    var executions = textBox.val().split(/^======$/m);
 
     // We need a variable share across all views/executions to keep them in
     // sync.
@@ -67,7 +63,7 @@ get("vizButton").onclick = function() {
         v.draw();
     });
 
-    get("graph").hidden = false;
+    $("#graph").show();
 
 
     /*
@@ -149,7 +145,7 @@ get("vizButton").onclick = function() {
       });
     }
     */
-};
+});
 
 /**
  * returns the last node associated with a certain process id
@@ -178,13 +174,12 @@ function createLastNodeElements() {
 }
 
 function handleLogFileResponse(response, linkObj) {
-    get("logField").value = response;
+    $("#logField").val(response);
     resetView();
-    linkObj.style.color = "grey";
-    // TODO 1: set linkObj's href to none to eliminate unnecessary
-    // network traffic. But, need to have a way to reset this back.
-
-    // TODO 2: remove linkObj's hover effect.
+    $(linkObj).css({
+        color: "gray",
+        pointerEvents: "none"
+    });
 }
 
 function loadExample(filename, linkObj) {
@@ -199,7 +194,7 @@ function loadExample(filename, linkObj) {
     });
 }
 
-window.onscroll = function() {
+$(window).on("scroll", function() {
     var top = window.pageYOffset ? window.pageYOffset
             : document.documentElement.scrollTop ? document.documentElement.scrollTop
                     : document.body.scrollTop;
@@ -208,57 +203,73 @@ window.onscroll = function() {
     if ($('#topBar').height()
             && top > $('#topBar').css('position', 'relative').offset().top
                     - parseInt($('#topBar p').css('margin-top'))) {
-        get("topBar").style.position = "fixed";
-        get("topBar").style.top = "0px";
+        $("#topBar").css({
+            position: "fixed",
+            top: "0"
+        });
 
         // Time flow div.
-        get("sideBar").style.position = "fixed";
-        get("sideBar").style.top = $("#topBar").height() + "px";
-        get("sideBar").style.left = left;
+        $("#sideBar").css({
+            position: "fixed",
+            top: $("#topBar").height() + "px",
+            left: left
+        });
 
         // Hidden hosts div
-        get("hosts").style.position = "fixed";
-        get("hosts").style.top = $("#topBar").height() + $("#hostBar").height()
-                + "px";
-        get("hosts").style.marginLeft = "800px";
+        $("#hosts").css({
+            position: "fixed",
+            top: $("#topBar").height() + $("#hostBar").height() + "px",
+            marginLeft: "800px"
+        });
 
-        get("hostBar").style.position = "fixed";
-        get("hostBar").style.top = "50px";
-        get("hostBar").style.left = left;
-        get("hostBar").style.marginLeft = "40px";
+        $("#hostBar").css({
+            position: "fixed",
+            top: "50px",
+            left: left,
+            marginLeft: "40px"
+        });
 
-        get("vizContainer").style.marginLeft = "40px";
-        get("vizContainer").style.marginTop = $("#topBar").height()
-                - parseInt($("#topBar p").css("margin-top")) + 55 + "px";
+        $("#vizContainer").css({
+            marginTop: $("#topBar").height()
+                       - parseInt($("#topBar p").css("margin-top")) + 55 + "px",
+            marginLeft: "40px"
+        });
 
     }
     else {
-        get("topBar").style.position = "relative";
+        $("#topBar").css("position", "relative");
 
-        get("sideBar").style.position = "relative";
-        get("sideBar").style.top = "";
-        get("sideBar").style.left = "";
+        $("#sideBar").css({
+            position: "relative",
+            top: "",
+            left: ""
+        });
 
-        get("hosts").style.position = "relative";
-        get("hosts").style.marginLeft = "0px";
-        get("hosts").style.top = "0px";
+        $("#hosts").css({
+            position: "relative",
+            marginLeft: 0,
+            top: 0
+        });
 
-        get("hostBar").style.position = "relative";
-        get("hostBar").style.marginLeft = "0px";
-        get("hostBar").style.left = "";
-        get("hostBar").style.top = "0px";
+        $("#hostBar").css({
+            position: "relative",
+            marginLeft: 0,
+            left: "",
+            top: 0
+        });
 
-        get("vizContainer").style.marginLeft = "0px";
-        get("vizContainer").style.marginTop = "";
+        $("#vizContainer").css({
+            marginLeft: "0",
+            marginTop: ""
+        })
     }
-};
+});
 
 function selectTextareaLine(tarea, lineNum) {
-    var lineLength = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa".length;
-
+    var lineLength = 131;
     var lines = tarea.value.split("\n");
-
     var numLines = 0;
+    
     // calculate start/end
     var startPos = 0;
     for (var x = 0; x < lines.length; x++) {
@@ -266,7 +277,6 @@ function selectTextareaLine(tarea, lineNum) {
             break;
         }
         startPos += (lines[x].length + 1);
-
         numLines += Math.ceil(lines[x].length / lineLength);
     }
 
