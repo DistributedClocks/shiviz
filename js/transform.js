@@ -16,7 +16,7 @@
  * @param {String} hostToHide The host to hide from the model
  */
 function HideHostTransformation(hostToHide) {
-  this.hostToHide = hostToHide;
+    this.hostToHide = hostToHide;
 }
 
 /**
@@ -29,35 +29,35 @@ function HideHostTransformation(hostToHide) {
  */
 HideHostTransformation.prototype.transform = function(graph) {
 
-  var curr = graph.getHead(this.hostToHide).getNext();
+    var curr = graph.getHead(this.hostToHide).getNext();
 
-  var parents = [];
-  var children = [];
-  while (!curr.isTail()) {
-    if (curr.hasParents() || curr.getNext().isTail()) {
+    var parents = [];
+    var children = [];
+    while (!curr.isTail()) {
+        if (curr.hasParents() || curr.getNext().isTail()) {
 
-      for ( var i = 0; i < parents.length; i++) {
-        for ( var j = 0; j < children.length; j++) {
-          if (parents[i].getHost() != children[j].getHost()) {
-            parents[i].addChild(children[j]);
-          }
+            for (var i = 0; i < parents.length; i++) {
+                for (var j = 0; j < children.length; j++) {
+                    if (parents[i].getHost() != children[j].getHost()) {
+                        parents[i].addChild(children[j]);
+                    }
+                }
+            }
+
+            if (children.length > 0) {
+                children = [];
+                parents = [];
+            }
+            parents = parents.concat(curr.getParents());
         }
-      }
 
-      if (children.length > 0) {
-        children = [];
-        parents = [];
-      }
-      parents = parents.concat(curr.getParents());
+        if (curr.hasChildren()) {
+            children = children.concat(curr.getChildren());
+        }
+
+        curr = curr.getNext();
     }
 
-    if (curr.hasChildren()) {
-      children = children.concat(curr.getChildren());
-    }
-
-    curr = curr.getNext();
-  }
-
-  graph.removeHost(this.hostToHide);
+    graph.removeHost(this.hostToHide);
 
 };

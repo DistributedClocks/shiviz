@@ -5,30 +5,30 @@
 /**
  * @constructor
  * @param {{String: Number}} clock The vector clock with host names
- *          corresponding to timestamps for host
+ *            corresponding to timestamps for host
  * @param {String} host The host the timestamp belongs to
  * @throws {String} An error string if the vector clock does not contain an
- *           entry for the host
+ *             entry for the host
  */
 function VectorTimestamp(clock, host) {
-  /** @private */
-  this.clock = clock;
+    /** @private */
+    this.clock = clock;
 
-  /** @private */
-  this.host = host;
+    /** @private */
+    this.host = host;
 
-  /** @private */
-  this.ownTime = clock[host];
+    /** @private */
+    this.ownTime = clock[host];
 
-  if (!clock.hasOwnProperty(host)) {
-    throw "Vector timestamp error: Vector clock must contain entry for host";
-  }
-
-  for ( var host in clock) {
-    if (clock[host] == 0) {
-      delete clock[host];
+    if (!clock.hasOwnProperty(host)) {
+        throw "Vector timestamp error: Vector clock must contain entry for host";
     }
-  }
+
+    for (var host in clock) {
+        if (clock[host] == 0) {
+            delete clock[host];
+        }
+    }
 }
 
 /**
@@ -37,7 +37,7 @@ function VectorTimestamp(clock, host) {
  * @returns {String} The host name
  */
 VectorTimestamp.prototype.getHost = function() {
-  return this.host;
+    return this.host;
 };
 
 /**
@@ -46,7 +46,7 @@ VectorTimestamp.prototype.getHost = function() {
  * @returns {Number} The clock value
  */
 VectorTimestamp.prototype.getOwnTime = function() {
-  return this.ownTime;
+    return this.ownTime;
 };
 
 /**
@@ -65,29 +65,31 @@ VectorTimestamp.prototype.getOwnTime = function() {
  * @return {Number} the result of the comparison as defined above
  */
 VectorTimestamp.prototype.compareTo = function(other) {
-  var thisFirst = false;
-  for ( var host in this.clock) {
-    if (other.clock[host] != undefined && this.clock[host] < other.clock[host]) {
-      thisFirst = true;
-      break;
+    var thisFirst = false;
+    for (var host in this.clock) {
+        if (other.clock[host] != undefined
+                && this.clock[host] < other.clock[host]) {
+            thisFirst = true;
+            break;
+        }
     }
-  }
 
-  var otherFirst = false;
-  for ( var host in other.clock) {
-    if (this.clock[host] != undefined && other.clock[host] < this.clock[host]) {
-      otherFirst = true;
-      break;
+    var otherFirst = false;
+    for (var host in other.clock) {
+        if (this.clock[host] != undefined
+                && other.clock[host] < this.clock[host]) {
+            otherFirst = true;
+            break;
+        }
     }
-  }
 
-  if (thisFirst && !otherFirst) {
-    return -1;
-  }
-  if (otherFirst && !thisFirst) {
-    return 1;
-  }
-  return 0;
+    if (thisFirst && !otherFirst) {
+        return -1;
+    }
+    if (otherFirst && !thisFirst) {
+        return 1;
+    }
+    return 0;
 };
 
 /**
@@ -106,9 +108,9 @@ VectorTimestamp.prototype.compareTo = function(other) {
  * @return {Number} the result of the comparison as defined above
  */
 VectorTimestamp.prototype.compareToLocal = function(other) {
-  if (this.host != other.host) {
-    return 0;
-  }
+    if (this.host != other.host) {
+        return 0;
+    }
 
-  return this.clock[this.host] - other.clock[other.host];
+    return this.clock[this.host] - other.clock[other.host];
 };

@@ -72,37 +72,37 @@
  * @param {String} host the host of the node
  */
 function Node(logEvents, host) {
-  /*
-   * IMPORTANT: If you ever decide to add or remove a field, make sure the
-   * clone() function is updated accordingly
-   */
+    /*
+     * IMPORTANT: If you ever decide to add or remove a field, make sure the
+     * clone() function is updated accordingly
+     */
 
-  /** @private */
-  this.id = Node.number++;
+    /** @private */
+    this.id = Node.number++;
 
-  /** @protected */
-  this.prev = null;
+    /** @protected */
+    this.prev = null;
 
-  /** @protected */
-  this.next = null;
+    /** @protected */
+    this.next = null;
 
-  /** @private */
-  this.hostToChild = {};
+    /** @private */
+    this.hostToChild = {};
 
-  /** @private */
-  this.hostToParent = {};
+    /** @private */
+    this.hostToParent = {};
 
-  /** @private */
-  this.logEvents = logEvents;
+    /** @private */
+    this.logEvents = logEvents;
 
-  /** @private */
-  this.host = host;
+    /** @private */
+    this.host = host;
 
-  /** @private */
-  this.isHeadInner = false;
+    /** @private */
+    this.isHeadInner = false;
 
-  /** @private */
-  this.isTailInner = false;
+    /** @private */
+    this.isTailInner = false;
 }
 
 // Global counter used to assign each node a unique ID
@@ -114,7 +114,7 @@ Node.number = 0;
  * @return {Number} the ID
  */
 Node.prototype.getId = function() {
-  return this.id;
+    return this.id;
 };
 
 /**
@@ -128,7 +128,7 @@ Node.prototype.getId = function() {
  * @return {[LogEvent]} an array of associated log events
  */
 Node.prototype.getLogEvents = function() {
-  return this.logEvents.slice();
+    return this.logEvents.slice();
 };
 
 /**
@@ -137,7 +137,7 @@ Node.prototype.getLogEvents = function() {
  * @return {String} the name of the host
  */
 Node.prototype.getHost = function() {
-  return this.host;
+    return this.host;
 };
 
 /**
@@ -146,7 +146,7 @@ Node.prototype.getHost = function() {
  * @return {Boolean} True if node is head
  */
 Node.prototype.isHead = function() {
-  return this.isHeadInner;
+    return this.isHeadInner;
 };
 
 /**
@@ -155,7 +155,7 @@ Node.prototype.isHead = function() {
  * @return {Boolean} True if node is tail
  */
 Node.prototype.isTail = function() {
-  return this.isTailInner;
+    return this.isTailInner;
 };
 
 /**
@@ -167,10 +167,10 @@ Node.prototype.isTail = function() {
  * @return {Node} The copy
  */
 Node.prototype.clone = function() {
-  var newNode = new Node(this.logEvents, this.host);
-  newNode.isHeadInner = this.isHeadInner;
-  newNode.isTailInner = this.isTailInner;
-  return newNode;
+    var newNode = new Node(this.logEvents, this.host);
+    newNode.isHeadInner = this.isHeadInner;
+    newNode.isTailInner = this.isTailInner;
+    return newNode;
 };
 
 /**
@@ -180,7 +180,7 @@ Node.prototype.clone = function() {
  * @return {Node} the next node or null if there is no next node.
  */
 Node.prototype.getNext = function() {
-  return this.next;
+    return this.next;
 };
 
 /**
@@ -190,7 +190,7 @@ Node.prototype.getNext = function() {
  * @return {Node} the previous node or null if there is no previous node
  */
 Node.prototype.getPrev = function() {
-  return this.prev;
+    return this.prev;
 };
 
 /**
@@ -210,7 +210,7 @@ Node.prototype.getPrev = function() {
  * @return {[Node]} an array of connected nodes
  */
 Node.prototype.getConnections = function() {
-  return this.getParents().concat(this.getChildren());
+    return this.getParents().concat(this.getChildren());
 };
 
 /**
@@ -232,8 +232,8 @@ Node.prototype.getConnections = function() {
  * @return {[Node]} an array of connected nodes
  */
 Node.prototype.getAllConnections = function() {
-  return [ this.prev, this.next ].concat(this.getParents()).concat(
-      this.getChildren());
+    return [ this.prev, this.next ].concat(this.getParents()).concat(
+            this.getChildren());
 };
 
 /**
@@ -244,19 +244,19 @@ Node.prototype.getAllConnections = function() {
  * @param {Node} node The node to insert
  */
 Node.prototype.insertNext = function(node) {
-  if (this.next == node) {
-    return;
-  }
+    if (this.next == node) {
+        return;
+    }
 
-  if (this.isTail()) {
-    throw "You cannot insert a node after a tail node";
-  }
+    if (this.isTail()) {
+        throw "You cannot insert a node after a tail node";
+    }
 
-  node.remove();
-  node.prev = this;
-  node.next = this.next;
-  node.prev.next = node;
-  node.next.prev = node;
+    node.remove();
+    node.prev = this;
+    node.next = this.next;
+    node.prev.next = node;
+    node.next.prev = node;
 };
 
 /**
@@ -267,19 +267,19 @@ Node.prototype.insertNext = function(node) {
  * @param {Node} node The node to insert
  */
 Node.prototype.insertPrev = function(node) {
-  if (this.prev == node) {
-    return;
-  }
+    if (this.prev == node) {
+        return;
+    }
 
-  if (this.isHead()) {
-    throw "You cannot insert a node before a head node";
-  }
+    if (this.isHead()) {
+        throw "You cannot insert a node before a head node";
+    }
 
-  node.remove();
-  node.next = this;
-  node.prev = this.prev;
-  node.next.prev = node;
-  node.prev.next = node;
+    node.remove();
+    node.next = this;
+    node.prev = this.prev;
+    node.next.prev = node;
+    node.prev.next = node;
 };
 
 /**
@@ -294,39 +294,39 @@ Node.prototype.insertPrev = function(node) {
  * <pre>
  * var node = this.getHead(host).getNext();
  * while (!curr.isTail()) {
- *   curr.remove();
- *   curr = curr.getNext(); // sets curr to null! curr.getNext() == null after removal
+ *     curr.remove();
+ *     curr = curr.getNext(); // sets curr to null! curr.getNext() == null after removal
  * }
  * </pre>
  */
 Node.prototype.remove = function() {
-  if (this.isHead() || this.isTail()) {
-    throw "Head and tail nodes cannot be removed";
-  }
+    if (this.isHead() || this.isTail()) {
+        throw "Head and tail nodes cannot be removed";
+    }
 
-  // nodes that have already been removed will have this.prev == null and
-  // this.next == null
-  if (!this.prev || !this.next) {
-    return;
-  }
+    // nodes that have already been removed will have this.prev == null and
+    // this.next == null
+    if (!this.prev || !this.next) {
+        return;
+    }
 
-  this.prev.next = this.next;
-  this.next.prev = this.prev;
-  this.prev = null;
-  this.next = null;
+    this.prev.next = this.next;
+    this.next.prev = this.prev;
+    this.prev = null;
+    this.next = null;
 
-  for ( var host in this.hostToParent) {
-    var otherNode = this.hostToParent[host];
-    delete otherNode.hostToChild[this.host];
-  }
+    for (var host in this.hostToParent) {
+        var otherNode = this.hostToParent[host];
+        delete otherNode.hostToChild[this.host];
+    }
 
-  for ( var host in this.hostToChild) {
-    var otherNode = this.hostToChild[host];
-    delete otherNode.hostToParent[this.host];
-  }
+    for (var host in this.hostToChild) {
+        var otherNode = this.hostToChild[host];
+        delete otherNode.hostToParent[this.host];
+    }
 
-  this.hostToChild = {};
-  this.hostToParent = {};
+    this.hostToChild = {};
+    this.hostToParent = {};
 };
 
 /**
@@ -335,10 +335,10 @@ Node.prototype.remove = function() {
  * @return {Boolean} True if the node has children
  */
 Node.prototype.hasChildren = function() {
-  for (key in this.hostToChild) {
-    return true;
-  }
-  return false;
+    for (key in this.hostToChild) {
+        return true;
+    }
+    return false;
 };
 
 /**
@@ -347,10 +347,10 @@ Node.prototype.hasChildren = function() {
  * @return {Boolean} True if the node has parents
  */
 Node.prototype.hasParents = function() {
-  for (key in this.hostToParent) {
-    return true;
-  }
-  return false;
+    for (key in this.hostToParent) {
+        return true;
+    }
+    return false;
 };
 
 /**
@@ -364,11 +364,11 @@ Node.prototype.hasParents = function() {
  * @return {[Node]} Array of parent nodes.
  */
 Node.prototype.getParents = function() {
-  var result = [];
-  for ( var key in this.hostToParent) {
-    result.push(this.hostToParent[key]);
-  }
-  return result;
+    var result = [];
+    for (var key in this.hostToParent) {
+        result.push(this.hostToParent[key]);
+    }
+    return result;
 };
 
 /**
@@ -382,11 +382,11 @@ Node.prototype.getParents = function() {
  * @return {[Node]} Array of child nodes.
  */
 Node.prototype.getChildren = function() {
-  var result = [];
-  for ( var key in this.hostToChild) {
-    result.push(this.hostToChild[key]);
-  }
-  return result;
+    var result = [];
+    for (var key in this.hostToChild) {
+        result.push(this.hostToChild[key]);
+    }
+    return result;
 };
 
 /**
@@ -396,8 +396,8 @@ Node.prototype.getChildren = function() {
  * @return {Node} The parent node or null if no parent belongs to host.
  */
 Node.prototype.getParentByHost = function(host) {
-  var result = this.hostToParent[host];
-  return !result ? null : result;
+    var result = this.hostToParent[host];
+    return !result ? null : result;
 };
 
 /**
@@ -407,8 +407,8 @@ Node.prototype.getParentByHost = function(host) {
  * @return {Node} The child node or null if no child belongs to host.
  */
 Node.prototype.getChildByHost = function(host) {
-  var result = this.hostToChild[host];
-  return !result ? null : result;
+    var result = this.hostToChild[host];
+    return !result ? null : result;
 };
 
 /**
@@ -418,10 +418,10 @@ Node.prototype.getChildByHost = function(host) {
  * @param {String} host
  */
 Node.prototype.removeChildByHost = function(host) {
-  var node = this.getChildByHost(host);
-  if (node != null) {
-    this.removeChild(node);
-  }
+    var node = this.getChildByHost(host);
+    if (node != null) {
+        this.removeChild(node);
+    }
 };
 
 /**
@@ -431,10 +431,10 @@ Node.prototype.removeChildByHost = function(host) {
  * @param {String} host
  */
 Node.prototype.removeParentByHost = function(host) {
-  var node = this.getParentByHost(host);
-  if (node != null) {
-    this.removeParent(node);
-  }
+    var node = this.getParentByHost(host);
+    if (node != null) {
+        this.removeParent(node);
+    }
 };
 
 /**
@@ -452,19 +452,19 @@ Node.prototype.removeParentByHost = function(host) {
  * @param {Node} node The child node to add
  */
 Node.prototype.addChild = function(node) {
-  if (node.host == this.host) {
-    throw "A node cannot be the child of another node who has the same host";
-  }
+    if (node.host == this.host) {
+        throw "A node cannot be the child of another node who has the same host";
+    }
 
-  if (this.getChildByHost(node.host) == node) {
-    return;
-  }
+    if (this.getChildByHost(node.host) == node) {
+        return;
+    }
 
-  this.removeChildByHost(node.host);
-  this.hostToChild[node.host] = node;
+    this.removeChildByHost(node.host);
+    this.hostToChild[node.host] = node;
 
-  node.removeParentByHost(this.host);
-  node.hostToParent[this.host] = this;
+    node.removeParentByHost(this.host);
+    node.hostToParent[this.host] = this;
 };
 
 /**
@@ -482,19 +482,19 @@ Node.prototype.addChild = function(node) {
  * @param {Node} node The node to add as a parent to this
  */
 Node.prototype.addParent = function(node) {
-  if (node.host == this.host) {
-    throw "A node cannot be the parent of another node who has the same host";
-  }
+    if (node.host == this.host) {
+        throw "A node cannot be the parent of another node who has the same host";
+    }
 
-  if (this.getParentByHost(node.host) == node) {
-    return;
-  }
+    if (this.getParentByHost(node.host) == node) {
+        return;
+    }
 
-  this.removeParentByHost(node.host);
-  this.hostToParent[node.host] = node;
+    this.removeParentByHost(node.host);
+    this.hostToParent[node.host] = node;
 
-  node.removeChildByHost(this.host);
-  node.hostToChild[this.host] = this;
+    node.removeChildByHost(this.host);
+    node.hostToChild[this.host] = this;
 };
 
 /**
@@ -504,12 +504,12 @@ Node.prototype.addParent = function(node) {
  * @param node
  */
 Node.prototype.removeChild = function(node) {
-  if (this.hostToChild[node.host] != node) {
-    return;
-  }
+    if (this.hostToChild[node.host] != node) {
+        return;
+    }
 
-  delete this.hostToChild[node.host];
-  delete node.hostToParent[this.host];
+    delete this.hostToChild[node.host];
+    delete node.hostToParent[this.host];
 };
 
 /**
@@ -519,10 +519,10 @@ Node.prototype.removeChild = function(node) {
  * @param node
  */
 Node.prototype.removeParent = function(node) {
-  if (this.hostToParent[node.host] != node) {
-    return;
-  }
+    if (this.hostToParent[node.host] != node) {
+        return;
+    }
 
-  delete this.hostToParent[node.host];
-  delete node.hostToChild[this.host];
+    delete this.hostToParent[node.host];
+    delete node.hostToChild[this.host];
 };
