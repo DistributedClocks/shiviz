@@ -3,6 +3,9 @@
  * a graph as input and modifies it in place. Each type of transformation is
  * defined in its own class. The transform method is solely responsible for
  * performing the actual transformation.
+ * 
+ * Graph transformations should strive to preserve the definitions of 'parent',
+ * 'child', 'next' and 'previous' as defined in node.js
  */
 
 /**
@@ -32,7 +35,7 @@ HideHostTransformation.prototype.transform = function(graph) {
   var children = [];
   while (!curr.isTail()) {
     if (curr.hasParents() || curr.getNext().isTail()) {
-      
+
       for ( var i = 0; i < parents.length; i++) {
         for ( var j = 0; j < children.length; j++) {
           if (parents[i].getHost() != children[j].getHost()) {
@@ -40,8 +43,8 @@ HideHostTransformation.prototype.transform = function(graph) {
           }
         }
       }
-      
-      if(children.length > 0) {
+
+      if (children.length > 0) {
         children = [];
         parents = [];
       }

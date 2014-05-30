@@ -1,7 +1,7 @@
 /**
  * A Node represents an event in the model and contains references to the
  * corresponding log event, its parents and children, as well as the previous
- * and next adjacent nodes.
+ * and next adjacent nodes. A Graph is made up of Nodes.
  * 
  * Definitions of specific terms:
  * 
@@ -55,13 +55,11 @@
  * |  |  |
  * </pre>
  * 
- * The following invariants hold for all nodes:
+ * The node class makes the following guarantees:
  * <ul>
  * <li>node.getID() is globally unique</li>
- * <li>if node.isTail() == false, then node == node.getNext().getPrev()</li>
- * <li>if node.isHead() == false, then node == node.getPrev().getNext()</li>
- * <li>node.getNext() == null if and only if node.isTail() == true</li>
- * <li>node.getPrev() == null if and only if node.isHead() == true</li>
+ * <li>if node.getNext() != false, then node == node.getNext().getPrev()</li>
+ * <li>if node.getPrev() != false, then node == node.getPrev().getNext()</li>
  * <li>if and only if x is a child of y, then y is a parent of x</li>
  * <li>All the children of a node belong to different hosts</li>
  * <li>All the parents of a node belong to different hosts</li>
@@ -122,10 +120,15 @@ Node.prototype.getId = function() {
 /**
  * Gets the log events associated with the node
  * 
+ * This function makes no guarantees about the ordering of LogEvents in the
+ * array returned. Also note that a new array is created to prevent modification
+ * of the underlying private data structure, so this function takes linear
+ * rather than constant time on the number of LogEvents.
+ * 
  * @return {[LogEvent]} an array of associated log events
  */
 Node.prototype.getLogEvents = function() {
-  return this.logEvents;
+  return this.logEvents.slice();
 };
 
 /**
@@ -157,8 +160,9 @@ Node.prototype.isTail = function() {
 
 /**
  * Creates a shallow copy of the the node. All fields of the copy will have the
- * same value as the original node, EXCEPT field regarding node connectivity
- * (i.e parent, child, next, prev)
+ * same value as the original node, EXCEPT the globally unique id and fields
+ * regarding node connectivity (i.e parent, child, next, prev), which are
+ * initialized to null.
  * 
  * @return {Node} The copy
  */
@@ -194,6 +198,11 @@ Node.prototype.getPrev = function() {
  * this function, a node is said to be connected to this one if it's a parent or
  * a child.
  * 
+ * This function makes no guarantees about the ordering of nodes in the array
+ * returned. Also note that a new array is created to prevent modification of
+ * the underlying private data structure, so this function takes linear rather
+ * than constant time on the number of connections.
+ * 
  * @see getParents
  * @see getChildren
  * @see getConnections
@@ -208,6 +217,11 @@ Node.prototype.getConnections = function() {
  * Returns the nodes this one is connected to as an array. In the context of
  * this function, a node is said to be connected to this one if it's the
  * previous node, the next node, a parent, or a child
+ * 
+ * This function makes no guarantees about the ordering of nodes in the array
+ * returned. Also note that a new array is created to prevent modification of
+ * the underlying private data structure, so this function takes linear rather
+ * than constant time on the number of connections.
  * 
  * @see getPrev
  * @see getNext
@@ -342,6 +356,11 @@ Node.prototype.hasParents = function() {
 /**
  * Returns parents of this node as an array
  * 
+ * This function makes no guarantees about the ordering of nodes in the array
+ * returned. Also note that a new array is created to prevent modification of
+ * the underlying private data structure, so this function takes linear rather
+ * than constant time on the number of connections.
+ * 
  * @return {[Node]} Array of parent nodes.
  */
 Node.prototype.getParents = function() {
@@ -354,6 +373,11 @@ Node.prototype.getParents = function() {
 
 /**
  * Returns children of this node as an array
+ * 
+ * This function makes no guarantees about the ordering of nodes in the array
+ * returned. Also note that a new array is created to prevent modification of
+ * the underlying private data structure, so this function takes linear rather
+ * than constant time on the number of connections.
  * 
  * @return {[Node]} Array of child nodes.
  */

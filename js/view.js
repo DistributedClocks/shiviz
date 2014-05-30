@@ -115,7 +115,7 @@ View.prototype.convertToLiteral = function(graph) {
   for(var i = 0; i < hosts.length; i++) {
     var host = hosts[i];
     var node = graph.getHead(host);
-    nodeToIndex[node.id] = index++;
+    nodeToIndex[node.getId()] = index++;
     
     literal.nodes.push({
       node: node,
@@ -129,13 +129,13 @@ View.prototype.convertToLiteral = function(graph) {
   var nodes = graph.getNodes();
   for(var i = 0; i < nodes.length; i++) {
     var node = nodes[i];
-    nodeToIndex[node.id] = index++;
+    nodeToIndex[node.getId()] = index++;
     
     literal.nodes.push({
       node: node,
-      name: node.logEvents[0].getText(), //Todo: fix
+      name: node.getLogEvents()[0].getText(), //Todo: fix
       group: node.host,
-      line: node.logEvents[0].getLineNumber(),
+      line: node.getLogEvents()[0].getLineNumber(),
     });
     
   }
@@ -144,15 +144,15 @@ View.prototype.convertToLiteral = function(graph) {
     var node = nodes[i];
     
     literal.links.push({
-      target: nodeToIndex[node.id],
-      source: nodeToIndex[node.prev.id]
+      target: nodeToIndex[node.getId()],
+      source: nodeToIndex[node.getPrev().getId()]
     });
     
     var connect = node.getChildren();
     for (var j = 0; j < connect.length; j++) {
       literal.links.push({
-        target: nodeToIndex[connect[j].id],
-        source: nodeToIndex[node.id]
+        target: nodeToIndex[connect[j].getId()],
+        source: nodeToIndex[node.getId()]
       });
     }
   }

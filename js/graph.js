@@ -1,10 +1,10 @@
 /**
- * A Graph contains the hosts and nodes that makes up the model.
+ * A Graph contains the hosts and Nodes that makes up the model.
  * 
  * A Graph can be thought of as a set of augmented linked-lists. Each host is
- * associated with a linked-list that is "augmented" in the sense that each node
- * can also be connected to nodes in other linked lists. The first and last
- * nodes in each linked list are dummy head and tail nodes respectively.
+ * associated with a linked-list that is "augmented" in the sense that nodes can
+ * also be connected to nodes in other linked lists. The first and last nodes in
+ * each linked list are dummy head and tail nodes respectively.
  * 
  * Traversing a Graph is much like traversing a linked list. For example, to
  * visit all nodes whose host is equal to "loadBalancer":
@@ -16,6 +16,10 @@
  *   currentNode = currentNode.getNext();
  * }
  * </pre>
+ * 
+ * The Graph class makes the following guarantees about nodes in the Graph:
+ * <li>node.getNext() == null if and only if node.isTail() == true</li>
+ * <li>node.getPrev() == null if and only if node.isHead() == true</li>
  */
 
 /**
@@ -35,11 +39,9 @@ function Graph(logEvents) {
   this.hostToTail = {};
 
   // Dictionary linking host name to array of nodes
-  /** @private */
   var hostToNodes = {};
 
   // Set of existing hosts
-  /** @private */
   var hostSet = {};
 
   /*
@@ -81,8 +83,8 @@ function Graph(logEvents) {
   for ( var host in hostToNodes) {
     var array = hostToNodes[host];
     array.sort(function(a, b) {
-      return a.logEvents[0].getVectorTimestamp()
-          .compareToLocal(b.logEvents[0].getVectorTimestamp());
+      return a.logEvents[0].getVectorTimestamp().compareToLocal(
+          b.logEvents[0].getVectorTimestamp());
     });
 
     for ( var i = 0; i < array.length; i++) {
@@ -236,7 +238,13 @@ Graph.prototype.removeHost = function(host) {
 };
 
 /**
- * Gets the non-dummy (i.e non-head and non-tail) nodes
+ * Gets all non-dummy (i.e non-head and non-tail) nodes in the graph as an
+ * array.
+ * 
+ * This function makes no guarantees about the ordering of nodes in the array
+ * returned. Also note that a new array is created to prevent modification of
+ * the underlying private data structure, so this function takes linear rather
+ * than constant time on the number of nodes.
  * 
  * @return {[Node]} an array of all non-dummy nodes
  */
@@ -254,7 +262,12 @@ Graph.prototype.getNodes = function() {
 };
 
 /**
- * Gets the dummy (head/tail) nodes
+ * Gets all dummy (head/tail) nodes in the graph as an array.
+ * 
+ * This function makes no guarantees about the ordering of nodes in the array
+ * returned. Also note that a new array is created to prevent modification of
+ * the underlying private data structure, so this function takes linear rather
+ * than constant time on the number of nodes.
  * 
  * @return {[Node]} an array of all dummy nodes
  */
@@ -272,6 +285,11 @@ Graph.prototype.getDummyNodes = function() {
 
 /**
  * Gets all nodes including dummy nodes
+ * 
+ * This function makes no guarantees about the ordering of nodes in the array
+ * returned. Also note that a new array is created to prevent modification of
+ * the underlying private data structure, so this function takes linear rather
+ * than constant time on the number of nodes.
  * 
  * @return {[Node]} an array of all nodes in the model
  */
