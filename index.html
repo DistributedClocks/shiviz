@@ -112,9 +112,11 @@
                     <a class="log-link" href="#" onclick="loadExample('log/facebook.log', this); return false;">Facebook data-center log</a>
                     <a class="log-link" href="#" onclick="loadExample('log/voldemort.log', this); return false;">Voldemort log</a>
                     <a class="log-link" href="#" onclick="loadExample('log/simpledb.log', this); return false;">SimpleDB log</a>
-                    <a class="log-link" href="#" onclick="loadExample('log/facebook-multiple.log', this); return false;">Facebook log with multiple executions</a>
+                    <a class="log-link" href="#" onclick="loadExample('log/facebook-multiple.log', this); $('#delimiter').val('^======$'); return false;">Facebook log with multiple executions</a>
                 </p>
-                <input type='button' id='vizButton' disabled=true value="visualize" />
+                <label>Multiple execution delimiter: <input type="text" id="delimiter"></label>
+                <br>
+                <input type="button" id="vizButton" disabled=true value="visualize" />
             </div>
 
             <div id="graph" hidden=true>

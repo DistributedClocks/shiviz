@@ -39,7 +39,12 @@ $("#vizButton").on("click", function() {
     d3.selectAll("svg").remove();
 
     var textBox = $("#logField");
-    var executions = textBox.val().split(/^======$/m);
+    var delimiter = new RegExp($("#delimiter").val(), "m");
+    var executions = textBox.val().split(delimiter);
+
+    executions = executions.filter(function (e) {
+        return e.trim().length != 0;
+    });
 
     // We need a variable share across all views/executions to keep them in
     // sync.
