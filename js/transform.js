@@ -6,6 +6,10 @@
  * 
  * Graph transformations should strive to preserve the definitions of 'parent',
  * 'child', 'next' and 'previous' as defined in node.js
+ * 
+ * In general, the constructors of the transformations should not perform any
+ * sort of validation. The transform method itself should validate that the
+ * transformation is valid and throw an error otherwise.
  */
 
 /**
@@ -28,6 +32,11 @@ function HideHostTransformation(hostToHide) {
  * @param {Graph} graph The graph to transform. Modified in place
  */
 HideHostTransformation.prototype.transform = function(graph) {
+
+    if (!graph.hasHost(this.hostToHide)) {
+        throw "Cannot hide host " + this.hostToHide
+                + " because it does not exist";
+    }
 
     var curr = graph.getHead(this.hostToHide).getNext();
 
@@ -59,5 +68,86 @@ HideHostTransformation.prototype.transform = function(graph) {
     }
 
     graph.removeHost(this.hostToHide);
+
+};
+
+/**
+ * Transformation to hide a node from the model. All parents and children of the
+ * node will be removed. The previous node and the next node will be linked
+ * 
+ * @constructor
+ * @param {Array.<Node>} nodesToHide The nodes to hide from the model
+ */
+function HideNodeTransformation(nodesToHide) {
+    this.nodesToHide = nodesToHide;
+}
+
+/**
+ * @param {Graph} graph The graph to transform. Modified in place
+ */
+HideNodeTransformation.prototype.transform = function(graph) {
+
+    for (var i = 0; i < nodesToHide.length; i++) {
+        var node = nodesToHide[i];
+        if(node.isHead() || node.isTail()) {
+            throw "Cannot hide a head or tail node";
+        }
+        nodesToHide[i].remove();
+    }
+
+};
+
+/**
+ * Transformation to collapse multiple nodes into one
+ * 
+ * @constructor
+ */
+function CollapseNodesTransformation() {
+
+    this.toCollapse = [];
+}
+
+CollapseNodesTransformation.prototype.addNodesToCollapse = function(startNode,
+        numberToCollapse) {
+    var params = {
+        startNode : startNode,
+        numberToCollapse : numberToCollapse
+    };
+    this.toCollapse.push(params);
+};
+
+/**
+ * @param {Graph} graph The graph to transform. Modified in place
+ */
+CollapseNodesTransformation.prototype.transform = function(graph) {
+
+    for(var i = 0; i < this.toCollapse.length; i++) {
+        var param = this.toCollapse[i];
+        
+        var node = param.startNode;
+        
+        if(node.isHead() || node.isTail()) {
+            throw "Cannot collapse a head or tail node";
+        }
+        
+        var head = node.getPrev();
+        
+        var logEvents = node.getLogEvents();
+        for(var j = 0; j < param.numberToCollapse; j++) {
+            var next = node.getNext();
+            node.remove();
+            node = next;
+            
+            if(node.isTail()) {
+                throw "Cannot collapse a head or tail node";
+            }
+            
+            logEvents.concat(node.getLogEvents());
+            
+        }
+        
+        var newNode = new Node(logEvents, head.getHost());
+        head.insertNext(newNode);
+    }
 
 };
