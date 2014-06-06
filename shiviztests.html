@@ -1,80 +1,37 @@
 <!DOCTYPE HTML>
 <html lang="en-US">
 <head>
-    <meta charset="UTF-8">
-    <title>Easy JavaScript Testing </title>
-    <style>
-        .pass:before {
-            content: 'PASS: ';
-            color:  blue;
-            font-weight: bold;
-        }
-        
-        .fail:before {
-            content: 'FAIL: ';
-            color: red;
-            font-weight: bold;
-            
-        }
-    </style>
+	<meta charset="UTF-8">
+	<title>ShiViz - Unit tests</title>
+	<style>
+		body {
+			background: #222;
+			color: #CCC;
+			font: 10pt monospace;
+		}
+
+		#output {
+			list-style: none;
+			padding: 0;
+			margin: 1em;
+		}
+
+		.pass:before {
+			content: 'PASS: ';
+			color: #8ca;
+			font-weight: bold;
+		}
+
+		.fail:before {
+			content: 'FAIL: ';
+			color: #c88;
+			font-weight: bold;
+		}
+	</style>
 </head>
 <body>
-
-<ul id="output"></ul>
-<script type="text/javascript" src="shiviz.js" ></script>   
-<script>
-var output = document.getElementById('output');
-
-function assert( outcome, description ) {
-    var li = document.createElement('li');
-    li.className = outcome ? 'pass' : 'fail';
-    li.appendChild( document.createTextNode( description ) );
-    
-    output.appendChild(li);
-};
-
-// NOTE: these tests have been broken by the July 2013 ShiViz refactoring and
-// should be replaced. The following illustrates how to use the testing
-// framework.
-/*
-var nodes = new Nodes();
-var clock = {};
-clock['A'] = 1;
-var a1 = new Node("Blah", "A", JSON.parse(JSON.stringify(clock)));
-clock['A'] = 2;
-var a2 = new Node("Blah", "A", JSON.parse(JSON.stringify(clock)));
-clock['A'] = 4;
-clock['B'] = 1;
-var a4 = new Node("Blah", "A", JSON.parse(JSON.stringify(clock)));
-clock['A'] = 7;
-var a7 = new Node("Blah", "A", JSON.parse(JSON.stringify(clock)));
-clock['A'] = 8;
-var a8 = new Node("Blah", "A", JSON.parse(JSON.stringify(clock)));
-delete clock['A'];
-clock['B'] = 1;
-var b1 = new Node("Blah", "B", JSON.parse(JSON.stringify(clock)));
-clock['B'] = 4;
-clock['A'] = 7;
-var b4 = new Node("Blah", "B", JSON.parse(JSON.stringify(clock)));
-
-nodes.add(a7);
-nodes.add(a4);
-nodes.add(a2);
-nodes.add(a8);
-nodes.add(a1);
-nodes.add(b4);
-nodes.add(b1);
-
-
-assert(nodes.getHosts().length == 2, "Checking getHosts function - size");
-assert(nodes.getHosts().indexOf("A") > -1, "Checking getHosts function - contents");
-assert(nodes.getHosts().indexOf("B"), "Checking getHosts function - contents");
-
-assert(nodes.$("#A", 1) === a1, "Checking add + get");
-assert(nodes.$("#A", 3) == null, "Checking get -- not present");
-assert(nodes.getNext("A", 2) == a2, "Checking getNext -- no skip");
-assert(nodes.getNext("A", 3) == a4, "Checking getNext -- 1 skip");
-assert(nodes.getNext("A", 5) == a7, "Checking getNext -- bigger skip");
-*/
-
-</script>
+	<ul id="output"></ul>
+	<script type="text/javascript" src="js/model.js"></script>
+	<script type="text/javascript" src="js/test.js"></script>
+</body>
+</html>
