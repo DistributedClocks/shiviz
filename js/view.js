@@ -101,67 +101,6 @@ View.prototype.applyTransformations = function() {
     }
 };
 
-View.prototype.convertToLiteral = function(graph) {
-    var literal = {
-        nodes : [],
-        links : [],
-        hosts : []
-    };
-
-    var nodeToIndex = {};
-    var index = 0;
-
-    var hosts = graph.getHosts();
-    for (var i = 0; i < hosts.length; i++) {
-        var host = hosts[i];
-        var node = graph.getHead(host);
-        nodeToIndex[node.getId()] = index++;
-
-        literal.nodes.push({
-            node : node,
-            name : node.host, // Todo: fix
-            group : node.host,
-            startNode : true,
-            line : 0,
-        });
-    }
-
-    var nodes = graph.getNodes();
-    for (var i = 0; i < nodes.length; i++) {
-        var node = nodes[i];
-        nodeToIndex[node.getId()] = index++;
-
-        literal.nodes.push({
-            node : node,
-            name : node.getLogEvents()[0].getText(), // Todo: fix
-            group : node.host,
-            line : node.getLogEvents()[0].getLineNumber(),
-        });
-
-    }
-
-    for (var i = 0; i < nodes.length; i++) {
-        var node = nodes[i];
-
-        literal.links.push({
-            target : nodeToIndex[node.getId()],
-            source : nodeToIndex[node.getPrev().getId()]
-        });
-
-        var connect = node.getChildren();
-        for (var j = 0; j < connect.length; j++) {
-            literal.links.push({
-                target : nodeToIndex[connect[j].getId()],
-                source : nodeToIndex[node.getId()]
-            });
-        }
-    }
-
-    literal.hosts = graph.getHosts();
-
-    return literal;
-
-};
 
 /**
  * Clears the current visualization and re-draws the current model.
@@ -171,20 +110,21 @@ View.prototype.draw = function() {
     // them
     if (this.id == null)
         this.id = "view" + d3.selectAll("#vizContainer > svg").size();
-
-    var graphLiteral = this.convertToLiteral(this.currentModel);
+    
+    
+    var numHosts = this.currentModel.getHosts().length;
+    var width = Math.max(numHosts * 40, $("body").width()
+            * numHosts
+            / (this.global.hosts.length
+               + this.global.views.length - 1));
+    
+    
+    var delta = 45;
+    var layout = new SpaceTimeLayout(width, delta);
+    var visualGraph = new VisualGraph(this.currentModel, layout);
 
     // Define locally so that we can use in lambdas below
     var view = this;
-
-    var spaceTime = spaceTimeLayout();
-    var width = Math.max(graphLiteral.hosts.length * 40, $("body").width()
-                         * graphLiteral.hosts.length
-                         / (this.global.hosts.length
-                            + this.global.views.length - 1));
-
-    spaceTime.hosts(graphLiteral.hosts).nodes(graphLiteral.nodes).links(
-            graphLiteral.links).width(width).start();
 
     var svg = d3.select("#vizContainer").append("svg");
 
@@ -193,70 +133,69 @@ View.prototype.draw = function() {
     d3.selectAll("." + this.id).remove();
     d3.selectAll("#hosts svg").remove();
 
-    var delta = 45;
 
     var link = svg.selectAll(".link")
-                  .data(graphLiteral.links)
+                  .data(visualGraph.getVisualEdges())
                   .enter()
                   .append("line")
                   .attr("class", "link")
-                  .style("stroke-width", function(d) {return 1;});
+                  .style("stroke-width", function(d) {return d.getWidth();});
 
     link.attr("x1", function(d) {
-        return d.source.x;
+        return d.getSourceVisualNode().getX();
     }).attr("y1", function(d) {
-        if (d.source.hasOwnProperty("startNode") && d.source.x != d.target.x) {
-            return d.source.y + 10 - delta;
-        }
-        return d.source.y - delta;
+//        if (d.source.hasOwnProperty("startNode") && d.source.x != d.target.x) {
+//            return d.source.y + 10 - delta;
+//        }
+        return d.getSourceVisualNode().getY() - delta;
     }).attr("x2", function(d) {
-        return d.target.x;
+        return d.getTargetVisualNode().getX();
     }).attr("y2", function(d) {
-        return d.target.y - delta;
+        return d.getTargetVisualNode().getY() - delta;
     });
 
     var node = svg.selectAll(".node")
-                  .data(graphLiteral.nodes)
+                  .data(visualGraph.getVisualNodes())
                   .enter()
                   .append("g");
 
     node.append("title").text(function(d) {
-        return d.name;
+        return d.getText();
     });
 
     var standardNodes = node.filter(function(d) {
-        return !d.hasOwnProperty("startNode");
+        return !d.isStart();
     });
 
     standardNodes.append("circle").on("mouseover", function(e) {
-        $("#curNode").text(e.name);
+        $("#curNode").text(e.getText());
     }).on("click", function(e) {
-        selectTextareaLine($("#logField")[0], e.line);
+        selectTextareaLine($("#logField")[0], e.getLine());
         // view.hideNodes([e.modelNode]);
     }).attr("class", "node").style("fill", function(d) {
-        return view.hostColors[d.group];
+        return view.hostColors[d.getHost()];
     }).attr("id", function(d) {
-        return d.group;
+        return d.getHost();
     }).attr("cx", function(d) {
-        return d.x;
+        return d.getX();
     }).attr("cy", function(d) {
-        return d.y - delta;
+        return d.getY() - delta;
     }).attr("r", function(d) {
-        return 5;
+        return d.getRadius();
     });
 
-    svg.attr("height", spaceTime.height())
-       .attr("width", spaceTime.width() + 40)
+    svg.attr("height", layout.getHeight())
+       .attr("width", layout.getWidth() + 40)
        .attr("class", this.id);
 
-    var starts = graphLiteral.nodes.filter(function(d) {
-        return d.hasOwnProperty("startNode");
+    var starts = visualGraph.getVisualNodes().filter(function(d) {
+        return d.isStart();
     });
     var hostSvg = d3.select("#hostBar").append("svg");
 
     hostSvg.append("rect")
            .style("stroke", "#fff")
-           .attr("width", spaceTime.width())
+           .attr("width", layout.getWidth())
            .attr("height", 60)
            .attr("x", 0)
            .attr("y", 0)
@@ -274,10 +213,10 @@ View.prototype.draw = function() {
     }).on("dblclick", function(e) {
         view.hideHost(e.group);
     }).attr("class", "node").style("fill", function(d) {
-        return view.hostColors[d.group];
+        return view.hostColors[d.getHost()];
     });
 
-    hostSvg.attr("width", spaceTime.width() + 40).attr("height", 55).attr(
+    hostSvg.attr("width", layout.getWidth() + 40).attr("height", 55).attr(
             "class", this.id);
 
     this.drawArrow();
