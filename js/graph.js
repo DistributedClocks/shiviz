@@ -80,7 +80,7 @@ function Graph(logEvents) {
     });
 
     // Generate linear linked list among nodes in same host
-    for ( var host in hostToNodes) {
+    for (var host in hostToNodes) {
         var array = hostToNodes[host];
         array.sort(function(a, b) {
             return a.logEvents[0].getVectorTimestamp().compareToLocal(
@@ -102,7 +102,7 @@ function Graph(logEvents) {
     }
 
     // Generates parent/child connections
-    for ( var host in hostSet) {
+    for (var host in hostSet) {
         // Latest clock
         var clock = {};
         var currNode = this.hostToHead[host].next;
@@ -117,7 +117,7 @@ function Graph(logEvents) {
 
             // Looks to see if a timestamp for a host in the
             // vector clock has been updated from the last one
-            for ( var otherHost in currVT.clock) {
+            for (var otherHost in currVT.clock) {
                 var time = currVT.clock[otherHost];
 
                 // If the timestamp for the host has been updated
@@ -146,7 +146,7 @@ function Graph(logEvents) {
 
             for (var i = 0; i < candidates.length; i++) {
                 var vt = candidates[i].logEvents[0].getVectorTimestamp();
-                for ( var otherHost in vt.clock) {
+                for (var otherHost in vt.clock) {
                     if (otherHost != vt.getHost()) {
                         var id = otherHost + ":" + vt.clock[otherHost];
                         delete connections[id];
@@ -155,7 +155,7 @@ function Graph(logEvents) {
             }
 
             // figure out which child to keep
-            for ( var key in connections) {
+            for (var key in connections) {
                 var node = connections[key];
                 var currParentOnHost = currNode.hostToParent[node.getHost()];
                 if (!currParentOnHost) {
@@ -286,11 +286,11 @@ Graph.prototype.getNodes = function() {
  */
 Graph.prototype.getDummyNodes = function() {
     var nodes = [];
-    for ( var host in this.hostToHead) {
+    for (var host in this.hostToHead) {
         nodes.push(this.hostToHead[host]);
     }
 
-    for ( var host in this.hostToTail) {
+    for (var host in this.hostToTail) {
         nodes.push(this.hostToTail[host]);
     }
     return nodes;
@@ -328,12 +328,12 @@ Graph.prototype.clone = function() {
         oldToNewNode[node.getId()] = node.clone();
     }
 
-    for ( var host in this.hostToHead) {
+    for (var host in this.hostToHead) {
         var node = this.hostToHead[host];
         newGraph.hostToHead[host] = oldToNewNode[node.getId()];
     }
 
-    for ( var host in this.hostToTail) {
+    for (var host in this.hostToTail) {
         var node = this.hostToTail[host];
         newGraph.hostToTail[host] = oldToNewNode[node.getId()];
     }

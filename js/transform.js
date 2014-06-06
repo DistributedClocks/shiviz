@@ -87,12 +87,12 @@ function HideNodeTransformation(nodesToHide) {
  */
 HideNodeTransformation.prototype.transform = function(graph) {
 
-    for (var i = 0; i < nodesToHide.length; i++) {
-        var node = nodesToHide[i];
+    for (var i = 0; i < this.nodesToHide.length; i++) {
+        var node = this.nodesToHide[i];
         if(node.isHead() || node.isTail()) {
             throw "Cannot hide a head or tail node";
         }
-        nodesToHide[i].remove();
+        node.remove();
     }
 
 };
