@@ -13,8 +13,6 @@ function View(model, global, label) {
     this.global = global;
     this.hiddenHosts = global.hiddenHosts;
     this.hostColors = global.hostColors;
-
-    console.log(this.label);
 }
 
 /**
