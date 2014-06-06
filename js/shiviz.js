@@ -38,41 +38,20 @@ function resetView() {
 $("#vizButton").on("click", function() {
     d3.selectAll("svg").remove();
 
-    var log = $("#logField").val();
-    var delimiter = new NamedRegExp($("#delimiter").val(), "m");
-    var executions = log.split(delimiter.no);
-
-    if (delimiter.names.indexOf("trace") >= 0) {
-        var labels = [""];
-        var match;
-        while (match = delimiter.exec(log))
-            labels.push(match.trace);
-    }
-
-    executions = executions.filter(function (e, i) {
-        if (e.trim().length == 0) {
-            if (labels) labels[i] = "//REMOVE";
-            return false;
-        }
-        return true;
-    });
-
-    if (labels)
-        labels = labels.filter(function (e) {
-            return !(e == "//REMOVE");
-        });
+    var textBox = $("#logField");
+    var executions = textBox.val().split(/^======$/m);
 
     // We need a variable share across all views/executions to keep them in
     // sync.
     var global = new Global();
 
     // Make a view for each execution, then draw it
-    var views = executions.map(function(v, i) {
+    var views = executions.map(function(v) {
         var lines = v.split('\n');
         var model = generateGraphFromLog(lines);
-        var view = new View(model, global, labels ? labels[i] : "");
+        var view = new View(model, global);
 
-        global.addHosts(model.hosts);
+        global.addHosts(model.getHosts());
         global.addView(view);
 
         return view;
@@ -86,82 +65,86 @@ $("#vizButton").on("click", function() {
 
     $("#graph").show();
 
+
     /*
     The following snippet of code is an attempt to address issue #14: Grey out process boxes 
     once their events have been scrolled through. The code checks to see if the final node in 
     the process is in view. If it is, then it greys out the process box, else it does not. 
     It is commented out because the code generates the following bugs:
-        1. Once the boxes are greyed out, scrolling up would cause all the boxes to be coloured in at once.
-        2. The boxes do not get greyed out once they are immediately scrolled out of view. You have to scroll down one more time to see it greyed out
-        You can see the above two bugs here: http://olzhang.bitbucket.org/shiviz.html. 
-        Source code here: https://bitbucket.org/olzhang/olzhang.bitbucket.org
-        
-        The .bind("inview",  function(event, isInView, visiblePartX, visiblePartY) {…} is not a 
-        native jquery method. It is made possible by the jquery.inview 
-        library (https://github.com/protonet/jquery.inview) (not included here). 
-        The following snippet of code uses this inview method, which returns a boolean value to detect 
-        whether an element of the DOM is visible to the user. Returns false if the object is not viewable; 
-        true if it is.    
+      1. Once the boxes are greyed out, scrolling up would cause all the boxes to be coloured in at once.
+      2. The boxes do not get greyed out once they are immediately scrolled out of view. You have to scroll down one more time to see it greyed out
+      You can see the above two bugs here: http://olzhang.bitbucket.org/shiviz.html. 
+      Source code here: https://bitbucket.org/olzhang/olzhang.bitbucket.org
+      
+      The .bind("inview",  function(event, isInView, visiblePartX, visiblePartY) {…} is not a 
+      native jquery method. It is made possible by the jquery.inview 
+      library (https://github.com/protonet/jquery.inview) (not included here). 
+      The following snippet of code uses this inview method, which returns a boolean value to detect 
+      whether an element of the DOM is visible to the user. Returns false if the object is not viewable; 
+      true if it is.    
 
-        For easy debugging, you can type in hostColors into the console to see the colours 
-        associated with each process box, or lastNodesElement to see the final node 
-        associated with the process, and hosts to see the hostId ossociated with each process.
-        */   
+      For easy debugging, you can type in hostColors into the console to see the colours 
+      associated with each process box, or lastNodesElement to see the final node 
+      associated with the process, and hosts to see the hostId ossociated with each process.
+      */   
 
+
+    
     /*
     createLastNodeElements();
-
-    for (n in lastNodesElements) {
-        // binds the inview event to each final node 
-        $(lastNodesElements[n]).bind("inview", function (event, isInView, visiblePartX, visiblePartY) {
-            var matchingHostId = $(this).find('circle').attr('id');
-            // matches each last node with the corresponding host 
-            var matchingHost = $("rect").filter(function () {
-                if ($(this).attr("id") == matchingHostId) {
-                    return $(this);
-                }
-            });
-            var lastScrollTop = 0;
-            $(window).scroll(function (event) {
-                var st = $(this).scrollTop();
-                if (st > lastScrollTop) {
-                    // downscroll code
-                    if (!isInView) {
-                        // if you are scrolling down and the final node is out of view 
-                        // grey out the host (i.e. process box) 
-                        $(matchingHost).attr("style", "stroke: #ffffff; fill: #cdcdcd;");
-                    } else {
-                        // if you are scrolling down and the final node is not out of view, they keep
-                        // the original colour of the process box  
-                        var k;
-                        for (var c in hostColors) {
-                            if (c == matchingHostId)
-                                k = hostColors[c];
-                        }
-                        $(matchingHost).attr("style", "stroke: #ffffff; fill: " + k + ";");
-                    }
-                } else {
-                    if (!isInView || ($(matchingHost).css("fill") == "#cdcdcd")) {
-                        // if you are scrolling up and the final node is not inview and the 
-                        // host (i.e. the process box) is greyed out then keep it greyed out  
-                        $(matchingHost).attr("style", "stroke: #ffffff; fill: #cdcdcd;");
-                    } else {
-                        // if you are scrolling up and the final node is not out of view, then keep
-                        // the original colour of the process box 
-                        var k;
-                        for (var c in hostColors) {
-                            if (c == matchingHostId)
-                                k = hostColors[c];
-                        }
-                        $(matchingHost).attr("style", "stroke: #ffffff; fill: " + k + ";");
-                    }
-                }
-                lastScrollTop = st;
-            });
-        });
+    
+    for(n in lastNodesElements) {
+      // binds the inview event to each final node 
+      $(lastNodesElements[n]).bind("inview",  function(event, isInView, visiblePartX, visiblePartY) {
+          
+          
+          var matchingHostId = $(this).find('circle').attr('id');
+          // matches each last node with the corresponding host 
+          var matchingHost = $("rect").filter(function() {
+              if($(this).attr("id")==matchingHostId) {
+                  return $(this);
+              }
+          });
+          var lastScrollTop = 0;
+          $(window).scroll(function(event){
+              var st = $(this).scrollTop();
+              if (st > lastScrollTop) {
+                  // downscroll code
+                  if(!isInView) {
+                      // if you are scrolling down and the final node is out of view 
+                      // grey out the host (i.e. process box) 
+                      $(matchingHost).attr("style", "stroke: #ffffff; fill: #cdcdcd;");
+                  } else {
+                      // if you are scrolling down and the final node is not out of view, they keep
+                      // the original colour of the process box  
+                      var k;
+                      for(var c in hostColors) {
+                          if(c==matchingHostId)
+                              k = hostColors[c]; 
+                      }
+                      $(matchingHost).attr("style", "stroke: #ffffff; fill: "+k+";");
+                  }
+              } else {
+                  if(!isInView || ($(matchingHost).css("fill")=="#cdcdcd")) {
+                      // if you are scrolling up and the final node is not inview and the 
+                      // host (i.e. the process box) is greyed out then keep it greyed out  
+                      $(matchingHost).attr("style", "stroke: #ffffff; fill: #cdcdcd;");
+                  } else {
+                      // if you are scrolling up and the final node is not out of view, then keep
+                      // the original colour of the process box 
+                      var k;
+                      for(var c in hostColors) {
+                          if(c==matchingHostId)
+                              k = hostColors[c]; 
+                      }
+                      $(matchingHost).attr("style", "stroke: #ffffff; fill: "+k+";");
+                  }
+              }
+              lastScrollTop = st;
+          });
+      });
     }
     */
-
 });
 
 /**
@@ -169,7 +152,7 @@ $("#vizButton").on("click", function() {
  * 
  * @param String hostid
  */
- function getLastNodeElementOfHost(hostid) {
+function getLastNodeElementOfHost(hostid) {
     var htmlElem;
     htmlElem = $("g").filter(function() {
         if ($(this).find("title").text() == lastNodesId[hostid]["logEvent"]) {
@@ -183,7 +166,7 @@ $("#vizButton").on("click", function() {
  * creates an object with the process (host) id as the key and the last node
  * associated with the process as the value
  */
- function createLastNodeElements() {
+function createLastNodeElements() {
     lastNodesElements = {};
     for (var i = 0; i < hosts.length; i++) {
         lastNodesElements[hosts[i]] = getLastNodeElementOfHost(hosts[i]);
@@ -213,13 +196,13 @@ function loadExample(filename, linkObj) {
 
 $(window).on("scroll", function() {
     var top = window.pageYOffset ? window.pageYOffset
-    : document.documentElement.scrollTop ? document.documentElement.scrollTop
-    : document.body.scrollTop;
+            : document.documentElement.scrollTop ? document.documentElement.scrollTop
+                    : document.body.scrollTop;
     var left = ($(window).width() - $("body").width()) / 2
-    - $(document).scrollLeft() + "px";
+            - $(document).scrollLeft() + "px";
     if ($('#topBar').height()
-        && top > $('#topBar').css('position', 'relative').offset().top
-        - parseInt($('#topBar p').css('margin-top'))) {
+            && top > $('#topBar').css('position', 'relative').offset().top
+                    - parseInt($('#topBar p').css('margin-top'))) {
         $("#topBar").css({
             position: "fixed",
             top: "0"
@@ -248,7 +231,7 @@ $(window).on("scroll", function() {
 
         $("#vizContainer").css({
             marginTop: $("#topBar").height()
-            - parseInt($("#topBar p").css("margin-top")) + 55 + "px",
+                       - parseInt($("#topBar p").css("margin-top")) + 55 + "px",
             marginLeft: "40px"
         });
 
