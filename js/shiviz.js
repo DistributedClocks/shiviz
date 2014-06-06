@@ -38,18 +38,38 @@ function resetView() {
 $("#vizButton").on("click", function() {
     d3.selectAll("svg").remove();
 
-    var textBox = $("#logField");
-    var executions = textBox.val().split(/^======$/m);
+    var log = $("#logField").val();
+    var delimiter = new NamedRegExp($("#delimiter").val(), "m");
+    var executions = log.split(delimiter.no);
+    if (delimiter.names.indexOf("trace") >= 0) {
+        var labels = [""];
+        var match;
+        while (match = delimiter.exec(log))
+            labels.push(match.trace);
+    }
+
+    executions = executions.filter(function (e, i) {
+        if (e.trim().length == 0) {
+            if (labels) labels[i] = "//REMOVE";
+            return false;
+        }
+        return true;
+    });
+
+    if (labels)
+        labels = labels.filter(function (e) {
+            return !(e == "//REMOVE");
+        });
 
     // We need a variable share across all views/executions to keep them in
     // sync.
     var global = new Global();
 
     // Make a view for each execution, then draw it
-    var views = executions.map(function(v) {
+    var views = executions.map(function (v, i) {
         var lines = v.split('\n');
         var model = generateGraphFromLog(lines);
-        var view = new View(model, global);
+        var view = new View(model, global, labels ? labels[i] : "");
 
         global.addHosts(model.getHosts());
         global.addView(view);
