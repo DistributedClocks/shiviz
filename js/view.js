@@ -3,7 +3,8 @@
  * accepts an initial model in construction and collects Tranformations that
  * generate new iterations of the initial model.
  */
-function View(model, global) {
+function View(model, global, label) {
+    this.label = label;
     this.initialModel = model;
     this.currentModel = model;
 
@@ -13,6 +14,7 @@ function View(model, global) {
     this.hiddenHosts = global.hiddenHosts;
     this.hostColors = global.hostColors;
 
+    console.log(this.label);
 }
 
 /**

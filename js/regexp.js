@@ -4,17 +4,23 @@
  * 
  * @param {String} regexp a string describing a regular expression.
  *                        All backslashes must be escaped, e.g. \\d
+ * @param {String} flags  a string of regexp flags, e.g. "mi" for
+ *                        multiline case-insensitive
  */
-function NamedRegExp (regexp) {
+function NamedRegExp (regexp, flags) {
     var match, names = [];
-    this.no = new RegExp(regexp.replace(/\(\?<\w+?>(.+?)\)/g, "\(\?\:$1\)"), "g");
+    flags = flags || "";
+    
+    this.no = new RegExp(regexp.replace(/\(\?<\w+?>(.+?)\)/g, "\(\?\:$1\)"),
+        "g" + flags);
     
     regexp = regexp.replace(/\((?!\?(=|!|<|:))/g,"(?:");
     while (match = regexp.match(/\(\?<(\w+?)>.+\)/)) {
         names.push(match[1]);
         regexp = regexp.replace(/\(\?<\w+?>(.+)\)/, '\($1\)');
     }
-    this.reg = new RegExp(regexp, "g");
+
+    this.reg = new RegExp(regexp, "g" + flags);
     this.names = names;
 }
 
