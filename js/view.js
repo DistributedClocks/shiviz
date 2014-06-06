@@ -232,7 +232,9 @@ View.prototype.draw = function() {
         $("#curNode").text(e.name);
     }).on("click", function(e) {
         selectTextareaLine($("#logField")[0], e.line);
-        // view.hideNodes([e.modelNode]);
+//        view.addTransformation(new HideNodeTransformation([e.node]));
+//        view.global.drawAll();
+//        // view.hideNodes([e.modelNode]);
     }).attr("class", "node").style("fill", function(d) {
         return view.hostColors[d.group];
     }).attr("id", function(d) {
