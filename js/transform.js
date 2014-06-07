@@ -69,7 +69,10 @@ HideHostTransformation.prototype.transform = function(graph, visualGraph) {
     for(var i = 0; i < tedge.length; i++) {
         var obj = tedge[i];
         
-        visualGraph.getVisualEdgeByNodes(obj.from, obj.to).setDashLength(5);
+        var edge = visualGraph.getVisualEdgeByNodes(obj.from, obj.to);
+        if(edge != null) {
+            edge.setDashLength(5)
+        }
     }
 };
 
@@ -84,16 +87,18 @@ CollapseSequentialNodesTransformation.prototype.transform = function(graph, visu
         var host = hosts[i];
         
         var groupCount = 0;
-        var curr = graph.getHead(host).getNext();
-        while(!curr.isTail()) {
-            if(curr.hasChildren() || curr.hasParents()) { //TODO: eddge case at end
+        var prev = graph.getHead(host);
+        var curr = prev.getNext();
+        while(curr != null) {
+            if(curr.hasChildren() || curr.hasParents() || curr.isTail()) {
                 if(groupCount >= this.limit) {
                     
                     var logEvents = [];
-                    curr = curr.getPrev();
+                    curr = prev;
+                    prev = curr.getPrev();
                     while(groupCount-- > 0) {
                         logEvents = logEvents.concat(curr.getLogEvents().reverse());
-                        var prev = curr.getPrev();
+                        prev = curr.getPrev();
                         curr.remove();
                         curr = prev;
                     }
@@ -105,10 +110,12 @@ CollapseSequentialNodesTransformation.prototype.transform = function(graph, visu
             else {
                 groupCount++;
             }
+            prev = curr;
             curr = curr.getNext();
         }
+
     }
-    
+
     visualGraph.update();
     
     var nodes = graph.getNodes();
@@ -120,4 +127,5 @@ CollapseSequentialNodesTransformation.prototype.transform = function(graph, visu
             visualNode.setLabel(node.getLogEvents().length);
         }
     }
+
 };
