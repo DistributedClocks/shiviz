@@ -6,6 +6,8 @@ function VisualNode(node) {
     this.x = 0;
     this.y = 0;
     this.radius = 5;
+    this.fillColor = 0;
+    this.label = "";
 }
 
 VisualNode.id = 0;
@@ -38,11 +40,27 @@ VisualNode.prototype.setRadius = function(newRadius) {
     this.radius = newRadius;
 };
 
+VisualNode.prototype.getFillColor = function() {
+    return this.fillColor;
+};
+
+VisualNode.prototype.setFillColor = function(newFillColor) {
+    this.fillColor = newFillColor;
+};
+
 VisualNode.prototype.getText = function() {
     if(this.isStart()) {
         return this.getHost();
     }
-    return this.node.getLogEvents()[0].getText(); // Todo: temporary
+    return this.node.getLogEvents()[0].getText();
+};
+
+VisualNode.prototype.getLabel = function() {
+    return this.label;
+};
+
+VisualNode.prototype.setLabel = function(newLabel) {
+    this.label = newLabel;
 };
 
 VisualNode.prototype.getHost = function() {
@@ -55,5 +73,5 @@ VisualNode.prototype.getLineNumber = function() {
 
 VisualNode.prototype.isStart = function() {
     return this.node.isHead();
-}
+};
 
