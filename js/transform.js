@@ -27,7 +27,7 @@ function HideHostTransformation(hostToHide) {
  * 
  * @param {Graph} graph The graph to transform. Modified in place
  */
-HideHostTransformation.prototype.transform = function(graph) {
+HideHostTransformation.prototype.transform = function(graph, visualGraph) {
 
     var curr = graph.getHead(this.hostToHide).getNext();
 
@@ -59,5 +59,56 @@ HideHostTransformation.prototype.transform = function(graph) {
     }
 
     graph.removeHost(this.hostToHide);
+    
+    visualGraph.update();
 
+};
+
+function CollapseSequentialNodesTransformation(limit) {
+    this.limit = limit;
+}
+
+CollapseSequentialNodesTransformation.prototype.transform = function(graph, visualGraph) {
+    
+    var hosts = graph.getHosts();
+    for(var i = 0; i < hosts.length; i++) {
+        var host = hosts[i];
+        
+        var groupCount = 0;
+        var curr = graph.getHead(host).getNext();
+        while(!curr.isTail()) {
+            if(curr.hasChildren() || curr.hasParents()) { //TODO: eddge case at end
+                if(groupCount >= this.limit) {
+                    
+                    var logEvents = [];
+                    curr = curr.getPrev();
+                    while(groupCount-- > 0) {
+                        logEvents = logEvents.concat(curr.getLogEvents().reverse());
+                        var prev = curr.getPrev();
+                        curr.remove();
+                        curr = prev;
+                    }
+                    var newNode = new Node(logEvents.reverse(), curr.getHost());
+                    curr.insertNext(newNode);
+                }
+                groupCount = 0;
+            }
+            else {
+                groupCount++;
+            }
+            curr = curr.getNext();
+        }
+    }
+    
+    visualGraph.update();
+    
+    var nodes = graph.getNodes();
+    for(var i = 0; i < nodes.length; i++) {
+        var node = nodes[i];
+        if(node.getLogEvents().length > 1) {
+            var visualNode = visualGraph.getVisualNodeByNode(node);
+            visualNode.setRadius(15);
+            visualNode.setLabel(node.getLogEvents().length);
+        }
+    }
 };

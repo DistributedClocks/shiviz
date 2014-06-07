@@ -6,6 +6,7 @@
 function View(model, global) {
     this.initialModel = model;
     this.currentModel = model;
+    this.currentVisualModel = null;
 
     this.transformations = [];
 
@@ -13,6 +14,15 @@ function View(model, global) {
     this.hiddenHosts = global.hiddenHosts;
     this.hostColors = global.hostColors;
 
+    var numHosts = this.currentModel.getHosts().length;
+    var width = Math.max(numHosts * 40, $("body").width() * numHosts
+            / (this.global.hosts.length + this.global.views.length - 1));
+    
+    var layout = new SpaceTimeLayout(width, 45);
+    this.currentVisualModel = new VisualGraph(this.currentModel, layout,
+            this.hostColors);
+    
+    this.addTransformation(new CollapseSequentialNodesTransformation(2));
 }
 
 /**
@@ -95,9 +105,19 @@ View.prototype.removeHidingTransformations = function(hostId) {
  */
 View.prototype.applyTransformations = function() {
     this.currentModel = this.initialModel.clone();
+    
+    var numHosts = this.currentModel.getHosts().length;
+    var width = Math.max(numHosts * 40, $("body").width() * numHosts
+            / (this.global.hosts.length + this.global.views.length - 1));
+    
+    var layout = new SpaceTimeLayout(width, 45);
+    
+    this.currentVisualModel = new VisualGraph(this.currentModel, layout,
+            this.hostColors);
+    
     for ( var i = 0; i < this.global.transformations.length; i++) {
-        var t = this.global.transformations[i];
-        t.transform(this.currentModel);
+        var t = this.global.transformations[this.global.transformations.length - i - 1]; // TODO: CHANGE
+        t.transform(this.currentModel, this.currentVisualModel);
     }
 };
 
@@ -110,13 +130,9 @@ View.prototype.draw = function() {
     if (this.id == null)
         this.id = "view" + d3.selectAll("#vizContainer > svg").size();
 
-    var numHosts = this.currentModel.getHosts().length;
-    var width = Math.max(numHosts * 40, $("body").width() * numHosts
-            / (this.global.hosts.length + this.global.views.length - 1));
 
+    var visualGraph = this.currentVisualModel;
     var delta = 45;
-    var layout = new SpaceTimeLayout(width, delta);
-    var visualGraph = new VisualGraph(this.currentModel, layout);
 
     // Define locally so that we can use in lambdas below
     var view = this;
@@ -145,7 +161,9 @@ View.prototype.draw = function() {
     });
 
     var node = svg.selectAll(".node").data(visualGraph.getVisualNodes())
-            .enter().append("g");
+            .enter().append("g").attr("transform", function(d) {
+                return "translate(" + d.getX() + "," + d.getY() + ")";
+            });
 
     node.append("title").text(function(d) {
         return d.getText();
@@ -160,18 +178,23 @@ View.prototype.draw = function() {
     }).on("click", function(e) {
         selectTextareaLine($("#logField")[0], e.getLine());
     }).attr("class", "node").style("fill", function(d) {
-        return view.hostColors[d.getHost()];
+        return d.getFillColor();
     }).attr("id", function(d) {
         return d.getHost();
     }).attr("cx", function(d) {
-        return d.getX();
+        return 0;
     }).attr("cy", function(d) {
-        return d.getY();
+        return 0;
     }).attr("r", function(d) {
         return d.getRadius();
     });
 
-    svg.attr("height", layout.getHeight()).attr("width", layout.getWidth())
+    standardNodes.append("text").attr("text-anchor", "middle").text(
+            function(d) {
+                return d.getLabel();
+            });
+
+    svg.attr("height", visualGraph.getHeight()).attr("width", visualGraph.getWidth())
             .attr("class", this.id);
 
     var starts = visualGraph.getVisualNodes().filter(function(d) {
@@ -180,7 +203,7 @@ View.prototype.draw = function() {
     var hostSvg = d3.select("#hostBar").append("svg");
 
     hostSvg.append("rect").style("stroke", "#fff").attr("width",
-            layout.getWidth()).attr("height", 60).attr("x", 0).attr("y", 0)
+            visualGraph.getWidth()).attr("height", 60).attr("x", 0).attr("y", 0)
             .style("fill", "#fff");
 
     hostSvg.selectAll().data(starts).enter().append("rect").style("stroke",
@@ -195,10 +218,10 @@ View.prototype.draw = function() {
     }).on("dblclick", function(e) {
         view.hideHost(e.getHost());
     }).attr("class", "node").style("fill", function(d) {
-        return view.hostColors[d.getHost()];
+        return d.getFillColor();
     });
 
-    hostSvg.attr("width", layout.getWidth()).attr("height", 55).attr("class",
+    hostSvg.attr("width", visualGraph.getWidth()).attr("height", 55).attr("class",
             this.id);
 
     this.drawArrow();
