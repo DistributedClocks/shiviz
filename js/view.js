@@ -158,6 +158,8 @@ View.prototype.draw = function() {
         return d.getTargetVisualNode().getX();
     }).attr("y2", function(d) {
         return d.getTargetVisualNode().getY();
+    }).style("stroke-dasharray", function(d) {
+        return d.getDashLength() + "," + d.getDashLength();
     });
 
     var node = svg.selectAll(".node").data(visualGraph.getVisualNodes())

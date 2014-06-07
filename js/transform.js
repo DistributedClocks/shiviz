@@ -31,6 +31,8 @@ HideHostTransformation.prototype.transform = function(graph, visualGraph) {
 
     var curr = graph.getHead(this.hostToHide).getNext();
 
+    var tedge = []; //*
+    
     var parents = [];
     var children = [];
     while (!curr.isTail()) {
@@ -40,6 +42,8 @@ HideHostTransformation.prototype.transform = function(graph, visualGraph) {
                 for (var j = 0; j < children.length; j++) {
                     if (parents[i].getHost() != children[j].getHost()) {
                         parents[i].addChild(children[j]);
+                        
+                        tedge.push({from: parents[i], to: children[j]}); //*
                     }
                 }
             }
@@ -62,6 +66,11 @@ HideHostTransformation.prototype.transform = function(graph, visualGraph) {
     
     visualGraph.update();
 
+    for(var i = 0; i < tedge.length; i++) {
+        var obj = tedge[i];
+        
+        visualGraph.getVisualEdgeByNodes(obj.from, obj.to).setDashLength(5);
+    }
 };
 
 function CollapseSequentialNodesTransformation(limit) {
