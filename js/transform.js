@@ -16,6 +16,7 @@
  * @param {String} hostToHide The host to hide from the model
  */
 function HideHostTransformation(hostToHide) {
+    this.priority = 80;
     this.hostToHide = hostToHide;
 }
 
@@ -71,7 +72,7 @@ HideHostTransformation.prototype.transform = function(graph, visualGraph) {
         
         var edge = visualGraph.getVisualEdgeByNodes(obj.from, obj.to);
         if(edge != null) {
-            edge.setDashLength(5)
+            edge.setDashLength(5);
         }
     }
 };
@@ -81,6 +82,8 @@ function CollapseSequentialNodesTransformation(limit) {
 }
 
 CollapseSequentialNodesTransformation.prototype.transform = function(graph, visualGraph) {
+    
+    this.priority = 20;
     
     var hosts = graph.getHosts();
     for(var i = 0; i < hosts.length; i++) {

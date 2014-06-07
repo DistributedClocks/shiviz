@@ -46,22 +46,17 @@ $("#vizButton").on("click", function() {
     var global = new Global();
 
     // Make a view for each execution, then draw it
-    var views = executions.map(function(v) {
+    executions.map(function(v) {
         var lines = v.split('\n');
         var model = generateGraphFromLog(lines);
         var view = new View(model, global);
 
-        global.addHosts(model.hosts);
         global.addView(view);
 
         return view;
     });
-
-    global.setColors();
-
-    views.forEach(function(v) {
-        v.draw();
-    });
+    
+    global.drawAll();
 
     $("#graph").show();
 
@@ -261,7 +256,7 @@ $(window).on("scroll", function() {
         $("#vizContainer").css({
             marginLeft: "0",
             marginTop: ""
-        })
+        });
     }
 });
 
