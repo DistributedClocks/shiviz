@@ -39,8 +39,10 @@ VisualNode.prototype.setRadius = function(newRadius) {
 };
 
 VisualNode.prototype.getText = function() {
-    return "TEMPORARY";
-//    return this.node.getLogEvents()[0].getText(); // Todo: temporary
+    if(this.isStart()) {
+        return this.getHost();
+    }
+    return this.node.getLogEvents()[0].getText(); // Todo: temporary
 };
 
 VisualNode.prototype.getHost = function() {

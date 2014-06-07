@@ -23,7 +23,7 @@ function View(model, global) {
 View.prototype.setColors = function() {
     var hosts = this.global.hosts;
     var color = d3.scale.category20();
-    for (var i = 0; i < hosts.length; i++) {
+    for ( var i = 0; i < hosts.length; i++) {
         var host = hosts[i];
         this.hostColors[host] = color(host);
     }
@@ -79,7 +79,7 @@ View.prototype.unhideHost = function(hostId) {
  */
 View.prototype.removeHidingTransformations = function(hostId) {
     var length = this.global.transformations.length;
-    for (var i = 0; i < length; i++) {
+    for ( var i = 0; i < length; i++) {
         var t = this.global.transformations[i];
         if (t.hasOwnProperty('hostToHide') && t.hostToHide == hostId) {
             continue;
@@ -95,12 +95,11 @@ View.prototype.removeHidingTransformations = function(hostId) {
  */
 View.prototype.applyTransformations = function() {
     this.currentModel = this.initialModel.clone();
-    for (var i = 0; i < this.global.transformations.length; i++) {
+    for ( var i = 0; i < this.global.transformations.length; i++) {
         var t = this.global.transformations[i];
         t.transform(this.currentModel);
     }
 };
-
 
 /**
  * Clears the current visualization and re-draws the current model.
@@ -110,15 +109,11 @@ View.prototype.draw = function() {
     // them
     if (this.id == null)
         this.id = "view" + d3.selectAll("#vizContainer > svg").size();
-    
-    
+
     var numHosts = this.currentModel.getHosts().length;
-    var width = Math.max(numHosts * 40, $("body").width()
-            * numHosts
-            / (this.global.hosts.length
-               + this.global.views.length - 1));
-    
-    
+    var width = Math.max(numHosts * 40, $("body").width() * numHosts
+            / (this.global.hosts.length + this.global.views.length - 1));
+
     var delta = 45;
     var layout = new SpaceTimeLayout(width, delta);
     var visualGraph = new VisualGraph(this.currentModel, layout);
@@ -133,31 +128,24 @@ View.prototype.draw = function() {
     d3.selectAll("." + this.id).remove();
     d3.selectAll("#hosts svg").remove();
 
-
-    var link = svg.selectAll(".link")
-                  .data(visualGraph.getVisualEdges())
-                  .enter()
-                  .append("line")
-                  .attr("class", "link")
-                  .style("stroke-width", function(d) {return d.getWidth();});
+    var link = svg.selectAll(".link").data(visualGraph.getVisualEdges())
+            .enter().append("line").attr("class", "link").style("stroke-width",
+                    function(d) {
+                        return d.getWidth();
+                    });
 
     link.attr("x1", function(d) {
         return d.getSourceVisualNode().getX();
     }).attr("y1", function(d) {
-//        if (d.source.hasOwnProperty("startNode") && d.source.x != d.target.x) {
-//            return d.source.y + 10 - delta;
-//        }
-        return d.getSourceVisualNode().getY() - delta;
+        return d.getSourceVisualNode().getY();
     }).attr("x2", function(d) {
         return d.getTargetVisualNode().getX();
     }).attr("y2", function(d) {
-        return d.getTargetVisualNode().getY() - delta;
+        return d.getTargetVisualNode().getY();
     });
 
-    var node = svg.selectAll(".node")
-                  .data(visualGraph.getVisualNodes())
-                  .enter()
-                  .append("g");
+    var node = svg.selectAll(".node").data(visualGraph.getVisualNodes())
+            .enter().append("g");
 
     node.append("title").text(function(d) {
         return d.getText();
@@ -171,7 +159,6 @@ View.prototype.draw = function() {
         $("#curNode").text(e.getText());
     }).on("click", function(e) {
         selectTextareaLine($("#logField")[0], e.getLine());
-        // view.hideNodes([e.modelNode]);
     }).attr("class", "node").style("fill", function(d) {
         return view.hostColors[d.getHost()];
     }).attr("id", function(d) {
@@ -179,45 +166,40 @@ View.prototype.draw = function() {
     }).attr("cx", function(d) {
         return d.getX();
     }).attr("cy", function(d) {
-        return d.getY() - delta;
+        return d.getY();
     }).attr("r", function(d) {
         return d.getRadius();
     });
 
-    svg.attr("height", layout.getHeight())
-       .attr("width", layout.getWidth() + 40)
-       .attr("class", this.id);
+    svg.attr("height", layout.getHeight()).attr("width", layout.getWidth())
+            .attr("class", this.id);
 
     var starts = visualGraph.getVisualNodes().filter(function(d) {
         return d.isStart();
     });
     var hostSvg = d3.select("#hostBar").append("svg");
 
-    hostSvg.append("rect")
-           .style("stroke", "#fff")
-           .attr("width", layout.getWidth())
-           .attr("height", 60)
-           .attr("x", 0)
-           .attr("y", 0)
-           .style("fill", "#fff");
+    hostSvg.append("rect").style("stroke", "#fff").attr("width",
+            layout.getWidth()).attr("height", 60).attr("x", 0).attr("y", 0)
+            .style("fill", "#fff");
 
     hostSvg.selectAll().data(starts).enter().append("rect").style("stroke",
             "#fff").attr("width", 25).attr("height", 25).attr("x", function(d) {
-        return d.x - (25 / 2);
+        return d.getX() - (25 / 2);
     }).attr("y", function(d) {
         return 15;
     }).on("mouseover", function(e) {
-        $("#curNode").text(e.name);
+        $("#curNode").text(e.getText());
     }).attr("id", function(d) {
         return d.group;
     }).on("dblclick", function(e) {
-        view.hideHost(e.group);
+        view.hideHost(e.getHost());
     }).attr("class", "node").style("fill", function(d) {
         return view.hostColors[d.getHost()];
     });
 
-    hostSvg.attr("width", layout.getWidth() + 40).attr("height", 55).attr(
-            "class", this.id);
+    hostSvg.attr("width", layout.getWidth()).attr("height", 55).attr("class",
+            this.id);
 
     this.drawArrow();
     this.drawHiddenHosts();
@@ -243,24 +225,17 @@ View.prototype.drawArrow = function() {
     var x = width / 2;
     var y1 = 85;
     var y2 = height - 30;
-    
-    svg.append("line")
-       .attr("class", "time")
-       .attr("x1", x)
-       .attr("y1", y1 + 15)
-       .attr("x2", x)
-       .attr("y2", y2)
-       .style("stroke-width", 3);
 
-    svg.append("path")
-       .attr("class", "time")
-       .attr("d", "M " + (x - 5) + " " + y2 + " L " + (x + 5) + " " + y2
-             + " L " + x + " " + (y2 + 10) + " z");
+    svg.append("line").attr("class", "time").attr("x1", x).attr("y1", y1 + 15)
+            .attr("x2", x).attr("y2", y2).style("stroke-width", 3);
 
-    svg.append("text")
-       .attr("class", "time")
-       .attr("x", x - 20)
-       .attr("y", y1 - 5).text("Time");
+    svg.append("path").attr("class", "time").attr(
+            "d",
+            "M " + (x - 5) + " " + y2 + " L " + (x + 5) + " " + y2 + " L " + x
+                    + " " + (y2 + 10) + " z");
+
+    svg.append("text").attr("class", "time").attr("x", x - 20)
+            .attr("y", y1 - 5).text("Time");
 };
 
 /**

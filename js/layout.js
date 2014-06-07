@@ -12,7 +12,6 @@ SpaceTimeLayout.prototype.start = function(visualGraph) {
     var nodes = visualGraph.getVisualNodes();
     for(var i = 0; i < nodes.length; i++) {
         var node = nodes[i];
-        node.setY(this.delta);
         nodeToNumParents[node.getId()] = 0;
         nodeToChildren[node.getId()] = [];
     }
