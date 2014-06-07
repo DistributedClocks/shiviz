@@ -6,24 +6,37 @@
 	<style>
 		body {
 			background: #222;
-			color: #CCC;
-			font: 10pt monospace;
+			color: #ddd;
+			font: 10pt/1.4em monospace;
+			margin: 1em;
 		}
 
 		#output {
 			list-style: none;
 			padding: 0;
-			margin: 1em;
+			margin: 1em auto;
+			width: 400px;
+		}
+
+		h1 {
+			font-size: 14pt;
+			font-weight: normal;
+			margin: 1.4em 0 .6em;
+		}
+
+		h1:before {
+			content: '\00a0\00a0\00a0\00a0\00a0\00a0\00a0';
+			font-size: 10pt;
 		}
 
 		.pass:before {
-			content: 'PASS: ';
+			content: '[ OK ] ';
 			color: #8ca;
 			font-weight: bold;
 		}
 
 		.fail:before {
-			content: 'FAIL: ';
+			content: '[FAIL] ';
 			color: #c88;
 			font-weight: bold;
 		}
@@ -31,7 +44,11 @@
 </head>
 <body>
 	<ul id="output"></ul>
-	<script type="text/javascript" src="js/model.js"></script>
+	<script type="text/javascript" src="js/node.js"></script>
+	<script type="text/javascript" src="js/graph.js"></script>
+	<script type="text/javascript" src="js/graphFactory.js"></script>
+	<script type="text/javascript" src="js/vectorTimestamp.js"></script>
+	<script type="text/javascript" src="js/logEvent.js"></script>
 	<script type="text/javascript" src="js/test.js"></script>
 </body>
 </html>
