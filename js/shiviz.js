@@ -56,13 +56,17 @@ $("#vizButton").on("click", function() {
     d3.selectAll("svg").remove();
 
     var log = $("#logField").val();
-    var delimiter = new NamedRegExp($("#delimiter").val(), "m");
-    var executions = log.split(delimiter.no);
-    if (delimiter.names.indexOf("trace") >= 0) {
-        var labels = [""];
-        var match;
-        while (match = delimiter.exec(log))
-            labels.push(match.trace);
+    if ($("#delimiter").val().length > 0) {
+        var delimiter = new NamedRegExp($("#delimiter").val(), "m");
+        var executions = log.split(delimiter.no);
+        if (delimiter.names.indexOf("trace") >= 0) {
+            var labels = [""];
+            var match;
+            while (match = delimiter.exec(log))
+                labels.push(match.trace);
+        }
+    } else {
+        executions = [log];
     }
 
     executions = executions.filter(function (e, i) {
