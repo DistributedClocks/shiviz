@@ -4,6 +4,23 @@ $("#logField").on('input propertychange', function(e) {
     resetView();
 });
 
+$("#examplelogs a").on("click", function(e) {
+    e.preventDefault();
+
+    // logUrlPrefix is defined in dev.js & deployed.js
+    var url = logUrlPrefix + $(this).data("log");
+    $.get(url, function(response) {
+        resetView();
+        $("#logField").val(response);
+        $("#delimiter").val($(e.target).data("delimiter"))
+        $(e.target).css({ color: "gray", pointerEvents: "none" });
+    }).fail(function() {
+        var errText = 'Unable to retrieve example log: ' + url;
+        console.log(errText);
+        alert(errText);
+    });
+});
+
 $("#versionContainer").html(versionText);
 
 // variables to store last node in a process
@@ -187,27 +204,6 @@ function createLastNodeElements() {
     for (var i = 0; i < hosts.length; i++) {
         lastNodesElements[hosts[i]] = getLastNodeElementOfHost(hosts[i]);
     }
-}
-
-function handleLogFileResponse(response, linkObj) {
-    $("#logField").val(response);
-    resetView();
-    $(linkObj).css({
-        color: "gray",
-        pointerEvents: "none"
-    });
-}
-
-function loadExample(filename, linkObj) {
-    // logUrlPrefix is defined in dev.js && deployed.js
-    var url = logUrlPrefix + filename;
-    $.get(url, function(response) {
-        handleLogFileResponse(response, linkObj);
-    }).fail(function() {
-        var errText = 'Unable to retrieve example log: ' + url;
-        console.log(errText);
-        alert(errText);
-    });
 }
 
 $(window).on("scroll", function() {
