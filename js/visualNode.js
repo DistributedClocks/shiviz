@@ -1,4 +1,9 @@
 
+/**
+ * 
+ * @param node
+ * @constructor
+ */
 function VisualNode(node) {
     this.id = VisualNode.id++;
     this.node = node;
@@ -12,6 +17,7 @@ function VisualNode(node) {
 
 VisualNode.id = 0;
 
+//why is this needed?
 VisualNode.prototype.getId = function() {
     return this.id;
 };

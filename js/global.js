@@ -1,3 +1,9 @@
+
+
+/**
+ * @constructor
+ * @private
+ */
 function Global() {
     this.hosts = [];
     this.views = [];
@@ -8,6 +14,19 @@ function Global() {
     this.color = d3.scale.category20();
 }
 
+//Global.instance = null;
+//
+//Global.getInstance = function() {
+//    if(Global.instance == null) {
+//        Global.instance = new Global();
+//    }
+//    return Global.instance;
+//};
+
+/**
+ * 
+ * @returns {Object<String, Number>} A mapping of host names to its designated color
+ */
 Global.prototype.getHostColors = function() {
     var colors = {};
     for(var host in this.hostColors) {
@@ -16,11 +35,18 @@ Global.prototype.getHostColors = function() {
     return colors;
 };
 
+/**
+ * 
+ * @param transformation The transformation to add
+ */
 Global.prototype.addTransformation = function(transformation) {
     this.transformations.push(transformation);
     this.drawAll();
 };
 
+/**
+ * 
+ */
 Global.prototype.drawAll = function() {
     for(var i = 0; i < this.views.length; i++) {
         this.views[i].draw();
@@ -29,10 +55,18 @@ Global.prototype.drawAll = function() {
     this.drawArrow();
 };
 
+/**
+ * 
+ * @returns {Array.<Transformation>}
+ */
 Global.prototype.getTransformations = function() {
     return this.transformations.slice();
 };
 
+/**
+ * 
+ * @param hostId The host to hide.
+ */
 Global.prototype.hideHost = function(hostId) {
     var transform = new HideHostTransformation(hostId);
     this.hiddenHostToTransformation[hostId] = transform;
@@ -40,16 +74,28 @@ Global.prototype.hideHost = function(hostId) {
     this.addTransformation(transform);
 };
 
+/**
+ * 
+ * @param hostId The host to unhide
+ */
 Global.prototype.unhideHost = function(hostId) {
     this.hiddenHosts.splice(this.hiddenHosts.indexOf(hostId), 1);
     this.transformations.splice(this.transformations.indexOf(this.hiddenHostToTransformation[hostId]), 1);
     this.drawAll();
 };
 
+/**
+ * 
+ * @returns {Array.<String>} An array of currently hidden hosts
+ */
 Global.prototype.getHiddenHosts = function() {
     return this.hiddenHosts.slice();
 };
 
+/**
+ * 
+ * @param view The view to add
+ */
 Global.prototype.addView = function(view) {
     var newHosts = view.getHosts();
     for(var i = 0; i < newHosts.length; i++) {
