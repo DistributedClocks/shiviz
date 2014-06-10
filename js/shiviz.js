@@ -33,6 +33,7 @@ function resetView() {
         "color": "",
         "pointer-events": "initial"
     });
+    
 };
 
 $("#vizButton").on("click", function() {
@@ -43,7 +44,7 @@ $("#vizButton").on("click", function() {
 
     // We need a variable share across all views/executions to keep them in
     // sync.
-    var global = new Global();
+    var global = new Global(); //Global.getInstance();
 
     // Make a view for each execution, then draw it
     executions.map(function(v) {

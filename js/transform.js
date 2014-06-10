@@ -31,8 +31,6 @@ function HideHostTransformation(hostToHide) {
 HideHostTransformation.prototype.transform = function(graph, visualGraph) {
 
     var curr = graph.getHead(this.hostToHide).getNext();
-
-    var tedge = []; //*
     
     var parents = [];
     var children = [];
@@ -44,7 +42,7 @@ HideHostTransformation.prototype.transform = function(graph, visualGraph) {
                     if (parents[i].getHost() != children[j].getHost()) {
                         parents[i].addChild(children[j]);
                         
-                        tedge.push({from: parents[i], to: children[j]}); //*
+                        visualGraph.getVisualEdgeByNodes(parents[i], children[j]).setDashLength(5);
                     }
                 }
             }
@@ -67,14 +65,6 @@ HideHostTransformation.prototype.transform = function(graph, visualGraph) {
     
     visualGraph.update();
 
-    for(var i = 0; i < tedge.length; i++) {
-        var obj = tedge[i];
-        
-        var edge = visualGraph.getVisualEdgeByNodes(obj.from, obj.to);
-        if(edge != null) {
-            edge.setDashLength(5);
-        }
-    }
 };
 
 function CollapseSequentialNodesTransformation(limit) {
@@ -105,8 +95,12 @@ CollapseSequentialNodesTransformation.prototype.transform = function(graph, visu
                         curr.remove();
                         curr = prev;
                     }
-                    var newNode = new Node(logEvents.reverse(), curr.getHost());
+                    var newNode = new Node(logEvents.reverse());
                     curr.insertNext(newNode);
+                    
+                    var visualNode = visualGraph.getVisualNodeByNode(newNode);
+                    visualNode.setRadius(15);
+                    visualNode.setLabel(newNode.getLogEvents().length);
                 }
                 groupCount = 0;
             }
@@ -120,15 +114,5 @@ CollapseSequentialNodesTransformation.prototype.transform = function(graph, visu
     }
 
     visualGraph.update();
-    
-    var nodes = graph.getNodes();
-    for(var i = 0; i < nodes.length; i++) {
-        var node = nodes[i];
-        if(node.getLogEvents().length > 1) {
-            var visualNode = visualGraph.getVisualNodeByNode(node);
-            visualNode.setRadius(15);
-            visualNode.setLabel(node.getLogEvents().length);
-        }
-    }
 
 };

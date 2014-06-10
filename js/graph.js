@@ -37,35 +37,52 @@ function Graph(logEvents) {
 
     /** @private */
     this.hostToTail = {};
+    
+    /** @private */
+    this.observers = {};
 
     // Dictionary linking host name to array of nodes
     var hostToNodes = {};
 
     // Set of existing hosts
-    var hostSet = {};
+    var hostSet = {};   
+    
+    for(var i = 0; i < Graph.validEvents.length; i++) {
+        this.observers[Graph.validEvents[i]] = {};
+    }
 
+    
     /*
      * Create and add nodes to host arrays. Initialize hosts if undefined by
      * adding them to hostSet and assigning head and tail dummy nodes
      */
     for (var i = 0; i < logEvents.length; i++) {
         var logEvent = logEvents[i];
-        var host = logEvent.host;
-        var node = new Node([ logEvent ], host);
+        var host = logEvent.getHost();
+        var node = new Node([ logEvent ]);
+        node.host = host;
+        node.graph = this;
 
         if (hostSet[host] == undefined) {
             hostSet[host] = true;
             this.hosts.push(host);
             hostToNodes[host] = [];
 
-            var head = new Node([], host);
+            var head = new Node([]);
             head.isHeadInner = true;
+            head.host = host;
+            head.graph = this;
 
-            var tail = new Node([], host);
+            var tail = new Node([]);
             tail.isTailInner = true;
+            head.host = host;
+            head.graph = this;
 
+            head.prev = null;
             head.next = tail;
+            
             tail.prev = head;
+            tail.next = null;
 
             this.hostToHead[host] = head;
             this.hostToTail[host] = tail;
@@ -94,12 +111,14 @@ function Graph(logEvents) {
         }
 
         var lastNode = this.hostToHead[host];
+        
         for (var i = 0; i < array.length; i++) {
             var newNode = array[i];
             lastNode.insertNext(newNode);
             lastNode = newNode;
         }
     }
+    
 
     // Generates parent/child connections
     for (var host in hostSet) {
@@ -111,6 +130,7 @@ function Graph(logEvents) {
         while (currNode != tail) {
             // Candidates is array of potential parents for
             // currNode
+            
             var candidates = [];
             var currVT = currNode.logEvents[0].getVectorTimestamp();
             clock[host] = currVT.ownTime;
@@ -177,6 +197,9 @@ function Graph(logEvents) {
 
 }
 
+Graph.validEvents = [AddNodeEvent, RemoveNodeEvent, AddFamilyEvent, RemoveFamilyEvent, RemoveHostEvent, ChangeEvent];
+
+
 /**
  * Gets the head node for a host
  * 
@@ -236,6 +259,8 @@ Graph.prototype.removeHost = function(host) {
 
     delete this.hostToHead[host];
     delete this.hostToTail[host];
+    
+    this.notify(new RemoveHostEvent(host));
 };
 
 /**
@@ -313,7 +338,12 @@ Graph.prototype.clone = function() {
     var oldToNewNode = {};
     for (var i = 0; i < allNodes.length; i++) {
         var node = allNodes[i];
-        oldToNewNode[node.getId()] = node.clone();
+        var newNode = new Node(node.getLogEvents());
+        newNode.host = node.getHost();
+        newNode.graph = newGraph;
+        newNode.isHeadInner = node.isHeadInner;
+        newNode.isTailInner = node.isTailInner;
+        oldToNewNode[node.getId()] = newNode;
     }
 
     for (var host in this.hostToHead) {
@@ -348,3 +378,109 @@ Graph.prototype.clone = function() {
 
     return newGraph;
 };
+
+Graph.prototype.addObserver = function(type, context, callback) {
+    if(Graph.validEvents.indexOf(type) < 0) {
+        throw type + " is not a valid event";
+    }  
+    
+    this.observers[type][callback] = {
+            callback: callback,
+            context: context
+    };
+};
+
+Graph.prototype.removeObserver = function(type, callback) {
+    if(Graph.validEvents.indexOf(type) < 0) {
+        throw type + " is not a valid event";
+    }  
+    
+    delete this.observers[type][callback];
+};
+
+Graph.prototype.notify = function(event) {
+    if(Graph.validEvents.indexOf(event.constructor) < 0) {
+        throw type + " is not a valid event";
+    }  
+    
+    var params = this.observers[event.constructor];
+    for(var key in params) {
+        var param = params[key];
+        param.callback(event, param.context);
+    }
+};
+
+
+function AddNodeEvent(newNode, prev, next) {
+    this.newNode = newNode;
+    this.prev = prev;
+    this.next = next;
+};
+
+AddNodeEvent.prototype.getNewNode = function() {
+    return this.newNode;
+};
+
+AddNodeEvent.prototype.getPrev = function() {
+    return this.prev;
+};
+
+AddNodeEvent.prototype.getNext = function() {
+    return this.next;
+};
+
+function RemoveNodeEvent(removedNode, prev, next) {
+    this.removedNode = removedNode;
+    this.prev = prev;
+    this.next = next;
+};
+
+RemoveNodeEvent.prototype.getRemovedNode = function() {
+    return this.removedNode;
+};
+
+RemoveNodeEvent.prototype.getPrev = function() {
+    return this.prev;
+};
+
+RemoveNodeEvent.prototype.getNext = function() {
+    return this.next;
+};
+
+function AddFamilyEvent(parent, child) {
+    this.parent = parent;
+    this.child = child;
+}
+
+AddFamilyEvent.prototype.getParent = function() {
+    return this.parent;
+};
+
+AddFamilyEvent.prototype.getChild = function() {
+    return this.child;
+};
+
+function RemoveFamilyEvent(parent, child) {
+    this.parent = parent;
+    this.child = child;
+}
+
+RemoveFamilyEvent.prototype.getParent = function() {
+    return this.parent;
+};
+
+RemoveFamilyEvent.prototype.getChild = function() {
+    return this.child;
+};
+
+function RemoveHostEvent(host) {
+    this.host = host;
+}
+
+RemoveHostEvent.prototype.getHost = function() {
+    return this.host;
+};
+
+function ChangeEvent() {
+    
+}
