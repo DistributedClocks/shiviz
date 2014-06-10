@@ -109,10 +109,10 @@
                 <textarea id="logField"></textarea>
                 <p id="examplelogs">
                     Examples:
-                    <a class="log-link" href="javascript:void(0)" onclick="loadExample('log/facebook.log', this);">Facebook data-center log</a>
-                    <a class="log-link" href="javascript:void(0)" onclick="loadExample('log/voldemort.log', this);">Voldemort log</a>
-                    <a class="log-link" href="javascript:void(0)" onclick="loadExample('log/simpledb.log', this);">SimpleDB log</a>
-                    <a class="log-link" href="javascript:void(0)" onclick="loadExample('log/facebook-multiple.log', this);$('#delimiter').val('^=== (?<trace>.*) ===$');">Facebook log with multiple executions</a>
+                    <a class="log-link" href="" data-log="log/facebook.log">Facebook data-center log</a>
+                    <a class="log-link" href="" data-log="log/voldemort.log">Voldemort log</a>
+                    <a class="log-link" href="" data-log="log/simpledb.log">SimpleDB log</a>
+                    <a class="log-link" href="" data-log="log/facebook-multiple.log" data-delimiter="^=== (?<trace>.*) ===$">Facebook log with multiple executions</a>
                 </p>
                 <label>Multiple execution delimiter: <input type="text" id="delimiter"></label>
                 <br>
