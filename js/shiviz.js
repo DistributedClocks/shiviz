@@ -10,8 +10,8 @@ $("#examplelogs a").on("click", function(e) {
     // logUrlPrefix is defined in dev.js & deployed.js
     var url = logUrlPrefix + $(this).data("log");
     $.get(url, function(response) {
-        resetView();
         $("#logField").val(response);
+        resetView();
         $("#delimiter").val($(e.target).data("delimiter"))
         $(e.target).css({ color: "gray", pointerEvents: "none" });
     }).fail(function() {
