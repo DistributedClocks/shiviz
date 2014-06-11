@@ -22,6 +22,10 @@ VisualNode.prototype.getId = function() {
     return this.id;
 };
 
+VisualNode.prototype.getNode = function() {
+    return this.node;
+};
+
 VisualNode.prototype.getX = function() {
     return this.x;
 };

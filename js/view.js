@@ -7,8 +7,9 @@ function View(model, global) {
     this.initialModel = model;
     this.global = global;
     this.transformations = [];
+    this.collapseSequentialNodesTransformation = new CollapseSequentialNodesTransformation(2, []);
     
-    this.addTransformation(new CollapseSequentialNodesTransformation(2));
+    this.addTransformation(this.collapseSequentialNodesTransformation);
 }
 
 View.prototype.getGlobal = function() {
@@ -19,6 +20,7 @@ View.prototype.addTransformation = function(transformation) {
     this.transformations.push(transformation);
     this.draw();
 };
+
 
 View.prototype.getHosts = function() {
     return this.initialModel.getHosts();
@@ -93,6 +95,11 @@ View.prototype.draw = function() {
     node.append("title").text(function(d) {
         return d.getText();
     });
+    
+    node.on("dblclick", function(e) {
+        view.collapseSequentialNodesTransformation.addAllExemptLogEvent(e.getNode().getLogEvents());
+        view.draw();
+    });
 
     var standardNodes = node.filter(function(d) {
         return !d.isStart();
@@ -101,7 +108,7 @@ View.prototype.draw = function() {
     standardNodes.append("circle").on("mouseover", function(e) {
         $("#curNode").text(e.getText());
     }).on("click", function(e) {
-        selectTextareaLine($("#logField")[0], e.getLine());
+        selectTextareaLine($("#logField")[0], e.getLineNumber());
     }).attr("class", "node").style("fill", function(d) {
         return d.getFillColor();
     }).attr("id", function(d) {
