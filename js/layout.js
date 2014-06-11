@@ -47,13 +47,6 @@ SpaceTimeLayout.prototype.start = function(visualGraph) {
         
         this.height = Math.max(this.height, current.getY());
         current.setX(this.width / hosts.length * hostNameToIndex[current.getHost()] + this.width / hosts.length / 2);
-//        if(current.getX() != current.getX()) {
-//            
-//            console.log(current.node);
-//            console.log(current.getHost());
-//            console.log(hostNameToIndex[current.getHost()]);
-//            throw "OMFG";
-//        }
         
         var children = nodeToChildren[current.getId()];
         for(var i = 0; i < children.length; i++) {

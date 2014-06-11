@@ -67,9 +67,28 @@ HideHostTransformation.prototype.transform = function(graph, visualGraph) {
 
 };
 
-function CollapseSequentialNodesTransformation(limit) {
-    this.limit = limit;
+function CollapseSequentialNodesTransformation(threshold, exemptLogEvents) {
+    this.threshold = threshold;
+    this.exemptLogEvents = exemptLogEvents;
 }
+
+CollapseSequentialNodesTransformation.prototype.setThreshold = function(threshold) {
+    this.threshold = threshold;
+};
+
+CollapseSequentialNodesTransformation.prototype.getThreshold = function() {
+    return this.threshold;
+};
+
+CollapseSequentialNodesTransformation.prototype.addExemptLogEvent = function(logEvent) {
+    this.exemptLogEvents.push(logEvent);
+};
+
+CollapseSequentialNodesTransformation.prototype.addAllExemptLogEvent = function(logEvents) {
+    for(var i = 0; i < logEvents.length; i++) {
+        this.addExemptLogEvent(logEvents[i]);
+    }
+};
 
 CollapseSequentialNodesTransformation.prototype.transform = function(graph, visualGraph) {
     
@@ -83,8 +102,18 @@ CollapseSequentialNodesTransformation.prototype.transform = function(graph, visu
         var prev = graph.getHead(host);
         var curr = prev.getNext();
         while(curr != null) {
-            if(curr.hasChildren() || curr.hasParents() || curr.isTail()) {
-                if(groupCount >= this.limit) {
+            
+            var hasExemptLogEvent = false;
+            var logEvents = curr.getLogEvents();
+            for(var j = 0; j < logEvents.length; j++) {
+                if(this.exemptLogEvents.indexOf(logEvents[j]) >= 0) {
+                    hasExemptLogEvent = true;
+                    break;
+                }
+            }
+            
+            if(curr.hasChildren() || curr.hasParents() || curr.isTail() || hasExemptLogEvent) {
+                if(groupCount >= this.threshold) {
                     
                     var logEvents = [];
                     curr = prev;
