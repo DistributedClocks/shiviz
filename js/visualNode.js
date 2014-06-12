@@ -1,6 +1,6 @@
 /**
  * A VisualNode represents the visualization of a Node that is, this class describes how the Node
- * should be drawn (such as its size, color, etc). Note that the actual drawing logic is not part of this class
+ * should be drawn (such as its size, color, etc). Note that the actual drawing logic is not part of this class.
  * 
  * @param {Node} node The Node to associate with this VisualNode. This object will then be a visualization of the argument
  * @constructor

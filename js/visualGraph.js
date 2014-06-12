@@ -1,7 +1,10 @@
 /**
  * @class
  * A VisualGraph represents the visualization of a graph; it describes how the graph is to be drawn. 
- * Note that the actual drawing logic is not part of this class
+ * Note that the actual drawing logic is not part of this class.
+ * 
+ * A VisualGraph is a composition of VisualNodes and VisualEdges. It provides methods to get the corresponding VisualNode
+ * or VisualEdge from graph Nodes
  * 
  * @constructor
  * @param {Graph} graph The underlying Graph that this VisualGraph is a visualization of
@@ -168,16 +171,25 @@ VisualGraph.prototype.getVisualEdgeByNodes = function(node1, node2) {
     return this.links[linkId];
 };
 
-
-
+/**
+ * Gets the width of the VisualGraph
+ * 
+ * @returns {Number} The width
+ */
 VisualGraph.prototype.getWidth = function() {
     return this.layout.getWidth();
 };
 
+/**
+ * Gets the height of the VisualGraph
+ * 
+ * @returns {Number} The height
+ */
 VisualGraph.prototype.getHeight = function() {
     return this.layout.getHeight();
 };
 
+// ---------- Private methods below ----------
 
 /**
  * 
