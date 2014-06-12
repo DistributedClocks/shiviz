@@ -21,6 +21,9 @@
  * after y</li>
  * </ul>
  * 
+ * family: x is a family node of y if y is x's parent or child. This implies that
+ * x is a family node of y if and only if y is a family node of x
+ * 
  * next node: x is the next node of y if and only if:
  * <ul>
  * <li>x happens after y and</li>
@@ -179,22 +182,19 @@ Node.prototype.getPrev = function() {
 };
 
 /**
- * Returns the nodes this one is connected to as an array. In the context of
- * this function, a node is said to be connected to this one if it's a parent or
- * a child.
+ * Returns the family nodes of this node as an array.
  * 
  * This function makes no guarantees about the ordering of nodes in the array
  * returned. Also note that a new array is created to prevent modification of
  * the underlying private data structure, so this function takes linear rather
- * than constant time on the number of connections.
+ * than constant time on the number of family nodes.
  * 
  * @see getParents
  * @see getChildren
- * @see getConnections
  * 
  * @return {Array<Node>} an array of connected nodes
  */
-Node.prototype.getConnections = function() {
+Node.prototype.getFamily = function() {
     return this.getParents().concat(this.getChildren());
 };
 
@@ -212,7 +212,7 @@ Node.prototype.getConnections = function() {
  * @see getNext
  * @see getParents
  * @see getChildren
- * @see getConnections
+ * @see getFamily
  * 
  * @return {Array<Node>} an array of connected nodes
  */

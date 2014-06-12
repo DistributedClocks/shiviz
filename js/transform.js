@@ -67,9 +67,9 @@ HideHostTransformation.prototype.transform = function(graph, visualGraph) {
 
 };
 
-function CollapseSequentialNodesTransformation(threshold, exemptLogEvents) {
+function CollapseSequentialNodesTransformation(threshold) {
     this.threshold = threshold;
-    this.exemptLogEvents = exemptLogEvents;
+    this.exemptLogEvents = {};
 }
 
 CollapseSequentialNodesTransformation.prototype.setThreshold = function(threshold) {
@@ -80,19 +80,70 @@ CollapseSequentialNodesTransformation.prototype.getThreshold = function() {
     return this.threshold;
 };
 
-CollapseSequentialNodesTransformation.prototype.addExemptLogEvent = function(logEvent) {
-    this.exemptLogEvents.push(logEvent);
-};
-
-CollapseSequentialNodesTransformation.prototype.addAllExemptLogEvent = function(logEvents) {
+CollapseSequentialNodesTransformation.prototype.addExemptionByLogEvents = function(logEvents) {
     for(var i = 0; i < logEvents.length; i++) {
-        this.addExemptLogEvent(logEvents[i]);
+        this.exemptLogEvents[logEvents[i].getId()] = true;
     }
 };
+
+CollapseSequentialNodesTransformation.prototype.removeExemptionByGroup = function(node) {
+    if(node.hasChildren() || node.hasParents()) {
+        return;
+    }
+    
+    var head = node;
+    while(!head.isHead() && !head.hasChildren() && !head.hasParents()) {
+        head = head.getPrev();
+    }
+    
+    var tail = node;
+    while(!tail.isTail() && !tail.hasChildren() && !tail.hasParents()) {
+        tail = tail.getNext();
+    }
+    
+    var curr = head.getNext();
+    while(curr != tail) {
+        var logEvents = curr.getLogEvents();
+        for(var i = 0; i < logEvents.length; i++) {
+            delete this.exemptLogEvents[logEvents[i].getId()];
+        }
+        curr = curr.getNext();
+    }
+};
+
 
 CollapseSequentialNodesTransformation.prototype.transform = function(graph, visualGraph) {
     
     this.priority = 20;
+    
+    
+    function collapse(curr, removalCount) {
+        var logEvents = [];
+        var prev = curr.getPrev();
+        while(removalCount-- > 0) {
+            logEvents = logEvents.concat(curr.getLogEvents().reverse());
+            prev = curr.getPrev();
+            curr.remove();
+            curr = prev;
+        }
+        var newNode = new Node(logEvents.reverse());
+        curr.insertNext(newNode);
+        
+        var visualNode = visualGraph.getVisualNodeByNode(newNode);
+        visualNode.setRadius(15);
+        visualNode.setLabel(newNode.getLogEvents().length);
+    }
+    
+    function isExempt(node, exemptLogEvents) {
+        var logEvents = node.getLogEvents();
+        for(var i = 0; i < logEvents.length; i++) {
+            if(exemptLogEvents[logEvents[i].getId()]) {
+                return true;
+            }
+        }
+        return false;
+    }
+    
     
     var hosts = graph.getHosts();
     for(var i = 0; i < hosts.length; i++) {
@@ -103,33 +154,9 @@ CollapseSequentialNodesTransformation.prototype.transform = function(graph, visu
         var curr = prev.getNext();
         while(curr != null) {
             
-            var hasExemptLogEvent = false;
-            var logEvents = curr.getLogEvents();
-            for(var j = 0; j < logEvents.length; j++) {
-                if(this.exemptLogEvents.indexOf(logEvents[j]) >= 0) {
-                    hasExemptLogEvent = true;
-                    break;
-                }
-            }
-            
-            if(curr.hasChildren() || curr.hasParents() || curr.isTail() || hasExemptLogEvent) {
+            if(curr.hasChildren() || curr.hasParents() || curr.isTail() || isExempt(curr, this.exemptLogEvents)) {
                 if(groupCount >= this.threshold) {
-                    
-                    var logEvents = [];
-                    curr = prev;
-                    prev = curr.getPrev();
-                    while(groupCount-- > 0) {
-                        logEvents = logEvents.concat(curr.getLogEvents().reverse());
-                        prev = curr.getPrev();
-                        curr.remove();
-                        curr = prev;
-                    }
-                    var newNode = new Node(logEvents.reverse());
-                    curr.insertNext(newNode);
-                    
-                    var visualNode = visualGraph.getVisualNodeByNode(newNode);
-                    visualNode.setRadius(15);
-                    visualNode.setLabel(newNode.getLogEvents().length);
+                    collapse(prev, groupCount);
                 }
                 groupCount = 0;
             }

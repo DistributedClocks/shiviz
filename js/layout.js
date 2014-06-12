@@ -1,3 +1,4 @@
+
 function SpaceTimeLayout(width, delta) {
     this.width = width;
     this.delta = delta;

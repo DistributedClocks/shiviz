@@ -1,13 +1,13 @@
 /**
  * A View for some ShiViz graphs. A View knows how to draw itself. A view
- * accepts an initial model in construction and collects Tranformations that
+ * accepts an initial model in construction and collects Transformations that
  * generate new iterations of the initial model.
  */
 function View(model, global) {
     this.initialModel = model;
     this.global = global;
     this.transformations = [];
-    this.collapseSequentialNodesTransformation = new CollapseSequentialNodesTransformation(2, []);
+    this.collapseSequentialNodesTransformation = new CollapseSequentialNodesTransformation(2);
     
     this.addTransformation(this.collapseSequentialNodesTransformation);
 }
@@ -96,9 +96,19 @@ View.prototype.draw = function() {
         return d.getText();
     });
     
-    node.on("dblclick", function(e) {
-        view.collapseSequentialNodesTransformation.addAllExemptLogEvent(e.getNode().getLogEvents());
-        view.draw();
+    node.on("click", function(e) {
+        if(d3.event.ctrlKey) {
+            view.collapseSequentialNodesTransformation.addExemptionByLogEvents(e.getNode().getLogEvents());
+            view.global.drawAll();
+        }
+        else if(d3.event.shiftKey) {
+            view.collapseSequentialNodesTransformation.removeExemptionByGroup(e.getNode());
+            view.global.drawAll();
+        }
+        else {
+            selectTextareaLine($("#logField")[0], e.getLineNumber());
+        }
+        
     });
 
     var standardNodes = node.filter(function(d) {
@@ -107,8 +117,6 @@ View.prototype.draw = function() {
 
     standardNodes.append("circle").on("mouseover", function(e) {
         $("#curNode").text(e.getText());
-    }).on("click", function(e) {
-        selectTextareaLine($("#logField")[0], e.getLineNumber());
     }).attr("class", "node").style("fill", function(d) {
         return d.getFillColor();
     }).attr("id", function(d) {
