@@ -1,4 +1,13 @@
-
+/**
+ * @class
+ * A VisualGraph represents the visualization of a graph; it describes how the graph is to be drawn. 
+ * Note that the actual drawing logic is not part of this class
+ * 
+ * @constructor
+ * @param {Graph} graph The underlying Graph that this VisualGraph is a visualization of
+ * @param {Layout} layout A layout object that is responsible for setting the positions of VisualNodes and Edges
+ * @param {Object<String, Number>} hostColors A mapping of host names to colors describing the color scheme for each host
+ */
 function VisualGraph(graph, layout, hostColors) {
     this.graph = graph;
     this.layout = layout;
@@ -82,43 +91,30 @@ VisualGraph.prototype.update = function() {
     
 };
 
-// for all of these, catch case when you try to add to head or tail
-VisualGraph.prototype.addVisualNodeByNode = function(node) {
-    if(!this.nodeIdToVisualNode[node.getId()]) {
-        var visualNode = new VisualNode(node);
-        visualNode.setFillColor(this.hostColors[visualNode.getHost()]);
-        this.nodeIdToVisualNode[node.getId()] = visualNode;
-    }
-    return this.nodeIdToVisualNode[node.getId()];
+/**
+ * Returns the underlying Graph that this VisualGraph is a visualization of
+ * 
+ * @returns {Graph} the underlying graph.
+ */
+VisualGraph.prototype.getGraph = function() {
+    return this.graph;
 };
 
-VisualGraph.prototype.removeVisualNodeByNode = function(node) {
-    if(!this.nodeIdToVisualNode[node.getId()]) {
-        return;
-    }
-    delete this.nodeIdToVisualNode[node.getId()];
-};
-
-VisualGraph.prototype.removeVisualEdgeByNodes = function(node1, node2) {
-    var edgeId = this.getEdgeId(node1, node2);
-    delete this.links[edgeId];
-};
-
-VisualGraph.prototype.addVisualEdgeByNodes = function(node1, node2) {
-    var edgeId = this.getEdgeId(node1, node2);
-    
-    visualNode1 = this.addVisualNodeByNode(node1);
-    visualNode2 = this.addVisualNodeByNode(node2);
-
-    var visualEdge = new VisualEdge(visualNode1, visualNode2);
-    this.links[edgeId] = visualEdge;
-    return visualEdge;
-};
-
+/**
+ * Returns the hosts associated with this visualGraph as an array
+ * 
+ * @returns {Array<String>} The array of hosts
+ */
 VisualGraph.prototype.getHosts = function() {
     return this.graph.getHosts();
 };
 
+/**
+ * Returns all VisualNodes in this VisualGraph as an array. There are no guarantees about the ordering of elements in the returned array. Note that a new array is created 
+ * to prevent access to the underlying one, so this method takes linear time.
+ * 
+ * @returns {Array<VisualNode>} The array of VisualNodes 
+ */
 VisualGraph.prototype.getVisualNodes = function() {
     var nodes = [];
     for(var id in this.nodeIdToVisualNode) {
@@ -127,6 +123,12 @@ VisualGraph.prototype.getVisualNodes = function() {
     return nodes;
 };
 
+/**
+ * Returns all VisualEdges in this VisualGraph as an array. There are no guarantees about the ordering of elements in the returned array. Note that a new array is created 
+ * to prevent access to the underlying one, so this method takes linear time.
+ * 
+ * @returns {Array<VisualEdge>} The array of VisualEdges.
+ */
 VisualGraph.prototype.getVisualEdges = function() {
     var edges = [];
     for(var id in this.links) {
@@ -135,6 +137,13 @@ VisualGraph.prototype.getVisualEdges = function() {
     return edges;
 };
 
+/**
+ * Gets the VisualNode in this VisualGraph that is the visualization of the Node provided as a parameter.
+ * Returns null if no VisualNode found
+ * 
+ * @param {Node} node The node whose visualization within this graph will be returned
+ * @returns {VisualNode} The VisualNode that is the visualization of node or null if none exists
+ */
 VisualGraph.prototype.getVisualNodeByNode = function(node) {
     var id = node.getId();
     if(!this.nodeIdToVisualNode[id]) {
@@ -143,16 +152,20 @@ VisualGraph.prototype.getVisualNodeByNode = function(node) {
     return this.nodeIdToVisualNode[id];
 };
 
+/**
+ * Gets the VisualEdge in this VisualGraph that is the visualization of the edge connecting node1 and node2.
+ * Note that getVisualEdgeByNodes(a, b) == getVisualEdgeByNodes(b, a)
+ * 
+ * @param {Node} node1 One of the end nodes of the edge
+ * @param {Node} node2 One of the end nodes of the edge
+ * @returns {VisualEdge} The VisualEdge that is the visualization of the edge between node1 and node2, or null if none exists
+ */
 VisualGraph.prototype.getVisualEdgeByNodes = function(node1, node2) {
     var linkId = this.getEdgeId(node1, node2);
     if(!this.links[linkId]) {
         return null;
     }
     return this.links[linkId];
-};
-
-VisualGraph.prototype.getEdgeId = function(node1, node2) {
-    return Math.min(node1.getId(), node2.getId()) + ":" + Math.max(node1.getId(), node2.getId());
 };
 
 
@@ -165,3 +178,69 @@ VisualGraph.prototype.getHeight = function() {
     return this.layout.getHeight();
 };
 
+
+/**
+ * 
+ * @private
+ * @param node1
+ * @param node2
+ * @returns {String}
+ */
+VisualGraph.prototype.getEdgeId = function(node1, node2) {
+    return Math.min(node1.getId(), node2.getId()) + ":" + Math.max(node1.getId(), node2.getId());
+};
+
+/**
+ * 
+ * @private
+ * @param {Node} node
+ * @returns {VisualNode} the newly created VisualNode
+ */
+VisualGraph.prototype.addVisualNodeByNode = function(node) {
+    if(!this.nodeIdToVisualNode[node.getId()]) {
+        var visualNode = new VisualNode(node);
+        visualNode.setFillColor(this.hostColors[visualNode.getHost()]);
+        this.nodeIdToVisualNode[node.getId()] = visualNode;
+    }
+    return this.nodeIdToVisualNode[node.getId()];
+};
+
+/**
+ * 
+ * @private
+ * @param node
+ */
+VisualGraph.prototype.removeVisualNodeByNode = function(node) {
+    if(!this.nodeIdToVisualNode[node.getId()]) {
+        return;
+    }
+    delete this.nodeIdToVisualNode[node.getId()];
+};
+
+/**
+ * 
+ * @private
+ * @param node1
+ * @param node2
+ */
+VisualGraph.prototype.removeVisualEdgeByNodes = function(node1, node2) {
+    var edgeId = this.getEdgeId(node1, node2);
+    delete this.links[edgeId];
+};
+
+/**
+ * @private
+ * @param node1
+ * @param node2
+ * @returns {VisualEdge}
+ */
+VisualGraph.prototype.addVisualEdgeByNodes = function(node1, node2) {
+    var edgeId = this.getEdgeId(node1, node2);
+    
+    visualNode1 = this.addVisualNodeByNode(node1);
+    visualNode2 = this.addVisualNodeByNode(node2);
+
+    var visualEdge = new VisualEdge(visualNode1, visualNode2);
+    this.links[edgeId] = visualEdge;
+    return visualEdge;
+};

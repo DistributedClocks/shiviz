@@ -6,6 +6,8 @@
  * 
  * Graph transformations should strive to preserve the definitions of 'parent',
  * 'child', 'next' and 'previous' as defined in node.js
+ * 
+ * Each transformation should declare a priority field of type Number. Transformations of highest priority will be applied first.
  */
 
 /**
@@ -16,20 +18,26 @@
  * @param {String} hostToHide The host to hide from the model
  */
 function HideHostTransformation(hostToHide) {
+    
     this.priority = 80;
+    
+    /** @private */
     this.hostToHide = hostToHide;
 }
 
 /**
+ * @class
  * Generates a transformed model by removing this Transformation's hostToHide
  * from the provided model. Removes all nodes for the hostToHide and any edges
- * touching a node for the hostToHide and adds transitive edges. This method
+ * touching a node for the hostToHide and adds transitive edges. The added transitive edges will be drawn with dashed lines.
+ * This method
  * modifies the provided graph in place
  * 
  * @param {Graph} graph The graph to transform. Modified in place
  */
-HideHostTransformation.prototype.transform = function(graph, visualGraph) {
+HideHostTransformation.prototype.transform = function(visualGraph) {
 
+    var graph = visualGraph.getGraph();
     var curr = graph.getHead(this.hostToHide).getNext();
     
     var parents = [];
@@ -67,26 +75,58 @@ HideHostTransformation.prototype.transform = function(graph, visualGraph) {
 
 };
 
+/**
+ * @class
+ * CollapseSequentialNodeTransformation groups local consecutive events that have no remote dependencies. The collapsed nodes
+ * will have an increased radius and will contain a label indicating the number of nodes collapsed into it. This transformation
+ * provides methods for adding and removing nodes exempt from this collapsing process
+ * 
+ * @param {Number} threshold Nodes are collapsed if the number of nodes in the group is greater than or equal to the threshold. The threshold must be greater than or equal to 2.
+ * @returns
+ */
 function CollapseSequentialNodesTransformation(threshold) {
-    this.threshold = threshold;
+    
+    /** @private */
+    this.threshold = 2;
+    this.setThreshold(threshold);
+    
+    /** @private */
     this.exemptLogEvents = {};
+    
+    this.priority = 20;
 }
 
-CollapseSequentialNodesTransformation.prototype.setThreshold = function(threshold) {
-    this.threshold = threshold;
-};
-
+/**
+ * Gets the threshold. Nodes are collapsed if the number of nodes in the group is greater than or equal to the threshold. The threshold must be greater than or equal to 2.
+ * 
+ * @returns {Number} The threshold
+ */
 CollapseSequentialNodesTransformation.prototype.getThreshold = function() {
     return this.threshold;
 };
 
-CollapseSequentialNodesTransformation.prototype.addExemptionByLogEvents = function(logEvents) {
+/**
+ * Sets the threshold. Nodes are collapsed if the number of nodes in the group is greater than or equal to the threshold. The threshold is always greater than or equal to 2.
+ * 
+ * @param {Number} threshold The new threshold
+ */
+CollapseSequentialNodesTransformation.prototype.setThreshold = function(threshold) {
+    if(threshold < 2) {
+        throw "Invalid threshold. Threshold must be greater than or equal to 2";
+    }
+    
+    this.threshold = threshold;
+};
+
+
+CollapseSequentialNodesTransformation.prototype.addExemption = function(node) {
+    var logEvents = node.getLogEvents();
     for(var i = 0; i < logEvents.length; i++) {
         this.exemptLogEvents[logEvents[i].getId()] = true;
     }
 };
 
-CollapseSequentialNodesTransformation.prototype.removeExemptionByGroup = function(node) {
+CollapseSequentialNodesTransformation.prototype.removeExemption = function(node) {
     if(node.hasChildren() || node.hasParents()) {
         return;
     }
@@ -111,11 +151,29 @@ CollapseSequentialNodesTransformation.prototype.removeExemptionByGroup = functio
     }
 };
 
+CollapseSequentialNodesTransformation.prototype.toggleExemption = function(node) {
+    if(this.isExempt(node)) {
+        this.removeExemption(node);
+    }
+    else {
+        this.addExemption(node);
+    }
+};
 
-CollapseSequentialNodesTransformation.prototype.transform = function(graph, visualGraph) {
-    
-    this.priority = 20;
-    
+CollapseSequentialNodesTransformation.prototype.isExempt = function(node) {
+    var logEvents = node.getLogEvents();
+    for(var i = 0; i < logEvents.length; i++) {
+        if(this.exemptLogEvents[logEvents[i].getId()]) {
+            return true;
+        }
+    }
+    return false;
+};
+
+
+CollapseSequentialNodesTransformation.prototype.transform = function(visualGraph) {
+
+    var graph = visualGraph.getGraph();
     
     function collapse(curr, removalCount) {
         var logEvents = [];
@@ -134,16 +192,6 @@ CollapseSequentialNodesTransformation.prototype.transform = function(graph, visu
         visualNode.setLabel(newNode.getLogEvents().length);
     }
     
-    function isExempt(node, exemptLogEvents) {
-        var logEvents = node.getLogEvents();
-        for(var i = 0; i < logEvents.length; i++) {
-            if(exemptLogEvents[logEvents[i].getId()]) {
-                return true;
-            }
-        }
-        return false;
-    }
-    
     
     var hosts = graph.getHosts();
     for(var i = 0; i < hosts.length; i++) {
@@ -154,7 +202,7 @@ CollapseSequentialNodesTransformation.prototype.transform = function(graph, visu
         var curr = prev.getNext();
         while(curr != null) {
             
-            if(curr.hasChildren() || curr.hasParents() || curr.isTail() || isExempt(curr, this.exemptLogEvents)) {
+            if(curr.hasChildren() || curr.hasParents() || curr.isTail() || this.isExempt(curr)) {
                 if(groupCount >= this.threshold) {
                     collapse(prev, groupCount);
                 }

@@ -55,7 +55,7 @@ View.prototype.draw = function() {
     });
     
     for ( var i = 0; i < transformations.length; i++) {
-        transformations[i].transform(currentModel, visualGraph);
+        transformations[i].transform(visualGraph);
     }
 
 
@@ -98,11 +98,7 @@ View.prototype.draw = function() {
     
     node.on("click", function(e) {
         if(d3.event.ctrlKey) {
-            view.collapseSequentialNodesTransformation.addExemptionByLogEvents(e.getNode().getLogEvents());
-            view.global.drawAll();
-        }
-        else if(d3.event.shiftKey) {
-            view.collapseSequentialNodesTransformation.removeExemptionByGroup(e.getNode());
+            view.collapseSequentialNodesTransformation.toggleExemption(e.getNode());
             view.global.drawAll();
         }
         else {
