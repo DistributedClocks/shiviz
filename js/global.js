@@ -1,4 +1,6 @@
-
+/**
+ * 
+ */
 
 /**
  * @constructor
@@ -14,14 +16,6 @@ function Global() {
     this.color = d3.scale.category20();
 }
 
-//Global.instance = null;
-//
-//Global.getInstance = function() {
-//    if(Global.instance == null) {
-//        Global.instance = new Global();
-//    }
-//    return Global.instance;
-//};
 
 /**
  * 
