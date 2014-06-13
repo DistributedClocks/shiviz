@@ -4,13 +4,22 @@
  * generate new iterations of the initial model.
  */
 function View(model, global) {
+    
+    /** @private */
     this.initialModel = model;
+    
+    /** @private */
     this.global = global;
+    
+    /** @private */
     this.transformations = [];
+    
+    /** @private */
     this.collapseSequentialNodesTransformation = new CollapseSequentialNodesTransformation(2);
     
     this.addTransformation(this.collapseSequentialNodesTransformation);
 }
+
 
 View.prototype.getGlobal = function() {
     return this.global;
