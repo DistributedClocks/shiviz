@@ -12,10 +12,20 @@
  * @param {Object<String, Number>} hostColors A mapping of host names to colors describing the color scheme for each host
  */
 function VisualGraph(graph, layout, hostColors) {
+    
+    /** @private */
     this.graph = graph;
+    
+    /** @private */
     this.layout = layout;
+    
+    /** @private */
     this.hostColors = hostColors;
+    
+    /** @private */
     this.nodeIdToVisualNode = {};
+    
+    /** @private A mapping of edge IDs to VisualEdges */
     this.links = {};
     
     graph.addObserver(AddNodeEvent, this, function(event, g) {
@@ -192,20 +202,23 @@ VisualGraph.prototype.getHeight = function() {
 // ---------- Private methods below ----------
 
 /**
+ * Gets the edge ID of two Nodes. This is used to store a mapping of pairs of Nodes 
+ * to their VisualEdge
  * 
  * @private
- * @param node1
- * @param node2
- * @returns {String}
+ * @param {Node} node1
+ * @param {Node} node2
+ * @returns {String} The edge ID
  */
 VisualGraph.prototype.getEdgeId = function(node1, node2) {
     return Math.min(node1.getId(), node2.getId()) + ":" + Math.max(node1.getId(), node2.getId());
 };
 
 /**
+ * Creates a new VisualNode from a Node and adds it to this VisualGraph. The new node is returned.
  * 
  * @private
- * @param {Node} node
+ * @param {Node} node The graph node from which the VisualNode is created
  * @returns {VisualNode} the newly created VisualNode
  */
 VisualGraph.prototype.addVisualNodeByNode = function(node) {
@@ -218,9 +231,10 @@ VisualGraph.prototype.addVisualNodeByNode = function(node) {
 };
 
 /**
+ * Removes a the VisualNode representation of the given Node from the VisualGraph
  * 
  * @private
- * @param node
+ * @param {Node} node The node whose VisualNode should be removed.
  */
 VisualGraph.prototype.removeVisualNodeByNode = function(node) {
     if(!this.nodeIdToVisualNode[node.getId()]) {
@@ -230,21 +244,13 @@ VisualGraph.prototype.removeVisualNodeByNode = function(node) {
 };
 
 /**
+ * Adds to the VisualGraph a VisualEdge that represents the edge between the
+ * two parameter Nodes. The newly created VisualEdge is returned.
  * 
  * @private
- * @param node1
- * @param node2
- */
-VisualGraph.prototype.removeVisualEdgeByNodes = function(node1, node2) {
-    var edgeId = this.getEdgeId(node1, node2);
-    delete this.links[edgeId];
-};
-
-/**
- * @private
- * @param node1
- * @param node2
- * @returns {VisualEdge}
+ * @param {Node} node1 One of the end Nodes of the edge that a VisualEdge is being created for
+ * @param {Node} node2 One of the end Nodes of the edge that a VisualEdge is being created for
+ * @returns {VisualEdge} The newly created VisualEdge
  */
 VisualGraph.prototype.addVisualEdgeByNodes = function(node1, node2) {
     var edgeId = this.getEdgeId(node1, node2);
@@ -255,4 +261,17 @@ VisualGraph.prototype.addVisualEdgeByNodes = function(node1, node2) {
     var visualEdge = new VisualEdge(visualNode1, visualNode2);
     this.links[edgeId] = visualEdge;
     return visualEdge;
+};
+
+/**
+ * Removes from the VisualGraph the VisualEdge representation of the edge
+ * between the two parameter Nodes
+ * 
+ * @private
+ * @param {Node} node1 One of the end Nodes of the edge whose VisualEdge should be removed.
+ * @param {Node} node2 One of the end Nodes of the edge whose VisualEdge should be removed.
+ */
+VisualGraph.prototype.removeVisualEdgeByNodes = function(node1, node2) {
+    var edgeId = this.getEdgeId(node1, node2);
+    delete this.links[edgeId];
 };
