@@ -137,6 +137,40 @@ VisualGraph.prototype.getVisualNodes = function() {
 };
 
 /**
+ * Returns only start VisualNodes in this VisualGraph as an array. There are no guarantees about the ordering of elements in the returned array. Note that a new array is created 
+ * to prevent access to the underlying one, so this method takes linear time.
+ * 
+ * @returns {Array<VisualNode>} The array of VisualNodes 
+ */
+VisualGraph.prototype.getStartVisualNodes = function() {
+    var nodes = [];
+    for(var id in this.nodeIdToVisualNode) {
+        var node = this.nodeIdToVisualNode[id];
+        if(node.isStart()) {
+            nodes.push(node);
+        }
+    }
+    return nodes;
+};
+
+/**
+ * Returns non-start VisualNodes in this VisualGraph as an array. There are no guarantees about the ordering of elements in the returned array. Note that a new array is created 
+ * to prevent access to the underlying one, so this method takes linear time.
+ * 
+ * @returns {Array<VisualNode>} The array of VisualNodes 
+ */
+VisualGraph.prototype.getNonStartVisualNodes = function() {
+    var nodes = [];
+    for(var id in this.nodeIdToVisualNode) {
+        var node = this.nodeIdToVisualNode[id];
+        if(!node.isStart()) {
+            nodes.push(node);
+        }
+    }
+    return nodes;
+};
+
+/**
  * Returns all VisualEdges in this VisualGraph as an array. There are no guarantees about the ordering of elements in the returned array. Note that a new array is created 
  * to prevent access to the underlying one, so this method takes linear time.
  * 

@@ -133,7 +133,7 @@ $(window).on("scroll", function() {
     var top = window.pageYOffset ? window.pageYOffset
             : document.documentElement.scrollTop ? document.documentElement.scrollTop
                     : document.body.scrollTop;
-    var left = ($(window).width() - $("body").width()) / 2
+    var left = ($(window).width() - $("body").width()) / 2 + Global.SIDE_BAR_WIDTH
             - $(document).scrollLeft() + "px";
     if ($('#topBar').height()
             && top > $('#topBar').css('position', 'relative').offset().top
@@ -160,13 +160,14 @@ $(window).on("scroll", function() {
             position: "fixed",
             top: "50px",
             left: left,
-            marginLeft: "120px"
+            marginLeft: Global.SIDE_BAR_WIDTH + "px"
         });
 
         $("#vizContainer").css({
             marginTop: $("#topBar").height()
                        - parseInt($("#topBar p").css("margin-top")) + 55 + "px",
-            marginLeft: "120px"
+            marginLeft: Global.SIDE_BAR_WIDTH + "px"
+            
         });
 
     }

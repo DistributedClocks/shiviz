@@ -80,7 +80,7 @@ View.prototype.draw = function() {
         this.id = "view" + d3.selectAll("#vizContainer > svg").size();
     }
 
-    
+    // Apply all transformations applied to this view an those applied to global
     var currentModel = this.initialModel.clone();
     var layout = new SpaceTimeLayout(this.width, 45);
     
@@ -99,34 +99,55 @@ View.prototype.draw = function() {
 
     // Define locally so that we can use in lambdas below
     var view = this;
-
     var svg = d3.select("#vizContainer").append("svg");
 
     // Remove old diagrams, but only the ones with the same ID
     // so we don't remove the other executions
     d3.selectAll("." + this.id).remove();
     
+    svg.attr("height", visualGraph.getHeight());
+    svg.attr("width", visualGraph.getWidth());
+    svg.attr("class", this.id);
+    
 
-    var link = svg.selectAll(".link").data(visualGraph.getVisualEdges())
-            .enter().append("line").attr("class", "link").style("stroke-width",
+    // draw links
+    var link = svg.selectAll().data(visualGraph.getVisualEdges())
+            .enter().append("line");
+    
+    link.style("stroke", "#999");
+    link.style("stroke-opacity", 0.6);
+    
+    link.style("stroke-width",
                     function(d) {
                         return d.getWidth();
                     });
 
     link.attr("x1", function(d) {
         return d.getSourceVisualNode().getX();
-    }).attr("y1", function(d) {
+    });
+    
+    link.attr("y1", function(d) {
         return d.getSourceVisualNode().getY();
-    }).attr("x2", function(d) {
+    });
+    
+    link.attr("x2", function(d) {
         return d.getTargetVisualNode().getX();
-    }).attr("y2", function(d) {
+    });
+    
+    link.attr("y2", function(d) {
         return d.getTargetVisualNode().getY();
-    }).style("stroke-dasharray", function(d) {
+    });
+    
+    link.style("stroke-dasharray", function(d) {
         return d.getDashLength() + "," + d.getDashLength();
     });
 
-    var node = svg.selectAll(".node").data(visualGraph.getVisualNodes())
-            .enter().append("g").attr("transform", function(d) {
+    // draw nodes
+    
+    var node = svg.selectAll().data(visualGraph.getNonStartVisualNodes())
+            .enter().append("g");
+    
+    node.attr("transform", function(d) {
                 return "translate(" + d.getX() + "," + d.getY() + ")";
             });
 
@@ -134,6 +155,7 @@ View.prototype.draw = function() {
         return d.getText();
     });
     
+
     node.on("click", function(e) {
         if(d3.event.ctrlKey) {
             view.collapseSequentialNodesTransformation.toggleExemption(e.getNode());
@@ -145,63 +167,80 @@ View.prototype.draw = function() {
         
     });
 
-    var standardNodes = node.filter(function(d) {
-        return !d.isStart();
-    });
-
-    standardNodes.append("circle").on("mouseover", function(e) {
+    var circle = node.append("circle");
+    circle.on("mouseover", function(e) {
         $("#curNode").text(e.getText());
-    }).attr("class", "node").style("fill", function(d) {
+    });
+    circle.style("fill", function(d) {
         return d.getFillColor();
-    }).attr("id", function(d) {
+    });
+    circle.attr("id", function(d) {
         return d.getHost();
-    }).attr("cx", function(d) {
+    });
+    circle.attr("cx", function(d) {
         return 0;
-    }).attr("cy", function(d) {
+    });
+    circle.attr("cy", function(d) {
         return 0;
-    }).attr("r", function(d) {
+    });
+    circle.attr("r", function(d) {
         return d.getRadius();
     });
-
-    standardNodes.append("text").attr("text-anchor", "middle")
-    .attr("font-size", 10)
-    .attr("fill", "white")
-    .attr("dy", "0.35em").text(
+    
+    circle.style("stroke", "#fff");
+    circle.style("stroke-width", "1.5px");
+    
+    
+    var label = node.append("text");
+    label.attr("text-anchor", "middle");
+    label.attr("font-size", 10);
+    label.attr("fill", "white");
+    label.attr("dy", "0.35em");
+    label.text(
             function(d) {
                 return d.getLabel();
             });
 
-    svg.attr("height", visualGraph.getHeight()).attr("width", visualGraph.getWidth())
-            .attr("class", this.id);
 
-    var starts = visualGraph.getVisualNodes().filter(function(d) {
-        return d.isStart();
-    });
+    
     var hostSvg = d3.select("#hostBar").append("svg");
+    hostSvg.attr("width", visualGraph.getWidth());
+    hostSvg.attr("height", 55);
+    hostSvg.attr("class", this.id);
 
-    hostSvg.append("rect").style("stroke", "#fff").attr("width",
-            visualGraph.getWidth()).attr("height", 60).attr("x", 0).attr("y", 0)
-            .style("fill", "#fff");
+    var bar = hostSvg.append("rect");
+    bar.style("stroke", "#fff");
+    bar.attr("width", visualGraph.getWidth());
+    bar.attr("height", 60);
+    bar.attr("x", 0);
+    bar.attr("y", 0);
+    bar.style("fill", "#fff");
 
-    hostSvg.selectAll().data(starts).enter().append("rect").style("stroke",
-            "#fff").attr("width", 25).attr("height", 25).attr("x", function(d) {
-        return d.getX() - (25 / 2);
-    }).attr("y", function(d) {
+   var rect = hostSvg.selectAll().data(visualGraph.getStartVisualNodes()).enter().append("rect");
+   rect.style("stroke", "#fff");
+   rect.attr("width", Global.HOST_SQUARE_SIZE);
+   rect.attr("height", Global.HOST_SQUARE_SIZE);
+   
+   rect.attr("x", function(d) {
+        return d.getX() - (Global.HOST_SQUARE_SIZE / 2);
+    });
+   
+   rect.attr("y", function(d) {
         return 15;
-    }).on("mouseover", function(e) {
+    });
+   
+   rect.on("mouseover", function(e) {
         $("#curNode").text(e.getText());
-    }).attr("id", function(d) {
-        return d.group;
-    }).on("dblclick", function(e) {
+    });
+   
+   rect.on("dblclick", function(e) {
         view.global.hideHost(e.getHost());
-    }).attr("class", "node").style("fill", function(d) {
+    });
+   
+   rect.attr("class", "node").style("fill", function(d) {
         return d.getFillColor();
     });
 
-    hostSvg.attr("width", visualGraph.getWidth()).attr("height", 55).attr("class",
-            this.id);
+
 };
-
-
-
 

@@ -103,16 +103,6 @@ header > a,
     margin-left: 1em;
 }
 
-.node {
-    stroke: #fff;
-    stroke-width: 1.5px;
-}
-
-.link {
-    stroke: #999;
-    stroke-opacity: .6;
-}
-
 .time {
     stroke: #999;
     stroke-opacity: .6;
@@ -175,10 +165,6 @@ svg {
     top: 0;
     background: white;
     z-index: -1;
-}
-
-.node text {
-    stroke: black;
 }
 
 #versionContainer {
