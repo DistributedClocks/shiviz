@@ -244,6 +244,19 @@ Graph.prototype.getHosts = function() {
 };
 
 /**
+ * Checks if this graph has the specified host
+ * 
+ * @param {String} host The host to check for
+ * @returns {Boolean} True if the host exists
+ */
+Graph.prototype.hasHost = function(host) {
+    if (!this.hostToTail[host]) {
+        return false;
+    }
+    return true;
+};
+
+/**
  * Removes a host from the model. All connections to and from this host will be
  * removed. The host must be a valid host in the current Graph.
  * 
