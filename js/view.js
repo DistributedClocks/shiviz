@@ -1,7 +1,8 @@
 /**
- * A View for some ShiViz graphs. A View knows how to draw itself. A view
- * accepts an initial model in construction and collects Transformations that
- * generate new iterations of the initial model.
+ * @class
+ * A View for a ShiViz graph. A View is responsible for drawing a single VisualGraph. It also collects transformations that 
+ * generate new iterations of the model
+ * 
  */
 function View(model, global, label) {
     this.label = label;
@@ -135,7 +136,10 @@ View.prototype.draw = function() {
         return d.getRadius();
     });
 
-    standardNodes.append("text").attr("text-anchor", "middle").text(
+    standardNodes.append("text").attr("text-anchor", "middle")
+    .attr("font-size", 10)
+    .attr("fill", "white")
+    .attr("dy", "0.35em").text(
             function(d) {
                 return d.getLabel();
             });
