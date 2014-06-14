@@ -139,7 +139,7 @@ svg {
 }
 
 #sideBar {
-    width: 40px;
+    width: 120px;
     float: left;
 }
 
@@ -157,11 +157,6 @@ svg {
     width: 760px;
     float: left;
     white-space: nowrap;
-}
-
-#hosts {
-    width: 120px;
-    float: left;
 }
 
 #topBar {
