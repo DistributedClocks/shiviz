@@ -8,6 +8,8 @@
  */
 function Global() {
     
+    this.id = Global.id++;
+    
     /** @private */
     this.views = [];
     
@@ -25,9 +27,26 @@ function Global() {
     
     /** @private */
     this.color = d3.scale.category20();
+    
+    /** @private */
+    this.overflow = null;
+    
+    /** @private */
+    this.scrollPast = null;
+    
+    this.last = 0;
+    
+    $("#sideBar").css({
+    width: Global.SIDE_BAR_WIDTH + "px",
+    float: "left"
+});
+    
+    $(window).off("scroll");
+    $(window).on("scroll", null, this, this.scrollHandler);
 
 }
 
+Global.id = 0;
 Global.SIDE_BAR_WIDTH = 115;
 Global.HOST_SQUARE_SIZE = 25;
 
@@ -244,7 +263,88 @@ Global.prototype.drawSideBar = function() {
         }
         return x;
     });
-       
+
+};
+
+Global.prototype.scrollHandler = function (event) {
+
+    var global = event.data;
+    
+        var top = window.pageYOffset ? window.pageYOffset
+                : document.documentElement.scrollTop ? document.documentElement.scrollTop
+                        : document.body.scrollTop;
+        
+        var paddingWidth = ($(window).width() - $("body").width()) / 2;
+        var left = Math.max(paddingWidth, 0) - $(document).scrollLeft();
+        
+        var overflow = paddingWidth < 0;
+        var scrollPast = top > $('#reference').offset().top
+        - parseInt($('#reference p').css('margin-top'));
+        
+        if(global.overflow == overflow && global.scrollPast == scrollPast) {
+            return;
+        }
+        
+        global.overflow = overflow;
+        global.scrollPast = scrollPast;
+        
+        if (scrollPast) {
+            $("#topBar").css({
+                position: "fixed",
+                top: "0px"
+            });
+
+            $("#sideBar").css({
+                position: "fixed",
+                top: $("#topBar").height() + "px",
+                left: left + "px"
+            });
+            
+            if(overflow) {
+                $("#sideBar").css({
+                    left: "auto",
+                    marginLeft: left + "px"
+                });
+            }
+
+            $("#hostBar").css({
+                position: "fixed",
+                top: "50px",
+                left: overflow ? "auto" : 0,
+                marginLeft: left + Global.SIDE_BAR_WIDTH + "px"
+            });
+
+
+            $("#vizContainer").css({
+                marginTop: $("#topBar").height()
+                           - parseInt($("#topBar p").css("margin-top")) + 55 + "px",
+                marginLeft: Global.SIDE_BAR_WIDTH + "px"
+                
+            });
+
+        }
+        else {
+            $("#topBar").css("position", "relative");
+
+            $("#sideBar").css({
+                position: "relative",
+                top: "",
+                left: "0px",
+                marginLeft: ""
+            });
+
+            $("#hostBar").css({
+                position: "relative",
+                marginLeft: 0,
+                left: "",
+                top: 0
+            });
+
+            $("#vizContainer").css({
+                marginLeft: "0",
+                marginTop: ""
+            });
+        }
     
 };
 

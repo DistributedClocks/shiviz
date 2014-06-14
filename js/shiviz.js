@@ -103,6 +103,7 @@ $("#vizButton").on("click", function() {
 
 });
 
+
 /**
  * returns the last node associated with a certain process id
  * 
@@ -128,77 +129,6 @@ function createLastNodeElements() {
         lastNodesElements[hosts[i]] = getLastNodeElementOfHost(hosts[i]);
     }
 }
-
-$(window).on("scroll", function() {
-    var top = window.pageYOffset ? window.pageYOffset
-            : document.documentElement.scrollTop ? document.documentElement.scrollTop
-                    : document.body.scrollTop;
-    var left = ($(window).width() - $("body").width()) / 2 + Global.SIDE_BAR_WIDTH
-            - $(document).scrollLeft() + "px";
-    if ($('#topBar').height()
-            && top > $('#topBar').css('position', 'relative').offset().top
-                    - parseInt($('#topBar p').css('margin-top'))) {
-        $("#topBar").css({
-            position: "fixed",
-            top: "0"
-        });
-
-        // Time flow div.
-        $("#sideBar").css({
-            position: "fixed",
-            top: $("#topBar").height() + "px",
-            left: left
-        });
-
-        // Hidden hosts div
-        $("#hosts").css({
-            position: "fixed",
-            top: "250px"
-        });
-
-        $("#hostBar").css({
-            position: "fixed",
-            top: "50px",
-            left: left,
-            marginLeft: Global.SIDE_BAR_WIDTH + "px"
-        });
-
-        $("#vizContainer").css({
-            marginTop: $("#topBar").height()
-                       - parseInt($("#topBar p").css("margin-top")) + 55 + "px",
-            marginLeft: Global.SIDE_BAR_WIDTH + "px"
-            
-        });
-
-    }
-    else {
-        $("#topBar").css("position", "relative");
-
-        $("#sideBar").css({
-            position: "relative",
-            top: "",
-            left: ""
-        });
-
-        $("#hosts").css({
-            position: "relative",
-            top: 0,
-            left: 0
-        });
-
-        $("#hostBar").css({
-            position: "relative",
-            marginLeft: 0,
-            left: "",
-            top: 0
-        });
-
-        $("#vizContainer").css({
-            marginLeft: "0",
-            marginTop: ""
-        });
-    }
-});
 
 function selectTextareaLine(tarea, lineNum) {
     var lineLength = 131;
