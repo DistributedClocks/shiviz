@@ -128,11 +128,6 @@ svg {
     -webkit-user-select: none;
 }
 
-#sideBar {
-    width: 120px;
-    float: left;
-}
-
 #vizContainer {
     width: 760px;
     float: left;
@@ -151,21 +146,9 @@ svg {
 
 #topBar {
     width: 100%;
-    position: relative;
     background-color: white;
 }
 
-#topBar:before {
-    content: "";
-    display: block;
-    height: calc(3em + 55px);
-    position: fixed;
-    width: 100%;
-    left: 0;
-    top: 0;
-    background: white;
-    z-index: -1;
-}
 
 #versionContainer {
     float: right;
