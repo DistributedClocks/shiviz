@@ -25,8 +25,11 @@ function Global() {
     
     /** @private */
     this.color = d3.scale.category20();
+
 }
 
+Global.SIDE_BAR_WIDTH = 115;
+Global.HOST_SQUARE_SIZE = 25;
 
 /**
  * Gets a mapping of host names to its designated color
@@ -126,7 +129,7 @@ Global.prototype.addView = function(view) {
     }
     this.views.push(view);
     
-    var totalWidth = $("body").width();
+    var totalWidth = $("body").width() - Global.SIDE_BAR_WIDTH;
     var totalHosts = 0;
     for(var i = 0; i < this.views.length; i++) {
         totalHosts += this.views[i].getHosts().length;
@@ -150,84 +153,98 @@ Global.prototype.drawSideBar = function() {
     d3.selectAll("#sideBar svg").remove();
     
     var view = this;
-    var width = 120;
-    var height = 200;
     var sideBar = d3.select("#sideBar");
-
+    
+ // Draw time arrow with label
+    var height = 200;
     var timeArrow = sideBar.append("svg");
-    timeArrow.attr("width", width);
+    timeArrow.attr("width", Global.SIDE_BAR_WIDTH);
     timeArrow.attr("height", height);
 
-    // Draw time arrow with label
-    var x = width / 2;
+    
+    var x = Global.SIDE_BAR_WIDTH / 2;
     var y1 = 85;
     var y2 = height - 30;
 
-    timeArrow.append("line")
-    .attr("class", "time")
-    .attr("x1", x)
-    .attr("y1", y1 + 15)
-    .attr("x2", x)
-    .attr("y2", y2)
-    .style("stroke-width", 3);
+    var line = timeArrow.append("line");
+    line.attr("class", "time");
+    line.attr("x1", x);
+    line.attr("y1", y1 + 15);
+    line.attr("x2", x);
+    line.attr("y2", y2);
+    line.style("stroke-width", 3);
 
-    timeArrow.append("path").attr("class", "time").attr(
-            "d",
-            "M " + (x - 5) + " " + y2 + " L " + (x + 5) + " " + y2 + " L " + x
-                    + " " + (y2 + 10) + " z");
+    var path = timeArrow.append("path");
+    path.attr("class", "time");
+    path.attr("d", "M " + (x - 5) + " " + y2 + " L " + (x + 5) + " " + y2 + " L " + x + " " + (y2 + 10) + " z");
 
-    timeArrow.append("text").attr("class", "time").attr("x", x - 20)
-            .attr("y", y1 - 5).text("Time");
+    var timeText = timeArrow.append("text");
+    timeText.attr("class", "time");
+    timeText.attr("x", x - 20);
+    timeText.attr("y", y1 - 5);
+    timeText.text("Time");
     
     
+    // Draw hidden hosts
     if (this.hiddenHosts.length <= 0) {
         return;
     }
-
-    // Define locally so that we can use in lambdas below
     
-
     var hiddenHosts = sideBar.append("svg");
-    
-    hiddenHosts.attr("width", 120);
+    hiddenHosts.attr("width", Global.SIDE_BAR_WIDTH);
     hiddenHosts.attr("height", 500);
 
     var x = 0;
     var y = 65;
 
-    var text = hiddenHosts.append("text").attr("class", "time").attr("x", x).attr("y",
-            y).text("Hidden hosts:");
+    var hiddenHostsText = hiddenHosts.append("text");
+    hiddenHostsText.attr("class", "time");
+    hiddenHostsText.attr("x", x);
+    hiddenHostsText.attr("y", y);
+    hiddenHostsText.text("Hidden hosts:");
+    hiddenHostsText.append("title").text("Double click to view");
 
-    y += 15;
-    var xDelta = 5;
-    x = xDelta;
-    var count = 0;
-
-    var rect = hiddenHosts.selectAll().data(this.hiddenHosts).enter().append("rect")
-            .on("dblclick", function(e) {
-                view.unhideHost(e);
-            }).on("mouseover", function(e) {
-                $("#curNode").innerHTML = e;
-            }).style("stroke", "#fff").attr("width", 25).attr("height", 25)
-            .style("fill", function(host) {
-                return view.hostColors[host];
-            }).attr("y", function(host) {
-                if (count == 3) {
-                    y += 30;
-                    count = 0;
-                }
-                count += 1;
-                return y;
-            }).attr("x", function(host) {
-                var curX = x;
-                x += 30;
-                if (x > 65) {
-                    x = xDelta;
-                }
-                return curX;
-            });
-
-    text.append("title").text("Double click to view");
+    var rect = hiddenHosts.selectAll().data(this.hiddenHosts).enter().append("rect");
+    rect.style("stroke", "#fff");
+    rect.attr("width", Global.HOST_SQUARE_SIZE);
+    rect.attr("height", Global.HOST_SQUARE_SIZE);
     rect.append("title").text("Double click to view");
+    
+    rect.style("fill", function(host) {
+        return view.hostColors[host];
+    });
+    
+    rect.on("dblclick", function(e) {
+        view.unhideHost(e);
+        });
+            
+    rect.on("mouseover", function(e) {
+                $("#curNode").innerHTML = e;
+            });
+            
+    var hostsPerLine = Math.floor((Global.SIDE_BAR_WIDTH + 5) / (Global.HOST_SQUARE_SIZE + 5));
+    var count = 0;
+    y += 15;
+    x = Global.SIDE_BAR_WIDTH + 1;
+    
+    rect.attr("y", function(host) {
+        count++;
+        if(count > hostsPerLine) {
+            y += Global.HOST_SQUARE_SIZE + 5;
+            count = 1;
+        }
+        
+        return y;
+    });
+    
+    rect.attr("x", function(host) {
+        x += 30;
+        if(x + Global.HOST_SQUARE_SIZE > Global.SIDE_BAR_WIDTH) {
+            x = 0;
+        }
+        return x;
+    });
+       
+    
 };
 
