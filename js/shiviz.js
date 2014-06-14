@@ -84,25 +84,20 @@ $("#vizButton").on("click", function() {
 
     // We need a variable share across all views/executions to keep them in
     // sync.
-    var global = new Global();
+    var global = new Global(); //Global.getInstance();
 
     // Make a view for each execution, then draw it
-    var views = executions.map(function (v, i) {
+    executions.map(function (v, i) {
         var lines = v.split('\n');
         var model = generateGraphFromLog(lines);
         var view = new View(model, global, labels ? labels[i] : "");
 
-        global.addHosts(model.getHosts());
         global.addView(view);
 
         return view;
     });
-
-    global.setColors();
-
-    views.forEach(function(v) {
-        v.draw();
-    });
+    
+    global.drawAll();
 
     $("#graph").show();
 
@@ -277,7 +272,7 @@ $(window).on("scroll", function() {
         $("#vizContainer").css({
             marginLeft: "0",
             marginTop: ""
-        })
+        });
     }
 });
 
