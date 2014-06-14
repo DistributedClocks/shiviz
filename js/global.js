@@ -34,7 +34,8 @@ function Global() {
     /** @private */
     this.scrollPast = null;
     
-    this.last = 0;
+    /** @private */
+    this.scrollPastPoint = -1;
     
     $("#sideBar").css({
     width: Global.SIDE_BAR_WIDTH + "px",
@@ -43,6 +44,7 @@ function Global() {
     
     $(window).off("scroll");
     $(window).on("scroll", null, this, this.scrollHandler);
+    this.scrollHandler({data: this});
 
 }
 
@@ -179,7 +181,6 @@ Global.prototype.drawSideBar = function() {
     var timeArrow = sideBar.append("svg");
     timeArrow.attr("width", Global.SIDE_BAR_WIDTH);
     timeArrow.attr("height", height);
-
     
     var x = Global.SIDE_BAR_WIDTH / 2;
     var y1 = 85;
@@ -266,6 +267,12 @@ Global.prototype.drawSideBar = function() {
 
 };
 
+/**
+ * Ensures things are positioned correctly on scroll
+ * 
+ * @private
+ * @param {Event} The event object JQuery passes to the handler
+ */
 Global.prototype.scrollHandler = function (event) {
 
     var global = event.data;
@@ -278,8 +285,14 @@ Global.prototype.scrollHandler = function (event) {
         var left = Math.max(paddingWidth, 0) - $(document).scrollLeft();
         
         var overflow = paddingWidth < 0;
-        var scrollPast = top > $('#reference').offset().top
-        - parseInt($('#reference p').css('margin-top'));
+        
+        if(global.scrollPastPoint <= 0) {
+            global.scrollPastPoint = $('#reference').offset().top
+            - parseInt($('#reference p').css('margin-top'));
+
+        }
+        
+        var scrollPast = (global.scrollPastPoint > 0 && top > global.scrollPastPoint);
         
         if(global.overflow == overflow && global.scrollPast == scrollPast) {
             return;

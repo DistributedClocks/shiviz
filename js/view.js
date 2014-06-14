@@ -99,6 +99,7 @@ View.prototype.draw = function() {
 
     // Define locally so that we can use in lambdas below
     var view = this;
+    
     var svg = d3.select("#vizContainer").append("svg");
 
     // Remove old diagrams, but only the ones with the same ID
@@ -142,8 +143,7 @@ View.prototype.draw = function() {
         return d.getDashLength() + "," + d.getDashLength();
     });
 
-    // draw nodes
-    
+    // draw non-start nodes
     var node = svg.selectAll().data(visualGraph.getNonStartVisualNodes())
             .enter().append("g");
     
@@ -190,7 +190,6 @@ View.prototype.draw = function() {
     circle.style("stroke", "#fff");
     circle.style("stroke-width", "1.5px");
     
-    
     var label = node.append("text");
     label.attr("text-anchor", "middle");
     label.attr("font-size", 10);
@@ -202,7 +201,7 @@ View.prototype.draw = function() {
             });
 
 
-    
+    // draw the host bar
     var hostSvg = d3.select("#hostBar").append("svg");
     hostSvg.attr("width", visualGraph.getWidth());
     hostSvg.attr("height", 55);
@@ -216,6 +215,7 @@ View.prototype.draw = function() {
     bar.attr("y", 0);
     bar.style("fill", "#fff");
 
+    // draw the hosts
    var rect = hostSvg.selectAll().data(visualGraph.getStartVisualNodes()).enter().append("rect");
    rect.style("stroke", "#fff");
    rect.attr("width", Global.HOST_SQUARE_SIZE);

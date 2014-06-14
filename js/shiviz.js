@@ -56,11 +56,12 @@ $("#vizButton").on("click", function() {
     d3.selectAll("svg").remove();
 
     var log = $("#logField").val();
+    var labels = null;
     if ($("#delimiter").val().length > 0) {
         var delimiter = new NamedRegExp($("#delimiter").val(), "m");
         var executions = log.split(delimiter.no);
         if (delimiter.names.indexOf("trace") >= 0) {
-            var labels = [""];
+            labels = [""];
             var match;
             while (match = delimiter.exec(log))
                 labels.push(match.trace);
@@ -77,7 +78,7 @@ $("#vizButton").on("click", function() {
         return true;
     });
 
-    if (labels)
+    if (!!labels)
         labels = labels.filter(function (e) {
             return !(e == "//REMOVE");
         });

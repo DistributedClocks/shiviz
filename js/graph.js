@@ -270,7 +270,8 @@ Graph.prototype.removeHost = function(host) {
 
     this.hosts.splice(index, 1);
 
-    var curr = this.getHead(host).getNext();
+    var head = this.getHead(host);
+    var curr = head.getNext();
     while (!curr.isTail()) {
         var next = curr.getNext();
         curr.remove();
@@ -281,7 +282,7 @@ Graph.prototype.removeHost = function(host) {
     delete this.hostToHead[host];
     delete this.hostToTail[host];
     
-    this.notify(new RemoveHostEvent(host));
+    this.notify(new RemoveHostEvent(host, head));
 };
 
 /**
@@ -633,9 +634,11 @@ RemoveFamilyEvent.prototype.getChild = function() {
  * 
  * @constructor
  * @param {String} host The host that was removed.
+ * @param {Node} head The head node of the host that was removed
  */
-function RemoveHostEvent(host) {
+function RemoveHostEvent(host, head) {
     this.host = host;
+    this.head = head;
 }
 
 /**
@@ -645,6 +648,15 @@ function RemoveHostEvent(host) {
  */
 RemoveHostEvent.prototype.getHost = function() {
     return this.host;
+};
+
+/**
+ * Returns the head of the host that was hidden that corresponds to the event.
+ * 
+ * @returns {Node} The head of the host that was hidden
+ */
+RemoveHostEvent.prototype.getHead = function() {
+    return this.head;
 };
 
 /**
