@@ -57,14 +57,14 @@ SpaceTimeLayout.prototype.start = function(visualGraph) {
         hostNameToIndex[hosts[i]] = i;
     }
     
-    var widthPerHost = this.width / (hosts.length + 1);
-    var padding = widthPerHost / 2;
+    var widthPerHost = this.width / hosts.length;
+    var leftMargin = widthPerHost / 2;
     
     while(noParents.length > 0) {
         var current = noParents.pop();
         
         this.height = Math.max(this.height, current.getY());
-        current.setX(widthPerHost * hostNameToIndex[current.getHost()] + padding);
+        current.setX(widthPerHost * hostNameToIndex[current.getHost()] + leftMargin);
         
         var children = nodeToChildren[current.getId()];
         for(var i = 0; i < children.length; i++) {
