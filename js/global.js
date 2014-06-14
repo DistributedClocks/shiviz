@@ -59,8 +59,7 @@ Global.prototype.drawAll = function() {
     for(var i = 0; i < this.views.length; i++) {
         this.views[i].draw();
     }
-    this.drawHiddenHosts();
-    this.drawArrow();
+    this.drawSideBar();
 };
 
 /**
@@ -121,7 +120,6 @@ Global.prototype.addView = function(view) {
     var newHosts = view.getHosts();
     for(var i = 0; i < newHosts.length; i++) {
         var host = newHosts[i];
-        this.hosts.push(host);
         if(!this.hostColors[host]) {
             this.hostColors[host] = this.color(host);
         }
@@ -148,25 +146,56 @@ Global.prototype.addView = function(view) {
  * 
  * @private
  */
-Global.prototype.drawHiddenHosts = function() {
-    d3.selectAll("#hosts svg").remove();
+Global.prototype.drawSideBar = function() {
+    d3.selectAll("#sideBar svg").remove();
+    
+    var view = this;
+    var width = 120;
+    var height = 200;
+    var sideBar = d3.select("#sideBar");
+
+    var timeArrow = sideBar.append("svg");
+    timeArrow.attr("width", width);
+    timeArrow.attr("height", height);
+
+    // Draw time arrow with label
+    var x = width / 2;
+    var y1 = 85;
+    var y2 = height - 30;
+
+    timeArrow.append("line")
+    .attr("class", "time")
+    .attr("x1", x)
+    .attr("y1", y1 + 15)
+    .attr("x2", x)
+    .attr("y2", y2)
+    .style("stroke-width", 3);
+
+    timeArrow.append("path").attr("class", "time").attr(
+            "d",
+            "M " + (x - 5) + " " + y2 + " L " + (x + 5) + " " + y2 + " L " + x
+                    + " " + (y2 + 10) + " z");
+
+    timeArrow.append("text").attr("class", "time").attr("x", x - 20)
+            .attr("y", y1 - 5).text("Time");
+    
     
     if (this.hiddenHosts.length <= 0) {
         return;
     }
 
     // Define locally so that we can use in lambdas below
-    var view = this;
-
-    var svg = d3.select("#hosts").append("svg");
     
-    svg.attr("width", 120);
-    svg.attr("height", 500);
+
+    var hiddenHosts = sideBar.append("svg");
+    
+    hiddenHosts.attr("width", 120);
+    hiddenHosts.attr("height", 500);
 
     var x = 0;
     var y = 65;
 
-    var text = svg.append("text").attr("class", "time").attr("x", x).attr("y",
+    var text = hiddenHosts.append("text").attr("class", "time").attr("x", x).attr("y",
             y).text("Hidden hosts:");
 
     y += 15;
@@ -174,7 +203,7 @@ Global.prototype.drawHiddenHosts = function() {
     x = xDelta;
     var count = 0;
 
-    var rect = svg.selectAll().data(this.hiddenHosts).enter().append("rect")
+    var rect = hiddenHosts.selectAll().data(this.hiddenHosts).enter().append("rect")
             .on("dblclick", function(e) {
                 view.unhideHost(e);
             }).on("mouseover", function(e) {
@@ -202,39 +231,3 @@ Global.prototype.drawHiddenHosts = function() {
     rect.append("title").text("Double click to view");
 };
 
-
-
-/**
- * Draws the time arrow.
- * 
- * @private
- */
-Global.prototype.drawArrow = function() {
-    var width = 40;
-    var height = 200;
-    var sideBar = d3.select("#sideBar");
-
-    // Don't draw the arrow twice
-    if (sideBar.selectAll("svg").size())
-        return;
-
-    var svg = sideBar.append("svg");
-    svg.attr("width", width);
-    svg.attr("height", height);
-
-    // Draw time arrow with label
-    var x = width / 2;
-    var y1 = 85;
-    var y2 = height - 30;
-
-    svg.append("line").attr("class", "time").attr("x1", x).attr("y1", y1 + 15)
-            .attr("x2", x).attr("y2", y2).style("stroke-width", 3);
-
-    svg.append("path").attr("class", "time").attr(
-            "d",
-            "M " + (x - 5) + " " + y2 + " L " + (x + 5) + " " + y2 + " L " + x
-                    + " " + (y2 + 10) + " z");
-
-    svg.append("text").attr("class", "time").attr("x", x - 20)
-            .attr("y", y1 - 5).text("Time");
-};
