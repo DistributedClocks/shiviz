@@ -15,6 +15,8 @@
  * from the provided model. It removes all nodes for the hostToHide and any edges
  * touching a node for the hostToHide and adds transitive edges. The added transitive edges will be drawn with dashed lines.
  * 
+ * If this transformation is applied to a graph that doesn't have the specified host, then this transformation does nothing
+ * 
  * @constructor
  * @param {String} hostToHide The host to hide from the model
  */
@@ -28,11 +30,16 @@ function HideHostTransformation(hostToHide) {
 
 /**
  * Performs the transformation on the given visualGraph. The VisualGraph and its underlying Graph are modified in place
+ * 
  * @param {VisualGraph} visualGraph The VisualGraph to transform
  */
 HideHostTransformation.prototype.transform = function(visualGraph) {
 
     var graph = visualGraph.getGraph();
+    if(!graph.hasHost(this.hostToHide)) {
+        return;
+    }
+    
     var curr = graph.getHead(this.hostToHide).getNext();
     
     var parents = [];

@@ -1,23 +1,35 @@
 /**
+ * @class
+ * A Global is the visualization in its entirety. It is a composition of Views and is responsible
+ * for information that's shared across Views such as the colors for hosts. It is also responsible for drawing 
+ * things shared across all Views such as the list of hidden hosts
  * 
- */
-
-/**
  * @constructor
- * @private
  */
 function Global() {
-    this.hosts = [];
+    
+    /** @private */
     this.views = [];
+    
+    /** @private */
     this.transformations = [];
+    
+    /** @private */
     this.hiddenHosts = [];
+    
+    /** @private */
     this.hiddenHostToTransformation = {};
+    
+    /** @private */
     this.hostColors = {};
+    
+    /** @private */
     this.color = d3.scale.category20();
 }
 
 
 /**
+ * Gets a mapping of host names to its designated color
  * 
  * @returns {Object<String, Number>} A mapping of host names to its designated color
  */
@@ -30,16 +42,18 @@ Global.prototype.getHostColors = function() {
 };
 
 /**
+ * Adds a transformation that is to be applied to all views. The transformation for a view will not be applied
+ * until it is redrawn (i.e by calling view.draw() to redraw a single view or global.drawAll() to redraw all views
+ * belonging to this global)
  * 
- * @param transformation The transformation to add
+ * @param {Transform} transformation The transformation to add
  */
 Global.prototype.addTransformation = function(transformation) {
     this.transformations.push(transformation);
-    this.drawAll();
 };
 
 /**
- * 
+ * Redraws the global.
  */
 Global.prototype.drawAll = function() {
     for(var i = 0; i < this.views.length; i++) {
@@ -50,35 +64,47 @@ Global.prototype.drawAll = function() {
 };
 
 /**
+ * Gets the transformations belonging to this global as an array
  * 
- * @returns {Array.<Transformation>}
+ * @returns {Array.<Transformation>} The transformations 
  */
 Global.prototype.getTransformations = function() {
     return this.transformations.slice();
 };
 
 /**
+ * Hides a host from all views and re-draws this global.
  * 
- * @param hostId The host to hide.
+ * @param {String} hostId The host to hide.
  */
 Global.prototype.hideHost = function(hostId) {
     var transform = new HideHostTransformation(hostId);
     this.hiddenHostToTransformation[hostId] = transform;
     this.hiddenHosts.push(hostId);
     this.addTransformation(transform);
+    this.drawAll();
 };
 
 /**
+ * Unhides a host from all views and re-draws this global. If the specified host doesn't exist or is not
+ * currently hidden, this method does nothing.
  * 
- * @param hostId The host to unhide
+ * @param {String} hostId The host to unhide
  */
 Global.prototype.unhideHost = function(hostId) {
-    this.hiddenHosts.splice(this.hiddenHosts.indexOf(hostId), 1);
+    var index = this.hiddenHosts.indexOf(hostId);
+    
+    if(index < 0) {
+        return;
+    }
+    
+    this.hiddenHosts.splice(index, 1);
     this.transformations.splice(this.transformations.indexOf(this.hiddenHostToTransformation[hostId]), 1);
     this.drawAll();
 };
 
 /**
+ * Gets the hosts that are currently hidden
  * 
  * @returns {Array.<String>} An array of currently hidden hosts
  */
@@ -87,8 +113,9 @@ Global.prototype.getHiddenHosts = function() {
 };
 
 /**
+ * Adds a View to this global.
  * 
- * @param view The view to add
+ * @param {View} view The view to add
  */
 Global.prototype.addView = function(view) {
     var newHosts = view.getHosts();
@@ -100,13 +127,30 @@ Global.prototype.addView = function(view) {
         }
     }
     this.views.push(view);
+    
+    var totalWidth = $("body").width();
+    var totalHosts = 0;
+    for(var i = 0; i < this.views.length; i++) {
+        totalHosts += this.views[i].getHosts().length;
+    }
+    
+    var widthPerHost = Math.max(totalWidth / totalHosts, 40);
+    
+    for(var i = 0; i < this.views.length; i++) {
+        var view = this.views[i];
+        view.setWidth(view.getHosts().length * widthPerHost);
+    }
 };
 
 
 /**
  * Draws the hidden hosts, if any exist.
+ * 
+ * @private
  */
 Global.prototype.drawHiddenHosts = function() {
+    d3.selectAll("#hosts svg").remove();
+    
     if (this.hiddenHosts.length <= 0) {
         return;
     }
@@ -115,6 +159,7 @@ Global.prototype.drawHiddenHosts = function() {
     var view = this;
 
     var svg = d3.select("#hosts").append("svg");
+    
     svg.attr("width", 120);
     svg.attr("height", 500);
 
@@ -161,6 +206,8 @@ Global.prototype.drawHiddenHosts = function() {
 
 /**
  * Draws the time arrow.
+ * 
+ * @private
  */
 Global.prototype.drawArrow = function() {
     var width = 40;

@@ -1,10 +1,16 @@
 /**
  * @class
  * A View for a ShiViz graph. A View is responsible for drawing a single VisualGraph. It also collects transformations that 
- * generate new iterations of the model
+ * generate new iterations of the model.
  * 
+ * @constructor
+ * @param {Graph} model
+ * @param {Global} global
+ * @param {String} label
  */
 function View(model, global, label) {
+    
+    /** @private */
     this.label = label;
     
     /** @private */
@@ -17,26 +23,51 @@ function View(model, global, label) {
     this.transformations = [];
     
     /** @private */
+    this.width = 500;
+    
+    /** @private */
     this.collapseSequentialNodesTransformation = new CollapseSequentialNodesTransformation(2);
     
     this.addTransformation(this.collapseSequentialNodesTransformation);
 }
 
-
+/**
+ * Gets the Global that this view belongs to
+ * 
+ * @returns {Global} The global that this view belongs to
+ */
 View.prototype.getGlobal = function() {
     return this.global;
 };
 
+/**
+ * Adds a transformation. The transformation is not applied until the draw method is invoked.
+ * The difference between view.addTransformation and global.addTransformation is that the global version
+ * adds applies the transformation to all views.
+ * 
+ * @param {Transform} transformation The new transformation
+ */
 View.prototype.addTransformation = function(transformation) {
     this.transformations.push(transformation);
-    this.draw();
 };
 
-
+/**
+ * Gets the hosts as an array
+ * 
+ * @returns {Array<String>} The hosts
+ */
 View.prototype.getHosts = function() {
     return this.initialModel.getHosts();
 };
 
+/**
+ * Sets the width of this view
+ * 
+ * @param {newWidth} The new width
+ */
+View.prototype.setWidth = function(newWidth) {
+    this.width = newWidth;
+};
 
 
 /**
@@ -45,17 +76,13 @@ View.prototype.getHosts = function() {
 View.prototype.draw = function() {
     // Assign a unique ID to each execution so we can distinguish
     // them
-    if (this.id == null)
+    if (this.id == null) {
         this.id = "view" + d3.selectAll("#vizContainer > svg").size();
+    }
 
     
     var currentModel = this.initialModel.clone();
-    
-    var numHosts = currentModel.getHosts().length;
-    var width = Math.max(numHosts * 40, $("body").width() * numHosts
-            / (this.global.hosts.length + this.global.views.length - 1));
-    
-    var layout = new SpaceTimeLayout(width, 45);
+    var layout = new SpaceTimeLayout(this.width, 45);
     
     var visualGraph = new VisualGraph(currentModel, layout,
             this.global.hostColors);
@@ -78,7 +105,7 @@ View.prototype.draw = function() {
     // Remove old diagrams, but only the ones with the same ID
     // so we don't remove the other executions
     d3.selectAll("." + this.id).remove();
-    d3.selectAll("#hosts svg").remove();
+    
 
     var link = svg.selectAll(".link").data(visualGraph.getVisualEdges())
             .enter().append("line").attr("class", "link").style("stroke-width",
