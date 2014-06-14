@@ -1,10 +1,24 @@
-
+/**
+ * @class
+ * SpaceTimeLayout arranges a VisualGraph as a space-time diagram with hosts laid out horizontally
+ * and time increasing with y coordinate.
+ * 
+ * @param {Number} width The maximum width of the resulting layout
+ * @param {Number} delta The vertical distance between nodes
+ */
 function SpaceTimeLayout(width, delta) {
     this.width = width;
     this.delta = delta;
     this.height = 0;
 }
 
+/**
+ * This method is solely responsible for actually performing the layout (i.e by manipulating
+ * the x and y coordinates of VisualNodes in the VisualGraph. A topological sort is performed to ensure 
+ * that the y-coordinate of any VisualNode's Node is greater than that of it's prev and parent Nodes
+ *
+ * @param {VisualGraph} visualGraph The visualGraph to lay out
+ */
 SpaceTimeLayout.prototype.start = function(visualGraph) {
     
     this.height = 0;
@@ -43,11 +57,14 @@ SpaceTimeLayout.prototype.start = function(visualGraph) {
         hostNameToIndex[hosts[i]] = i;
     }
     
+    var widthPerHost = this.width / (hosts.length + 1);
+    var padding = widthPerHost / 2;
+    
     while(noParents.length > 0) {
         var current = noParents.pop();
         
         this.height = Math.max(this.height, current.getY());
-        current.setX(this.width / hosts.length * hostNameToIndex[current.getHost()] + this.width / hosts.length / 2);
+        current.setX(widthPerHost * hostNameToIndex[current.getHost()] + padding);
         
         var children = nodeToChildren[current.getId()];
         for(var i = 0; i < children.length; i++) {
@@ -60,14 +77,24 @@ SpaceTimeLayout.prototype.start = function(visualGraph) {
         }
     }
 
-    this.height += 2 * this.delta;
+    this.height += this.delta;
     
 };
 
+/**
+ * Gets the height of the resulting layout
+ * 
+ * @returns {Number} The height
+ */
 SpaceTimeLayout.prototype.getHeight = function() {
     return this.height;
 };
 
+/**
+ * Gets the width of the resulting layout
+ * 
+ * @returns {Number} The width
+ */
 SpaceTimeLayout.prototype.getWidth = function() {
     return this.width;
 };

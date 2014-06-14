@@ -27,7 +27,7 @@ function VisualGraph(graph, layout, hostColors) {
     
     /** @private A mapping of edge IDs to VisualEdges */
     this.links = {};
-    
+
     graph.addObserver(AddNodeEvent, this, function(event, g) {
         g.addVisualNodeByNode(event.getNewNode());
         g.removeVisualEdgeByNodes(event.getPrev(), event.getNext());
@@ -55,15 +55,10 @@ function VisualGraph(graph, layout, hostColors) {
     });
     
     graph.addObserver(RemoveHostEvent, this, function(event, g) {
-        // just delete head by keeping host to head
-        for(var key in g.nodeIdToVisualNode) {
-            var visualNode = g.nodeIdToVisualNode[key];
-            if(visualNode.getHost() == event.getHost()) {
-                delete g.nodeIdToVisualNode[key];
-            }
-        }
+        delete g.nodeIdToVisualNode[event.getHead().getId()];
     });
     
+    // Create nodes
     var nodes = graph.getAllNodes();
     for (var i = 0; i < nodes.length; i++) {
         var node = nodes[i];
@@ -74,6 +69,7 @@ function VisualGraph(graph, layout, hostColors) {
         }
     }
     
+    // Create edges
     for(var i = 0; i < nodes.length; i++) {
         var node = nodes[i];
         var visualNode = this.nodeIdToVisualNode[node.getId()];
