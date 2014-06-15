@@ -104,10 +104,16 @@ header > a,
 }
 
 .time {
-    stroke: #999;
-    stroke-opacity: .6;
-    fill: #999;
-    fill-opacity: .6;
+    opacity: .4;
+}
+
+text.time {
+    font-weight: bold;
+}
+
+line.time {
+    stroke: #000;
+    stroke-width: 2px;
 }
 
 #curNode {
