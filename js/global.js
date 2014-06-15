@@ -38,18 +38,18 @@ function Global() {
     this.scrollPastPoint = -1;
     
     $("#sideBar").css({
-    width: Global.SIDE_BAR_WIDTH + "px",
-    float: "left"
-});
+        width: Global.SIDE_BAR_WIDTH + "px",
+        float: "left"
+    });
     
-    $(window).off("scroll");
+    $(window).unbind("scroll");
     $(window).on("scroll", null, this, this.scrollHandler);
     this.scrollHandler({data: this});
 
 }
 
 Global.id = 0;
-Global.SIDE_BAR_WIDTH = 115;
+Global.SIDE_BAR_WIDTH = 60;
 Global.HOST_SQUARE_SIZE = 25;
 
 /**
@@ -192,7 +192,6 @@ Global.prototype.drawSideBar = function() {
     line.attr("y1", y1 + 15);
     line.attr("x2", x);
     line.attr("y2", y2);
-    line.style("stroke-width", 3);
 
     var path = timeArrow.append("path");
     path.attr("class", "time");
@@ -217,12 +216,19 @@ Global.prototype.drawSideBar = function() {
     var x = 0;
     var y = 65;
 
-    var hiddenHostsText = hiddenHosts.append("text");
-    hiddenHostsText.attr("class", "time");
-    hiddenHostsText.attr("x", x);
-    hiddenHostsText.attr("y", y);
-    hiddenHostsText.text("Hidden hosts:");
-    hiddenHostsText.append("title").text("Double click to view");
+    var hiddenHostsGroup = hiddenHosts.append("g");
+    hiddenHostsGroup.append("title").text("Double click to view");
+    var hiddenText = hiddenHostsGroup.append("text");
+    hiddenText.attr("class", "time");
+    hiddenText.attr("x", x);
+    hiddenText.attr("y", y);
+    hiddenText.text('Hidden');
+    var hostsText = hiddenHostsGroup.append("text");
+    hostsText.attr("class", "time");
+    hostsText.attr("x", x);
+    hostsText.attr("y", y);
+    hostsText.attr("dy", "1em");
+    hostsText.text('hosts:');
 
     var rect = hiddenHosts.selectAll().data(this.hiddenHosts).enter().append("rect");
     rect.style("stroke", "#fff");
@@ -244,7 +250,7 @@ Global.prototype.drawSideBar = function() {
             
     var hostsPerLine = Math.floor((Global.SIDE_BAR_WIDTH + 5) / (Global.HOST_SQUARE_SIZE + 5));
     var count = 0;
-    y += 15;
+    y += 25;
     x = Global.SIDE_BAR_WIDTH + 1;
     
     rect.attr("y", function(host) {

@@ -188,18 +188,17 @@ View.prototype.draw = function() {
     });
     
     circle.style("stroke", "#fff");
-    circle.style("stroke-width", "1.5px");
+    circle.style("stroke-width", "2px");
     
     var label = node.append("text");
     label.attr("text-anchor", "middle");
-    label.attr("font-size", 10);
+    label.attr("font-size", "8pt");
     label.attr("fill", "white");
-    label.attr("dy", "0.35em");
-    label.text(
-            function(d) {
-                return d.getLabel();
-            });
-
+    label.attr("dominant-baseline", "central");
+    label.attr("pointer-events", "none");
+    label.text(function(d) {
+        return d.getLabel();
+    });
 
     // draw the host bar
     var hostSvg = d3.select("#hostBar").append("svg");
@@ -216,28 +215,27 @@ View.prototype.draw = function() {
     bar.style("fill", "#fff");
 
     // draw the hosts
-   var rect = hostSvg.selectAll().data(visualGraph.getStartVisualNodes()).enter().append("rect");
-   rect.style("stroke", "#fff");
-   rect.attr("width", Global.HOST_SQUARE_SIZE);
-   rect.attr("height", Global.HOST_SQUARE_SIZE);
-   
-   rect.attr("x", function(d) {
+    var rect = hostSvg.selectAll().data(visualGraph.getStartVisualNodes()).enter().append("rect");
+    rect.attr("width", Global.HOST_SQUARE_SIZE);
+    rect.attr("height", Global.HOST_SQUARE_SIZE);
+
+    rect.attr("x", function(d) {
         return d.getX() - (Global.HOST_SQUARE_SIZE / 2);
     });
-   
-   rect.attr("y", function(d) {
+
+    rect.attr("y", function(d) {
         return 15;
     });
-   
-   rect.on("mouseover", function(e) {
+
+    rect.on("mouseover", function(e) {
         $("#curNode").text(e.getText());
     });
-   
-   rect.on("dblclick", function(e) {
+
+    rect.on("dblclick", function(e) {
         view.global.hideHost(e.getHost());
     });
-   
-   rect.attr("class", "node").style("fill", function(d) {
+
+    rect.attr("class", "node").style("fill", function(d) {
         return d.getFillColor();
     });
 
