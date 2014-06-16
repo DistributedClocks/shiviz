@@ -56,8 +56,7 @@ HideHostTransformation.prototype.transform = function(visualGraph) {
                     if (parents[i].getHost() != children[j].getHost()) {
                         parents[i].addChild(children[j]);
 
-                        visualGraph.getVisualEdgeByNodes(parents[i],
-                                children[j]).setDashLength(5);
+                        visualGraph.getVisualEdgeByNodes(parents[i], children[j]).setDashLength(5);
                     }
                 }
             }
@@ -129,8 +128,7 @@ CollapseSequentialNodesTransformation.prototype.getThreshold = function() {
  * 
  * @param {Number} threshold The new threshold
  */
-CollapseSequentialNodesTransformation.prototype.setThreshold = function(
-        threshold) {
+CollapseSequentialNodesTransformation.prototype.setThreshold = function(threshold) {
     if (threshold < 2) {
         throw "Invalid threshold. Threshold must be greater than or equal to 2";
     }
@@ -234,8 +232,7 @@ CollapseSequentialNodesTransformation.prototype.isExempt = function(node) {
  * 
  * @param {VisualGraph} visualGraph The VisualGraph to transform
  */
-CollapseSequentialNodesTransformation.prototype.transform = function(
-        visualGraph) {
+CollapseSequentialNodesTransformation.prototype.transform = function(visualGraph) {
 
     var graph = visualGraph.getGraph();
 
@@ -265,8 +262,7 @@ CollapseSequentialNodesTransformation.prototype.transform = function(
         var curr = prev.getNext();
         while (curr != null) {
 
-            if (curr.hasChildren() || curr.hasParents() || curr.isTail()
-                    || this.isExempt(curr)) {
+            if (curr.hasChildren() || curr.hasParents() || curr.isTail() || this.isExempt(curr)) {
                 if (groupCount >= this.threshold) {
                     collapse(prev, groupCount);
                 }

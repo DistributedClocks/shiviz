@@ -66,8 +66,7 @@ SpaceTimeLayout.prototype.start = function(visualGraph) {
         var current = noParents.pop();
 
         this.height = Math.max(this.height, current.getY());
-        current.setX(widthPerHost * hostNameToIndex[current.getHost()]
-                + leftMargin);
+        current.setX(widthPerHost * hostNameToIndex[current.getHost()] + leftMargin);
 
         var children = nodeToChildren[current.getId()];
         for (var i = 0; i < children.length; i++) {

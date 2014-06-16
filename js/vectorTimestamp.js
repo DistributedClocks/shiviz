@@ -67,8 +67,7 @@ VectorTimestamp.prototype.getOwnTime = function() {
 VectorTimestamp.prototype.compareTo = function(other) {
     var thisFirst = false;
     for (var host in this.clock) {
-        if (other.clock[host] != undefined
-                && this.clock[host] < other.clock[host]) {
+        if (other.clock[host] != undefined && this.clock[host] < other.clock[host]) {
             thisFirst = true;
             break;
         }
@@ -76,8 +75,7 @@ VectorTimestamp.prototype.compareTo = function(other) {
 
     var otherFirst = false;
     for (var host in other.clock) {
-        if (this.clock[host] != undefined
-                && other.clock[host] < this.clock[host]) {
+        if (this.clock[host] != undefined && other.clock[host] < this.clock[host]) {
             otherFirst = true;
             break;
         }

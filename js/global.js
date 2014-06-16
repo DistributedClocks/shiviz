@@ -38,14 +38,14 @@ function Global() {
     this.scrollPastPoint = -1;
 
     $("#sideBar").css({
-        width : Global.SIDE_BAR_WIDTH + "px",
-        float : "left"
+        width: Global.SIDE_BAR_WIDTH + "px",
+        float: "left"
     });
 
     $(window).unbind("scroll");
     $(window).on("scroll", null, this, this.scrollHandler);
     this.scrollHandler({
-        data : this
+        data: this
     });
 
 }
@@ -125,8 +125,7 @@ Global.prototype.unhideHost = function(hostId) {
     }
 
     this.hiddenHosts.splice(index, 1);
-    this.transformations.splice(this.transformations
-            .indexOf(this.hiddenHostToTransformation[hostId]), 1);
+    this.transformations.splice(this.transformations.indexOf(this.hiddenHostToTransformation[hostId]), 1);
     this.drawAll();
 };
 
@@ -182,9 +181,9 @@ Global.prototype.drawSideBar = function() {
     // Draw time arrow with label
     var height = 200;
     var timeArrow = sideBar.append("svg").attr({
-        "width" : Global.SIDE_BAR_WIDTH,
-        "height" : height,
-        "class" : "arrow"
+        "width": Global.SIDE_BAR_WIDTH,
+        "height": height,
+        "class": "arrow"
     });
 
     var x = Global.SIDE_BAR_WIDTH / 2;
@@ -198,8 +197,7 @@ Global.prototype.drawSideBar = function() {
     line.attr("y2", y2);
 
     var path = timeArrow.append("path");
-    path.attr("d", "M " + (x - 5) + " " + y2 + " L " + (x + 5) + " " + y2
-            + " L " + x + " " + (y2 + 10) + " z");
+    path.attr("d", "M " + (x - 5) + " " + y2 + " L " + (x + 5) + " " + y2 + " L " + x + " " + (y2 + 10) + " z");
 
     var timeText = timeArrow.append("text");
     timeText.attr("x", x - 20);
@@ -213,9 +211,9 @@ Global.prototype.drawSideBar = function() {
 
     var hiddenHosts = sideBar.append("svg");
     hiddenHosts.attr({
-        "width" : Global.SIDE_BAR_WIDTH,
-        "height" : 500,
-        "class" : "hidden-hosts"
+        "width": Global.SIDE_BAR_WIDTH,
+        "height": 500,
+        "class": "hidden-hosts"
     });
 
     var x = 0;
@@ -226,21 +224,20 @@ Global.prototype.drawSideBar = function() {
 
     var hiddenText = hiddenHostsGroup.append("text");
     hiddenText.attr({
-        "x" : x,
-        "y" : y
+        "x": x,
+        "y": y
     });
     hiddenText.text('Hidden');
 
     var hostsText = hiddenHostsGroup.append("text");
     hostsText.attr({
-        "x" : x,
-        "y" : y,
-        "dy" : "1em"
+        "x": x,
+        "y": y,
+        "dy": "1em"
     });
     hostsText.text('hosts:');
 
-    var rect = hiddenHosts.selectAll().data(this.hiddenHosts).enter().append(
-            "rect");
+    var rect = hiddenHosts.selectAll().data(this.hiddenHosts).enter().append("rect");
     rect.attr("width", Global.HOST_SQUARE_SIZE);
     rect.attr("height", Global.HOST_SQUARE_SIZE);
     rect.style("fill", function(host) {
@@ -254,8 +251,7 @@ Global.prototype.drawSideBar = function() {
     });
     rect.append("title").text("Double click to view");
 
-    var hostsPerLine = Math.floor((Global.SIDE_BAR_WIDTH + 5)
-            / (Global.HOST_SQUARE_SIZE + 5));
+    var hostsPerLine = Math.floor((Global.SIDE_BAR_WIDTH + 5) / (Global.HOST_SQUARE_SIZE + 5));
     var count = 0;
     y += 25;
     x = Global.SIDE_BAR_WIDTH + 1;
@@ -288,9 +284,7 @@ Global.prototype.scrollHandler = function(event) {
 
     var global = event.data;
 
-    var top = window.pageYOffset ? window.pageYOffset
-            : document.documentElement.scrollTop ? document.documentElement.scrollTop
-                    : document.body.scrollTop;
+    var top = window.pageYOffset ? window.pageYOffset : document.documentElement.scrollTop ? document.documentElement.scrollTop : document.body.scrollTop;
 
     var paddingWidth = ($(window).width() - $("body").width()) / 2;
     var left = Math.max(paddingWidth, 0) - $(document).scrollLeft();
@@ -298,8 +292,7 @@ Global.prototype.scrollHandler = function(event) {
     var overflow = paddingWidth < 0;
 
     if (global.scrollPastPoint <= 0) {
-        global.scrollPastPoint = $('#reference').offset().top
-                - parseInt($('#reference p').css('margin-top'));
+        global.scrollPastPoint = $('#reference').offset().top - parseInt($('#reference p').css('margin-top'));
     }
 
     var scrollPast = (global.scrollPastPoint > 0 && top > global.scrollPastPoint);
@@ -315,48 +308,45 @@ Global.prototype.scrollHandler = function(event) {
         $("body").addClass("fixed");
 
         $("#sideBar").css({
-            top : $("#topBar").height() + "px",
-            left : left + "px"
+            top: $("#topBar").height() + "px",
+            left: left + "px"
         });
 
         if (overflow) {
             $("#sideBar").css({
-                left : "auto",
-                marginLeft : left + "px"
+                left: "auto",
+                marginLeft: left + "px"
             });
         }
 
         $("#hostBar").css({
-            left : overflow ? "auto" : 0,
-            marginLeft : left + Global.SIDE_BAR_WIDTH + "px"
+            left: overflow ? "auto" : 0,
+            marginLeft: left + Global.SIDE_BAR_WIDTH + "px"
         });
 
-        $("#vizContainer").css(
-                {
-                    marginTop : $("#topBar").height()
-                            - parseInt($("#topBar p").css("margin-top")) + 55
-                            + "px",
-                    marginLeft : Global.SIDE_BAR_WIDTH + "px"
-                });
+        $("#vizContainer").css({
+            marginTop: $("#topBar").height() - parseInt($("#topBar p").css("margin-top")) + 55 + "px",
+            marginLeft: Global.SIDE_BAR_WIDTH + "px"
+        });
 
     }
     else {
         $("body").removeClass("fixed");
 
         $("#sideBar").css({
-            top : "",
-            left : "0px",
-            marginLeft : ""
+            top: "",
+            left: "0px",
+            marginLeft: ""
         });
 
         $("#hostBar").css({
-            marginLeft : 0,
-            left : ""
+            marginLeft: 0,
+            left: ""
         });
 
         $("#vizContainer").css({
-            marginLeft : "0",
-            marginTop : ""
+            marginLeft: "0",
+            marginTop: ""
         });
     }
 };

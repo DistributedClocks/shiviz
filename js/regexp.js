@@ -10,8 +10,7 @@ function NamedRegExp(regexp, flags) {
     var match, names = [];
     flags = flags || "";
 
-    this.no = new RegExp(regexp.replace(/\(\?<\w+?>(.+?)\)/g, "\(\?\:$1\)"),
-            "g" + flags);
+    this.no = new RegExp(regexp.replace(/\(\?<\w+?>(.+?)\)/g, "\(\?\:$1\)"), "g" + flags);
 
     regexp = regexp.replace(/\((?!\?(=|!|<|:))/g, "(?:");
     while (match = regexp.match(/\(\?<(\w+?)>.+\)/)) {

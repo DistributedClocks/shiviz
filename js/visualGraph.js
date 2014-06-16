@@ -85,15 +85,13 @@ function VisualGraph(graph, layout, hostColors) {
 
         var prev = node.getPrev();
         var linkId = this.getEdgeId(node, prev);
-        this.links[linkId] = new VisualEdge(this.nodeIdToVisualNode[prev
-                .getId()], visualNode);
+        this.links[linkId] = new VisualEdge(this.nodeIdToVisualNode[prev.getId()], visualNode);
 
         var connect = node.getChildren();
         for (var j = 0; j < connect.length; j++) {
             var child = connect[j];
             var childLinkId = this.getEdgeId(node, child);
-            this.links[childLinkId] = new VisualEdge(visualNode,
-                    this.nodeIdToVisualNode[child.getId()]);
+            this.links[childLinkId] = new VisualEdge(visualNode, this.nodeIdToVisualNode[child.getId()]);
         }
 
     }
@@ -259,8 +257,7 @@ VisualGraph.prototype.getHeight = function() {
  * @returns {String} The edge ID
  */
 VisualGraph.prototype.getEdgeId = function(node1, node2) {
-    return Math.min(node1.getId(), node2.getId()) + ":"
-            + Math.max(node1.getId(), node2.getId());
+    return Math.min(node1.getId(), node2.getId()) + ":" + Math.max(node1.getId(), node2.getId());
 };
 
 /**

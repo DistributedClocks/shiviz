@@ -103,8 +103,7 @@ function Graph(logEvents) {
     for (var host in hostToNodes) {
         var array = hostToNodes[host];
         array.sort(function(a, b) {
-            return a.logEvents[0].getVectorTimestamp().compareToLocal(
-                    b.logEvents[0].getVectorTimestamp());
+            return a.logEvents[0].getVectorTimestamp().compareToLocal(b.logEvents[0].getVectorTimestamp());
         });
 
         for (var i = 0; i < array.length; i++) {
@@ -185,8 +184,7 @@ function Graph(logEvents) {
                     continue;
                 }
                 var newTime = node.getLogEvents()[0].getVectorTimestamp().ownTime;
-                var oldTime = currParentOnHost.getLogEvents()[0]
-                        .getVectorTimestamp().ownTime;
+                var oldTime = currParentOnHost.getLogEvents()[0].getVectorTimestamp().ownTime;
                 if (newTime > oldTime) {
                     currNode.addParent(node);
                 }
@@ -205,8 +203,7 @@ function Graph(logEvents) {
  * @static
  * @private
  */
-Graph.validEvents = [ AddNodeEvent, RemoveNodeEvent, AddFamilyEvent,
-        RemoveFamilyEvent, RemoveHostEvent, ChangeEvent ];
+Graph.validEvents = [ AddNodeEvent, RemoveNodeEvent, AddFamilyEvent, RemoveFamilyEvent, RemoveHostEvent, ChangeEvent ];
 
 /**
  * Gets the head node for a host
@@ -423,8 +420,8 @@ Graph.prototype.addObserver = function(type, context, callback) {
     }
 
     this.observers[type][callback] = {
-        callback : callback,
-        context : context
+        callback: callback,
+        context: context
     };
 };
 
