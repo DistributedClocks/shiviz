@@ -171,37 +171,37 @@ Global.prototype.addView = function(view) {
  * @private
  */
 Global.prototype.drawSideBar = function() {
-    d3.selectAll("#sideBar svg").remove();
+    $("#sideBar svg").remove();
     
-    var view = this;
+    var global = this;
     var sideBar = d3.select("#sideBar");
     
- // Draw time arrow with label
+    // Draw time arrow with label
     var height = 200;
-    var timeArrow = sideBar.append("svg");
-    timeArrow.attr("width", Global.SIDE_BAR_WIDTH);
-    timeArrow.attr("height", height);
+    var timeArrow = sideBar.append("svg")
+        .attr({
+            "width": Global.SIDE_BAR_WIDTH,
+            "height": height,
+            "class": "arrow"
+        });
     
     var x = Global.SIDE_BAR_WIDTH / 2;
     var y1 = 85;
     var y2 = height - 30;
 
-    var line = timeArrow.append("line");
-    line.attr("class", "time");
-    line.attr("x1", x);
-    line.attr("y1", y1 + 15);
-    line.attr("x2", x);
-    line.attr("y2", y2);
+    var line = timeArrow.append("line")
+        .attr("x1", x)
+        .attr("y1", y1 + 15)
+        .attr("x2", x)
+        .attr("y2", y2);
 
-    var path = timeArrow.append("path");
-    path.attr("class", "time");
-    path.attr("d", "M " + (x - 5) + " " + y2 + " L " + (x + 5) + " " + y2 + " L " + x + " " + (y2 + 10) + " z");
+    var path = timeArrow.append("path")
+        .attr("d", "M " + (x - 5) + " " + y2 + " L " + (x + 5) + " " + y2 + " L " + x + " " + (y2 + 10) + " z");
 
-    var timeText = timeArrow.append("text");
-    timeText.attr("class", "time");
-    timeText.attr("x", x - 20);
-    timeText.attr("y", y1 - 5);
-    timeText.text("Time");
+    var timeText = timeArrow.append("text")
+        .attr("x", x - 20)
+        .attr("y", y1 - 5)
+        .text("Time");
     
     
     // Draw hidden hosts
@@ -209,45 +209,49 @@ Global.prototype.drawSideBar = function() {
         return;
     }
     
-    var hiddenHosts = sideBar.append("svg");
-    hiddenHosts.attr("width", Global.SIDE_BAR_WIDTH);
-    hiddenHosts.attr("height", 500);
+    var hiddenHosts = sideBar.append("svg")
+        .attr({
+            "width": Global.SIDE_BAR_WIDTH,
+            "height": 500,
+            "class": "hidden-hosts"
+        });
 
     var x = 0;
     var y = 65;
 
     var hiddenHostsGroup = hiddenHosts.append("g");
     hiddenHostsGroup.append("title").text("Double click to view");
-    var hiddenText = hiddenHostsGroup.append("text");
-    hiddenText.attr("class", "time");
-    hiddenText.attr("x", x);
-    hiddenText.attr("y", y);
-    hiddenText.text('Hidden');
-    var hostsText = hiddenHostsGroup.append("text");
-    hostsText.attr("class", "time");
-    hostsText.attr("x", x);
-    hostsText.attr("y", y);
-    hostsText.attr("dy", "1em");
-    hostsText.text('hosts:');
 
-    var rect = hiddenHosts.selectAll().data(this.hiddenHosts).enter().append("rect");
-    rect.style("stroke", "#fff");
-    rect.attr("width", Global.HOST_SQUARE_SIZE);
-    rect.attr("height", Global.HOST_SQUARE_SIZE);
-    rect.append("title").text("Double click to view");
-    
-    rect.style("fill", function(host) {
-        return view.hostColors[host];
-    });
-    
-    rect.on("dblclick", function(e) {
-        view.unhideHost(e);
+    var hiddenText = hiddenHostsGroup.append("text")
+        .attr({
+            "x": x,
+            "y": y
+        })
+        .text('Hidden');
+
+    var hostsText = hiddenHostsGroup.append("text")
+        .attr({
+            "x": x,
+            "y": y,
+            "dy": "1em"
+        })
+        .text('hosts:');
+
+    var rect = hiddenHosts.selectAll().data(this.hiddenHosts).enter().append("rect")
+        .attr("width", Global.HOST_SQUARE_SIZE)
+        .attr("height", Global.HOST_SQUARE_SIZE)
+        .style("fill", function(host) {
+            return global.hostColors[host];
+        })
+        .on("dblclick", function(e) {
+            global.unhideHost(e);
+        })
+        .on("mouseover", function(e) {
+            $("#curNode").innerHTML = e;
         });
-            
-    rect.on("mouseover", function(e) {
-                $("#curNode").innerHTML = e;
-            });
-            
+
+    rect.append("title").text("Double click to view");
+
     var hostsPerLine = Math.floor((Global.SIDE_BAR_WIDTH + 5) / (Global.HOST_SQUARE_SIZE + 5));
     var count = 0;
     y += 25;
@@ -261,16 +265,13 @@ Global.prototype.drawSideBar = function() {
         }
         
         return y;
-    });
-    
-    rect.attr("x", function(host) {
+    }).attr("x", function(host) {
         x += 30;
         if(x + Global.HOST_SQUARE_SIZE > Global.SIDE_BAR_WIDTH) {
             x = 0;
         }
         return x;
     });
-
 };
 
 /**
@@ -283,87 +284,73 @@ Global.prototype.scrollHandler = function (event) {
 
     var global = event.data;
     
-        var top = window.pageYOffset ? window.pageYOffset
-                : document.documentElement.scrollTop ? document.documentElement.scrollTop
-                        : document.body.scrollTop;
-        
-        var paddingWidth = ($(window).width() - $("body").width()) / 2;
-        var left = Math.max(paddingWidth, 0) - $(document).scrollLeft();
-        
-        var overflow = paddingWidth < 0;
-        
-        if(global.scrollPastPoint <= 0) {
-            global.scrollPastPoint = $('#reference').offset().top
-            - parseInt($('#reference p').css('margin-top'));
-
-        }
-        
-        var scrollPast = (global.scrollPastPoint > 0 && top > global.scrollPastPoint);
-        
-        if(global.overflow == overflow && global.scrollPast == scrollPast) {
-            return;
-        }
-        
-        global.overflow = overflow;
-        global.scrollPast = scrollPast;
-        
-        if (scrollPast) {
-            $("#topBar").css({
-                position: "fixed",
-                top: "0px"
-            });
-
-            $("#sideBar").css({
-                position: "fixed",
-                top: $("#topBar").height() + "px",
-                left: left + "px"
-            });
-            
-            if(overflow) {
-                $("#sideBar").css({
-                    left: "auto",
-                    marginLeft: left + "px"
-                });
-            }
-
-            $("#hostBar").css({
-                position: "fixed",
-                top: "50px",
-                left: overflow ? "auto" : 0,
-                marginLeft: left + Global.SIDE_BAR_WIDTH + "px"
-            });
-
-
-            $("#vizContainer").css({
-                marginTop: $("#topBar").height()
-                           - parseInt($("#topBar p").css("margin-top")) + 55 + "px",
-                marginLeft: Global.SIDE_BAR_WIDTH + "px"
-                
-            });
-
-        }
-        else {
-            $("#topBar").css("position", "relative");
-
-            $("#sideBar").css({
-                position: "relative",
-                top: "",
-                left: "0px",
-                marginLeft: ""
-            });
-
-            $("#hostBar").css({
-                position: "relative",
-                marginLeft: 0,
-                left: "",
-                top: 0
-            });
-
-            $("#vizContainer").css({
-                marginLeft: "0",
-                marginTop: ""
-            });
-        }
+    var top = window.pageYOffset ? window.pageYOffset
+            : document.documentElement.scrollTop ? document.documentElement.scrollTop
+                    : document.body.scrollTop;
     
-};
+    var paddingWidth = ($(window).width() - $("body").width()) / 2;
+    var left = Math.max(paddingWidth, 0) - $(document).scrollLeft();
 
+    var overflow = paddingWidth < 0;
+    
+    if(global.scrollPastPoint <= 0) {
+        global.scrollPastPoint = $('#reference').offset().top
+        - parseInt($('#reference p').css('margin-top'));
+    }
+    
+    var scrollPast = (global.scrollPastPoint > 0 && top > global.scrollPastPoint);
+    
+    if(global.overflow == overflow && global.scrollPast == scrollPast) {
+        return;
+    }
+    
+    global.overflow = overflow;
+    global.scrollPast = scrollPast;
+    
+    if (scrollPast) {
+        $("body").addClass("fixed");
+
+        $("#sideBar").css({
+            top: $("#topBar").height() + "px",
+            left: left + "px"
+        });
+        
+        if(overflow) {
+            $("#sideBar").css({
+                left: "auto",
+                marginLeft: left + "px"
+            });
+        }
+
+        $("#hostBar").css({
+            left: overflow ? "auto" : 0,
+            marginLeft: left + Global.SIDE_BAR_WIDTH + "px"
+        });
+
+
+        $("#vizContainer").css({
+            marginTop: $("#topBar").height()
+                       - parseInt($("#topBar p").css("margin-top")) + 55 + "px",
+            marginLeft: Global.SIDE_BAR_WIDTH + "px"
+        });
+
+    } else {
+        $("body").removeClass("fixed");
+
+        $("#sideBar").css({
+            top: "",
+            left: "0px",
+            marginLeft: ""
+        });
+
+        $("#hostBar").css({
+            marginLeft: 0,
+            left: ""
+        });
+
+        $("#vizContainer").css({
+            marginLeft: "0",
+            marginTop: ""
+        });
+    }
+};
