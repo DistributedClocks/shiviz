@@ -12,8 +12,11 @@ $("#examplelogs a").on("click", function(e) {
     $.get(url, function(response) {
         $("#logField").val(response);
         resetView();
-        $("#delimiter").val($(e.target).data("delimiter"))
-        $(e.target).css({ color: "gray", pointerEvents: "none" });
+        $("#delimiter").val($(e.target).data("delimiter"));
+        $(e.target).css({
+            color : "gray",
+            pointerEvents : "none"
+        });
     }).fail(function() {
         var errText = 'Unable to retrieve example log: ' + url;
         console.log(errText);
@@ -47,8 +50,8 @@ function resetView() {
 
     // Reset the color of all of the log-links.
     $(".log-link").css({
-        "color": "",
-        "pointer-events": "initial"
+        "color" : "",
+        "pointer-events" : "initial"
     });
 };
 
@@ -61,34 +64,36 @@ $("#vizButton").on("click", function() {
         var delimiter = new NamedRegExp($("#delimiter").val(), "m");
         var executions = log.split(delimiter.no);
         if (delimiter.names.indexOf("trace") >= 0) {
-            labels = [""];
+            labels = [ "" ];
             var match;
             while (match = delimiter.exec(log))
                 labels.push(match.trace);
         }
-    } else {
-        executions = [log];
+    }
+    else {
+        executions = [ log ];
     }
 
-    executions = executions.filter(function (e, i) {
+    executions = executions.filter(function(e, i) {
         if (e.trim().length == 0) {
-            if (labels) labels[i] = "//REMOVE";
+            if (labels)
+                labels[i] = "//REMOVE";
             return false;
         }
         return true;
     });
 
     if (!!labels)
-        labels = labels.filter(function (e) {
+        labels = labels.filter(function(e) {
             return !(e == "//REMOVE");
         });
 
     // We need a variable share across all views/executions to keep them in
     // sync.
-    var global = new Global(); //Global.getInstance();
+    var global = new Global(); // Global.getInstance();
 
     // Make a view for each execution, then draw it
-    executions.map(function (v, i) {
+    executions.map(function(v, i) {
         var lines = v.split('\n');
         var model = generateGraphFromLog(lines);
         var view = new View(model, global, labels ? labels[i] : "");
@@ -97,13 +102,12 @@ $("#vizButton").on("click", function() {
 
         return view;
     });
-    
+
     global.drawAll();
 
     $("#graph").show();
 
 });
-
 
 /**
  * returns the last node associated with a certain process id
@@ -135,7 +139,7 @@ function selectTextareaLine(tarea, lineNum) {
     var lineLength = 131;
     var lines = tarea.value.split("\n");
     var numLines = 0;
-    
+
     // calculate start/end
     var startPos = 0;
     for (var x = 0; x < lines.length; x++) {

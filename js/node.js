@@ -21,8 +21,8 @@
  * after y</li>
  * </ul>
  * 
- * family: x is a family node of y if y is x's parent or child. This implies that
- * x is a family node of y if and only if y is a family node of x
+ * family: x is a family node of y if y is x's parent or child. This implies
+ * that x is a family node of y if and only if y is a family node of x
  * 
  * next node: x is the next node of y if and only if:
  * <ul>
@@ -101,11 +101,10 @@ function Node(logEvents) {
 
     /** @private */
     this.isTailInner = false;
-    
+
     /** @private */
     this.graph = null;
 
-    
 }
 
 // Global counter used to assign each node a unique ID
@@ -242,10 +241,10 @@ Node.prototype.insertNext = function(node) {
     node.next = this.next;
     node.prev.next = node;
     node.next.prev = node;
-    
+
     node.graph = this.graph;
     node.host = this.host;
-    
+
     this.notifyGraph(new AddNodeEvent(node, node.prev, node.next));
 };
 
@@ -270,10 +269,10 @@ Node.prototype.insertPrev = function(node) {
     node.prev = this.prev;
     node.next.prev = node;
     node.prev.next = node;
-    
+
     node.graph = this.graph;
     node.host = this.host;
-    
+
     this.notifyGraph(new AddNodeEvent(node, node.prev, node.next));
 };
 
@@ -304,7 +303,7 @@ Node.prototype.remove = function() {
     if (!this.prev || !this.next) {
         return;
     }
-    
+
     var prev = this.prev;
     var next = this.next;
 
@@ -327,9 +326,9 @@ Node.prototype.remove = function() {
 
     this.hostToChild = {};
     this.hostToParent = {};
-    
+
     this.notifyGraph(new RemoveNodeEvent(this, prev, next));
-    
+
     this.host = null;
     this.graph = null;
 };
@@ -470,7 +469,7 @@ Node.prototype.addChild = function(node) {
 
     node.removeParentByHost(this.host);
     node.hostToParent[this.host] = this;
-    
+
     this.notifyGraph(new AddFamilyEvent(this, node));
 };
 
@@ -502,7 +501,7 @@ Node.prototype.addParent = function(node) {
 
     node.removeChildByHost(this.host);
     node.hostToChild[this.host] = this;
-    
+
     this.notifyGraph(new AddFamilyEvent(node, this));
 };
 
@@ -519,7 +518,7 @@ Node.prototype.removeChild = function(node) {
 
     delete this.hostToChild[node.host];
     delete node.hostToParent[this.host];
-    
+
     this.notifyGraph(new RemoveFamilyEvent(this, node));
 };
 
@@ -536,13 +535,12 @@ Node.prototype.removeParent = function(node) {
 
     delete this.hostToParent[node.host];
     delete node.hostToChild[this.host];
-    
+
     this.notifyGraph(new RemoveFamilyEvent(node, this));
 };
 
-
 Node.prototype.notifyGraph = function(event) {
-    if(this.graph != null) {
+    if (this.graph != null) {
         this.graph.notify(event);
     }
 };

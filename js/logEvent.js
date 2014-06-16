@@ -14,7 +14,7 @@
 function LogEvent(text, host, vectorTimestamp, lineNum) {
     /** @private */
     this.id = LogEvent.id++;
-    
+
     /** @private */
     this.text = text;
 
@@ -29,7 +29,6 @@ function LogEvent(text, host, vectorTimestamp, lineNum) {
 }
 
 LogEvent.id = 0;
-
 
 /**
  * Returns the LogEvent's unique ID

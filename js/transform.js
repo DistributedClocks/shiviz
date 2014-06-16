@@ -7,41 +7,45 @@
  * Graph transformations should strive to preserve the definitions of 'parent',
  * 'child', 'next' and 'previous' as defined in node.js
  * 
- * Each transformation should declare a priority field of type Number. Transformations of highest priority will be applied first.
+ * Each transformation should declare a priority field of type Number.
+ * Transformations of highest priority will be applied first.
  */
 
 /**
- * This transformation generates a transformed model by removing this Transformation's hostToHide
- * from the provided model. It removes all nodes for the hostToHide and any edges
- * touching a node for the hostToHide and adds transitive edges. The added transitive edges will be drawn with dashed lines.
+ * This transformation generates a transformed model by removing this
+ * Transformation's hostToHide from the provided model. It removes all nodes for
+ * the hostToHide and any edges touching a node for the hostToHide and adds
+ * transitive edges. The added transitive edges will be drawn with dashed lines.
  * 
- * If this transformation is applied to a graph that doesn't have the specified host, then this transformation does nothing
+ * If this transformation is applied to a graph that doesn't have the specified
+ * host, then this transformation does nothing
  * 
  * @constructor
  * @param {String} hostToHide The host to hide from the model
  */
 function HideHostTransformation(hostToHide) {
-    
+
     this.priority = 80;
-    
+
     /** @private */
     this.hostToHide = hostToHide;
 }
 
 /**
- * Performs the transformation on the given visualGraph. The VisualGraph and its underlying Graph are modified in place
+ * Performs the transformation on the given visualGraph. The VisualGraph and its
+ * underlying Graph are modified in place
  * 
  * @param {VisualGraph} visualGraph The VisualGraph to transform
  */
 HideHostTransformation.prototype.transform = function(visualGraph) {
 
     var graph = visualGraph.getGraph();
-    if(!graph.hasHost(this.hostToHide)) {
+    if (!graph.hasHost(this.hostToHide)) {
         return;
     }
-    
+
     var curr = graph.getHead(this.hostToHide).getNext();
-    
+
     var parents = [];
     var children = [];
     while (!curr.isTail()) {
@@ -51,8 +55,9 @@ HideHostTransformation.prototype.transform = function(visualGraph) {
                 for (var j = 0; j < children.length; j++) {
                     if (parents[i].getHost() != children[j].getHost()) {
                         parents[i].addChild(children[j]);
-                        
-                        visualGraph.getVisualEdgeByNodes(parents[i], children[j]).setDashLength(5);
+
+                        visualGraph.getVisualEdgeByNodes(parents[i],
+                                children[j]).setDashLength(5);
                     }
                 }
             }
@@ -72,38 +77,44 @@ HideHostTransformation.prototype.transform = function(visualGraph) {
     }
 
     graph.removeHost(this.hostToHide);
-    
+
     visualGraph.update();
 
 };
 
 /**
- * @class
- * CollapseSequentialNodeTransformation groups local consecutive events that have no remote dependencies. The collapsed nodes
- * will have an increased radius and will contain a label indicating the number of nodes collapsed into it. This transformation
- * provides methods for adding and removing nodes exempt from this collapsing process.
+ * @class CollapseSequentialNodeTransformation groups local consecutive events
+ *        that have no remote dependencies. The collapsed nodes will have an
+ *        increased radius and will contain a label indicating the number of
+ *        nodes collapsed into it. This transformation provides methods for
+ *        adding and removing nodes exempt from this collapsing process.
  * 
- * This transformation collapses nodes that belong to the same group. Intuitively, nodes belong to the same
- * group if they are local consecutive events that have no remote dependencies. More formally, a node y is in x's group
- * if y == x or y has no family and y's prev or next node is in x's group.
+ * This transformation collapses nodes that belong to the same group.
+ * Intuitively, nodes belong to the same group if they are local consecutive
+ * events that have no remote dependencies. More formally, a node y is in x's
+ * group if y == x or y has no family and y's prev or next node is in x's group.
  * 
- * @param {Number} threshold Nodes are collapsed if the number of nodes in the group is greater than or equal to the threshold. The threshold must be greater than or equal to 2.
+ * @param {Number} threshold Nodes are collapsed if the number of nodes in the
+ *        group is greater than or equal to the threshold. The threshold must be
+ *        greater than or equal to 2.
  * @returns
  */
 function CollapseSequentialNodesTransformation(threshold) {
-    
+
     /** @private */
     this.threshold = 2;
     this.setThreshold(threshold);
-    
+
     /** @private */
     this.exemptLogEvents = {};
-    
+
     this.priority = 20;
 }
 
 /**
- * Gets the threshold. Nodes are collapsed if the number of nodes in the group is greater than or equal to the threshold. The threshold must be greater than or equal to 2.
+ * Gets the threshold. Nodes are collapsed if the number of nodes in the group
+ * is greater than or equal to the threshold. The threshold must be greater than
+ * or equal to 2.
  * 
  * @returns {Number} The threshold
  */
@@ -112,65 +123,74 @@ CollapseSequentialNodesTransformation.prototype.getThreshold = function() {
 };
 
 /**
- * Sets the threshold. Nodes are collapsed if the number of nodes in the group is greater than or equal to the threshold. The threshold is always greater than or equal to 2.
+ * Sets the threshold. Nodes are collapsed if the number of nodes in the group
+ * is greater than or equal to the threshold. The threshold is always greater
+ * than or equal to 2.
  * 
  * @param {Number} threshold The new threshold
  */
-CollapseSequentialNodesTransformation.prototype.setThreshold = function(threshold) {
-    if(threshold < 2) {
+CollapseSequentialNodesTransformation.prototype.setThreshold = function(
+        threshold) {
+    if (threshold < 2) {
         throw "Invalid threshold. Threshold must be greater than or equal to 2";
     }
-    
+
     this.threshold = threshold;
 };
 
 /**
- * Adds an exemption. An exemption is a LogEvent whose Node will never be collapsed. 
+ * Adds an exemption. An exemption is a LogEvent whose Node will never be
+ * collapsed.
  * 
- * Note that addExemption and removeExemption are not inverses of each other. addExemption affects only the 
- * LogEvents of the given node, while removeExemption affects the LogEvents of the given node and all nodes in its group.
+ * Note that addExemption and removeExemption are not inverses of each other.
+ * addExemption affects only the LogEvents of the given node, while
+ * removeExemption affects the LogEvents of the given node and all nodes in its
+ * group.
  * 
  * @param {Node} node The node whose LogEvents will be added as exemptions
  */
 CollapseSequentialNodesTransformation.prototype.addExemption = function(node) {
     var logEvents = node.getLogEvents();
-    for(var i = 0; i < logEvents.length; i++) {
+    for (var i = 0; i < logEvents.length; i++) {
         this.exemptLogEvents[logEvents[i].getId()] = true;
     }
 };
 
-
 /**
- * Removes an exemption. An exemption is a LogEvent whose Node will never be collapsed
+ * Removes an exemption. An exemption is a LogEvent whose Node will never be
+ * collapsed
  * 
- * Note that addExemption and removeExemption are not inverses of each other. addExemption affects only the 
- * LogEvents of the given node, while removeExemption affects the LogEvents of the given node and all nodes in its group.
+ * Note that addExemption and removeExemption are not inverses of each other.
+ * addExemption affects only the LogEvents of the given node, while
+ * removeExemption affects the LogEvents of the given node and all nodes in its
+ * group.
  * 
- * @param {Node} node The LogEvents of this node and the LogEvents of every node in its group will be removed as exemptions
+ * @param {Node} node The LogEvents of this node and the LogEvents of every node
+ *        in its group will be removed as exemptions
  */
 CollapseSequentialNodesTransformation.prototype.removeExemption = function(node) {
-    if(node.hasChildren() || node.hasParents()) {
+    if (node.hasChildren() || node.hasParents()) {
         var logEvents = node.getLogEvents();
-        for(var i = 0; i < logEvents.length; i++) {
+        for (var i = 0; i < logEvents.length; i++) {
             delete this.exemptLogEvents[logEvents[i].getId()];
         }
         return;
     }
-    
+
     var head = node;
-    while(!head.isHead() && !head.hasChildren() && !head.hasParents()) {
+    while (!head.isHead() && !head.hasChildren() && !head.hasParents()) {
         head = head.getPrev();
     }
-    
+
     var tail = node;
-    while(!tail.isTail() && !tail.hasChildren() && !tail.hasParents()) {
+    while (!tail.isTail() && !tail.hasChildren() && !tail.hasParents()) {
         tail = tail.getNext();
     }
-    
+
     var curr = head.getNext();
-    while(curr != tail) {
+    while (curr != tail) {
         var logEvents = curr.getLogEvents();
-        for(var i = 0; i < logEvents.length; i++) {
+        for (var i = 0; i < logEvents.length; i++) {
             delete this.exemptLogEvents[logEvents[i].getId()];
         }
         curr = curr.getNext();
@@ -183,7 +203,7 @@ CollapseSequentialNodesTransformation.prototype.removeExemption = function(node)
  * @param {Node} node The node to toggle.
  */
 CollapseSequentialNodesTransformation.prototype.toggleExemption = function(node) {
-    if(this.isExempt(node)) {
+    if (this.isExempt(node)) {
         this.removeExemption(node);
     }
     else {
@@ -192,15 +212,16 @@ CollapseSequentialNodesTransformation.prototype.toggleExemption = function(node)
 };
 
 /**
- * Determines if any of the LogEvents contained inside the given node is an exemption
+ * Determines if any of the LogEvents contained inside the given node is an
+ * exemption
  * 
  * @param {Node} node The node to check
  * @returns {Boolean} True if one of the LogEvents is an exemption
  */
 CollapseSequentialNodesTransformation.prototype.isExempt = function(node) {
     var logEvents = node.getLogEvents();
-    for(var i = 0; i < logEvents.length; i++) {
-        if(this.exemptLogEvents[logEvents[i].getId()]) {
+    for (var i = 0; i < logEvents.length; i++) {
+        if (this.exemptLogEvents[logEvents[i].getId()]) {
             return true;
         }
     }
@@ -208,17 +229,20 @@ CollapseSequentialNodesTransformation.prototype.isExempt = function(node) {
 };
 
 /**
- * Performs the transformation on the given visualGraph. The VisualGraph and its underlying Graph are modified in place
+ * Performs the transformation on the given visualGraph. The VisualGraph and its
+ * underlying Graph are modified in place
+ * 
  * @param {VisualGraph} visualGraph The VisualGraph to transform
  */
-CollapseSequentialNodesTransformation.prototype.transform = function(visualGraph) {
+CollapseSequentialNodesTransformation.prototype.transform = function(
+        visualGraph) {
 
     var graph = visualGraph.getGraph();
-    
+
     function collapse(curr, removalCount) {
         var logEvents = [];
         var prev = curr.getPrev();
-        while(removalCount-- > 0) {
+        while (removalCount-- > 0) {
             logEvents = logEvents.concat(curr.getLogEvents().reverse());
             prev = curr.getPrev();
             curr.remove();
@@ -226,24 +250,24 @@ CollapseSequentialNodesTransformation.prototype.transform = function(visualGraph
         }
         var newNode = new Node(logEvents.reverse());
         curr.insertNext(newNode);
-        
+
         var visualNode = visualGraph.getVisualNodeByNode(newNode);
         visualNode.setRadius(15);
         visualNode.setLabel(newNode.getLogEvents().length);
     }
-    
-    
+
     var hosts = graph.getHosts();
-    for(var i = 0; i < hosts.length; i++) {
+    for (var i = 0; i < hosts.length; i++) {
         var host = hosts[i];
-        
+
         var groupCount = 0;
         var prev = graph.getHead(host);
         var curr = prev.getNext();
-        while(curr != null) {
-            
-            if(curr.hasChildren() || curr.hasParents() || curr.isTail() || this.isExempt(curr)) {
-                if(groupCount >= this.threshold) {
+        while (curr != null) {
+
+            if (curr.hasChildren() || curr.hasParents() || curr.isTail()
+                    || this.isExempt(curr)) {
+                if (groupCount >= this.threshold) {
                     collapse(prev, groupCount);
                 }
                 groupCount = 0;

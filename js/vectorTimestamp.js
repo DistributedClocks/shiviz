@@ -5,10 +5,10 @@
 /**
  * @constructor
  * @param {{String: Number}} clock The vector clock with host names
- *            corresponding to timestamps for host
+ *        corresponding to timestamps for host
  * @param {String} host The host the timestamp belongs to
  * @throws {String} An error string if the vector clock does not contain an
- *             entry for the host
+ *         entry for the host
  */
 function VectorTimestamp(clock, host) {
     /** @private */
