@@ -106,139 +106,106 @@ View.prototype.draw = function() {
     // so we don't remove the other executions
     d3.selectAll("." + this.id).remove();
     
-    svg.attr("height", visualGraph.getHeight());
-    svg.attr("width", visualGraph.getWidth());
-    svg.attr("class", this.id);
-    
+    svg.attr({
+        "height": visualGraph.getHeight(),
+        "width": visualGraph.getWidth(),
+        "class": this.id
+    })
 
-    // draw links
-    var link = svg.selectAll().data(visualGraph.getVisualEdges())
-            .enter().append("line");
-    
-    link.style("stroke", "#999");
-    link.style("stroke-opacity", 0.6);
-    
-    link.style("stroke-width",
-                    function(d) {
-                        return d.getWidth();
-                    });
-
-    link.attr("x1", function(d) {
-        return d.getSourceVisualNode().getX();
-    });
-    
-    link.attr("y1", function(d) {
-        return d.getSourceVisualNode().getY();
-    });
-    
-    link.attr("x2", function(d) {
-        return d.getTargetVisualNode().getX();
-    });
-    
-    link.attr("y2", function(d) {
-        return d.getTargetVisualNode().getY();
-    });
-    
-    link.style("stroke-dasharray", function(d) {
-        return d.getDashLength() + "," + d.getDashLength();
-    });
+    // Draw links
+    var link = svg.selectAll()
+        .data(visualGraph.getVisualEdges())
+        .enter()
+        .append("line")
+        .style({
+            "stroke-width": function(d) { return d.getWidth(); },
+            "stroke-dasharray": function(d) {
+                return d.getDashLength() + "," + d.getDashLength();
+            }
+        })
+        .attr({
+            "x1": function(d) { return d.getSourceVisualNode().getX(); },
+            "y1": function(d) { return d.getSourceVisualNode().getY(); },
+            "x2": function(d) { return d.getTargetVisualNode().getX(); },
+            "y2": function(d) { return d.getTargetVisualNode().getY(); }
+        });
 
     // draw non-start nodes
-    var node = svg.selectAll().data(visualGraph.getNonStartVisualNodes())
-            .enter().append("g");
-    
-    node.attr("transform", function(d) {
+    var node = svg.selectAll()
+        .data(visualGraph.getNonStartVisualNodes())
+        .enter()
+        .append("g")
+        .attr({
+            "transform": function(d) {
                 return "translate(" + d.getX() + "," + d.getY() + ")";
-            });
+            }
+        })
+        .on("click", function(e) {
+            if(d3.event.ctrlKey) {
+                view.collapseSequentialNodesTransformation.toggleExemption(e.getNode());
+                view.global.drawAll();
+            }
+            else {
+                selectTextareaLine($("#logField")[0], e.getLineNumber());
+            }
+
+        });
 
     node.append("title").text(function(d) {
         return d.getText();
-    });
-    
+    })
 
-    node.on("click", function(e) {
-        if(d3.event.ctrlKey) {
-            view.collapseSequentialNodesTransformation.toggleExemption(e.getNode());
-            view.global.drawAll();
-        }
-        else {
-            selectTextareaLine($("#logField")[0], e.getLineNumber());
-        }
-        
-    });
+    var circle = node.append("circle")
+        .on("mouseover", function(e) {
+            $("#curNode").text(e.getText());
+        })
+        .style("fill", function(d) {
+            return d.getFillColor();
+        })
+        .attr({
+            "id": function(d) { return d.getHost(); },
+            "r": function(d) { return d.getRadius(); }
+        });
 
-    var circle = node.append("circle");
-    circle.on("mouseover", function(e) {
-        $("#curNode").text(e.getText());
-    });
-    circle.style("fill", function(d) {
-        return d.getFillColor();
-    });
-    circle.attr("id", function(d) {
-        return d.getHost();
-    });
-    circle.attr("cx", function(d) {
-        return 0;
-    });
-    circle.attr("cy", function(d) {
-        return 0;
-    });
-    circle.attr("r", function(d) {
-        return d.getRadius();
-    });
-    
-    circle.style("stroke", "#fff");
-    circle.style("stroke-width", "2px");
-    
-    var label = node.append("text");
-    label.attr("text-anchor", "middle");
-    label.attr("font-size", "8pt");
-    label.attr("fill", "white");
-    label.attr("dominant-baseline", "central");
-    label.attr("pointer-events", "none");
-    label.text(function(d) {
-        return d.getLabel();
-    });
+    var label = node.append("text")
+        .text(function(d) {
+            return d.getLabel();
+        });
 
     // draw the host bar
-    var hostSvg = d3.select("#hostBar").append("svg");
-    hostSvg.attr("width", visualGraph.getWidth());
-    hostSvg.attr("height", 55);
-    hostSvg.attr("class", this.id);
+    var hostSvg = d3.select("#hostBar").append("svg")
+        .attr({
+            "width": visualGraph.getWidth(),
+            "class": this.id
+        });
 
-    var bar = hostSvg.append("rect");
-    bar.style("stroke", "#fff");
-    bar.attr("width", visualGraph.getWidth());
-    bar.attr("height", 60);
-    bar.attr("x", 0);
-    bar.attr("y", 0);
-    bar.style("fill", "#fff");
+    var bar = hostSvg.append("rect")
+        .attr({
+            "width": visualGraph.getWidth(),
+            "height": 55,
+            "class": "bg"
+        });
 
     // draw the hosts
-    var rect = hostSvg.selectAll().data(visualGraph.getStartVisualNodes()).enter().append("rect");
-    rect.attr("width", Global.HOST_SQUARE_SIZE);
-    rect.attr("height", Global.HOST_SQUARE_SIZE);
-
-    rect.attr("x", function(d) {
-        return d.getX() - (Global.HOST_SQUARE_SIZE / 2);
-    });
-
-    rect.attr("y", function(d) {
-        return 15;
-    });
-
-    rect.on("mouseover", function(e) {
-        $("#curNode").text(e.getText());
-    });
-
-    rect.on("dblclick", function(e) {
-        view.global.hideHost(e.getHost());
-    });
-
-    rect.attr("class", "node").style("fill", function(d) {
-        return d.getFillColor();
-    });
-
-
+    var rect = hostSvg.selectAll()
+        .data(visualGraph.getStartVisualNodes())
+        .enter()
+        .append("rect")
+        .attr({
+            "width": Global.HOST_SQUARE_SIZE,
+            "height": Global.HOST_SQUARE_SIZE,
+            "y": 15,
+            "x": function(d) {
+                return d.getX() - (Global.HOST_SQUARE_SIZE / 2);
+            },
+            "fill": function(d) {
+                return d.getFillColor();
+            }
+        })
+        .on("mouseover", function(e) {
+            $("#curNode").text(e.getText());
+        })
+        .on("dblclick", function(e) {
+            view.global.hideHost(e.getHost());
+        })
 };
-

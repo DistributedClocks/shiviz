@@ -103,17 +103,21 @@ header > a,
     margin-left: 1em;
 }
 
-.time {
+#sideBar .arrow {
     opacity: .4;
 }
 
-text.time {
+#sideBar line {
+    stroke: #000;
+    stroke-width: 2px;
+}
+
+#sideBar text {
     font-weight: bold;
 }
 
-line.time {
-    stroke: #000;
-    stroke-width: 2px;
+#sideBar .hidden-hosts text {
+    opacity: .4;
 }
 
 #curNode {
@@ -144,17 +148,54 @@ svg {
     vertical-align: top;
 }
 
+#vizContainer svg line {
+    stroke: #999;
+    stroke-opacity: 0.6;
+}
+
+#vizContainer svg g circle {
+    stroke: #fff;
+    stroke-width: 2px;
+}
+
+#vizContainer svg g text {
+    text-anchor: middle;
+    font-size: 8pt;
+    fill: #fff;
+    dominant-baseline: central;
+    pointer-events: none;
+}
+
 #hostBar {
     width: 760px;
     float: left;
     white-space: nowrap;
+}
+.fixed #hostBar {
+    position: fixed;
+    top: 50px;
+}
+
+#hostBar svg {
+    height: 55px;
+}
+
+#hostBar svg rect.bg {
+    fill: #fff;
 }
 
 #topBar {
     width: 100%;
     background-color: white;
 }
+.fixed #topBar {
+    position: fixed;
+    top: 0;
+}
 
+.fixed #sideBar {
+    position: fixed;
+}
 
 #versionContainer {
     float: right;
