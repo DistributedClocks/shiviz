@@ -1,10 +1,15 @@
 /**
  * @class
- * A VisualEdge is a visualization of a Graph edge; it describes how the edge is to be drawn.
- * Note that actual drawing logic is not part of this class
  * 
- * @param {VisualNode} sourceVisualNode One of the Nodes that is connected by this edge. sourceVisualNode.getNode() must either be the parent or the prev node of targetVisualNode.getNode()
- * @param {VisualNode} targetVisualNode One of the Nodes that is connected by this edge. targetVisualNode.getNode() must either be the child or the next node of sourceVisualNode.getNode()
+ * A VisualEdge is a visualization of a Graph edge; it describes how the edge is
+ * to be drawn. Note that actual drawing logic is not part of this class
+ * 
+ * @param {VisualNode} sourceVisualNode One of the Nodes that is connected by
+ *        this edge. sourceVisualNode.getNode() must either be the parent or the
+ *        prev node of targetVisualNode.getNode()
+ * @param {VisualNode} targetVisualNode One of the Nodes that is connected by
+ *        this edge. targetVisualNode.getNode() must either be the child or the
+ *        next node of sourceVisualNode.getNode()
  */
 function VisualEdge(sourceVisualNode, targetVisualNode) {
     this.sourceVisualNode = sourceVisualNode;
@@ -14,7 +19,9 @@ function VisualEdge(sourceVisualNode, targetVisualNode) {
 }
 
 /**
- * Gets the source VisualNode. The source VisualNode is the VisualNode connected by this VisualEdge such that getSourceVisualNode().getNode() is either the parent or the prev node of getTargetVisualNode().getNode()
+ * Gets the source VisualNode. The source VisualNode is the VisualNode connected
+ * by this VisualEdge such that getSourceVisualNode().getNode() is either the
+ * parent or the prev node of getTargetVisualNode().getNode()
  * 
  * @returns {VisualNode} The source VisualNode
  */
@@ -23,7 +30,9 @@ VisualEdge.prototype.getSourceVisualNode = function() {
 };
 
 /**
- * Gets the target VisualNode. The target VisualNode is the VisualNode connected by this VisualEdge such that getTargetVisualNode().getNode() is either the child or the next node the getSourceVisualNode().getNode()
+ * Gets the target VisualNode. The target VisualNode is the VisualNode connected
+ * by this VisualEdge such that getTargetVisualNode().getNode() is either the
+ * child or the next node the getSourceVisualNode().getNode()
  * 
  * @returns {VisualNode}
  */
@@ -50,7 +59,8 @@ VisualEdge.prototype.setWidth = function(newWidth) {
 };
 
 /**
- * Gets the dash length of the VisualEdge. A dash length of zero indicates that this VisualEdge is not dashed
+ * Gets the dash length of the VisualEdge. A dash length of zero indicates that
+ * this VisualEdge is not dashed
  * 
  * @returns {Number} The dash length. Always non-negative
  */
@@ -59,14 +69,15 @@ VisualEdge.prototype.getDashLength = function() {
 };
 
 /**
- * Sets the dash length of the VisualEdge. A dash length of zero indicates that this VisualEdge is not dashed
+ * Sets the dash length of the VisualEdge. A dash length of zero indicates that
+ * this VisualEdge is not dashed
  * 
  * @param {Number} newDashLength The new dash length. Must be non-negative
  */
 VisualEdge.prototype.setDashLength = function(newDashLength) {
-    if(newDashLength < 0) {
+    if (newDashLength < 0) {
         throw "Dash length must be non-negative";
     }
-    
+
     this.dashLength = newDashLength;
 };

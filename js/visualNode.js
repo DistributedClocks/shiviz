@@ -1,29 +1,33 @@
 /**
- * A VisualNode represents the visualization of a Node that is, this class describes how the Node
- * should be drawn (such as its size, color, etc). Note that the actual drawing logic is not part of this class.
+ * @class
  * 
- * @param {Node} node The Node to associate with this VisualNode. This object will then be a visualization of the argument
+ * A VisualNode represents the visualization of a Node that is, this class
+ * describes how the Node should be drawn (such as its size, color, etc). Note
+ * that the actual drawing logic is not part of this class.
+ * 
+ * @param {Node} node The Node to associate with this VisualNode. This object
+ *        will then be a visualization of the argument
  * @constructor
  */
 function VisualNode(node) {
     /** @private */
     this.id = VisualNode.id++;
-    
+
     /** @private */
     this.node = node;
-    
+
     /** @private */
     this.x = 0;
-    
+
     /** @private */
     this.y = 0;
-    
+
     /** @private */
     this.radius = 5;
-    
+
     /** @private */
     this.fillColor = 0;
-    
+
     /** @private */
     this.label = "";
 }
@@ -74,7 +78,7 @@ VisualNode.prototype.setX = function(newX) {
  * 
  */
 VisualNode.prototype.getY = function() {
-  return this.y;  
+    return this.y;
 };
 
 /**
@@ -105,9 +109,9 @@ VisualNode.prototype.setRadius = function(newRadius) {
 };
 
 /**
- * Gets the fill color of the VisualNode in standard RGB-form. 
+ * Gets the fill color of the VisualNode in standard RGB-form.
  * 
- * @returns {Number} The fill color 
+ * @returns {Number} The fill color
  */
 VisualNode.prototype.getFillColor = function() {
     return this.fillColor;
@@ -128,14 +132,15 @@ VisualNode.prototype.setFillColor = function(newFillColor) {
  * @returns {String} The text
  */
 VisualNode.prototype.getText = function() {
-    if(this.isStart()) {
+    if (this.isStart()) {
         return this.getHost();
     }
     return this.node.getLogEvents()[0].getText();
 };
 
 /**
- * Gets the VisualNode's label text. The label text is displayed inside the VisualNode itself
+ * Gets the VisualNode's label text. The label text is displayed inside the
+ * VisualNode itself
  * 
  * @returns {String} The label text
  */
@@ -144,7 +149,8 @@ VisualNode.prototype.getLabel = function() {
 };
 
 /**
- * Sets the VisualNode's label text. The label text is displayed inside the VisualNode itself
+ * Sets the VisualNode's label text. The label text is displayed inside the
+ * VisualNode itself
  * 
  * @param {String} newLabel The new label text
  */
@@ -153,7 +159,8 @@ VisualNode.prototype.setLabel = function(newLabel) {
 };
 
 /**
- * Gets the VisualNode's host. This will be the same as the host of the underlying node.
+ * Gets the VisualNode's host. This will be the same as the host of the
+ * underlying node.
  * 
  * @returns {String} The host
  */
@@ -171,12 +178,11 @@ VisualNode.prototype.getLineNumber = function() {
 };
 
 /**
- * Determines if this VisualNode is the special starting node of its host. The start node will be drawn differently from 
- * non-start nodes.
+ * Determines if this VisualNode is the special starting node of its host. The
+ * start node will be drawn differently from non-start nodes.
  * 
  * @returns {boolean} True if this is a start VisualNode
  */
 VisualNode.prototype.isStart = function() {
     return this.node.isHead();
 };
-
