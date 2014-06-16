@@ -216,8 +216,7 @@ Node.prototype.getFamily = function() {
  * @return {Array<Node>} an array of connected nodes
  */
 Node.prototype.getAllConnections = function() {
-    return [ this.prev, this.next ].concat(this.getParents()).concat(
-            this.getChildren());
+    return [ this.prev, this.next ].concat(this.getParents()).concat(this.getChildren());
 };
 
 /**

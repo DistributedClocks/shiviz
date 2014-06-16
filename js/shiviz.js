@@ -14,8 +14,8 @@ $("#examplelogs a").on("click", function(e) {
         resetView();
         $("#delimiter").val($(e.target).data("delimiter"));
         $(e.target).css({
-            color : "gray",
-            pointerEvents : "none"
+            color: "gray",
+            pointerEvents: "none"
         });
     }).fail(function() {
         var errText = 'Unable to retrieve example log: ' + url;
@@ -50,8 +50,8 @@ function resetView() {
 
     // Reset the color of all of the log-links.
     $(".log-link").css({
-        "color" : "",
-        "pointer-events" : "initial"
+        "color": "",
+        "pointer-events": "initial"
     });
 };
 

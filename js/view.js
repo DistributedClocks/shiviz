@@ -28,8 +28,7 @@ function View(model, global, label) {
     this.width = 500;
 
     /** @private */
-    this.collapseSequentialNodesTransformation = new CollapseSequentialNodesTransformation(
-            2);
+    this.collapseSequentialNodesTransformation = new CollapseSequentialNodesTransformation(2);
 
     this.addTransformation(this.collapseSequentialNodesTransformation);
 }
@@ -87,11 +86,9 @@ View.prototype.draw = function() {
     var currentModel = this.initialModel.clone();
     var layout = new SpaceTimeLayout(this.width, 45);
 
-    var visualGraph = new VisualGraph(currentModel, layout,
-            this.global.hostColors);
+    var visualGraph = new VisualGraph(currentModel, layout, this.global.hostColors);
 
-    var transformations = this.global.getTransformations().concat(
-            this.transformations);
+    var transformations = this.global.getTransformations().concat(this.transformations);
     transformations.sort(function(a, b) {
         return b.priority - a.priority;
     });
@@ -110,50 +107,47 @@ View.prototype.draw = function() {
     d3.selectAll("." + this.id).remove();
 
     svg.attr({
-        "height" : visualGraph.getHeight(),
-        "width" : visualGraph.getWidth(),
-        "class" : this.id
+        "height": visualGraph.getHeight(),
+        "width": visualGraph.getWidth(),
+        "class": this.id
     });
 
     // Draw links
-    var link = svg.selectAll().data(visualGraph.getVisualEdges()).enter()
-            .append("line");
+    var link = svg.selectAll().data(visualGraph.getVisualEdges()).enter().append("line");
 
     link.style({
-        "stroke-width" : function(d) {
+        "stroke-width": function(d) {
             return d.getWidth();
         },
-        "stroke-dasharray" : function(d) {
+        "stroke-dasharray": function(d) {
             return d.getDashLength() + "," + d.getDashLength();
         }
     });
     link.attr({
-        "x1" : function(d) {
+        "x1": function(d) {
             return d.getSourceVisualNode().getX();
         },
-        "y1" : function(d) {
+        "y1": function(d) {
             return d.getSourceVisualNode().getY();
         },
-        "x2" : function(d) {
+        "x2": function(d) {
             return d.getTargetVisualNode().getX();
         },
-        "y2" : function(d) {
+        "y2": function(d) {
             return d.getTargetVisualNode().getY();
         }
     });
 
     // draw non-start nodes
-    var node = svg.selectAll().data(visualGraph.getNonStartVisualNodes())
-            .enter().append("g");
+    var node = svg.selectAll().data(visualGraph.getNonStartVisualNodes()).enter().append("g");
     node.attr({
-        "transform" : function(d) {
+        "transform": function(d) {
             return "translate(" + d.getX() + "," + d.getY() + ")";
         }
     });
     node.on("click", function(e) {
         if (d3.event.ctrlKey) {
-            view.collapseSequentialNodesTransformation.toggleExemption(e
-                    .getNode());
+            view.collapseSequentialNodesTransformation.toggleExemption(e.getNode());
             view.global.drawAll();
         }
         else {
@@ -174,10 +168,10 @@ View.prototype.draw = function() {
         return d.getFillColor();
     });
     circle.attr({
-        "id" : function(d) {
+        "id": function(d) {
             return d.getHost();
         },
-        "r" : function(d) {
+        "r": function(d) {
             return d.getRadius();
         }
     });
@@ -190,28 +184,27 @@ View.prototype.draw = function() {
     // draw the host bar
     var hostSvg = d3.select("#hostBar").append("svg");
     hostSvg.attr({
-        "width" : visualGraph.getWidth(),
-        "class" : this.id
+        "width": visualGraph.getWidth(),
+        "class": this.id
     });
 
     var bar = hostSvg.append("rect");
     bar.attr({
-        "width" : visualGraph.getWidth(),
-        "height" : 55,
-        "class" : "bg"
+        "width": visualGraph.getWidth(),
+        "height": 55,
+        "class": "bg"
     });
 
     // draw the hosts
-    var rect = hostSvg.selectAll().data(visualGraph.getStartVisualNodes())
-            .enter().append("rect");
+    var rect = hostSvg.selectAll().data(visualGraph.getStartVisualNodes()).enter().append("rect");
     rect.attr({
-        "width" : Global.HOST_SQUARE_SIZE,
-        "height" : Global.HOST_SQUARE_SIZE,
-        "y" : 15,
-        "x" : function(d) {
+        "width": Global.HOST_SQUARE_SIZE,
+        "height": Global.HOST_SQUARE_SIZE,
+        "y": 15,
+        "x": function(d) {
             return d.getX() - (Global.HOST_SQUARE_SIZE / 2);
         },
-        "fill" : function(d) {
+        "fill": function(d) {
             return d.getFillColor();
         }
     });
