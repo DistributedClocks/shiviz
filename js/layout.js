@@ -1,106 +1,102 @@
-spaceTimeLayout = function() {
-    var spaceTime = {}, nodes = [], links = [], width = 760, height = 0, hosts = [];
+/**
+ * @class
+ * 
+ * SpaceTimeLayout arranges a VisualGraph as a space-time diagram with hosts
+ * laid out horizontally and time increasing with y coordinate.
+ * 
+ * @param {Number} width The maximum width of the resulting layout
+ * @param {Number} delta The vertical distance between nodes
+ */
+function SpaceTimeLayout(width, delta) {
+    this.width = width;
+    this.delta = delta;
+    this.height = 0;
+}
 
-    spaceTime.nodes = function(x) {
-        if (!arguments.length)
-            return nodes;
-        nodes = x;
-        return spaceTime;
-    };
+/**
+ * This method is solely responsible for actually performing the layout (i.e by
+ * manipulating the x and y coordinates of VisualNodes in the VisualGraph. A
+ * topological sort is performed to ensure that the y-coordinate of any
+ * VisualNode's Node is greater than that of it's prev and parent Nodes
+ * 
+ * @param {VisualGraph} visualGraph The visualGraph to lay out
+ */
+SpaceTimeLayout.prototype.start = function(visualGraph) {
 
-    spaceTime.links = function(x) {
-        if (!arguments.length)
-            return links;
-        links = x;
-        return spaceTime;
-    };
+    this.height = 0;
 
-    spaceTime.width = function(x) {
-        if (!arguments.length)
-            return width;
-        width = x;
-        return spaceTime;
-    };
+    var nodeToNumParents = {};
+    var nodeToChildren = {};
 
-    spaceTime.height = function(x) {
-        if (!arguments.length)
-            return height;
-        height = x;
-        return spaceTime;
-    };
+    var nodes = visualGraph.getVisualNodes();
+    for (var i = 0; i < nodes.length; i++) {
+        var node = nodes[i];
+        node.setY(0);
+        nodeToNumParents[node.getId()] = 0;
+        nodeToChildren[node.getId()] = [];
+    }
 
-    spaceTime.hosts = function(x) {
-        if (!arguments.length)
-            return hosts;
-        hosts = x;
-        return spaceTime;
-    };
+    var edges = visualGraph.getVisualEdges();
+    for (var i = 0; i < edges.length; i++) {
+        var edge = edges[i];
+        var source = edge.getSourceVisualNode();
+        var target = edge.getTargetVisualNode();
+        nodeToNumParents[target.getId()]++;
+        nodeToChildren[source.getId()].push(target);
+    }
 
-    spaceTime.start = function() {
-
-        // This is the amount of vertical spacing between nodes
-        var delta = 45;
-
-        var n = nodes.length, m = links.length, o;
-
-        // Assign each node an index
-        for (var i = 0; i < n; ++i) {
-            o = nodes[i];
-            o.index = i;
-            o.y = delta;
-            o.children = [];
-            o.parents = 0;
+    var noParents = [];
+    for (var i = 0; i < nodes.length; i++) {
+        var node = nodes[i];
+        if (nodeToNumParents[node.getId()] == 0) {
+            noParents.push(node);
         }
+    }
 
-        // All vertical positions are initialized to delta
-        height = delta;
+    var hosts = visualGraph.getHosts();
+    var hostNameToIndex = {};
+    for (var i = 0; i < hosts.length; i++) {
+        hostNameToIndex[hosts[i]] = i;
+    }
 
-        // Give each link the source/target node objects based on indices
-        // computed
-        // above
-        for (var i = 0; i < m; ++i) {
-            o = links[i];
-            if (typeof o.source == "number")
-                o.source = nodes[o.source];
-            if (typeof o.target == "number")
-                o.target = nodes[o.target];
-            o.source.children.push(o.target);
-            o.target.parents++;
-        }
+    var widthPerHost = this.width / hosts.length;
+    var leftMargin = widthPerHost / 2;
 
-        // Going to want to sort the nodes by increasing number of parents and
-        // put
-        // them in a priority queue
-        var remainingNodes = [];
+    while (noParents.length > 0) {
+        var current = noParents.pop();
 
-        for (var i = 0; i < n; ++i) {
-            remainingNodes.push(nodes[i]);
-        }
+        this.height = Math.max(this.height, current.getY());
+        current.setX(widthPerHost * hostNameToIndex[current.getHost()] + leftMargin);
 
-        while (remainingNodes.length > 0) {
-            remainingNodes.sort(function(a, b) {
-                return b.parents - a.parents;
-            });
-
-            o = remainingNodes.pop();
-
-            horizontalPos = width / hosts.length * hosts.indexOf(o.group)
-                    + (width / hosts.length / 2);
-            o.x = horizontalPos;
-            for (var i = 0; i < o.children.length; ++i) {
-                o.children[i].parents--;
-                // Increment child position by delta
-                if (o.y + delta > o.children[i].y) {
-                    o.children[i].y = o.y + delta;
-                    height = Math.max(height, o.y + delta);
-                }
+        var children = nodeToChildren[current.getId()];
+        for (var i = 0; i < children.length; i++) {
+            var child = children[i];
+            nodeToNumParents[child.getId()]--;
+            if (nodeToNumParents[child.getId()] == 0) {
+                noParents.push(child);
             }
+            child.setY(Math.max(child.getY(), current.getY() + this.delta));
         }
+    }
 
-        height += delta;
+    this.height += this.delta;
 
-        return spaceTime;
-    };
+};
 
-    return spaceTime;
+/**
+ * Gets the height of the resulting layout
+ * 
+ * @returns {Number} The height
+ */
+SpaceTimeLayout.prototype.getHeight = function() {
+    return this.height;
+};
+
+/**
+ * Gets the width of the resulting layout
+ * 
+ * @returns {Number} The width
+ */
+SpaceTimeLayout.prototype.getWidth = function() {
+    return this.width;
 };
