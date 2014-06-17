@@ -139,7 +139,7 @@ function Graph(logEvents) {
             // Looks to see if a timestamp for a host in the
             // vector clock has been updated from the last one
             for (var otherHost in currVT.clock) {
-                var time = currVT.clock[otherHost];
+                var time = currVT.clock[otherHost]; //TODO: use method
 
                 // If the timestamp for the host has been updated
                 // then add the node in otherHost with timestamp
@@ -161,14 +161,14 @@ function Graph(logEvents) {
             var connections = {};
             for (var i = 0; i < candidates.length; i++) {
                 var vt = candidates[i].logEvents[0].getVectorTimestamp();
-                var id = vt.getHost() + ":" + vt.getOwnTime();
+                var id = vt.getOwnHost() + ":" + vt.getOwnTime();
                 connections[id] = candidates[i];
             }
 
             for (var i = 0; i < candidates.length; i++) {
                 var vt = candidates[i].logEvents[0].getVectorTimestamp();
                 for (var otherHost in vt.clock) {
-                    if (otherHost != vt.getHost()) {
+                    if (otherHost != vt.getOwnHost()) {
                         var id = otherHost + ":" + vt.clock[otherHost];
                         delete connections[id];
                     }
@@ -192,6 +192,51 @@ function Graph(logEvents) {
             }
 
             currNode = currNode.next;
+        }
+    }
+    
+    
+    // Step through and verify that the vector clocks make sense
+    var clocks = {}; // clocks[x][y] = vector clock of host x at local time y
+    for(var host in hostSet) {
+        clocks[host] = {};
+    }
+    
+    for(var host in hostSet) {
+        var curr = this.getHead(host).getNext();
+        var time = 0;
+        while(!curr.isTail()) {
+            var clock = {};
+            clock[host] = ++time;
+            clocks[host][time] = new VectorTimestamp(clock, host);
+            curr = curr.getNext();
+        }
+    }
+    
+    var sortedNodes = this.getNodesTopologicallySorted();
+    
+    for(var i = 0; i < sortedNodes.length; i++) {
+        var curr = sortedNodes[i];
+        var host = curr.getHost();
+        var time = curr.getLogEvents()[0].getVectorTimestamp().getOwnTime();
+        
+        var children = curr.getChildren();
+        if(!curr.getNext().isTail()) {
+            children.push(curr.getNext());
+        }
+        
+        for(var j = 0; j < children.length; j++) {
+            var childHost = children[j].getHost();
+            var childTime = children[j].getLogEvents()[0].getVectorTimestamp().getOwnTime();
+            clocks[childHost][childTime] = clocks[childHost][childTime].update(clocks[host][time]);
+        }
+        
+        
+        if(!clocks[host][time].equals(curr.getLogEvents()[0].getVectorTimestamp())) {
+            console.log(clocks[host][time]);
+            console.log(curr.getLogEvents()[0].getVectorTimestamp());
+            console.log("");
+//            throw "ASDF";
         }
     }
 
@@ -343,6 +388,53 @@ Graph.prototype.getAllNodes = function() {
 };
 
 /**
+ * 
+ * @returns
+ */
+Graph.prototype.getNodesTopologicallySorted = function() {
+    toposort = [];
+    
+    var inDegree = {}; // mapping of node ID to current in degree
+    var ready = [];
+    var nodes = this.getNodes();
+    for(var i = 0; i < nodes.length; i++) {
+        var node = nodes[i];
+        
+        inDegree[node.getId()] = node.getParents().length;
+        if(!node.getPrev().isHead()) {
+            inDegree[node.getId()]++;
+        }
+        
+        if(inDegree[node.getId()] == 0) {
+            ready.push(node);
+        }
+    }
+    
+    while(ready.length > 0) {
+        var curr = ready.pop();
+        toposort.push(curr);
+        
+        var others = curr.getChildren();
+        if(!curr.getNext().isTail()) {
+            others.push(curr.getNext());
+        }
+        
+        for(var i = 0; i < others.length; i++) {
+            var other = others[i];
+            inDegree[other.getId()]--;
+            
+            if(inDegree[other.getId()] == 0) {
+                
+                ready.push(other);
+                
+            }
+        }
+    }
+    
+    return toposort;
+};
+
+/**
  * Returns a copy of the graph. The new graph has nodes connected in exactly the
  * same way as the original. The new graph has exactly the same set of hosts.
  * The node themselves are shallow copies provided by node.clone()
@@ -401,7 +493,7 @@ Graph.prototype.clone = function() {
 /**
  * Adds an observer to this graph. The observer will be notified (by invoking
  * the provided callback function) of events when events of the specified type
- * occur. There cannot exist two observers that are identical. If the newly
+ * occur. There cannot exist two observers that are identical. The newly
  * added observer will replace another if it is identical to the other one. Two
  * observers are considered identical if they were registered with the same type
  * and callback.
