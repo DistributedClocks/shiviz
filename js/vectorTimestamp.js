@@ -5,10 +5,10 @@
 /**
  * @constructor
  * @param {{String: Number}} clock The vector clock with host names
- *            corresponding to timestamps for host
+ *        corresponding to timestamps for host
  * @param {String} host The host the timestamp belongs to
  * @throws {String} An error string if the vector clock does not contain an
- *             entry for the host
+ *         entry for the host
  */
 function VectorTimestamp(clock, host) {
     /** @private */
@@ -67,8 +67,7 @@ VectorTimestamp.prototype.getOwnTime = function() {
 VectorTimestamp.prototype.compareTo = function(other) {
     var thisFirst = false;
     for (var host in this.clock) {
-        if (other.clock[host] != undefined
-                && this.clock[host] < other.clock[host]) {
+        if (other.clock[host] != undefined && this.clock[host] < other.clock[host]) {
             thisFirst = true;
             break;
         }
@@ -76,8 +75,7 @@ VectorTimestamp.prototype.compareTo = function(other) {
 
     var otherFirst = false;
     for (var host in other.clock) {
-        if (this.clock[host] != undefined
-                && other.clock[host] < this.clock[host]) {
+        if (this.clock[host] != undefined && other.clock[host] < this.clock[host]) {
             otherFirst = true;
             break;
         }
