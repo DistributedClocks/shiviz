@@ -12,7 +12,7 @@
 <body>
     <header>
         <strong><a href="index.html">Home</a></strong>
-        <a href="javascript:void(0)" onclick="document.getElementById('help').style.display='block';document.getElementById('fade').style.display='block';">FAQ</a>
+        <a href="#" onclick="document.getElementById('help').style.display='block';document.getElementById('fade').style.display='block';return false">FAQ</a>
         <a href="http://bitbucket.org/bestchai/shiviz/wiki/Home">Documentation</a>
         <a href="http://bitbucket.org/bestchai/shiviz/src">Source</a>
 
@@ -109,23 +109,28 @@
                 <textarea id="logField"></textarea>
                 <p id="examplelogs">
                     Examples:
-                    <a class="log-link" href="javascript:void(0)" onclick="loadExample('log/facebook.log', this);">Facebook data-center log</a>
-                    <a class="log-link" href="javascript:void(0)" onclick="loadExample('log/voldemort.log', this);">Voldemort log</a>
-                    <a class="log-link" href="javascript:void(0)" onclick="loadExample('log/simpledb.log', this);">SimpleDB log</a>
-                    <a class="log-link" href="javascript:void(0)" onclick="loadExample('log/facebook-multiple.log', this);">Facebook log with multiple executions</a>
+                    <a class="log-link" href="" data-log="log/facebook.log">Facebook data-center log</a>
+                    <a class="log-link" href="" data-log="log/voldemort.log">Voldemort log</a>
+                    <a class="log-link" href="" data-log="log/simpledb.log">SimpleDB log</a>
+                    <a class="log-link" href="" data-log="log/facebook-multiple.log" data-delimiter="^=== (?<trace>.*) ===$">Facebook log with multiple executions</a>
                 </p>
-                <input type='button' id='vizButton' disabled=true value="visualize" />
+                <label>Multiple execution delimiter: <input type="text" id="delimiter"></label>
+                <br>
+                <input type="button" id="vizButton" disabled=true value="visualize" />
             </div>
 
             <div id="graph" hidden=true>
                 <h2>Visualization</h2>
+                <div id="reference">
+                <p></p>
+                </div>
                 <div id="topBar">
                     <p>Current node: <span id="curNode">(hover to view)</span></p>
                 </div>
                 <div id="sideBar"></div>
                 <div id="hostBar"></div>
                 <div id="vizContainer"></div>
-                <div id="hosts"></div>
+                
             </div>
         </div>
 
@@ -133,16 +138,22 @@
         <script type="text/javascript" src="js/dev.js"></script>
         <!-- -->
 
+        <script type="text/javascript" src="js/visualGraph.js"></script>  
+        <script type="text/javascript" src="js/visualNode.js"></script>
+        <script type="text/javascript" src="js/visualEdge.js"></script>
         <script type="text/javascript" src="js/node.js"></script>  
         <script type="text/javascript" src="js/graph.js"></script> 
-        <script type="text/javascript" src="js/layout.js"></script>    
-        <script type="text/javascript" src="js/graphFactory.js"></script>  
-        <script type="text/javascript" src="js/transform.js"></script> 
-        <script type="text/javascript" src="js/global.js"></script>
-        <script type="text/javascript" src="js/view.js"></script>  
-        <script type="text/javascript" src="js/shiviz.js"></script>
         <script type="text/javascript" src="js/vectorTimestamp.js"></script>
         <script type="text/javascript" src="js/logEvent.js"></script>
 
+        <script type="text/javascript" src="js/graphFactory.js"></script>  
+        <script type="text/javascript" src="js/layout.js"></script>    
+        <script type="text/javascript" src="js/transform.js"></script> 
+        <script type="text/javascript" src="js/regexp.js"></script>
+
+        <script type="text/javascript" src="js/global.js"></script>
+        <script type="text/javascript" src="js/view.js"></script>  
+
+        <script type="text/javascript" src="js/shiviz.js"></script>
     </body>
     </html>

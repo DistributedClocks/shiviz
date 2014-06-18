@@ -21,6 +21,9 @@
  * after y</li>
  * </ul>
  * 
+ * family: x is a family node of y if y is x's parent or child. This implies
+ * that x is a family node of y if and only if y is a family node of x
+ * 
  * next node: x is the next node of y if and only if:
  * <ul>
  * <li>x happens after y and</li>
@@ -68,14 +71,9 @@
 
 /**
  * @constructor
- * @param {[LogEvent]} logEvents an array of corresponding log events
- * @param {String} host the host of the node
+ * @param {Array<LogEvent>} logEvent The LogEvents that this node represents
  */
-function Node(logEvents, host) {
-    /*
-     * IMPORTANT: If you ever decide to add or remove a field, make sure the
-     * clone() function is updated accordingly
-     */
+function Node(logEvents) {
 
     /** @private */
     this.id = Node.number++;
@@ -96,13 +94,17 @@ function Node(logEvents, host) {
     this.logEvents = logEvents;
 
     /** @private */
-    this.host = host;
+    this.host = null;
 
     /** @private */
     this.isHeadInner = false;
 
     /** @private */
     this.isTailInner = false;
+
+    /** @private */
+    this.graph = null;
+
 }
 
 // Global counter used to assign each node a unique ID
@@ -125,7 +127,7 @@ Node.prototype.getId = function() {
  * of the underlying private data structure, so this function takes linear
  * rather than constant time on the number of LogEvents.
  * 
- * @return {[LogEvent]} an array of associated log events
+ * @return {Array<LogEvent>} an array of associated log events
  */
 Node.prototype.getLogEvents = function() {
     return this.logEvents.slice();
@@ -159,21 +161,6 @@ Node.prototype.isTail = function() {
 };
 
 /**
- * Creates a shallow copy of the the node. All fields of the copy will have the
- * same value as the original node, EXCEPT the globally unique id and fields
- * regarding node connectivity (i.e parent, child, next, prev), which are
- * initialized to null.
- * 
- * @return {Node} The copy
- */
-Node.prototype.clone = function() {
-    var newNode = new Node(this.logEvents, this.host);
-    newNode.isHeadInner = this.isHeadInner;
-    newNode.isTailInner = this.isTailInner;
-    return newNode;
-};
-
-/**
  * Gets the next node. The next node is the node having the same host as the
  * current one that comes directly after the current node.
  * 
@@ -194,22 +181,19 @@ Node.prototype.getPrev = function() {
 };
 
 /**
- * Returns the nodes this one is connected to as an array. In the context of
- * this function, a node is said to be connected to this one if it's a parent or
- * a child.
+ * Returns the family nodes of this node as an array.
  * 
  * This function makes no guarantees about the ordering of nodes in the array
  * returned. Also note that a new array is created to prevent modification of
  * the underlying private data structure, so this function takes linear rather
- * than constant time on the number of connections.
+ * than constant time on the number of family nodes.
  * 
  * @see getParents
  * @see getChildren
- * @see getConnections
  * 
- * @return {[Node]} an array of connected nodes
+ * @return {Array<Node>} an array of connected nodes
  */
-Node.prototype.getConnections = function() {
+Node.prototype.getFamily = function() {
     return this.getParents().concat(this.getChildren());
 };
 
@@ -227,13 +211,12 @@ Node.prototype.getConnections = function() {
  * @see getNext
  * @see getParents
  * @see getChildren
- * @see getConnections
+ * @see getFamily
  * 
- * @return {[Node]} an array of connected nodes
+ * @return {Array<Node>} an array of connected nodes
  */
 Node.prototype.getAllConnections = function() {
-    return [ this.prev, this.next ].concat(this.getParents()).concat(
-            this.getChildren());
+    return [ this.prev, this.next ].concat(this.getParents()).concat(this.getChildren());
 };
 
 /**
@@ -257,6 +240,11 @@ Node.prototype.insertNext = function(node) {
     node.next = this.next;
     node.prev.next = node;
     node.next.prev = node;
+
+    node.graph = this.graph;
+    node.host = this.host;
+
+    this.notifyGraph(new AddNodeEvent(node, node.prev, node.next));
 };
 
 /**
@@ -280,6 +268,11 @@ Node.prototype.insertPrev = function(node) {
     node.prev = this.prev;
     node.next.prev = node;
     node.prev.next = node;
+
+    node.graph = this.graph;
+    node.host = this.host;
+
+    this.notifyGraph(new AddNodeEvent(node, node.prev, node.next));
 };
 
 /**
@@ -310,23 +303,33 @@ Node.prototype.remove = function() {
         return;
     }
 
-    this.prev.next = this.next;
-    this.next.prev = this.prev;
+    var prev = this.prev;
+    var next = this.next;
+
+    prev.next = next;
+    next.prev = prev;
     this.prev = null;
     this.next = null;
 
     for (var host in this.hostToParent) {
         var otherNode = this.hostToParent[host];
         delete otherNode.hostToChild[this.host];
+        this.notifyGraph(new RemoveFamilyEvent(otherNode, this));
     }
 
     for (var host in this.hostToChild) {
         var otherNode = this.hostToChild[host];
         delete otherNode.hostToParent[this.host];
+        this.notifyGraph(new RemoveFamilyEvent(this, otherNode));
     }
 
     this.hostToChild = {};
     this.hostToParent = {};
+
+    this.notifyGraph(new RemoveNodeEvent(this, prev, next));
+
+    this.host = null;
+    this.graph = null;
 };
 
 /**
@@ -361,7 +364,7 @@ Node.prototype.hasParents = function() {
  * the underlying private data structure, so this function takes linear rather
  * than constant time on the number of connections.
  * 
- * @return {[Node]} Array of parent nodes.
+ * @return {Array.<Node>} Array of parent nodes.
  */
 Node.prototype.getParents = function() {
     var result = [];
@@ -379,7 +382,7 @@ Node.prototype.getParents = function() {
  * the underlying private data structure, so this function takes linear rather
  * than constant time on the number of connections.
  * 
- * @return {[Node]} Array of child nodes.
+ * @return {Array<Node>} Array of child nodes.
  */
 Node.prototype.getChildren = function() {
     var result = [];
@@ -465,6 +468,8 @@ Node.prototype.addChild = function(node) {
 
     node.removeParentByHost(this.host);
     node.hostToParent[this.host] = this;
+
+    this.notifyGraph(new AddFamilyEvent(this, node));
 };
 
 /**
@@ -495,6 +500,8 @@ Node.prototype.addParent = function(node) {
 
     node.removeChildByHost(this.host);
     node.hostToChild[this.host] = this;
+
+    this.notifyGraph(new AddFamilyEvent(node, this));
 };
 
 /**
@@ -510,6 +517,8 @@ Node.prototype.removeChild = function(node) {
 
     delete this.hostToChild[node.host];
     delete node.hostToParent[this.host];
+
+    this.notifyGraph(new RemoveFamilyEvent(this, node));
 };
 
 /**
@@ -525,4 +534,12 @@ Node.prototype.removeParent = function(node) {
 
     delete this.hostToParent[node.host];
     delete node.hostToChild[this.host];
+
+    this.notifyGraph(new RemoveFamilyEvent(node, this));
+};
+
+Node.prototype.notifyGraph = function(event) {
+    if (this.graph != null) {
+        this.graph.notify(event);
+    }
 };

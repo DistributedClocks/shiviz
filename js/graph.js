@@ -20,12 +20,16 @@
  * The Graph class makes the following guarantees about nodes in the Graph:
  * <li>node.getNext() == null if and only if node.isTail() == true</li>
  * <li>node.getPrev() == null if and only if node.isHead() == true</li>
+ * 
+ * Graph implements the observer pattern. Graph will notify registered observers
+ * when certain events happen such as the removal of a node, the addition of
+ * edges between nodes, removal of a host, etc
  */
 
 /**
  * @constructor
  * @param {[LogEvent]} logEvents an array of log events extracted from the raw
- *            log input
+ *        log input
  */
 function Graph(logEvents) {
     /** @private */
@@ -38,11 +42,18 @@ function Graph(logEvents) {
     /** @private */
     this.hostToTail = {};
 
+    /** @private */
+    this.observers = {};
+
     // Dictionary linking host name to array of nodes
     var hostToNodes = {};
 
     // Set of existing hosts
     var hostSet = {};
+
+    for (var i = 0; i < Graph.validEvents.length; i++) {
+        this.observers[Graph.validEvents[i]] = {};
+    }
 
     /*
      * Create and add nodes to host arrays. Initialize hosts if undefined by
@@ -50,22 +61,31 @@ function Graph(logEvents) {
      */
     for (var i = 0; i < logEvents.length; i++) {
         var logEvent = logEvents[i];
-        var host = logEvent.host;
-        var node = new Node([ logEvent ], host);
+        var host = logEvent.getHost();
+        var node = new Node([ logEvent ]);
+        node.host = host;
+        node.graph = this;
 
         if (hostSet[host] == undefined) {
             hostSet[host] = true;
             this.hosts.push(host);
             hostToNodes[host] = [];
 
-            var head = new Node([], host);
+            var head = new Node([]);
             head.isHeadInner = true;
+            head.host = host;
+            head.graph = this;
 
-            var tail = new Node([], host);
+            var tail = new Node([]);
             tail.isTailInner = true;
+            head.host = host;
+            head.graph = this;
 
+            head.prev = null;
             head.next = tail;
+
             tail.prev = head;
+            tail.next = null;
 
             this.hostToHead[host] = head;
             this.hostToTail[host] = tail;
@@ -83,8 +103,7 @@ function Graph(logEvents) {
     for (var host in hostToNodes) {
         var array = hostToNodes[host];
         array.sort(function(a, b) {
-            return a.logEvents[0].getVectorTimestamp().compareToLocal(
-                    b.logEvents[0].getVectorTimestamp());
+            return a.logEvents[0].getVectorTimestamp().compareToLocal(b.logEvents[0].getVectorTimestamp());
         });
 
         for (var i = 0; i < array.length; i++) {
@@ -94,6 +113,7 @@ function Graph(logEvents) {
         }
 
         var lastNode = this.hostToHead[host];
+
         for (var i = 0; i < array.length; i++) {
             var newNode = array[i];
             lastNode.insertNext(newNode);
@@ -111,6 +131,7 @@ function Graph(logEvents) {
         while (currNode != tail) {
             // Candidates is array of potential parents for
             // currNode
+
             var candidates = [];
             var currVT = currNode.logEvents[0].getVectorTimestamp();
             clock[host] = currVT.ownTime;
@@ -163,8 +184,7 @@ function Graph(logEvents) {
                     continue;
                 }
                 var newTime = node.getLogEvents()[0].getVectorTimestamp().ownTime;
-                var oldTime = currParentOnHost.getLogEvents()[0]
-                        .getVectorTimestamp().ownTime;
+                var oldTime = currParentOnHost.getLogEvents()[0].getVectorTimestamp().ownTime;
                 if (newTime > oldTime) {
                     currNode.addParent(node);
                 }
@@ -176,6 +196,14 @@ function Graph(logEvents) {
     }
 
 }
+
+/**
+ * Define valid events here.
+ * 
+ * @static
+ * @private
+ */
+Graph.validEvents = [ AddNodeEvent, RemoveNodeEvent, AddFamilyEvent, RemoveFamilyEvent, RemoveHostEvent, ChangeEvent ];
 
 /**
  * Gets the head node for a host
@@ -213,6 +241,19 @@ Graph.prototype.getHosts = function() {
 };
 
 /**
+ * Checks if this graph has the specified host
+ * 
+ * @param {String} host The host to check for
+ * @returns {Boolean} True if the host exists
+ */
+Graph.prototype.hasHost = function(host) {
+    if (!this.hostToTail[host]) {
+        return false;
+    }
+    return true;
+};
+
+/**
  * Removes a host from the model. All connections to and from this host will be
  * removed. The host must be a valid host in the current Graph.
  * 
@@ -226,7 +267,8 @@ Graph.prototype.removeHost = function(host) {
 
     this.hosts.splice(index, 1);
 
-    var curr = this.getHead(host).getNext();
+    var head = this.getHead(host);
+    var curr = head.getNext();
     while (!curr.isTail()) {
         var next = curr.getNext();
         curr.remove();
@@ -236,6 +278,8 @@ Graph.prototype.removeHost = function(host) {
 
     delete this.hostToHead[host];
     delete this.hostToTail[host];
+
+    this.notify(new RemoveHostEvent(host, head));
 };
 
 /**
@@ -313,7 +357,12 @@ Graph.prototype.clone = function() {
     var oldToNewNode = {};
     for (var i = 0; i < allNodes.length; i++) {
         var node = allNodes[i];
-        oldToNewNode[node.getId()] = node.clone();
+        var newNode = new Node(node.getLogEvents());
+        newNode.host = node.getHost();
+        newNode.graph = newGraph;
+        newNode.isHeadInner = node.isHeadInner;
+        newNode.isTailInner = node.isTailInner;
+        oldToNewNode[node.getId()] = newNode;
     }
 
     for (var host in this.hostToHead) {
@@ -348,3 +397,290 @@ Graph.prototype.clone = function() {
 
     return newGraph;
 };
+
+/**
+ * Adds an observer to this graph. The observer will be notified (by invoking
+ * the provided callback function) of events when events of the specified type
+ * occur. There cannot exist two observers that are identical. If the newly
+ * added observer will replace another if it is identical to the other one. Two
+ * observers are considered identical if they were registered with the same type
+ * and callback.
+ * 
+ * @param {Function} type The type of event you want to observe. Use the
+ *        constructor function of the event class. For example, if you want to
+ *        observe AddNodeEvents, type would just be "AddNodeEvent".
+ * @param {Object} context This object will be provided to the callback function
+ *        when it is invoked.
+ * @param {Function} callback The callback function. The parameters of the
+ *        callback should be event, context
+ */
+Graph.prototype.addObserver = function(type, context, callback) {
+    if (Graph.validEvents.indexOf(type) < 0) {
+        throw type + " is not a valid event";
+    }
+
+    this.observers[type][callback] = {
+        callback: callback,
+        context: context
+    };
+};
+
+/**
+ * Removes an observer from this graph. If the specified observer cannot be
+ * found, this function does nothing.
+ * 
+ * @param {Function} type The type of event you want to observe. Use the
+ *        constructor function of the event class. For example, if you want to
+ *        remove an observer for AddNodeEvents, type would just be
+ *        "AddNodeEvent".
+ * @param {Function} callback The callback function.
+ */
+Graph.prototype.removeObserver = function(type, callback) {
+    if (Graph.validEvents.indexOf(type) < 0) {
+        throw type + " is not a valid event";
+    }
+
+    delete this.observers[type][callback];
+};
+
+/**
+ * Notifies all registered observers of an event. Dispatching any event will
+ * also dispatch a ChangeEvent. Note that you cannot directly dispatch a
+ * ChangeEvent.
+ * 
+ * You should only notify observers of events after the corresponding action has
+ * been completed. For example, a RemoveNodeEvent should only be dispatched
+ * after the node has been removed from the graph and the prev and next nodes of
+ * the removed node have been linked.
+ * 
+ * @private
+ * @param {Event} event The event object to dispatch.
+ */
+Graph.prototype.notify = function(event) {
+    if (Graph.validEvents.indexOf(event.constructor) < 0) {
+        throw type + " is not a valid event";
+    }
+
+    if (event.constructor == ChangeEvent) {
+        throw "You cannot directly dispatch a ChangeEvent.";
+    }
+
+    var params = this.observers[event.constructor];
+    for (var key in params) {
+        var param = params[key];
+        param.callback(event, param.context);
+    }
+
+    var changeEventParams = this.observers[ChangeEvent];
+    for (var key in changeEventParams) {
+        var curr = changeEventParams[key];
+        curr.callback(event, curr.context);
+    }
+};
+
+/**
+ * Dispatchable events are specified below. Each class below is associated with
+ * an event. For example, an AddNodeEvent indicates that a new node has been
+ * added to the graph.
+ */
+
+/**
+ * AddNodeEvents indicate that a new node has been added to the graph. This also
+ * implies that prev/next edges of the prev and next nodes of the new node have
+ * been change accordingly to accomodate the new node.
+ * 
+ * @constructor
+ * @param {Node} newNode The new node that has been added
+ * @param {Node} prev newNode's previous node
+ * @param {Node} next newNode's next node
+ */
+function AddNodeEvent(newNode, prev, next) {
+    this.newNode = newNode;
+    this.prev = prev;
+    this.next = next;
+};
+
+/**
+ * Returns the newly added node that corresponds to the event.
+ * 
+ * @returns {Node} the newly added node.
+ */
+AddNodeEvent.prototype.getNewNode = function() {
+    return this.newNode;
+};
+
+/**
+ * Returns the previous node of the newly added node that corresponds to the
+ * event.
+ * 
+ * @returns {Node} the prev node.
+ */
+AddNodeEvent.prototype.getPrev = function() {
+    return this.prev;
+};
+
+/**
+ * Returns the next node of the newly added node that corresponds to the event.
+ * 
+ * @returns {Node} the next node.
+ */
+AddNodeEvent.prototype.getNext = function() {
+    return this.next;
+};
+
+/**
+ * RemoveNodeEvent indicates that a node has been removed from the graph. This
+ * also implies that prev/next edges of the prev and next nodes of the removed
+ * node have been change accordingly
+ * 
+ * @constructor
+ * @param {Node} removedNode The new node that has been removed
+ * @param {Node} prev newNode's previous node
+ * @param {Node} next newNode's next node
+ */
+function RemoveNodeEvent(removedNode, prev, next) {
+    this.removedNode = removedNode;
+    this.prev = prev;
+    this.next = next;
+};
+
+/**
+ * Returns the removed node that corresponds to the event.
+ * 
+ * @returns {Node} the removed node.
+ */
+RemoveNodeEvent.prototype.getRemovedNode = function() {
+    return this.removedNode;
+};
+
+/**
+ * Returns the previous node of the removed node that corresponds to the event.
+ * 
+ * @returns {Node} the prev node.
+ */
+RemoveNodeEvent.prototype.getPrev = function() {
+    return this.prev;
+};
+
+/**
+ * Returns the next node of the removed node that corresponds to the event.
+ * 
+ * @returns {Node} the next node.
+ */
+RemoveNodeEvent.prototype.getNext = function() {
+    return this.next;
+};
+
+/**
+ * AddFamilyEvent indicates that a new family relationship has been created
+ * between two nodes
+ * 
+ * @constructor
+ * @param {Node} parent The parent node in the newly created family relationship
+ *        (i.e the node that gained a new child)
+ * @param {Node} child The child node in the newly created family relationship
+ *        (i.e the node that gained a new parent)
+ */
+function AddFamilyEvent(parent, child) {
+    this.parent = parent;
+    this.child = child;
+}
+
+/**
+ * Returns the parent node in the newly created family relationship that
+ * corresponds to the event.
+ * 
+ * @returns {Node} The parent node
+ */
+AddFamilyEvent.prototype.getParent = function() {
+    return this.parent;
+};
+
+/**
+ * Returns the child node in the newly created family relationship that
+ * corresponds to the event.
+ * 
+ * @returns {Node} The child node
+ */
+AddFamilyEvent.prototype.getChild = function() {
+    return this.child;
+};
+
+/**
+ * RemoveFamilyEvent indicates that a family relationship has been removed
+ * between two nodes
+ * 
+ * @constructor
+ * @param {Node} parent The parent node in the removed family relationship (i.e
+ *        the node that lost a new child)
+ * @param {Node} child The child node in the removed family relationship (i.e
+ *        the node that lost a new parent)
+ */
+function RemoveFamilyEvent(parent, child) {
+    this.parent = parent;
+    this.child = child;
+}
+
+/**
+ * Returns the parent node in the removed family relationship that corresponds
+ * to the event.
+ * 
+ * @returns {Node} The parent node
+ */
+RemoveFamilyEvent.prototype.getParent = function() {
+    return this.parent;
+};
+
+/**
+ * Returns the child node in the removed family relationship that corresponds to
+ * the event.
+ * 
+ * @returns {Node} The child node
+ */
+RemoveFamilyEvent.prototype.getChild = function() {
+    return this.child;
+};
+
+/**
+ * RemoveHostEvent indicates that a host has been removed from the graph.
+ * Removing a host necessarily implies the removal of all of the host's nodes,
+ * but the node removal is treated as separate events and will be dispatched
+ * separately.
+ * 
+ * @constructor
+ * @param {String} host The host that was removed.
+ * @param {Node} head The head node of the host that was removed
+ */
+function RemoveHostEvent(host, head) {
+    this.host = host;
+    this.head = head;
+}
+
+/**
+ * Returns the host that was hidden that corresponds to the event.
+ * 
+ * @returns {String} The host that was hidden
+ */
+RemoveHostEvent.prototype.getHost = function() {
+    return this.host;
+};
+
+/**
+ * Returns the head of the host that was hidden that corresponds to the event.
+ * 
+ * @returns {Node} The head of the host that was hidden
+ */
+RemoveHostEvent.prototype.getHead = function() {
+    return this.head;
+};
+
+/**
+ * ChangeEvent indicates that the graph has changed in any way. This event is
+ * never dispatched directly rather, dispatching any event will automatically
+ * dispach a ChangeEvent.
+ * 
+ * @constructor
+ */
+function ChangeEvent() {
+
+}
