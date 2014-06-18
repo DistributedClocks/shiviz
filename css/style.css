@@ -103,21 +103,21 @@ header > a,
     margin-left: 1em;
 }
 
-.node {
-    stroke: #fff;
-    stroke-width: 1.5px;
+#sideBar .arrow {
+    opacity: .4;
 }
 
-.link {
-    stroke: #999;
-    stroke-opacity: .6;
+#sideBar line {
+    stroke: #000;
+    stroke-width: 2px;
 }
 
-.time {
-    stroke: #999;
-    stroke-opacity: .6;
-    fill: #999;
-    fill-opacity: .6;
+#sideBar text {
+    font-weight: bold;
+}
+
+#sideBar .hidden-hosts text {
+    opacity: .4;
 }
 
 #curNode {
@@ -138,11 +138,6 @@ svg {
     -webkit-user-select: none;
 }
 
-#sideBar {
-    width: 40px;
-    float: left;
-}
-
 #vizContainer {
     width: 760px;
     float: left;
@@ -153,37 +148,53 @@ svg {
     vertical-align: top;
 }
 
+#vizContainer svg line {
+    stroke: #999;
+    stroke-opacity: 0.6;
+}
+
+#vizContainer svg g circle {
+    stroke: #fff;
+    stroke-width: 2px;
+}
+
+#vizContainer svg g text {
+    text-anchor: middle;
+    font-size: 8pt;
+    fill: #fff;
+    dominant-baseline: central;
+    pointer-events: none;
+}
+
 #hostBar {
     width: 760px;
     float: left;
     white-space: nowrap;
 }
+.fixed #hostBar {
+    position: fixed;
+    top: 50px;
+}
 
-#hosts {
-    width: 120px;
-    float: left;
+#hostBar svg {
+    height: 55px;
+}
+
+#hostBar svg rect.bg {
+    fill: #fff;
 }
 
 #topBar {
     width: 100%;
-    position: relative;
     background-color: white;
 }
-
-#topBar:before {
-    content: "";
-    display: block;
-    height: calc(3em + 55px);
+.fixed #topBar {
     position: fixed;
-    width: 100%;
-    left: 0;
     top: 0;
-    background: white;
-    z-index: -1;
 }
 
-.node text {
-    stroke: black;
+.fixed #sideBar {
+    position: fixed;
 }
 
 #versionContainer {
