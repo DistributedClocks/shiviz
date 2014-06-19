@@ -39,6 +39,13 @@ function generateGraphFromLog(logLines) {
         return null;
     }
 
-    return new Graph(logEvents);
+    try {
+        return new Graph(logEvents);
+    }
+   catch(err) {
+       alert(err);
+       resetView();
+       return null;
+   }
     
 }

@@ -107,8 +107,34 @@ function Graph(logEvents) {
         });
 
         for (var i = 0; i < array.length; i++) {
-            if (array[i].logEvents[0].getVectorTimestamp().getOwnTime() != i + 1) {
-                throw "Bad vector clock";
+            
+            var node = array[i];
+            var logEvent = node.getLogEvents()[0];
+            var vt = logEvent.getVectorTimestamp();
+            var time = vt.getOwnTime();
+            
+            if (time != i + 1) {
+                if(i == 0) {
+                    var message = "Logical clock values for each host must start at 0.\n" +
+                    		"The clock value for the first event for host \"" + node.getHost() 
+                    		+ "\" is " + time + ".";
+                    message += attachEvent(logEvent);
+                    throw message;
+                }
+                else {
+                    var lastNode = array[i-i];
+                    var lastLogEvent = lastNode.getLogEvents()[0];
+                    var lastVt = lastLogEvent.getVectorTimestamp();
+                    var lastTime = lastVt.getOwnTime();
+                    
+                    var message = "Clock values for a host must increase monotonically by 1.\n"
+                        + "The clock for host \"" + node.getHost() + "\" goes from " + lastTime + " to "
+                        + time + " in the following two events:";
+                    
+                    message += attachEvent(lastLogEvent);
+                    message += attachEvent(logEvent);
+                    throw message;
+                }
             }
         }
 
@@ -147,11 +173,19 @@ function Graph(logEvents) {
                 if (clock[otherHost] == undefined || clock[otherHost] < time) {
                     clock[otherHost] = time;
 
-                    if (hostSet[otherHost] == undefined)
-                        throw "Unrecognized host: " + otherHost;
+                    if (hostSet[otherHost] == undefined) {
+                        var message = "The following event's vector clock contains an entry for " +
+                        		"an unrecognized host \"" + otherHost + "\".";
+                        message += attachEvent(currNode.logEvents[0]);
+                        throw message;
+                    }
 
-                    if (time < 1 || time > hostToNodes[otherHost].length)
-                        throw "Invalid vector clock time value";
+                    if (time < 1 || time > hostToNodes[otherHost].length) {
+                        var message = "The following event's vector clock contains an invalid clock value " + time 
+                        + " for " + "host \"" + otherHost + "\".";
+                        message += attachEvent(currNode.logEvents[0]);
+                        throw message;
+                    }
 
                     candidates.push(hostToNodes[otherHost][time - 1]);
                 }
@@ -233,11 +267,19 @@ function Graph(logEvents) {
         
         
         if(!clocks[host][time].equals(curr.getLogEvents()[0].getVectorTimestamp())) {
-            console.log(clocks[host][time]);
-            console.log(curr.getLogEvents()[0].getVectorTimestamp());
-            console.log("");
-//            throw "ASDF";
+            var message = "The following event has an impermissible vector clock.\n";
+            message += attachEvent(curr.getLogEvents()[0]);
+            message += "\n\nWe think it should be:\n" + JSON.stringify(clocks[host][time].clock);
+            throw message;
+
         }
+    }
+    
+    function attachEvent(event) {
+        var vt = event.getVectorTimestamp();
+        
+        return "\n\nOn line " + event.getLineNumber() 
+        + ":\n" + event.getText() + "\n" + JSON.stringify(vt.clock);
     }
 
 }
