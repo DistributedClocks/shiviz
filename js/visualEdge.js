@@ -76,7 +76,7 @@ VisualEdge.prototype.getDashLength = function() {
  */
 VisualEdge.prototype.setDashLength = function(newDashLength) {
     if (newDashLength < 0) {
-        throw "Dash length must be non-negative";
+        throw new Exception("Dash length must be non-negative");
     }
 
     this.dashLength = newDashLength;

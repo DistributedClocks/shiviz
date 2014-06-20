@@ -21,7 +21,7 @@ function VectorTimestamp(clock, host) {
     this.ownTime = clock[host];
 
     if (!clock.hasOwnProperty(host)) {
-        throw "Vector timestamp error: Vector clock must contain entry for host";
+        throw new Exception("Vector timestamp error: Vector clock must contain entry for host");
     }
 
     for (var host in clock) {
