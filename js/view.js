@@ -165,9 +165,18 @@ View.prototype.draw = function() {
     circle.on("mouseover", function(e) {
         $("#curNode").text(e.getText());
     });
-    circle.style("fill", function(d) {
-        return d.getFillColor();
+    circle.style({
+        "fill": function(d) {
+            return d.getFillColor();
+        },
+        "stroke": function(d) {
+            return d.getStrokeColor();
+        },
+        "stroke-width": function(d) {
+            return d.getStrokeWidth() + "px";
+        }
     });
+
     circle.attr({
         "id": function(d) {
             return d.getHost();
@@ -176,7 +185,7 @@ View.prototype.draw = function() {
             return d.getRadius();
         }
     });
-
+    
     var label = node.append("text");
     label.text(function(d) {
         return d.getLabel();
@@ -207,6 +216,14 @@ View.prototype.draw = function() {
         },
         "fill": function(d) {
             return d.getFillColor();
+        }
+    });
+    rect.style({
+        "stroke": function(d) {
+            return d.getStrokeColor();
+        },
+        "stroke-width": function(d) {
+            return d.getStrokeWidth() + "px";
         }
     });
     rect.on("mouseover", function(e) {

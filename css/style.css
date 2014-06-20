@@ -153,11 +153,6 @@ svg {
     stroke-opacity: 0.6;
 }
 
-#vizContainer svg g circle {
-    stroke: #fff;
-    stroke-width: 2px;
-}
-
 #vizContainer svg g text {
     text-anchor: middle;
     font-size: 8pt;

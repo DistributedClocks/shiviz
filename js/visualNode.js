@@ -26,8 +26,14 @@ function VisualNode(node) {
     this.radius = 5;
 
     /** @private */
-    this.fillColor = 0;
+    this.fillColor = "#000";
 
+    /** @private */
+    this.strokeColor = "#fff";
+    
+    /** @private */
+    this.strokeWidth = 1.5;
+    
     /** @private */
     this.label = "";
 }
@@ -111,7 +117,7 @@ VisualNode.prototype.setRadius = function(newRadius) {
 /**
  * Gets the fill color of the VisualNode in standard RGB-form.
  * 
- * @returns {Number} The fill color
+ * @returns {String} The fill color
  */
 VisualNode.prototype.getFillColor = function() {
     return this.fillColor;
@@ -120,10 +126,41 @@ VisualNode.prototype.getFillColor = function() {
 /**
  * Sets the fill color of the VisualNode
  * 
- * @param {Number} newFillColor The new fill color
+ * @param {String} newFillColor The new fill color
  */
 VisualNode.prototype.setFillColor = function(newFillColor) {
     this.fillColor = newFillColor;
+};
+
+/**
+ * 
+ * 
+ * @param {String}
+ */
+VisualNode.prototype.setStrokeColor = function(newStrokeColor) {
+    this.strokeColor = newStrokeColor;
+};
+
+/**
+ * 
+ */
+VisualNode.prototype.getStrokeColor = function() {
+    return this.strokeColor;
+};
+
+/**
+ * 
+ */
+VisualNode.prototype.setStrokeWidth = function(newStrokeWidth) {
+    this.strokeWidth = newStrokeWidth;
+};
+
+/**
+ * 
+ * @returns {Number}
+ */
+VisualNode.prototype.getStrokeWidth = function() {
+    return this.strokeWidth;
 };
 
 /**
