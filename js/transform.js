@@ -98,7 +98,6 @@ HideHostTransformation.prototype.transform = function(visualGraph) {
  * @param {Number} threshold Nodes are collapsed if the number of nodes in the
  *        group is greater than or equal to the threshold. The threshold must be
  *        greater than or equal to 2.
- * @returns
  */
 function CollapseSequentialNodesTransformation(threshold) {
 
@@ -283,11 +282,23 @@ CollapseSequentialNodesTransformation.prototype.transform = function(visualGraph
 
 };
 
-
+/**
+ * @class
+ * 
+ * HighlightHostTransformation "highlights" a set of hosts by removing all edges not
+ * incident on the set of highlighted nodes. The highlighted hosts are drawn with a border
+ * to distinguish them from unhighlighted ones.
+ * 
+ * In the case that the set of hosts to highlight is empty, this transformation does nothing.
+ * In the case that a specified host does not exist, it is ignored.
+ * 
+ * @param {Array<String>} hostsToHighlight The array of hosts to highlight.
+ */
 function HighlightHostTransformation(hostsToHighlight) {
     
     this.priority = 30;
     
+    /** @private */
     this.hosts = {};
     
     for(var i = 0; i < hostsToHighlight.length; i++) {
@@ -295,14 +306,31 @@ function HighlightHostTransformation(hostsToHighlight) {
     }
 }
 
+/**
+ * Adds a host to the set of hosts to highlight. 
+ * 
+ * @param {String} hostToHighlight
+ */
 HighlightHostTransformation.prototype.addHostToHighlight = function(hostToHighlight) {
     this.hosts[hostToHighlight] = true;
 };
 
+/**
+ * Removes a host from the set of hosts to highlight. In the case that the provided host
+ * isn't in the set of hosts to highlight, this method does nothing.
+ * 
+ * @param {String} hostToHighlight
+ */
 HighlightHostTransformation.prototype.removeHostToHighlight = function(hostToHighlight) {
     delete this.hosts[hostToHighlight];
 };
 
+/**
+ * Toggles a host to and from the set of hosts to highlight. In other words, if a host is currently
+ * in the set of hosts to highlight, it is removed and if it isn't in that set, it is added to that set.
+ * 
+ * @param {String} hostToHighlight
+ */
 HighlightHostTransformation.prototype.toggleHostToHighlight = function(hostToHighlight) {
     if(!this.hosts[hostToHighlight]) {
         this.hosts[hostToHighlight] = true;
@@ -312,6 +340,11 @@ HighlightHostTransformation.prototype.toggleHostToHighlight = function(hostToHig
     }
 };
 
+/**
+ * Performs the transformation
+ * 
+ * @param {VisualGraph} visualGraph
+ */
 HighlightHostTransformation.prototype.transform = function(visualGraph) {
     
     var graph = visualGraph.getGraph();
