@@ -108,7 +108,7 @@ function Graph(logEvents) {
 
         for (var i = 0; i < array.length; i++) {
             if (array[i].logEvents[0].getVectorTimestamp().getOwnTime() != i + 1) {
-                throw "Bad vector clock";
+                throw new Error("Bad vector clock");
             }
         }
 
