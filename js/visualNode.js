@@ -32,7 +32,7 @@ function VisualNode(node) {
     this.strokeColor = "#fff";
     
     /** @private */
-    this.strokeWidth = 1.5;
+    this.strokeWidth = 2;
     
     /** @private */
     this.label = "";
