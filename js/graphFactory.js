@@ -34,7 +34,7 @@ function generateGraphFromLog(logLines) {
         
     }
     catch (err) {
-        alert("Error parsing input, malformed log on line: " + i + "\n" + err);
+        alert(err + "\n\nOn line " + i + ":\n" + logLines[i] + "\n" + logLines[i+1]);
         resetView();
         return null;
     }
