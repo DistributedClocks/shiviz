@@ -356,7 +356,7 @@ HighlightHostTransformation.prototype.transform = function(visualGraph) {
         if(head != null) {
             var vn = visualGraph.getVisualNodeByNode(head);
             vn.setStrokeColor("#000");
-            vn.setStrokeWidth(5);
+            vn.setStrokeWidth(4);
         }
         
     }
