@@ -314,20 +314,24 @@ HighlightHostTransformation.prototype.toggleHostToHighlight = function(hostToHig
 
 HighlightHostTransformation.prototype.transform = function(visualGraph) {
     
+    var graph = visualGraph.getGraph();
     
     var hasHost = false;
     for(var key in this.hosts) {
         hasHost = true;
-        break;
+        var head = graph.getHead(key);
+        if(head != null) {
+            var vn = visualGraph.getVisualNodeByNode(head);
+            vn.setStrokeColor("#000");
+            vn.setStrokeWidth(5);
+        }
+        
     }
     
     if(!hasHost) {
         return;
     }
 
-
-    var graph = visualGraph.getGraph();
-    
     var nodes = graph.getNodes();
     
     for(var i = 0; i < nodes.length; i++) {
