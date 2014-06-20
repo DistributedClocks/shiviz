@@ -108,12 +108,12 @@ $("#vizButton").on("click", function() {
     
         $("#graph").show();
     }
-    catch(error) {
-        if(error.constructor != Error) {
-            throw error;
+    catch(exception) {
+        if(exception.constructor != Exception) {
+            throw exception;
         }
         
-        alert(error.getMessage());
+        alert(exception.getMessage());
     }
 
 });
