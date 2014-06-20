@@ -10,9 +10,9 @@ function assert (description, outcome) {
         var err = document.createElement('pre');
         err.className = 'err';
         if (e.stack)
-            err.appendChild(document.createTextNode(e.stack.replace(/(^|\n)/g, '$1      ')));
+            err.appendChild(document.createTextNode(e.stack.replace(/(^|\n)/g, '$1        ')));
         else
-            err.appendChild(document.createTextNode("       " + e));
+            err.appendChild(document.createTextNode("         " + e));
 
         li.appendChild(err);
         document.getElementById('output').appendChild(li);
@@ -154,15 +154,6 @@ assert("isTail", function () {
     return result;
 });
 
-assert("clone", function () {
-    var node = graph.getNodes()[0];
-    var clone = node.clone();
-    return node.getLogEvents().length == clone.getLogEvents().length
-    && node.getHost() == clone.getHost()
-    && node.isHead() == clone.isHead()
-    && node.isTail() == clone.isTail();
-});
-
 assert("getNext", function () {
     return graph.getNodes()[0].getNext() == graph.getNodes()[1];
 });
@@ -265,6 +256,96 @@ assert("addParent for invalid parent", function () {
         return e.indexOf("cannot be the parent") > -1;
     }
     return false;
+});
+
+/**
+ * Global
+ */
+beginSection("Global.js");
+$("body").append($("<div id='sideBar'></div>"));
+$("body").append($("<div id='reference'></div>"));
+var global = new Global();
+var view = new View(graph, global, "lable");
+
+assert("addView", function () {
+    global.addView(view);
+    return global.views.length == 1;
+});
+
+assert("getHostColors", function () {
+    var colors = global.getHostColors();
+    return colors.a && colors.b;
+});
+
+assert("drawSideBar", function () {
+    global.drawSideBar();
+    var $svg = $("#sideBar svg");
+    var $text = $("#sideBar text");
+    var $line = $("#sideBar line");
+
+    var sw = $svg.width() == 60;
+    var sh = $svg.height() == 200;
+    var t = $text.text() == "Time";
+    var ly = $line.attr("y2") - $line.attr("y1") == 70;
+    var lx = $line.attr("x1") == $line.attr("x2");
+
+    $svg.remove();
+
+    return sw && sh && t && ly && lx;
+});
+
+/**
+ * View
+ */
+beginSection("View.js");
+
+assert("getGlobal", function () {
+    return view.getGlobal() === global;
+});
+
+assert("getHosts", function () {
+    var hosts = view.getHosts();
+    return hosts.length == 2 && hosts[0] == "a" && hosts[1] == "b";
+});
+
+$("body").append("<div id='vizContainer'></div>");
+$("body").append("<div id='hostBar'></div>");
+view.draw();
+var $svg = $("#vizContainer svg");
+var $hostBar = $("#hostBar");
+var $hosts = $("#hostBar rect:not(:first-child)");
+var $circles = $("svg circle");
+var $lines = $("svg line");
+
+assert("draw: component count", function () {
+    var h = $hosts.length == 2;
+    var c = $circles.length == 4;
+    var l = $lines.length == 6;
+
+    return h && c && l;
+});
+
+assert("draw: host ordering", function () {
+    var first = $circles.sort(function (a, b) {
+        return a.getAttribute("cx") < b.getAttribute("cx");
+    })[0];
+    return first.__data__.node.host == "a";
+});
+
+assert("draw: host colors", function () {
+    return $hosts[0].getAttribute("fill") == global.getHostColors().a;
+});
+
+assert("draw: node ordering", function () {
+    var a = $circles.filter(function (c) {
+        return c.getAttribute("fill") == global.getHostColors().a;
+    });
+    var b = $circles.filter(function (c) {
+        return c.getAttribute("fill") == global.getHostColors().b;
+    });
+
+    var al = a[0].getAttribute("cy") < a[1].getAttribute("cy");
+    return al;
 });
 
 console.log(Date.now() - start);
