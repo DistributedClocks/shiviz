@@ -115,7 +115,7 @@ VisualNode.prototype.setRadius = function(newRadius) {
 };
 
 /**
- * Gets the fill color of the VisualNode in standard RGB-form.
+ * Gets the fill color of the VisualNode.
  * 
  * @returns {String} The fill color
  */
@@ -124,40 +124,48 @@ VisualNode.prototype.getFillColor = function() {
 };
 
 /**
- * Sets the fill color of the VisualNode
+ * Sets the fill color of the VisualNode.
  * 
- * @param {String} newFillColor The new fill color
+ * @param {String} newFillColor The new fill color. The color must be a string that
+ * parses to a valid SVG color as defined in http://www.w3.org/TR/SVG/types.html#WSP
  */
 VisualNode.prototype.setFillColor = function(newFillColor) {
     this.fillColor = newFillColor;
 };
 
-/**
- * 
- * 
- * @param {String}
- */
-VisualNode.prototype.setStrokeColor = function(newStrokeColor) {
-    this.strokeColor = newStrokeColor;
-};
 
 /**
+ * Gets the stroke color of the VisualNode.
  * 
+ * @returns {String} The fill color
  */
 VisualNode.prototype.getStrokeColor = function() {
     return this.strokeColor;
 };
 
 /**
+ * Sets the stroke color of the VisualNode.
  * 
+ * @param {String} newStrokeColor The new stroke color. The color must be a string that
+ * parses to a valid SVG color as defined in http://www.w3.org/TR/SVG/types.html#WSP
+ */
+VisualNode.prototype.setStrokeColor = function(newStrokeColor) {
+    this.strokeColor = newStrokeColor;
+};
+
+/**
+ * Sets the stroke width in px
+ * 
+ * @param {Number} newStrokeWidth The new stroke width in units of px
  */
 VisualNode.prototype.setStrokeWidth = function(newStrokeWidth) {
     this.strokeWidth = newStrokeWidth;
 };
 
 /**
+ * Gets the stroke width in units of px
  * 
- * @returns {Number}
+ * @returns {Number} The stroke width in units of px
  */
 VisualNode.prototype.getStrokeWidth = function() {
     return this.strokeWidth;
