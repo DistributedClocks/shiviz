@@ -82,11 +82,13 @@ HideHostTransformation.prototype.transform = function(visualGraph) {
 };
 
 /**
- * @class CollapseSequentialNodeTransformation groups local consecutive events
- *        that have no remote dependencies. The collapsed nodes will have an
- *        increased radius and will contain a label indicating the number of
- *        nodes collapsed into it. This transformation provides methods for
- *        adding and removing nodes exempt from this collapsing process.
+ * @class
+ * 
+ * CollapseSequentialNodeTransformation groups local consecutive events that
+ * have no remote dependencies. The collapsed nodes will have an increased
+ * radius and will contain a label indicating the number of nodes collapsed into
+ * it. This transformation provides methods for adding and removing nodes exempt
+ * from this collapsing process.
  * 
  * This transformation collapses nodes that belong to the same group.
  * Intuitively, nodes belong to the same group if they are local consecutive
@@ -279,4 +281,68 @@ CollapseSequentialNodesTransformation.prototype.transform = function(visualGraph
 
     visualGraph.update();
 
+};
+
+
+function HighlightHostTransformation(hostsToHighlight) {
+    
+    this.priority = 30;
+    
+    this.hosts = {};
+    
+    for(var i = 0; i < hostsToHighlight.length; i++) {
+        this.addHostToHighlight(hostsToHighlight[i]);
+    }
+}
+
+HighlightHostTransformation.prototype.addHostToHighlight = function(hostToHighlight) {
+    this.hosts[hostToHighlight] = true;
+};
+
+HighlightHostTransformation.prototype.removeHostToHighlight = function(hostToHighlight) {
+    delete this.hosts[hostToHighlight];
+};
+
+HighlightHostTransformation.prototype.toggleHostToHighlight = function(hostToHighlight) {
+    if(!this.hosts[hostToHighlight]) {
+        this.hosts[hostToHighlight] = true;
+    }
+    else {
+        delete this.hosts[hostToHighlight];
+    }
+};
+
+HighlightHostTransformation.prototype.transform = function(visualGraph) {
+    
+    
+    var hasHost = false;
+    for(var key in this.hosts) {
+        hasHost = true;
+        break;
+    }
+    
+    if(!hasHost) {
+        return;
+    }
+
+
+    var graph = visualGraph.getGraph();
+    
+    var nodes = graph.getNodes();
+    
+    for(var i = 0; i < nodes.length; i++) {
+        var node = nodes[i];
+        
+        var keep = !!this.hosts[node.getHost()];
+        var family = node.getFamily();
+        for(var j = 0; j < family.length && !keep; j++) {
+            keep |= !!this.hosts[family[j].getHost()];
+        }
+        
+        if(!keep) {
+            node.clearFamily();
+        }
+    }
+    
+    visualGraph.update();
 };

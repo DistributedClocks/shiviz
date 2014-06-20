@@ -31,6 +31,7 @@ function View(model, global, label) {
     this.collapseSequentialNodesTransformation = new CollapseSequentialNodesTransformation(2);
 
     this.addTransformation(this.collapseSequentialNodesTransformation);
+    
 }
 
 /**
@@ -212,6 +213,11 @@ View.prototype.draw = function() {
         $("#curNode").text(e.getText());
     });
     rect.on("dblclick", function(e) {
-        view.global.hideHost(e.getHost());
+        if (d3.event.shiftKey) {
+            view.global.toggleHighlightHost(e.getHost());
+        }
+        else {
+            view.global.hideHost(e.getHost());
+        }
     });
 };

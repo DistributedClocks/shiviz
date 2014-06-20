@@ -506,9 +506,10 @@ Node.prototype.addParent = function(node) {
 
 /**
  * Removes the target node from this's children, preserving the invariants
- * described at the top of this document.
+ * described at the top of this document.  If the argument is not one of this'
+ * children, this method does nothing.
  * 
- * @param node
+ * @param {Node} node
  */
 Node.prototype.removeChild = function(node) {
     if (this.hostToChild[node.host] != node) {
@@ -523,9 +524,10 @@ Node.prototype.removeChild = function(node) {
 
 /**
  * Removes the target node from this's parents, preserving the invariants
- * described at the top of this document.
+ * described at the top of this document. If the argument is not one of this'
+ * parents, this method does nothing.
  * 
- * @param node
+ * @param {Node} node
  */
 Node.prototype.removeParent = function(node) {
     if (this.hostToParent[node.host] != node) {
@@ -538,6 +540,32 @@ Node.prototype.removeParent = function(node) {
     this.notifyGraph(new RemoveFamilyEvent(node, this));
 };
 
+Node.prototype.removeFamily = function(node) {
+    this.removeChild(node);
+    this.removeParent(node);
+};
+
+Node.prototype.clearChildren = function() {
+    for(var host in this.hostToChild) {
+        this.removeChild(this.hostToChild[host]);
+    }
+};
+
+Node.prototype.clearParents = function() {
+    for(var host in this.hostToParent) {
+        this.removeParent(this.hostToParent[host]);
+    }
+};
+
+Node.prototype.clearFamily = function() {
+    this.clearChildren();
+    this.clearParents();
+};
+
+/**
+ * @private
+ * @param event
+ */
 Node.prototype.notifyGraph = function(event) {
     if (this.graph != null) {
         this.graph.notify(event);

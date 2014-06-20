@@ -36,6 +36,10 @@ function Global() {
 
     /** @private */
     this.scrollPastPoint = -1;
+    
+    /** @private */
+    this.hht = new HighlightHostTransformation([]);
+    this.addTransformation(this.hht);
 
     $("#sideBar").css({
         width: Global.SIDE_BAR_WIDTH + "px",
@@ -136,6 +140,11 @@ Global.prototype.unhideHost = function(hostId) {
  */
 Global.prototype.getHiddenHosts = function() {
     return this.hiddenHosts.slice();
+};
+
+Global.prototype.toggleHighlightHost = function(host) {
+    this.hht.toggleHostToHighlight(host);
+    this.drawAll();
 };
 
 /**
