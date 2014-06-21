@@ -116,7 +116,7 @@ def main():
     conn.request('POST', '/compile', urlparams, headers)
     response = conn.getresponse()
     data = response.read()
-    print len(data)
+    print "Minified size: " + len(data)
 
     if len(data) < 500:
         print "Minification failed!"
