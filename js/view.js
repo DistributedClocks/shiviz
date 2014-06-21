@@ -146,7 +146,7 @@ View.prototype.draw = function() {
         }
     });
     node.on("click", function(e) {
-        if (d3.event.ctrlKey) {
+        if (d3.event.shiftKey) {
             view.collapseSequentialNodesTransformation.toggleExemption(e.getNode());
             view.global.drawAll();
         }
