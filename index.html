@@ -10,150 +10,218 @@
 </head>
 
 <body>
-    <header>
-        <strong><a href="index.html">Home</a></strong>
-        <a href="#" onclick="document.getElementById('help').style.display='block';document.getElementById('fade').style.display='block';return false">FAQ</a>
-        <a href="http://bitbucket.org/bestchai/shiviz/wiki/Home">Documentation</a>
-        <a href="http://bitbucket.org/bestchai/shiviz/src">Source</a>
+    <div class="load">h</div>
+    <section class="home">
+        <header>
+            <strong><a href="index.html">Home</a></strong>
+            <a href="http://bitbucket.org/bestchai/shiviz/wiki/Home">Documentation</a>
+            <a href="http://bitbucket.org/bestchai/shiviz/src">Source</a>
+            <div id="versionContainer"><!-- Filled in with versionText in shiviz.js --></div>
+        </header>
+        <div class="content">
+            <h1>ShiViz</h1>
+            <h2>
+                <strong>ShiViz</strong> is a vis&shy;ual&shy;izat&shy;ion engi&shy;ne that gene&shy;r&shy;ate&shy;s high level gra&shy;phic&shy;al sum&shy;mar&shy;ies of dis&shy;tri&shy;but&shy;ed sys&shy;tem exe&shy;cut&shy;ion logs.
+            </h2>
 
-        <div id="versionContainer"><!-- Filled in with versionText in shiviz.js --></div>
+            <button class="try">Try out ShiViz</button>
 
-    </header>
+            <h3>What am I looking at?</h3>
+            <p>
+                In the visualization:
+                <ul>
+                    <li>
+                        Time flows from top to bottom.
+                    </li>
+                    <li>
+                        A vertical line with a box at the top is a <em>process
+                        timeline</em>. This represents a single thread of execution
+                        (e.g., a process).
+                    </li>
+                    <li>
+                        Circles on a process timeline are <em>events</em> that were
+                        executed by the process.
+                    </li>
+                    <li>
+                        Diagonal lines connecting two events represent the
+                        <a href="http://en.wikipedia.org/wiki/Happened-before">happened-before</a>
+                        relation between the events: the higher of the two events
+                        happened <i>before</i> the second event.
+                    </li>
+                </ul>
+            </p>
 
-    <div id="fade" class="black_overlay"></div>
+            <h3>How do I interact with the visualization?</h3>
+            <p>
+                The visualization supports the following actions:
+                <ul>
+                    <li>
+                        <strong>Hide a process timeline</strong>: double click a process box. To
+                        show the process timeline, double click on the process box in
+                        the "hidden hosts" panel.
+                    </li>
+                    <li>
+                        <strong>Show event or process text</strong>: hover over the event circle
+                        or process box. The corresponding text will appear next to
+                        "Current node:"
+                    </li>
+                </ul>
+            </p>
 
-    <div id="help" class="overlay_content">
-        <div id="close_help">
-            <a href="javascript:void(0)" onclick="document.getElementById('help').style.display='none';document.getElementById('fade').style.display='none'"><strong>X</strong></a>
+            <h3>What is the input log format?</h3>
+            <p>TODO: describe log format with a short 2-event example.</p>
+
+            <h3>How do I generate logs in this format?</h3>
+            <p>TODO: describe <a href="http://bitbucket.org/bestchai/shivector/wiki/Home">ShiVector</a></p>
+
+            <h3>How is this useful?</h3>
+            <p>
+                ShiViz is useful for:
+                <ul>
+                    <li>
+                        <strong>Understanding the communication graph.</strong> For example, to
+                        look for presence or absence of certain communication
+                        patterns.
+                    </li>
+                    <li>
+                        <strong>Reasoning about ordering in a distributed setting</strong>. For
+                        example, to figure out whether two events occurred
+                        concurrently, or if one happened before the other.
+                    </li>
+                </ul>
+            </p>
+
         </div>
-        <h3 style="margin-top:0px;" id="helpsectiontitle">What am I looking at?</h3>
-        <hr>
-        <p>
-            In the visualization:
-            <ul>
-                <li>
-                    Time flows from top to bottom.
-                </li>
-                <li>
-                    A vertical line with a box at the top is a <strong>process
-                    timeline</strong>. This represents a single thread of execution
-                    (e.g., a process).
-                </li>
-                <li>
-                    Circles on a process timeline are <strong>events</strong> that were
-                    executed by the process.
-                </li>
-                <li>
-                    Diagonal lines connecting two events represent the
-                    <a href="http://en.wikipedia.org/wiki/Happened-before">happened-before</a>
-                    relation between the events: the higher of the two events
-                    happened <i>before</i> the second event.
-                </li>
-            </ul>
-        </p>
+    </section>
 
-        <h3 id="helpsectiontitle">How do I interact with the visualization?</h3>
-        <hr>
-        <p>
-            The visualization supports the following actions:
-            <ul>
-                <li>
-                    <strong>Hide a process timeline</strong>: double click a process box. To
-                    show the process timeline, double click on the process box in
-                    the "hidden hosts" panel.
-                </li>
-                <li>
-                    <strong>Show event or process text</strong>: hover over the event circle
-                    or process box. The corresponding text will appear next to
-                    "Current node:"
-                </li>
-            </ul>
-        </p>
+    <section class="input two">
+        <table>
+            <tr>
+                <td class="left">
+                    <header class="icon">
+                        <ul class="tabs">
+                            <li>h</li>
+                            <li class="active">i</li>
+                            <li>a</li>
+                        </ul>
+                        <ul class="links">
+                            <li><a href="//bitbucket.org/bestchai/shiviz/wiki/Home">d</a></li>
+                            <li><a href="//bitbucket.org/bestchai/shiviz/src">s</a></li>
+                        </ul>
+                    </header>
+                    <h3>Options</h3>
+                    <div class="option">
+                        <label>Multiple execution delimiter: <input type="text" id="delimiter"></label>
+                    </div>
+                    <div class="option">
+                        Sort hosts in <select><option>ascending</option><option selected>descending</option></select> order by:<br>
+                        <label><input name="host_sort" type="radio" checked> # nodes</label> <label><input name="host_sort" type="radio"> appearance in log</label>
+                    </div>
+                    <button id="visualize" disabled>Visualize</button>
+                </td>
+                <td class="right">
+                    <div id="examples">
+                        Examples:
+                        <a class="log-link" href="" data-log="log/facebook.log">Facebook data-center log</a>
+                        <a class="log-link" href="" data-log="log/voldemort.log">Voldemort log</a>
+                        <a class="log-link" href="" data-log="log/simpledb.log">SimpleDB log</a>
+                        <a class="log-link" href="" data-log="log/facebook-multiple.log" data-delimiter="^=== (?<trace>.*) ===$">Facebook log with multiple executions</a>
+                    </div>
+                    <textarea id="input" spellcheck="false"></textarea>
+                </td>
+            </tr>
+        </table>
+    </section>
 
-        <h3 id="helpsectiontitle">What is the input log format?</h3>
-        <hr>
-        <p>TODO: describe log format with a short 2-event example.</p>
+    <section class="visualization two">
+        <table>
+            <tr>
+                <td class="left">
+                    <header class="icon">
+                        <ul class="tabs">
+                            <li>h</li>
+                            <li>i</li>
+                            <li class="active">a</li>
+                        </ul>
+                        <ul class="links">
+                            <li><a href="//bitbucket.org/bestchai/shiviz/wiki/Home">d</a></li>
+                            <li><a href="//bitbucket.org/bestchai/shiviz/src">s</a></li>
+                        </ul>
+                    </header>
+                </td>
+                <td class="right">
+                    <div id="graph">
+                        <div id="reference"></div>
+                        <div id="hostBar"></div>
+                        <div id="vizContainer"></div>
+                        <div id="sidebar"><div id="curNode"></div></div>
+                    </div>
+                </td>
+            </tr>
+        </table>
+    </section>
 
-        <h3 id="helpsectiontitle">How do I generate logs in this format?</h3>
-        <hr>
-        <p>TODO: describe <a href="http://bitbucket.org/bestchai/shivector/wiki/Home">ShiVector</a></p>
+    <!-- REPLACED DURING DEPLOYMENT: -->
+    <script type="text/javascript" src="js/dev.js"></script>
+    <!-- -->
 
-        <h3 id="helpsectiontitle">How is this useful?</h3>
-        <hr>
-        <p>
-            ShiViz is useful for:
-            <ul>
-                <li>
-                    <strong>Understanding the communication graph.</strong> For example, to
-                    look for presence or absence of certain communication
-                    patterns.
-                </li>
-                <li>
-                    <strong>Reasoning about ordering in a distributed setting</strong>. For
-                    example, to figure out whether two events occurred
-                    concurrently, or if one happened before the other.
-                </li>
-            </ul>
-        </p>
-    </div>
+    <script type="text/javascript" src="js/visualGraph.js"></script>  
+    <script type="text/javascript" src="js/visualNode.js"></script>
+    <script type="text/javascript" src="js/visualEdge.js"></script>
+    <script type="text/javascript" src="js/node.js"></script>  
+    <script type="text/javascript" src="js/graph.js"></script> 
+    <script type="text/javascript" src="js/vectorTimestamp.js"></script>
+    <script type="text/javascript" src="js/logEvent.js"></script>
 
-    <div id="content">
-        <h1>ShiViz</h1>
-        <p><strong>ShiViz</strong> is a visualization engine that generates high level
-            graphical summaries of distributed system execution logs.</p>
+    <script type="text/javascript" src="js/graphFactory.js"></script>  
+    <script type="text/javascript" src="js/layout.js"></script>    
+    <script type="text/javascript" src="js/transform.js"></script> 
+    <script type="text/javascript" src="js/regexp.js"></script>
 
-            <p>Try out ShiViz below.</p>
+    <script type="text/javascript" src="js/global.js"></script>
+    <script type="text/javascript" src="js/view.js"></script>  
 
-            <div id="info">
-                <h2>Execution log</h2>
-                <textarea id="logField"></textarea>
-                <p id="examplelogs">
-                    Examples:
-                    <a class="log-link" href="" data-log="log/facebook.log">Facebook data-center log</a>
-                    <a class="log-link" href="" data-log="log/voldemort.log">Voldemort log</a>
-                    <a class="log-link" href="" data-log="log/simpledb.log">SimpleDB log</a>
-                    <a class="log-link" href="" data-log="log/facebook-multiple.log" data-delimiter="^=== (?<trace>.*) ===$">Facebook log with multiple executions</a>
-                </p>
-                <label>Multiple execution delimiter: <input type="text" id="delimiter"></label>
-                <br>
-                <input type="button" id="vizButton" disabled=true value="visualize" />
-            </div>
+    <script type="text/javascript" src="js/shiviz.js"></script>
 
-            <div id="graph" hidden=true>
-                <h2>Visualization</h2>
-                <div id="reference">
-                <p></p>
-                </div>
-                <div id="topBar">
-                    <p>Current node: <span id="curNode">(hover to view)</span></p>
-                </div>
-                <div id="sideBar"></div>
-                <div id="hostBar"></div>
-                <div id="vizContainer"></div>
-                
-            </div>
-        </div>
+    <script type="text/javascript">
+        function go (index, store, force) {
+            $("section").hide();
+            switch (index) {
+                case 0:
+                $(".home").show();
+                break;
+                case 1:
+                $(".input").show();
+                inputHeight();
+                break;
+                case 2:
+                $(".visualization").show();
+                if (!$("#graph svg").length || force)
+                    visualize();
+                break;
+            }
 
-        <!-- REPLACED DURING DEPLOYMENT: -->
-        <script type="text/javascript" src="js/dev.js"></script>
-        <!-- -->
+            if (store)
+                history.pushState({index: index}, null, null);
+        }
 
-        <script type="text/javascript" src="js/visualGraph.js"></script>  
-        <script type="text/javascript" src="js/visualNode.js"></script>
-        <script type="text/javascript" src="js/visualEdge.js"></script>
-        <script type="text/javascript" src="js/node.js"></script>  
-        <script type="text/javascript" src="js/graph.js"></script> 
-        <script type="text/javascript" src="js/vectorTimestamp.js"></script>
-        <script type="text/javascript" src="js/logEvent.js"></script>
+        function inputHeight () {
+            $(".input #input").outerHeight(0).outerHeight(Math.max($(".input .left").height(), $(window).height() - parseFloat($("body").css("padding-top")) * 2) - $("#examples").outerHeight());
+        }
 
-        <script type="text/javascript" src="js/graphFactory.js"></script>  
-        <script type="text/javascript" src="js/layout.js"></script>    
-        <script type="text/javascript" src="js/transform.js"></script> 
-        <script type="text/javascript" src="js/regexp.js"></script>
+        $(".tabs li").on("click", function () {
+            go($(this).index(), true)
+        });
 
-        <script type="text/javascript" src="js/global.js"></script>
-        <script type="text/javascript" src="js/view.js"></script>  
+        $(".try").on("click", function () {
+            go(1, true);
+        });
 
-        <script type="text/javascript" src="js/shiviz.js"></script>
-    </body>
-    </html>
+        $(window).on("load resize", inputHeight);
+
+        $(window).on("popstate", function (e) {
+            go(e.originalEvent.state == null ? 0 : e.originalEvent.state.index, false);
+        });
+    </script>
+</body>
+</html>

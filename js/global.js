@@ -37,7 +37,7 @@ function Global() {
     /** @private */
     this.scrollPastPoint = -1;
 
-    $("#sideBar").css({
+    $("#sidebar").css({
         width: Global.SIDE_BAR_WIDTH + "px",
         float: "left"
     });
@@ -50,7 +50,7 @@ function Global() {
 
 }
 
-Global.SIDE_BAR_WIDTH = 60;
+Global.SIDE_BAR_WIDTH = 240;
 Global.HOST_SQUARE_SIZE = 25;
 
 /**
@@ -153,7 +153,7 @@ Global.prototype.addView = function(view) {
     }
     this.views.push(view);
 
-    var totalWidth = $("body").width() - Global.SIDE_BAR_WIDTH;
+    var totalWidth = $("#graph").width() - Global.SIDE_BAR_WIDTH;
     var totalHosts = 0;
     for (var i = 0; i < this.views.length; i++) {
         totalHosts += this.views[i].getHosts().length;
@@ -173,14 +173,14 @@ Global.prototype.addView = function(view) {
  * @private
  */
 Global.prototype.drawSideBar = function() {
-    $("#sideBar svg").remove();
+    $("#sidebar .hidden svg").remove();
 
     var global = this;
-    var sideBar = d3.select("#sideBar");
+    var sidebar = d3.select("#sidebar");
 
     // Draw time arrow with label
     var height = 200;
-    var timeArrow = sideBar.append("svg").attr({
+    var timeArrow = sidebar.append("svg").attr({
         "width": Global.SIDE_BAR_WIDTH,
         "height": height,
         "class": "arrow"
@@ -209,7 +209,7 @@ Global.prototype.drawSideBar = function() {
         return;
     }
 
-    var hiddenHosts = sideBar.append("svg");
+    var hiddenHosts = sidebar.append("svg");
     hiddenHosts.attr({
         "width": Global.SIDE_BAR_WIDTH,
         "height": 500,
@@ -281,72 +281,4 @@ Global.prototype.drawSideBar = function() {
  * @param {Event} The event object JQuery passes to the handler
  */
 Global.prototype.scrollHandler = function(event) {
-
-    var global = event.data;
-
-    var top = window.pageYOffset ? window.pageYOffset : document.documentElement.scrollTop ? document.documentElement.scrollTop : document.body.scrollTop;
-
-    var paddingWidth = ($(window).width() - $("body").width()) / 2;
-    var left = Math.max(paddingWidth, 0) - $(document).scrollLeft();
-
-    var overflow = paddingWidth < 0;
-
-    if (global.scrollPastPoint <= 0) {
-        global.scrollPastPoint = $('#reference').offset().top - parseInt($('#reference p').css('margin-top'));
-    }
-
-    var scrollPast = (global.scrollPastPoint > 0 && top > global.scrollPastPoint);
-
-    if (global.overflow == overflow && global.scrollPast == scrollPast) {
-        return;
-    }
-
-    global.overflow = overflow;
-    global.scrollPast = scrollPast;
-
-    if (scrollPast) {
-        $("body").addClass("fixed");
-
-        $("#sideBar").css({
-            top: $("#topBar").height() + "px",
-            left: left + "px"
-        });
-
-        if (overflow) {
-            $("#sideBar").css({
-                left: "auto",
-                marginLeft: left + "px"
-            });
-        }
-
-        $("#hostBar").css({
-            left: overflow ? "auto" : 0,
-            marginLeft: left + Global.SIDE_BAR_WIDTH + "px"
-        });
-
-        $("#vizContainer").css({
-            marginTop: $("#topBar").height() - parseInt($("#topBar p").css("margin-top")) + 55 + "px",
-            marginLeft: Global.SIDE_BAR_WIDTH + "px"
-        });
-
-    }
-    else {
-        $("body").removeClass("fixed");
-
-        $("#sideBar").css({
-            top: "",
-            left: "0px",
-            marginLeft: ""
-        });
-
-        $("#hostBar").css({
-            marginLeft: 0,
-            left: ""
-        });
-
-        $("#vizContainer").css({
-            marginLeft: "0",
-            marginTop: ""
-        });
-    }
 };

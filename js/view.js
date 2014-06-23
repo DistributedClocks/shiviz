@@ -84,7 +84,7 @@ View.prototype.draw = function() {
 
     // Apply all transformations applied to this view an those applied to global
     var currentModel = this.initialModel.clone();
-    var layout = new SpaceTimeLayout(this.width, 45);
+    var layout = new SpaceTimeLayout(this.width, 48);
 
     var visualGraph = new VisualGraph(currentModel, layout, this.global.hostColors);
 
@@ -185,13 +185,14 @@ View.prototype.draw = function() {
     var hostSvg = d3.select("#hostBar").append("svg");
     hostSvg.attr({
         "width": visualGraph.getWidth(),
+        "height": Global.HOST_SQUARE_SIZE,
         "class": this.id
     });
 
     var bar = hostSvg.append("rect");
     bar.attr({
         "width": visualGraph.getWidth(),
-        "height": 55,
+        "height": Global.HOST_SQUARE_SIZE,
         "class": "bg"
     });
 
@@ -200,7 +201,7 @@ View.prototype.draw = function() {
     rect.attr({
         "width": Global.HOST_SQUARE_SIZE,
         "height": Global.HOST_SQUARE_SIZE,
-        "y": 15,
+        "y": 0,
         "x": function(d) {
             return d.getX() - (Global.HOST_SQUARE_SIZE / 2);
         },
