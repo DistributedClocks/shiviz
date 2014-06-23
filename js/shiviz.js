@@ -1,16 +1,16 @@
 // an alternative to the above commented out code. This resolves issue 18
 // and prevents the innocuos keys such as 'ctrl' from resetting the view
-$("#logField").on('input propertychange', function(e) {
+$("#input").on('input propertychange', function(e) {
     resetView();
 });
 
-$("#examplelogs a").on("click", function(e) {
+$("#examples a").on("click", function(e) {
     e.preventDefault();
 
     // logUrlPrefix is defined in dev.js & deployed.js
     var url = logUrlPrefix + $(this).data("log");
     $.get(url, function(response) {
-        $("#logField").val(response);
+        $("#input").val(response);
         resetView();
         $("#delimiter").val($(e.target).data("delimiter"));
         $(e.target).css({
@@ -36,15 +36,14 @@ var hosts = {};
 function resetView() {
     // Enable/disable the visualize button depending on whether or not
     // the text area is empty.
-    if ($("#logField").val() == "") {
-        $("#vizButton").prop("disabled", true);
+    if ($("#input").val() == "") {
+        $("#visualize").prop("disabled", true);
     }
     else {
-        $("#vizButton").prop("disabled", false);
+        $("#visualize").prop("disabled", false);
     }
 
     $("#curNode").html("(click to view)");
-    $("#graph").hide();
 
     d3.selectAll("svg").remove();
 
@@ -55,10 +54,14 @@ function resetView() {
     });
 };
 
-$("#vizButton").on("click", function() {
+$("#visualize").on("click", function () {
+    go(2, true, true);
+});
+
+function visualize() {
     d3.selectAll("svg").remove();
 
-    var log = $("#logField").val();
+    var log = $("#input").val();
     var labels = null;
     if ($("#delimiter").val().length > 0) {
         var delimiter = new NamedRegExp($("#delimiter").val(), "m");
@@ -104,10 +107,7 @@ $("#vizButton").on("click", function() {
     });
 
     global.drawAll();
-
-    $("#graph").show();
-
-});
+};
 
 /**
  * returns the last node associated with a certain process id
