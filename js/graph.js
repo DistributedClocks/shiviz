@@ -107,8 +107,30 @@ function Graph(logEvents) {
         });
 
         for (var i = 0; i < array.length; i++) {
-            if (array[i].logEvents[0].getVectorTimestamp().getOwnTime() != i + 1) {
-                throw "Bad vector clock";
+
+            var node = array[i];
+            var logEvent = node.getLogEvents()[0];
+            var vt = logEvent.getVectorTimestamp();
+            var time = vt.getOwnTime();
+
+            if (time != i + 1) {
+                if (i == 0) {
+                    var message = "Logical clock values for each host must start at 0.\n" + "The clock value for the first event for host \"" + node.getHost() + "\" is " + time + ".";
+                    message += attachEvent(logEvent);
+                    throw message;
+                }
+                else {
+                    var lastNode = array[i - i];
+                    var lastLogEvent = lastNode.getLogEvents()[0];
+                    var lastVt = lastLogEvent.getVectorTimestamp();
+                    var lastTime = lastVt.getOwnTime();
+
+                    var message = "Clock values for a host must increase monotonically by 1.\n" + "The clock for host \"" + node.getHost() + "\" goes from " + lastTime + " to " + time + " in the following two events:";
+
+                    message += attachEvent(lastLogEvent);
+                    message += attachEvent(logEvent);
+                    throw message;
+                }
             }
         }
 
@@ -139,7 +161,7 @@ function Graph(logEvents) {
             // Looks to see if a timestamp for a host in the
             // vector clock has been updated from the last one
             for (var otherHost in currVT.clock) {
-                var time = currVT.clock[otherHost];
+                var time = currVT.clock[otherHost]; // TODO: use method
 
                 // If the timestamp for the host has been updated
                 // then add the node in otherHost with timestamp
@@ -147,11 +169,17 @@ function Graph(logEvents) {
                 if (clock[otherHost] == undefined || clock[otherHost] < time) {
                     clock[otherHost] = time;
 
-                    if (hostSet[otherHost] == undefined)
-                        throw "Unrecognized host: " + otherHost;
+                    if (hostSet[otherHost] == undefined) {
+                        var message = "The following event's vector clock contains an entry for " + "an unrecognized host \"" + otherHost + "\".";
+                        message += attachEvent(currNode.logEvents[0]);
+                        throw message;
+                    }
 
-                    if (time < 1 || time > hostToNodes[otherHost].length)
-                        throw "Invalid vector clock time value";
+                    if (time < 1 || time > hostToNodes[otherHost].length) {
+                        var message = "The following event's vector clock contains an invalid clock value " + time + " for " + "host \"" + otherHost + "\".";
+                        message += attachEvent(currNode.logEvents[0]);
+                        throw message;
+                    }
 
                     candidates.push(hostToNodes[otherHost][time - 1]);
                 }
@@ -161,14 +189,14 @@ function Graph(logEvents) {
             var connections = {};
             for (var i = 0; i < candidates.length; i++) {
                 var vt = candidates[i].logEvents[0].getVectorTimestamp();
-                var id = vt.getHost() + ":" + vt.getOwnTime();
+                var id = vt.getOwnHost() + ":" + vt.getOwnTime();
                 connections[id] = candidates[i];
             }
 
             for (var i = 0; i < candidates.length; i++) {
                 var vt = candidates[i].logEvents[0].getVectorTimestamp();
                 for (var otherHost in vt.clock) {
-                    if (otherHost != vt.getHost()) {
+                    if (otherHost != vt.getOwnHost()) {
                         var id = otherHost + ":" + vt.clock[otherHost];
                         delete connections[id];
                     }
@@ -193,6 +221,56 @@ function Graph(logEvents) {
 
             currNode = currNode.next;
         }
+    }
+
+    // Step through and verify that the vector clocks make sense
+    var clocks = {}; // clocks[x][y] = vector clock of host x at local time y
+    for (var host in hostSet) {
+        clocks[host] = {};
+    }
+
+    for (var host in hostSet) {
+        var curr = this.getHead(host).getNext();
+        var time = 0;
+        while (!curr.isTail()) {
+            var clock = {};
+            clock[host] = ++time;
+            clocks[host][time] = new VectorTimestamp(clock, host);
+            curr = curr.getNext();
+        }
+    }
+
+    var sortedNodes = this.getNodesTopologicallySorted();
+
+    for (var i = 0; i < sortedNodes.length; i++) {
+        var curr = sortedNodes[i];
+        var host = curr.getHost();
+        var time = curr.getLogEvents()[0].getVectorTimestamp().getOwnTime();
+
+        var children = curr.getChildren();
+        if (!curr.getNext().isTail()) {
+            children.push(curr.getNext());
+        }
+
+        for (var j = 0; j < children.length; j++) {
+            var childHost = children[j].getHost();
+            var childTime = children[j].getLogEvents()[0].getVectorTimestamp().getOwnTime();
+            clocks[childHost][childTime] = clocks[childHost][childTime].update(clocks[host][time]);
+        }
+
+        if (!clocks[host][time].equals(curr.getLogEvents()[0].getVectorTimestamp())) {
+            var message = "The following event has an impermissible vector clock.\n";
+            message += attachEvent(curr.getLogEvents()[0]);
+            message += "\n\nWe think it should be:\n" + JSON.stringify(clocks[host][time].clock);
+            throw message;
+
+        }
+    }
+
+    function attachEvent(event) {
+        var vt = event.getVectorTimestamp();
+
+        return "\n\nOn line " + (event.getLineNumber() + 1) + ":\n" + event.getText() + "\n" + JSON.stringify(vt.clock);
     }
 
 }
@@ -343,6 +421,53 @@ Graph.prototype.getAllNodes = function() {
 };
 
 /**
+ * 
+ * @returns
+ */
+Graph.prototype.getNodesTopologicallySorted = function() {
+    toposort = [];
+
+    var inDegree = {}; // mapping of node ID to current in degree
+    var ready = [];
+    var nodes = this.getNodes();
+    for (var i = 0; i < nodes.length; i++) {
+        var node = nodes[i];
+
+        inDegree[node.getId()] = node.getParents().length;
+        if (!node.getPrev().isHead()) {
+            inDegree[node.getId()]++;
+        }
+
+        if (inDegree[node.getId()] == 0) {
+            ready.push(node);
+        }
+    }
+
+    while (ready.length > 0) {
+        var curr = ready.pop();
+        toposort.push(curr);
+
+        var others = curr.getChildren();
+        if (!curr.getNext().isTail()) {
+            others.push(curr.getNext());
+        }
+
+        for (var i = 0; i < others.length; i++) {
+            var other = others[i];
+            inDegree[other.getId()]--;
+
+            if (inDegree[other.getId()] == 0) {
+
+                ready.push(other);
+
+            }
+        }
+    }
+
+    return toposort;
+};
+
+/**
  * Returns a copy of the graph. The new graph has nodes connected in exactly the
  * same way as the original. The new graph has exactly the same set of hosts.
  * The node themselves are shallow copies provided by node.clone()
@@ -401,8 +526,8 @@ Graph.prototype.clone = function() {
 /**
  * Adds an observer to this graph. The observer will be notified (by invoking
  * the provided callback function) of events when events of the specified type
- * occur. There cannot exist two observers that are identical. If the newly
- * added observer will replace another if it is identical to the other one. Two
+ * occur. There cannot exist two observers that are identical. The newly added
+ * observer will replace another if it is identical to the other one. Two
  * observers are considered identical if they were registered with the same type
  * and callback.
  * 
