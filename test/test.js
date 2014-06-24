@@ -337,15 +337,22 @@ assert("draw: host colors", function () {
 });
 
 assert("draw: node ordering", function () {
-    var a = $circles.filter(function (c) {
-        return c.getAttribute("fill") == global.getHostColors().a;
+    var a = $circles.filter(function (i, c) {
+        return c.getAttribute("class") == "a";
     });
-    var b = $circles.filter(function (c) {
-        return c.getAttribute("fill") == global.getHostColors().b;
+    var b = $circles.filter(function (i, c) {
+        return c.getAttribute("class") == "b";
     });
 
-    var al = a[0].getAttribute("cy") < a[1].getAttribute("cy");
-    return al;
+    var la = $(a[0]).offset().top < $(a[1]).offset().top;
+    var lb = $(b[0]).offset().top < $(b[1]).offset().top;
+    var ab = $(a[0]).offset().top < $(b[0]).offset().top;
+    var ba = $(b[1]).offset().top < $(a[1]).offset().top;
+
+    return la && lb && ab && ba;
 });
+
+$("#vizContainer").remove();
+$hostBar.remove();
 
 console.log(Date.now() - start);
