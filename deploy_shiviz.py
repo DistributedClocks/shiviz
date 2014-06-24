@@ -146,7 +146,7 @@ def main():
 
         conn.close()
     else:
-        minified = open('js/min.js', 'w')
+        minified = open(dist_dir + 'js/min.js', 'w')
         minified.write(data)
 
         # Replace reference to js files with minified js in deployed version
