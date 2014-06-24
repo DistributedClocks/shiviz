@@ -20,9 +20,6 @@ function Global() {
     this.hiddenHosts = [];
 
     /** @private */
-    this.hiddenHostToTransformation = {};
-
-    /** @private */
     this.hostColors = {};
 
     /** @private */
@@ -38,8 +35,12 @@ function Global() {
     this.scrollPastPoint = -1;
     
     /** @private */
-    this.hht = new HighlightHostTransformation([]);
-    this.addTransformation(this.hht);
+    this.highlightHostTransformation = new HighlightHostTransformation([]);
+    this.addTransformation(this.highlightHostTransformation );
+    
+    /** @private */
+    this.hideHostTransformation = new HideHostTransformation();
+    this.addTransformation(this.hideHostTransformation);
 
     $("#sideBar").css({
         width: Global.SIDE_BAR_WIDTH + "px",
@@ -108,10 +109,7 @@ Global.prototype.getTransformations = function() {
  * @param {String} hostId The host to hide.
  */
 Global.prototype.hideHost = function(hostId) {
-    var transform = new HideHostTransformation(hostId);
-    this.hiddenHostToTransformation[hostId] = transform;
-    this.hiddenHosts.push(hostId);
-    this.addTransformation(transform);
+    this.hideHostTransformation.addHost(hostId);
     this.drawAll();
 };
 
@@ -122,14 +120,7 @@ Global.prototype.hideHost = function(hostId) {
  * @param {String} hostId The host to unhide
  */
 Global.prototype.unhideHost = function(hostId) {
-    var index = this.hiddenHosts.indexOf(hostId);
-
-    if (index < 0) {
-        return;
-    }
-
-    this.hiddenHosts.splice(index, 1);
-    this.transformations.splice(this.transformations.indexOf(this.hiddenHostToTransformation[hostId]), 1);
+    this.hideHostTransformation.removeHost(hostId);
     this.drawAll();
 };
 
@@ -143,7 +134,7 @@ Global.prototype.getHiddenHosts = function() {
 };
 
 Global.prototype.toggleHighlightHost = function(host) {
-    this.hht.toggleHostToHighlight(host);
+    this.highlightHostTransformation.toggleHostToHighlight(host);
     this.drawAll();
 };
 
