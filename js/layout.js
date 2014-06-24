@@ -59,8 +59,10 @@ SpaceTimeLayout.prototype.start = function(visualGraph) {
         hostNameToIndex[hosts[i]] = i;
     }
 
-    var widthPerHost = this.width / hosts.length;
-    var leftMargin = widthPerHost / 2;
+    var totalMargin = this.width - hosts.length * Global.HOST_SQUARE_SIZE;
+    var hostMargin = totalMargin / (hosts.length - 1);
+    var widthPerHost = (this.width + hostMargin) / hosts.length;
+    var leftMargin = Global.HOST_SQUARE_SIZE / 2;
 
     while (noParents.length > 0) {
         var current = noParents.pop();

@@ -106,6 +106,10 @@ function visualize() {
         return view;
     });
 
+    $(window).unbind("resize").on("resize", function () {
+        global.drawAll();
+    });
+
     global.drawAll();
 };
 

@@ -86,6 +86,9 @@ Global.prototype.drawAll = function() {
     for (var i = 0; i < this.views.length; i++) {
         this.views[i].draw();
     }
+
+    this.resize();
+
     this.drawSideBar();
 };
 
@@ -153,19 +156,38 @@ Global.prototype.addView = function(view) {
     }
     this.views.push(view);
 
-    var totalWidth = $("#graph").width() - Global.SIDE_BAR_WIDTH;
+    this.resize();
+};
+
+/**
+ * Resizes the graph
+ */
+Global.prototype.resize = function() {
     var totalHosts = 0;
     for (var i = 0; i < this.views.length; i++) {
         totalHosts += this.views[i].getHosts().length;
     }
 
-    var widthPerHost = Math.max(totalWidth / totalHosts, 40);
+    var globalWidth = Math.max($("#graph").width("").width());
+    var totalMargin = globalWidth - totalHosts * Global.HOST_SQUARE_SIZE;
+    var hostMargin = totalMargin / (totalHosts + this.views.length - 2);
+
+    if (hostMargin < Global.HOST_SQUARE_SIZE) {
+        hostMargin = Global.HOST_SQUARE_SIZE;
+        totalMargin = hostMargin * (totalHosts + this.views.length - 2);
+        globalWidth = totalMargin + totalHosts * Global.HOST_SQUARE_SIZE;
+        $("#graph").width(globalWidth);
+    }
+
+    var widthPerHost = Global.HOST_SQUARE_SIZE + hostMargin;
 
     for (var i = 0; i < this.views.length; i++) {
         var view = this.views[i];
-        view.setWidth(view.getHosts().length * widthPerHost);
+        view.setWidth(view.getHosts().length * widthPerHost - hostMargin);
     }
-};
+
+    $("#vizContainer > svg:not(:last-child), #hostBar > svg:not(:last-child)").css("margin-right", hostMargin * 2);
+}
 
 /**
  * Draws the hidden hosts, if any exist.
@@ -177,32 +199,6 @@ Global.prototype.drawSideBar = function() {
 
     var global = this;
     var sidebar = d3.select("#sidebar");
-
-    // Draw time arrow with label
-    var height = 200;
-    var timeArrow = sidebar.append("svg").attr({
-        "width": Global.SIDE_BAR_WIDTH,
-        "height": height,
-        "class": "arrow"
-    });
-
-    var x = Global.SIDE_BAR_WIDTH / 2;
-    var y1 = 85;
-    var y2 = height - 30;
-
-    var line = timeArrow.append("line");
-    line.attr("x1", x);
-    line.attr("y1", y1 + 15);
-    line.attr("x2", x);
-    line.attr("y2", y2);
-
-    var path = timeArrow.append("path");
-    path.attr("d", "M " + (x - 5) + " " + y2 + " L " + (x + 5) + " " + y2 + " L " + x + " " + (y2 + 10) + " z");
-
-    var timeText = timeArrow.append("text");
-    timeText.attr("x", x - 20);
-    timeText.attr("y", y1 - 5);
-    timeText.text("Time");
 
     // Draw hidden hosts
     if (this.hiddenHosts.length <= 0) {
