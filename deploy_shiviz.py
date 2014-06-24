@@ -116,6 +116,9 @@ def main():
     conn.request('POST', '/compile', urlparams, headers)
     response = conn.getresponse()
     data = response.read()
+
+    conn.close()
+
     print "Minified size: %i" % len(data)
 
     if len(data) < 500:
@@ -132,15 +135,16 @@ def main():
         for file in files:
             params += [('code_url', 'https://bitbucket.org/bestchai/shiviz/raw/tip/js/' + file)]
 
-            urlparams = urllib.urlencode(params)
-            headers = {'Content-type': 'application/x-www-form-urlencoded'}
-            conn = httplib.HTTPConnection('closure-compiler.appspot.com')
-            conn.request('POST', '/compile', urlparams, headers)
-            response = conn.getresponse()
-            data = response.read()
+        urlparams = urllib.urlencode(params)
+        headers = {'Content-type': 'application/x-www-form-urlencoded'}
+        conn = httplib.HTTPConnection('closure-compiler.appspot.com')
+        conn.request('POST', '/compile', urlparams, headers)
+        response = conn.getresponse()
+        data = response.read()
 
         print data
 
+        conn.close()
     else:
         minified = open('js/min.js', 'w')
         minified.write(data)
