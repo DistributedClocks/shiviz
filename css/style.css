@@ -15,8 +15,8 @@ body {
 h1 {
     font-size: 48pt;
     font-weight: 300;
-    letter-spacing: -.1ex;
-    margin: 24pt 0 24pt -.1ex;
+    letter-spacing: -2px;
+    margin: 24pt 0 24pt -2px;
 }
 
 h2 {
@@ -163,29 +163,30 @@ header.icon ul.links li a:hover {
     color: #04a;
 }
 
-section.two {
-    width: 100%;
-}
-
-section.two table {
-    width: 100%;
-    border-collapse: collapse;
-}
-
-section.two td {
-    vertical-align: top;
-    padding: 0;
-}
-
-section.two .left {
-    width: 240pt;
-    padding-right: 2em;
-}
-
 /* Input */
 section.input .right textarea#input {
     resize: none;
     height: calc(100% - 2em);
+}
+
+section.input {
+    width: 100%;
+}
+
+section.input table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+section.input td {
+    vertical-align: top;
+    padding: 0;
+}
+
+section.input .left {
+    width: 240pt;
+    min-width: 240pt;
+    padding-right: 2em;
 }
 
 #input {
@@ -199,12 +200,18 @@ section.input .right textarea#input {
 
 
 /* Visualization */
-.visualization header {
+.visualization .left {
     position: fixed;
+    background: #fff;
+    height: 100%;
+    padding: 2em;
+    top: 0;
+    left: 0;
 }
 
-#sideBar .hidden-hosts text {
-    opacity: .4;
+.visualization #graph {
+    margin-left: 264pt;
+    padding-right: 240px;
 }
 
 svg {
@@ -216,6 +223,7 @@ svg {
 
 #vizContainer {
     margin-top: 2em;
+    white-space: nowrap;
 }
 
 #vizContainer svg {
@@ -252,10 +260,13 @@ svg {
 }
 
 #sidebar {
-    width: 200px;
-    height: 100px;
-    z-index: 2;
+    width: 240px;
+    height: 100%;
+    padding: 2em;
+    box-sizing: border-box;
     position: fixed;
-    right: 2em;
-    top: 2em;
+    right: 0;
+    top: 0;
+    background: #fff;
+    z-index: 1;
 }
