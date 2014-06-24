@@ -282,10 +282,10 @@ CollapseSequentialNodesTransformation.prototype.transform = function(visualGraph
 };
 
 
-function HighlightLogEventTransformation(ignoreEdges) {
+function HighlightLogEventTransformation(finder, ignoreEdges) {
     
+    this.finder = finder;
     this.setIgnoreEdges(ignoreEdges);
-    this.logEvents = {};
     
     this.priority = 0;
     
@@ -295,52 +295,28 @@ HighlightLogEventTransformation.prototype.setIgnoreEdges = function(val) {
     this.ignoreEdges = !!val;
 };
 
-HighlightLogEventTransformation.prototype.addLogEvent = function(logEvent) {
-    console.log(logEvent.getId());
-    this.logEvents[logEvent.getId()] = true;
-};
-
-HighlightLogEventTransformation.prototype.removeLogEvent = function(logEvent) {
-    delete this.logEvents[logEvents.getId()];
-};
-
 HighlightLogEventTransformation.prototype.transform = function(visualGraph) {
     
-    console.log(this.logEvents);
-    for(var k in this.logEvents) {
-        console.log(k);
+    var nodes = this.finder.find(visualGraph.getGraph());
+    var nodeSet = {};
+    for(var i = 0; i < nodes.length; i++) {
+        nodeSet[nodes[i].getId()] = true;
     }
-    console.log(this.logEvents[21]);
-    
-    function shouldHighlight(node, context) {
-        var logEvents = node.getLogEvents();
 
-        for(var i = 0; i < logEvents.length; i++) {
-            if(context.logEvents[logEvents[i].getId()]) { // TODO: check "this"
-                return true;
-            }
-        }
-        return false;
-    }
-    
-    var graph = visualGraph.getGraph();
-    
-    var nodes = graph.getNodes();
     for(var i = 0; i < nodes.length; i++) {
         var node = nodes[i];
-        if(!shouldHighlight(node, this)) {
-            continue;
-        }
         
         var visualNode = visualGraph.getVisualNodeByNode(node);
-        visualNode.setFillColor("#000");
-        visualNode.setRadius(20);
         // TODO: highlight here.
+        visualNode.setFillColor("#000");
         
-        var other = visualGraph.getConnections();
+        var other = node.getConnections();
         for(var j = 0; j < other.length; j++) {
-            var visualEdge = visualGraph.getVisualEdgeByNodes(node, other[j]);
-            //TODO: highlight here
+            if(nodeSet[other[j].getId()]) {
+                var visualEdge = visualGraph.getVisualEdgeByNodes(node, other[j]);
+                //TODO: highlight here
+//                visualEdge.setWidth(3);
+            }
         }
     }
 };

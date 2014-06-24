@@ -33,7 +33,11 @@ function View(model, global, label) {
     this.addTransformation(this.collapseSequentialNodesTransformation);
     
     //TEMPORARY
-    this.hnt = new HighlightLogEventTransformation(false);
+    
+    //-----------TEMPORARY--------------------
+    
+    var rrFinder = new RequestResponseFinder(0, 0, false);
+    this.hnt = new HighlightLogEventTransformation(rrFinder, false);
     this.addTransformation(this.hnt);
 }
 
@@ -100,18 +104,6 @@ View.prototype.draw = function() {
     for (var i = 0; i < transformations.length; i++) {
         transformations[i].transform(visualGraph);
     }
-    
-    //-----------TEMPORARY--------------------
-    
-    var rrFinder = new RequestResponseFinder(0, 0, false);
-    var found = rrFinder.find(currentModel);
-    console.log(found.length);
-    for(var i = 0; i < found.length; i++) {
-        this.hnt.addLogEvent(found[i].getLogEvents()[0]);
-    }
-    
-    //----------------------------------------
-    
 
     // Define locally so that we can use in lambdas below
     var view = this;
@@ -133,7 +125,7 @@ View.prototype.draw = function() {
 
     link.style({
         "stroke-width": function(d) {
-            return d.getWidth();
+            return d.getWidth() + "px";
         },
         "stroke-dasharray": function(d) {
             return d.getDashLength() + "," + d.getDashLength();
