@@ -297,7 +297,7 @@ HighlightLogEventTransformation.prototype.setIgnoreEdges = function(val) {
 
 HighlightLogEventTransformation.prototype.transform = function(visualGraph) {
     
-    var nodes = this.finder.find(visualGraph.getGraph());
+    var nodes = this.finder.find(visualGraph.getGraph()).getNodes();
     var nodeSet = {};
     for(var i = 0; i < nodes.length; i++) {
         nodeSet[nodes[i].getId()] = true;
