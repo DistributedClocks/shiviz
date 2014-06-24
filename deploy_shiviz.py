@@ -70,7 +70,7 @@ def main():
 
     # Remove previously deployed version of shiviz.
     if (os.path.exists(dist_dir)):
-        runcmd("rm " + dist_dir + "*")
+        runcmd("rm -rf " + dist_dir + "*")
     else:
         print "Error: deployment dir is not where it is expected."
         sys.exit(-1)
@@ -116,7 +116,7 @@ def main():
     conn.request('POST', '/compile', urlparams, headers)
     response = conn.getresponse()
     data = response.read()
-    print "Minified size: " + len(data)
+    print "Minified size: %i" % len(data)
 
     if len(data) < 500:
         print "Minification failed!"
