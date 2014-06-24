@@ -92,7 +92,7 @@ def main():
     print "Revid is : " + revid
 
     # Replace the place-holder revision with the actual revision id:
-    runcmd("sed -i '' 's/revision: ZZZ/revision: " + revid
+    runcmd("sed -i'' -e's/revision: ZZZ/revision: " + revid
            + "/g' " + dist_dir + "js/deployed.js")
 
     # Minify the code
@@ -147,8 +147,8 @@ def main():
 
         # Replace reference to js files with minified js in deployed version
         # of index.html.
-        runcmd("sed -i '' 's/<script[^>]*><\/script>//g' " + dist_dir + "index.html")
-        runcmd("sed -i '' 's/<\/body>/<script src=\"js\/min.js\"><\/script>/g' " + dist_dir + "index.html")
+        runcmd("sed -i'' -e's/<script[^>]*><\/script>//g' " + dist_dir + "index.html")
+        runcmd("sed -i'' -e's/<\/body>/<script src=\"js\/min.js\"><\/script>/g' " + dist_dir + "index.html")
 
         print "Minification successful!"
 
