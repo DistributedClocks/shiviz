@@ -17,7 +17,7 @@ function Global() {
     this.transformations = [];
 
     /** @private */
-    this.hiddenHosts = [];
+    this.hiddenHosts = {};
 
     /** @private */
     this.hostColors = {};
@@ -110,6 +110,7 @@ Global.prototype.getTransformations = function() {
  */
 Global.prototype.hideHost = function(hostId) {
     this.hideHostTransformation.addHost(hostId);
+    this.hiddenHosts[hostId] = true;
     this.drawAll();
 };
 
@@ -121,6 +122,7 @@ Global.prototype.hideHost = function(hostId) {
  */
 Global.prototype.unhideHost = function(hostId) {
     this.hideHostTransformation.removeHost(hostId);
+    delete this.hiddenHosts[hostId];
     this.drawAll();
 };
 
@@ -130,7 +132,11 @@ Global.prototype.unhideHost = function(hostId) {
  * @returns {Array.<String>} An array of currently hidden hosts
  */
 Global.prototype.getHiddenHosts = function() {
-    return this.hiddenHosts.slice();
+    var hosts = [];
+    for(var host in this.hiddenHosts) {
+        hosts.push(host);
+    }
+    return hosts;
 };
 
 Global.prototype.toggleHighlightHost = function(host) {
@@ -205,7 +211,8 @@ Global.prototype.drawSideBar = function() {
     timeText.text("Time");
 
     // Draw hidden hosts
-    if (this.hiddenHosts.length <= 0) {
+    var hh = this.getHiddenHosts();
+    if (hh.length <= 0) {
         return;
     }
 
@@ -237,7 +244,7 @@ Global.prototype.drawSideBar = function() {
     });
     hostsText.text('hosts:');
 
-    var rect = hiddenHosts.selectAll().data(this.hiddenHosts).enter().append("rect");
+    var rect = hiddenHosts.selectAll().data(hh).enter().append("rect");
     rect.attr("width", Global.HOST_SQUARE_SIZE);
     rect.attr("height", Global.HOST_SQUARE_SIZE);
     rect.style("fill", function(host) {
