@@ -168,7 +168,7 @@ View.prototype.draw = function() {
         return d.getFillColor();
     });
     circle.attr({
-        "id": function(d) {
+        "class": function(d) {
             return d.getHost();
         },
         "r": function(d) {
