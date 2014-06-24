@@ -161,6 +161,7 @@ header.icon ul.links li a {
 }
 header.icon ul.links li a:hover {
     color: #04a;
+    text-decoration: none;
 }
 
 /* Input */
@@ -207,6 +208,7 @@ section.input .left {
     padding: 2em;
     top: 0;
     left: 0;
+    z-index: 1;
 }
 
 .visualization #graph {
