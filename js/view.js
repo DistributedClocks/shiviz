@@ -203,7 +203,7 @@ View.prototype.draw = function() {
         "height": Global.HOST_SQUARE_SIZE,
         "y": 0,
         "x": function(d) {
-            return d.getX() - (Global.HOST_SQUARE_SIZE / 2);
+            return Math.round(d.getX() - (Global.HOST_SQUARE_SIZE / 2));
         },
         "fill": function(d) {
             return d.getFillColor();

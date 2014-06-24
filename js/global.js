@@ -155,7 +155,6 @@ Global.prototype.addView = function(view) {
         }
     }
     this.views.push(view);
-
     this.resize();
 };
 
@@ -168,7 +167,7 @@ Global.prototype.resize = function() {
         totalHosts += this.views[i].getHosts().length;
     }
 
-    var globalWidth = Math.max($("#graph").width("").width());
+    var globalWidth = Math.max($("#graph").width("initial").width());
     var totalMargin = globalWidth - totalHosts * Global.HOST_SQUARE_SIZE;
     var hostMargin = totalMargin / (totalHosts + this.views.length - 2);
 
@@ -277,4 +276,6 @@ Global.prototype.drawSideBar = function() {
  * @param {Event} The event object JQuery passes to the handler
  */
 Global.prototype.scrollHandler = function(event) {
+    var x = window.pageXOffset;
+    $("#hostBar").css("margin-left", -x);
 };

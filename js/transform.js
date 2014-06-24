@@ -249,7 +249,7 @@ CollapseSequentialNodesTransformation.prototype.transform = function(visualGraph
         curr.insertNext(newNode);
 
         var visualNode = visualGraph.getVisualNodeByNode(newNode);
-        visualNode.setRadius(15);
+        visualNode.setRadius(12);
         visualNode.setLabel(newNode.getLogEvents().length);
     }
 

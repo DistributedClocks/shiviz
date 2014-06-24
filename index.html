@@ -105,8 +105,8 @@
                             <li>a</li>
                         </ul>
                         <ul class="links">
-                            <li><a href="//bitbucket.org/bestchai/shiviz/wiki/Home">d</a></li>
-                            <li><a href="//bitbucket.org/bestchai/shiviz/src">s</a></li>
+                            <li><a title="Documentation" href="//bitbucket.org/bestchai/shiviz/wiki/Home">d</a></li>
+                            <li><a title="Source" href="//bitbucket.org/bestchai/shiviz/src">s</a></li>
                         </ul>
                     </header>
                     <h3>Options</h3>
@@ -142,8 +142,8 @@
                     <li class="active">a</li>
                 </ul>
                 <ul class="links">
-                    <li><a href="//bitbucket.org/bestchai/shiviz/wiki/Home">d</a></li>
-                    <li><a href="//bitbucket.org/bestchai/shiviz/src">s</a></li>
+                    <li><a title="Documentation" href="//bitbucket.org/bestchai/shiviz/wiki/Home">d</a></li>
+                    <li><a title="Source" href="//bitbucket.org/bestchai/shiviz/src">s</a></li>
                 </ul>
             </header>
         </div>
@@ -187,11 +187,14 @@
                 case 1:
                 $(".input").show();
                 inputHeight();
+                $(window).on("load resize", inputHeight);
                 break;
                 case 2:
                 $(".visualization").show();
                 if (!$("#graph svg").length || force)
                     visualize();
+                $(window).resize();
+                $(window).resize();
                 break;
             }
 
@@ -210,8 +213,6 @@
         $(".try").on("click", function () {
             go(1, true);
         });
-
-        $(window).on("load resize", inputHeight);
 
         $(window).on("popstate", function (e) {
             go(e.originalEvent.state == null ? 0 : e.originalEvent.state.index, false);
