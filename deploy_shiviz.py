@@ -85,16 +85,6 @@ def main():
     # Remove the unnecessary dev.js that was copied over.
     runcmd("rm " + dist_dir + "js/dev.js")
 
-    # Find out the current revision id:
-    revid = get_cmd_output('hg', ['id', '-i']);
-    revid = revid.rstrip()
-
-    print "Revid is : " + revid
-
-    # Replace the place-holder revision with the actual revision id:
-    runcmd("sed -i'' -e's/revision: ZZZ/revision: " + revid
-           + "/g' " + dist_dir + "js/deployed.js")
-
     # Minify the code
     print "Minifying... please wait"
 
@@ -106,7 +96,7 @@ def main():
     ('output_info', 'compiled_code')
     ]
 
-    files = os.listdir('./js')
+    files = os.listdir(dist_dir + './js')
     for file in files:
         params += [('code_url', 'https://bitbucket.org/bestchai/shiviz/raw/tip/js/' + file)]
 
@@ -131,7 +121,7 @@ def main():
         ('output_info', 'errors')
         ]
 
-        files = os.listdir('./js')
+        files = os.listdir(dist_dir + './js')
         for file in files:
             params += [('code_url', 'https://bitbucket.org/bestchai/shiviz/raw/tip/js/' + file)]
 
@@ -155,6 +145,16 @@ def main():
         runcmd("sed -i'' -e's/<\/body>/<script src=\"js\/min.js\"><\/script>/g' " + dist_dir + "index.html")
 
         print "Minification successful!"
+
+    # Find out the current revision id:
+    revid = get_cmd_output('hg', ['id', '-i']);
+    revid = revid.rstrip()
+
+    print "Revid is : " + revid
+
+    # Replace the place-holder revision with the actual revision id:
+    runcmd("sed -i'' -e's/revision: ZZZ/revision: " + revid
+           + "/g' " + dist_dir + "js/min.js")
 
     # Remove any files containing '#'
     runcmd("cd " + dist_dir + " && find . | grep '#' | xargs rm")
