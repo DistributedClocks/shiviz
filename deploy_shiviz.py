@@ -82,6 +82,12 @@ def main():
         print "Error: source dir is not where it is expected."
         sys.exit(-1)
 
+    # Find out the current revision id:
+    revid = get_cmd_output('hg', ['id', '-i']);
+    revid = revid.rstrip()
+
+    print "Revid is : " + revid
+
     # Remove the unnecessary dev.js that was copied over.
     runcmd("rm " + dist_dir + "js/dev.js")
 
@@ -140,25 +146,16 @@ def main():
 
         conn.close()
     else:
+        data = data.replace("revision: ZZZ", "revision: %s" % revid)
         minified = open(dist_dir + 'js/min.js', 'w')
         minified.write(data)
 
         # Replace reference to js files with minified js in deployed version
         # of index.html.
-        runcmd("sed -i'' -e's/<script[^>]*><\/script>//g' " + dist_dir + "index.html")
-        runcmd("sed -i'' -e's/<\/body>/<script src=\"js\/min.js\"><\/script>/g' " + dist_dir + "index.html")
+        runcmd("sed -i 's/<script[^>]*><\/script>//g' " + dist_dir + "index.html")
+        runcmd("sed -i 's/<\/body>/<script src=\"js\/min.js\"><\/script>/g' " + dist_dir + "index.html")
 
         print "Minification successful!"
-
-    # Find out the current revision id:
-    revid = get_cmd_output('hg', ['id', '-i']);
-    revid = revid.rstrip()
-
-    print "Revid is : " + revid
-
-    # Replace the place-holder revision with the actual revision id:
-    runcmd("sed -i'' -e's/revision: ZZZ/revision: " + revid
-           + "/g' " + dist_dir + "js/min.js")
 
     # Remove any files containing '#'
     runcmd("cd " + dist_dir + " && find . | grep '#' | xargs rm")
