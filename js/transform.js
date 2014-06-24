@@ -23,13 +23,21 @@
  * @constructor
  * @param {String} hostToHide The host to hide from the model
  */
-function HideHostTransformation(hostToHide) {
+function HideHostTransformation() {
 
     this.priority = 80;
 
     /** @private */
-    this.hostToHide = hostToHide;
+    this.hostsToHide = {};
 }
+
+HideHostTransformation.prototype.addHost = function(host) {
+    this.hostsToHide[host] = true;
+};
+
+HideHostTransformation.prototype.removeHost = function(host) {
+    delete this.hostsToHide[host];
+};
 
 /**
  * Performs the transformation on the given visualGraph. The VisualGraph and its
@@ -40,42 +48,42 @@ function HideHostTransformation(hostToHide) {
 HideHostTransformation.prototype.transform = function(visualGraph) {
 
     var graph = visualGraph.getGraph();
-    if (!graph.hasHost(this.hostToHide)) {
-        return;
-    }
-
-    var curr = graph.getHead(this.hostToHide).getNext();
-
-    var parents = [];
-    var children = [];
-    while (!curr.isTail()) {
-        if (curr.hasParents() || curr.getNext().isTail()) {
-
-            for (var i = 0; i < parents.length; i++) {
-                for (var j = 0; j < children.length; j++) {
-                    if (parents[i].getHost() != children[j].getHost()) {
-                        parents[i].addChild(children[j]);
-
-                        visualGraph.getVisualEdgeByNodes(parents[i], children[j]).setDashLength(5);
+    
+    for(var host in this.hostsToHide) {
+    
+        var curr = graph.getHead(host).getNext();
+    
+        var parents = [];
+        var children = [];
+        while (!curr.isTail()) {
+            if (curr.hasParents() || curr.getNext().isTail()) {
+    
+                for (var i = 0; i < parents.length; i++) {
+                    for (var j = 0; j < children.length; j++) {
+                        if (parents[i].getHost() != children[j].getHost()) {
+                            parents[i].addChild(children[j]);
+    
+                            visualGraph.getVisualEdgeByNodes(parents[i], children[j]).setDashLength(5);
+                        }
                     }
                 }
+    
+                if (children.length > 0) {
+                    children = [];
+                    parents = [];
+                }
+                parents = parents.concat(curr.getParents());
             }
-
-            if (children.length > 0) {
-                children = [];
-                parents = [];
+    
+            if (curr.hasChildren()) {
+                children = children.concat(curr.getChildren());
             }
-            parents = parents.concat(curr.getParents());
+    
+            curr = curr.getNext();
         }
-
-        if (curr.hasChildren()) {
-            children = children.concat(curr.getChildren());
-        }
-
-        curr = curr.getNext();
+    
+        graph.removeHost(host);
     }
-
-    graph.removeHost(this.hostToHide);
 
     visualGraph.update();
 
@@ -370,16 +378,29 @@ HighlightHostTransformation.prototype.transform = function(visualGraph) {
     for(var i = 0; i < nodes.length; i++) {
         var node = nodes[i];
         
-        var keep = !!this.hosts[node.getHost()];
-        var family = node.getFamily();
-        for(var j = 0; j < family.length && !keep; j++) {
-            keep |= !!this.hosts[family[j].getHost()];
+        if(this.hosts[node.getHost()]) {
+            continue;
+        }
+        
+        var keep = true;
+        for(var host in this.hosts) {
+            keep &= node.getChildByHost(host) != null || node.getParentByHost(host) != null;
         }
         
         if(!keep) {
-            node.clearFamily();
+            node.remove();
         }
     }
+    
+    var hideHostTransformation = new HideHostTransformation();
+    var hosts = graph.getHosts();
+    for(var i = 0; i < hosts.length; i++) {
+        var head = graph.getHead(hosts[i]);
+        if(head.getNext().isTail()) {
+            hideHostTransformation.addHost(hosts[i]);
+        }
+    }
+    hideHostTransformation.transform(visualGraph);
     
     visualGraph.update();
 };
