@@ -83,12 +83,17 @@ Global.prototype.addTransformation = function(transformation) {
  * Redraws the global.
  */
 Global.prototype.drawAll = function() {
+    $("table.log").children().remove();
+    var width = (240 - 12 * (this.views.length - 1)) / this.views.length;
     for (var i = 0; i < this.views.length; i++) {
+        $("table.log").append($("<td></td>").width(width + "pt"));
         this.views[i].draw();
+        $("table.log").append($("<td></td>").addClass("spacer"));
     }
 
-    this.resize();
+    $("table.log.spacer:last-child").remove();
 
+    this.resize();
     this.drawSideBar();
 };
 
@@ -197,14 +202,14 @@ Global.prototype.drawSideBar = function() {
     $("#sidebar .hidden svg").remove();
 
     var global = this;
-    var sidebar = d3.select("#sidebar");
+    var hidden = d3.select(".hidden");
 
     // Draw hidden hosts
     if (this.hiddenHosts.length <= 0) {
         return;
     }
 
-    var hiddenHosts = sidebar.append("svg");
+    var hiddenHosts = hidden.append("svg");
     hiddenHosts.attr({
         "width": Global.SIDE_BAR_WIDTH,
         "height": 500,
