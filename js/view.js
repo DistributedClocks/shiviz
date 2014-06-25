@@ -120,7 +120,7 @@ View.prototype.draw = function() {
             return d.getWidth();
         },
         "stroke-dasharray": function(d) {
-            return d.getDashLength() + "," + d.getDashLength();
+            return d.getDashLength();
         }
     });
     link.attr({
@@ -163,6 +163,16 @@ View.prototype.draw = function() {
     var circle = node.append("circle");
     circle.on("mouseover", function(e) {
         $("#curNode").text(e.getText());
+        $(".focus").css({
+            "color": $(".focus").css("background-color"),
+            "background": ""
+        }).removeClass("focus");
+        $(".reveal").removeClass("reveal");
+        $("#line" + e.getId()).addClass("focus").css({
+            "background": e.getFillColor(),
+            "color": "white"
+        });
+        $("#line" + e.getId()).parent(".line").addClass("reveal");
     });
     circle.style("fill", function(d) {
         return d.getFillColor();
@@ -215,4 +225,53 @@ View.prototype.draw = function() {
     rect.on("dblclick", function(e) {
         view.global.hideHost(e.getHost());
     });
+
+    // draw the log lines
+    var lines = visualGraph.lines;
+    delete lines[0];
+
+    for (var y in lines) {
+        var vn = lines[y];
+        var startMargin = (1 - Math.min(vn.length, 3)) / 2;
+
+        if (vn.length > 3)
+            var other = vn.splice(2, vn.length);
+        else
+            var other = false;
+
+        for (var i in vn) {
+            var text = vn[i].getNode().getLogEvents()[0].getText();
+            var $div = $("<div></div>").attr({
+                "id": "line" + vn[i].getId()
+            }).addClass("line").css({
+                "top": y + "px",
+                "margin-top": startMargin + "em",
+                "color": vn[i].getFillColor()
+            }).text(text);
+            $(".log td:last-child").append($div);
+            startMargin++;
+        }
+
+        if (other) {
+            var $div = $("<div></div>").addClass("line more").css({
+                "top": y + "px",
+                "margin-top": startMargin + "em",
+                "color": "#ddd"
+            }).text("+ " + other.length + " more");
+
+            for (var o in other) {
+                var text = other[o].getNode().getLogEvents()[0].getText();
+                var o1 = parseInt(o) + 1;
+                $div.append($("<div></div>").attr({
+                    "id": "line" + other[o].getId()
+                }).addClass("line").css({
+                    "margin-top": o1 + "em",
+                    "color": other[o].getFillColor()
+                }).text(text));
+                startMargin++;
+            }
+
+            $(".log td:last-child").append($div);
+        }
+    }
 };

@@ -201,14 +201,55 @@ section.input .left {
 
 
 /* Visualization */
-.visualization .left {
+.visualization header {
     position: fixed;
     background: #fff;
-    height: 100%;
-    padding: 2em;
+    padding: 24pt;
     top: 0;
     left: 0;
     z-index: 1;
+}
+
+.visualization .log {
+    position: absolute;
+    border-collapse: collapse;
+    border-spacing: 0;
+    font-size: 10pt;
+    font-family: monospace;
+    margin-top: -6px;
+    line-height: 1em;
+}
+
+.visualization .log td.spacer {
+    width: 12pt;
+    min-width: 12pt;
+}
+
+.visualization .log .line {
+    position: absolute;
+    width: inherit;
+    white-space: nowrap;
+    overflow: hidden;
+    background: #fff;
+}
+
+.visualization .log .line.more:hover,
+.visualization .log .line.more.reveal {
+    overflow: visible;
+    font-size: 0;
+    line-height: 0;
+}
+
+.visualization .log .line.more:hover > .line,
+.visualization .log .line.more.reveal > .line {
+    z-index: 1;
+    font-size: 10pt;
+    line-height: 1em;
+}
+
+.visualization .log .line.more:hover > .line:last-child,
+.visualization .log .line.more.reveal > .line:last-child {
+    padding-bottom: 1em;
 }
 
 .visualization #graph {
@@ -271,4 +312,8 @@ svg {
     top: 0;
     background: #fff;
     z-index: 1;
+}
+
+#sidebar #curNode {
+    word-break: break-all;
 }
