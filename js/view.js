@@ -155,13 +155,24 @@ View.prototype.draw = function() {
         }
 
     });
-
     node.append("title").text(function(d) {
         return d.getText();
     });
-
-    var circle = node.append("circle");
-    circle.on("mouseover", function(e) {
+    node.append("rect").attr({
+        "width": 48,
+        "height": 48,
+        "x": -24,
+        "y": -24
+    });
+    node.on("mouseover", function(e) {
+        $("circle[style*='stroke-width: 4px']").css({
+            "stroke": "",
+            "stroke-width": ""
+        });
+        $(this).find("circle").css({
+            "stroke": e.getFillColor(),
+            "stroke-width": "4px"
+        });
         $("#curNode").text(e.getText());
         $(".focus").css({
             "color": $(".focus").css("background-color"),
@@ -174,6 +185,8 @@ View.prototype.draw = function() {
         });
         $("#line" + e.getId()).parent(".line").addClass("reveal");
     });
+
+    var circle = node.append("circle");
     circle.style("fill", function(d) {
         return d.getFillColor();
     });
@@ -255,17 +268,16 @@ View.prototype.draw = function() {
         if (other) {
             var $div = $("<div></div>").addClass("line more").css({
                 "top": y + "px",
-                "margin-top": startMargin + "em",
+                "margin-top": (startMargin * 10) + "pt",
                 "color": "#ddd"
             }).text("+ " + other.length + " more");
 
             for (var o in other) {
                 var text = other[o].getNode().getLogEvents()[0].getText();
-                var o1 = parseInt(o) + 1;
                 $div.append($("<div></div>").attr({
                     "id": "line" + other[o].getId()
                 }).addClass("line").css({
-                    "margin-top": o1 + "em",
+                    "margin-top": o + "em",
                     "color": other[o].getFillColor()
                 }).text(text));
                 startMargin++;
