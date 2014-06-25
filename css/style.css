@@ -231,13 +231,16 @@ section.input .left {
     white-space: nowrap;
     overflow: hidden;
     background: #fff;
+    transition: background, color, font-size, line-height, box-shadow;
+    transition-duration: .1s;
+    transition-timing-function: ease-out;
 }
 
 .visualization .log .line.more:hover,
 .visualization .log .line.more.reveal {
     overflow: visible;
     font-size: 0;
-    line-height: 0;
+    line-height: 1em;
 }
 
 .visualization .log .line.more:hover > .line,
@@ -249,7 +252,7 @@ section.input .left {
 
 .visualization .log .line.more:hover > .line:last-child,
 .visualization .log .line.more.reveal > .line:last-child {
-    padding-bottom: 1em;
+    box-shadow: 0 1em #fff;
 }
 
 .visualization #graph {
@@ -281,6 +284,7 @@ svg {
 #vizContainer svg g circle {
     stroke: #fff;
     stroke-width: 2px;
+    transition: all .1s ease-out;
 }
 
 #vizContainer svg g text {
@@ -289,6 +293,10 @@ svg {
     fill: #fff;
     dominant-baseline: central;
     pointer-events: none;
+}
+
+#vizContainer svg g rect {
+    fill: transparent;
 }
 
 #hostBar {
