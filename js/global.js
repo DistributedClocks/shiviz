@@ -89,7 +89,7 @@ Global.prototype.addTransformation = function(transformation) {
  * Redraws the global.
  */
 Global.prototype.drawAll = function() {
-    this.resize();
+    var hostMargin = this.resize();
     this.drawSideBar();
 
     $("table.log").children().remove();
@@ -100,6 +100,7 @@ Global.prototype.drawAll = function() {
         $("table.log").append($("<td></td>").addClass("spacer"));
     }
 
+    $("#vizContainer > svg:not(:last-child), #hostBar > svg:not(:last-child)").css("margin-right", hostMargin * 2 + "px");
     $("table.log .spacer:last-child").remove();
 };
 
@@ -199,8 +200,9 @@ Global.prototype.resize = function() {
         view.setWidth(hosts.length * widthPerHost - hostMargin);
     }
 
-    $("#vizContainer > svg:not(:last-child), #hostBar > svg:not(:last-child)").css("margin-right", hostMargin * 2);
     $("#graph").width(globalWidth);
+
+    return hostMargin;
 }
 
 /**
