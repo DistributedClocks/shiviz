@@ -100,7 +100,7 @@ Global.prototype.drawAll = function() {
         $("table.log").append($("<td></td>").addClass("spacer"));
     }
 
-    $("table.log.spacer:last-child").remove();
+    $("table.log .spacer:last-child").remove();
 };
 
 /**
@@ -173,7 +173,8 @@ Global.prototype.addView = function(view) {
  * Resizes the graph
  */
 Global.prototype.resize = function() {
-    var totalHosts = 0;
+    var hiddenHosts = this.getHiddenHosts();
+    var totalHosts = -hiddenHosts.length;
     for (var i = 0; i < this.views.length; i++) {
         totalHosts += this.views[i].getHosts().length;
     }
@@ -192,7 +193,10 @@ Global.prototype.resize = function() {
 
     for (var i = 0; i < this.views.length; i++) {
         var view = this.views[i];
-        view.setWidth(view.getHosts().length * widthPerHost - hostMargin);
+        var hosts = view.getHosts().filter(function (h) {
+            return hiddenHosts.indexOf(h) < 0;
+        });
+        view.setWidth(hosts.length * widthPerHost - hostMargin);
     }
 
     $("#vizContainer > svg:not(:last-child), #hostBar > svg:not(:last-child)").css("margin-right", hostMargin * 2);
@@ -289,4 +293,5 @@ Global.prototype.drawSideBar = function() {
 Global.prototype.scrollHandler = function(event) {
     var x = window.pageXOffset;
     $("#hostBar").css("margin-left", -x);
+    $(".log").css("margin-left", x);
 };
