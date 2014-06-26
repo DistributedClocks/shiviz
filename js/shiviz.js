@@ -106,11 +106,11 @@ function visualize() {
         return view;
     });
 
-    $(window).unbind("resize").on("resize", function () {
-        global.drawAll();
-    });
-
     global.drawAll();
+
+    // Check for vertical overflow
+    if ($(document).height() > $(window).height())
+        global.drawAll();
 };
 
 /**

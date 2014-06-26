@@ -257,7 +257,7 @@ section.input .left {
 
 .visualization #graph {
     margin-left: 264pt;
-    padding-right: 240px;
+    padding-right: calc(240px - 2em);
 }
 
 svg {
