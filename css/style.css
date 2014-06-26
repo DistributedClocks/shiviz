@@ -114,14 +114,13 @@ section.home .content {
 }
 
 #versionContainer {
-    float: right;
-    left: 80%;
-    top: 0px;
+    position: absolute;
+    top: 24pt;
+    right: 24pt;
     height: 30px;
-    width: 20%;
     text-align: right;
     color: grey;
-    font-size: 10px;
+    font-size: 8pt;
     font-family: monospace;
 }
 
@@ -152,6 +151,10 @@ header.icon ul li.active {
 }
 header.icon ul.tabs li {
     margin-right: 1em;
+}
+header.icon ul.tabs li.disabled {
+    color: #ddd;
+    pointer-events: none;
 }
 header.icon ul.links li {
     margin-left: 1em;

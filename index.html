@@ -12,11 +12,17 @@
 <body>
     <div class="load">h</div>
     <section class="home">
-        <header>
-            <strong><a href="index.html">Home</a></strong>
-            <a href="http://bitbucket.org/bestchai/shiviz/wiki/Home">Documentation</a>
-            <a href="http://bitbucket.org/bestchai/shiviz/src">Source</a>
-            <div id="versionContainer"><!-- Filled in with versionText in shiviz.js --></div>
+        <header class="icon">
+            <ul class="tabs">
+                <li class="active">h</li>
+                <li>i</li>
+                <li class="disabled">a</li>
+            </ul>
+            <ul class="links">
+                <li><a title="Documentation" href="//bitbucket.org/bestchai/shiviz/wiki/Home">d</a></li>
+                <li><a title="Source" href="//bitbucket.org/bestchai/shiviz/src">s</a></li>
+            </ul>
+            <div id="versionContainer"></div>
         </header>
         <div class="content">
             <h1>ShiViz</h1>
@@ -102,7 +108,7 @@
                         <ul class="tabs">
                             <li>h</li>
                             <li class="active">i</li>
-                            <li>a</li>
+                            <li class="disabled">a</li>
                         </ul>
                         <ul class="links">
                             <li><a title="Documentation" href="//bitbucket.org/bestchai/shiviz/wiki/Home">d</a></li>
@@ -185,6 +191,7 @@
     <script type="text/javascript">
         function go (index, store, force) {
             $("section").hide();
+            $(window).scrollTop();
             switch (index) {
                 case 0:
                 $(".home").show();
