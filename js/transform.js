@@ -39,6 +39,18 @@ HideHostTransformation.prototype.removeHost = function(host) {
     delete this.hostsToHide[host];
 };
 
+HideHostTransformation.prototype.clearHosts = function(host) {
+    this.hostsToHide = {};
+};
+
+HideHostTransformation.prototype.getHostsToHide = function() {
+    var hosts = [];
+    for(var host in this.hostsToHide) {
+        hosts.push(host);
+    };
+    return hosts;
+};
+
 /**
  * Performs the transformation on the given visualGraph. The VisualGraph and its
  * underlying Graph are modified in place
@@ -309,6 +321,9 @@ function HighlightHostTransformation(hostsToHighlight) {
     /** @private */
     this.hosts = {};
     
+    /** @private */
+    this.hiddenHosts = [];
+    
     for(var i = 0; i < hostsToHighlight.length; i++) {
         this.addHostToHighlight(hostsToHighlight[i]);
     }
@@ -348,6 +363,15 @@ HighlightHostTransformation.prototype.toggleHostToHighlight = function(hostToHig
     }
 };
 
+HighlightHostTransformation.prototype.clearHostsToHighlight = function() {
+    this.hosts = {};
+};
+
+// note: null before transform; returns value from previous transformation
+HighlightHostTransformation.prototype.getHiddenHosts = function() { 
+    return this.hiddenHosts.slice();
+};
+
 /**
  * Performs the transformation
  * 
@@ -357,9 +381,9 @@ HighlightHostTransformation.prototype.transform = function(visualGraph) {
     
     var graph = visualGraph.getGraph();
     
-    var hasHost = false;
+    var numHosts = 0;
     for(var key in this.hosts) {
-        hasHost = true;
+        numHosts++;
         var head = graph.getHead(key);
         if(head != null) {
             var vn = visualGraph.getVisualNodeByNode(head);
@@ -369,38 +393,54 @@ HighlightHostTransformation.prototype.transform = function(visualGraph) {
         
     }
     
-    if(!hasHost) {
+    if(numHosts == 0) {
+        this.hiddenHosts = [];
         return;
-    }
-
-    var nodes = graph.getNodes();
-    
-    for(var i = 0; i < nodes.length; i++) {
-        var node = nodes[i];
-        
-        if(this.hosts[node.getHost()]) {
-            continue;
-        }
-        
-        var keep = true;
-        for(var host in this.hosts) {
-            keep &= node.getChildByHost(host) != null || node.getParentByHost(host) != null;
-        }
-        
-        if(!keep) {
-            node.remove();
-        }
     }
     
     var hideHostTransformation = new HideHostTransformation();
+    
     var hosts = graph.getHosts();
     for(var i = 0; i < hosts.length; i++) {
-        var head = graph.getHead(hosts[i]);
-        if(head.getNext().isTail()) {
-            hideHostTransformation.addHost(hosts[i]);
+        var host = hosts[i];
+        if(this.hosts[host]) {
+            continue;
         }
+        
+        var communicated = {};
+        var numCommunicated = 0;
+        
+        var curr = graph.getHead(host).getNext();
+        while(!curr.isTail()) {
+            var families = curr.getFamily();
+            var keep = false;
+            
+            for(var j = 0; j < families.length; j++) {
+                var family = families[j];
+                keep |= this.hosts[family.getHost()];
+                
+                if(this.hosts[family.getHost()] && !communicated[family.getHost()]) {
+                    communicated[family.getHost()] = true;
+                    numCommunicated++;
+                }
+            }
+            
+            if(!keep) {
+                curr = curr.getPrev();
+                curr.getNext().remove();
+            }
+            curr = curr.getNext();
+        }
+        
+        if(numCommunicated != numHosts) {
+            hideHostTransformation.addHost(host);
+        }
+
+        
     }
+    
     hideHostTransformation.transform(visualGraph);
+    this.hiddenHosts = hideHostTransformation.getHostsToHide();
     
     visualGraph.update();
 };
