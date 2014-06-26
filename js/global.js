@@ -17,9 +17,6 @@ function Global() {
     this.transformations = [];
 
     /** @private */
-    this.hiddenHosts = {};
-
-    /** @private */
     this.hostColors = {};
 
     /** @private */
@@ -110,7 +107,7 @@ Global.prototype.getTransformations = function() {
  */
 Global.prototype.hideHost = function(hostId) {
     this.hideHostTransformation.addHost(hostId);
-    this.hiddenHosts[hostId] = true;
+    this.highlightHostTransformation.clearHostsToHighlight();
     this.drawAll();
 };
 
@@ -122,22 +119,10 @@ Global.prototype.hideHost = function(hostId) {
  */
 Global.prototype.unhideHost = function(hostId) {
     this.hideHostTransformation.removeHost(hostId);
-    delete this.hiddenHosts[hostId];
+    this.highlightHostTransformation.clearHostsToHighlight();
     this.drawAll();
 };
 
-/**
- * Gets the hosts that are currently hidden
- * 
- * @returns {Array.<String>} An array of currently hidden hosts
- */
-Global.prototype.getHiddenHosts = function() {
-    var hosts = [];
-    for(var host in this.hiddenHosts) {
-        hosts.push(host);
-    }
-    return hosts;
-};
 
 Global.prototype.toggleHighlightHost = function(host) {
     this.highlightHostTransformation.toggleHostToHighlight(host);
@@ -211,7 +196,7 @@ Global.prototype.drawSideBar = function() {
     timeText.text("Time");
 
     // Draw hidden hosts
-    var hh = this.getHiddenHosts();
+    var hh = this.hideHostTransformation.getHostsToHide().concat(this.highlightHostTransformation.getHiddenHosts());
     if (hh.length <= 0) {
         return;
     }
