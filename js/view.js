@@ -175,14 +175,14 @@ View.prototype.draw = function() {
         });
         $("#curNode").text(e.getText());
         $(".focus").css({
-            "color": $(".focus").css("background-color"),
+            "color": $(".focus").data("fill"),
             "background": ""
         }).removeClass("focus");
         $(".reveal").removeClass("reveal");
         $("#line" + e.getId()).addClass("focus").css({
             "background": e.getFillColor(),
             "color": "white"
-        });
+        }).data("fill", e.getFillColor());
         $("#line" + e.getId()).parent(".line").addClass("reveal");
     });
 
@@ -253,7 +253,7 @@ View.prototype.draw = function() {
             var other = false;
 
         for (var i in vn) {
-            var text = vn[i].getNode().getLogEvents()[0].getText();
+            var text = vn[i].getText();
             var $div = $("<div></div>").attr({
                 "id": "line" + vn[i].getId()
             }).addClass("line").css({
@@ -273,7 +273,7 @@ View.prototype.draw = function() {
             }).text("+ " + other.length + " more");
 
             for (var o in other) {
-                var text = other[o].getNode().getLogEvents()[0].getText();
+                var text = other[o].getText();
                 $div.append($("<div></div>").attr({
                     "id": "line" + other[o].getId()
                 }).addClass("line").css({
