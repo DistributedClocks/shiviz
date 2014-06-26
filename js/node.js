@@ -357,6 +357,15 @@ Node.prototype.hasParents = function() {
 };
 
 /**
+ * Determines whether the node has family
+ * 
+ * @return {Boolean} True if the node has family
+ */
+Node.prototype.hasFamily = function() {
+    return this.hasChildren() || this.hasParents();
+};
+
+/**
  * Returns parents of this node as an array
  * 
  * This function makes no guarantees about the ordering of nodes in the array

@@ -125,6 +125,9 @@ Global.prototype.unhideHost = function(hostId) {
 
 
 Global.prototype.toggleHighlightHost = function(host) {
+    if(this.views.length > 1) {
+        return;
+    }
     this.highlightHostTransformation.toggleHostToHighlight(host);
     this.drawAll();
 };
