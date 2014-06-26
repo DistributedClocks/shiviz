@@ -9,6 +9,7 @@
  * @constructor
  */
 function Global() {
+    var g = this;
 
     /** @private */
     this.views = [];
@@ -44,10 +45,15 @@ function Global() {
 
     $(window).unbind("scroll");
     $(window).on("scroll", null, this, this.scrollHandler);
+
     this.scrollHandler({
         data: this
     });
 
+    $(window).unbind("resize");
+    $(window).on("resize", function() {
+        g.drawAll.call(g);
+    });
 }
 
 Global.SIDE_BAR_WIDTH = 240;
@@ -83,6 +89,9 @@ Global.prototype.addTransformation = function(transformation) {
  * Redraws the global.
  */
 Global.prototype.drawAll = function() {
+    this.resize();
+    this.drawSideBar();
+
     $("table.log").children().remove();
     var width = (240 - 12 * (this.views.length - 1)) / this.views.length;
     for (var i = 0; i < this.views.length; i++) {
@@ -92,9 +101,6 @@ Global.prototype.drawAll = function() {
     }
 
     $("table.log.spacer:last-child").remove();
-
-    this.resize();
-    this.drawSideBar();
 };
 
 /**
@@ -172,7 +178,7 @@ Global.prototype.resize = function() {
         totalHosts += this.views[i].getHosts().length;
     }
 
-    var globalWidth = Math.max($("#graph").width("initial").width());
+    var globalWidth = $(window).width() - $(".visualization header").outerWidth() - $("#sidebar").outerWidth();
     var totalMargin = globalWidth - totalHosts * Global.HOST_SQUARE_SIZE;
     var hostMargin = totalMargin / (totalHosts + this.views.length - 2);
 
@@ -180,7 +186,6 @@ Global.prototype.resize = function() {
         hostMargin = Global.HOST_SQUARE_SIZE;
         totalMargin = hostMargin * (totalHosts + this.views.length - 2);
         globalWidth = totalMargin + totalHosts * Global.HOST_SQUARE_SIZE;
-        $("#graph").width(globalWidth);
     }
 
     var widthPerHost = Global.HOST_SQUARE_SIZE + hostMargin;
@@ -191,6 +196,7 @@ Global.prototype.resize = function() {
     }
 
     $("#vizContainer > svg:not(:last-child), #hostBar > svg:not(:last-child)").css("margin-right", hostMargin * 2);
+    $("#graph").width(globalWidth);
 }
 
 /**
