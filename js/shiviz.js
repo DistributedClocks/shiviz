@@ -38,9 +38,11 @@ function resetView() {
     // the text area is empty.
     if ($("#input").val() == "") {
         $("#visualize").prop("disabled", true);
+        $(".icon .tabs li:last-child").addClass("disabled");
     }
     else {
         $("#visualize").prop("disabled", false);
+        $(".icon .tabs li:last-child").removeClass("disabled");
     }
 
     $("#curNode").html("(click to view)");
