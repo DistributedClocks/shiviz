@@ -436,6 +436,21 @@ HighlightHostTransformation.prototype.transform = function(visualGraph) {
             hideHostTransformation.addHost(host);
         }
 
+    }
+    
+    for(var host in this.hosts) {
+        if(!graph.hasHost(host)) {
+            continue;
+        }
+        
+        var curr = graph.getHead(host).getNext();
+        while(!curr.isTail()) {
+            if(!curr.hasFamily()) {
+                curr = curr.getPrev();
+                curr.getNext().remove();
+            }
+            curr = curr.getNext();
+        }
         
     }
     
