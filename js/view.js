@@ -160,6 +160,37 @@ View.prototype.draw = function() {
     node.append("title").text(function(d) {
         return d.getText();
     });
+    
+    var hiddenParentLinks = node.filter(function(val) {
+       return val.hasHiddenParent(); 
+    }).append("line");
+    
+    hiddenParentLinks.style({
+        "stroke-width": "2px",
+        "stroke-dasharray": "2,2"
+    });
+    hiddenParentLinks.attr({
+        "x1": 0,
+        "y1": 0,
+        "x2": 15,
+        "y2": -15
+    });
+    
+    var hiddenChildLinks = node.filter(function(val) {
+        return val.hasHiddenChild(); 
+     }).append("line");
+     
+    hiddenChildLinks.style({
+         "stroke-width": "2px",
+         "stroke-dasharray": "2,2"
+     });
+    
+    hiddenChildLinks.attr({
+         "x1": 0,
+         "y1": 0,
+         "x2": 15,
+         "y2": 15
+     });
 
     var circle = node.append("circle");
     circle.on("mouseover", function(e) {
