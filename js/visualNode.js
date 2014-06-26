@@ -30,6 +30,9 @@ function VisualNode(node) {
 
     /** @private */
     this.label = "";
+
+    /** @private */
+    this.isCollapsed = node.getLogEvents().length > 1;
 }
 
 // Global variable used to assign each node an unique id
@@ -132,10 +135,12 @@ VisualNode.prototype.setFillColor = function(newFillColor) {
  * @returns {String} The text
  */
 VisualNode.prototype.getText = function() {
-    if (this.isStart()) {
+    if (this.isStart())
         return this.getHost();
-    }
-    return this.node.getLogEvents()[0].getText();
+    else if (!this.isCollapsed)
+        return this.node.getLogEvents()[0].getText();
+    else
+        return this.node.getLogEvents().length + " collapsed nodes";
 };
 
 /**
