@@ -204,6 +204,16 @@ section.input .left {
 
 
 /* Visualization */
+.visualization .bg {
+    position: fixed;
+    background: #fff;
+    width: 240pt;
+    height: 100%;
+    padding: 24pt;
+    top: 0;
+    left: 0;
+}
+
 .visualization header {
     position: fixed;
     background: #fff;
