@@ -68,6 +68,19 @@ HideHostTransformation.prototype.transform = function(visualGraph) {
         var parents = [];
         var children = [];
         while (!curr.isTail()) {
+            
+            var currChildren = curr.getChildren();
+            for(var i = 0; i < currChildren.length; i++) {
+                var currChild = currChildren[i];
+                visualGraph.getVisualNodeByNode(currChild).setHasHiddenParent(true);
+            }
+            
+            var currParents = curr.getParents();
+            for(var i = 0; i < currParents.length; i++) {
+                var currParent = currParents[i];
+                visualGraph.getVisualNodeByNode(currParent).setHasHiddenChild(true);
+            }
+            
             if (curr.hasParents() || curr.getNext().isTail()) {
     
                 for (var i = 0; i < parents.length; i++) {
@@ -387,10 +400,9 @@ HighlightHostTransformation.prototype.transform = function(visualGraph) {
         var head = graph.getHead(key);
         if(head != null) {
             var vn = visualGraph.getVisualNodeByNode(head);
-            vn.setStrokeColor("#000");
-            vn.setStrokeWidth(4);
+            vn.setStrokeColor(vn.getFillColor());
+            vn.setStrokeWidth(18);
         }
-        
     }
     
     if(numHosts == 0) {
@@ -436,22 +448,6 @@ HighlightHostTransformation.prototype.transform = function(visualGraph) {
             hideHostTransformation.addHost(host);
         }
 
-    }
-    
-    for(var host in this.hosts) {
-        if(!graph.hasHost(host)) {
-            continue;
-        }
-        
-        var curr = graph.getHead(host).getNext();
-        while(!curr.isTail()) {
-            if(!curr.hasFamily()) {
-                curr = curr.getPrev();
-                curr.getNext().remove();
-            }
-            curr = curr.getNext();
-        }
-        
     }
     
     hideHostTransformation.transform(visualGraph);

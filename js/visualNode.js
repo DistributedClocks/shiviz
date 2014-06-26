@@ -36,6 +36,12 @@ function VisualNode(node) {
     
     /** @private */
     this.label = "";
+    
+    /** @private */
+    this.hasHiddenParentInner = false;
+    
+    /** @private */
+    this.hasHiddenChildInner = false;
 }
 
 // Global variable used to assign each node an unique id
@@ -230,4 +236,20 @@ VisualNode.prototype.getLineNumber = function() {
  */
 VisualNode.prototype.isStart = function() {
     return this.node.isHead();
+};
+
+VisualNode.prototype.hasHiddenParent = function() {
+    return this.hasHiddenParentInner;
+};
+
+VisualNode.prototype.setHasHiddenParent = function(val) {
+    this.hasHiddenParentInner = val;
+};
+
+VisualNode.prototype.hasHiddenChild = function() {
+    return this.hasHiddenChildInner;
+};
+
+VisualNode.prototype.setHasHiddenChild = function(val) {
+    this.hasHiddenChildInner = val;
 };
