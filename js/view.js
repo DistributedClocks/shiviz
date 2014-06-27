@@ -34,7 +34,7 @@ function View(model, global, label) {
     
     
     //-----------TEMPORARY--------------------
-    var rrFinder = new RequestResponseFinder(99, 99, false);
+    var rrFinder = new RequestResponseFinder(1, 1, false);
     this.hnt = new HighlightLogEventTransformation(rrFinder, false);
     this.addTransformation(this.hnt);
 //    var bFinder = new BroadcastFinder(3, 1);
