@@ -54,6 +54,7 @@ function Global() {
 
 Global.SIDE_BAR_WIDTH = 60;
 Global.HOST_SQUARE_SIZE = 25;
+Global.HIDDEN_EDGE_LENGTH = 15;
 
 /**
  * Gets a mapping of host names to its designated color

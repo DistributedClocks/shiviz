@@ -261,19 +261,25 @@ CollapseSequentialNodesTransformation.prototype.transform = function(visualGraph
 
     function collapse(curr, removalCount) {
         var logEvents = [];
-        var prev = curr.getPrev();
+        var hasHiddenParent = false;
+        var hasHiddenChild = false;
+        
         while (removalCount-- > 0) {
-            logEvents = logEvents.concat(curr.getLogEvents().reverse());
-            prev = curr.getPrev();
-            curr.remove();
-            curr = prev;
+            var prev = curr.getPrev();
+            logEvents = logEvents.concat(prev.getLogEvents().reverse());
+            var removedVN = visualGraph.getVisualNodeByNode(prev);
+            hasHiddenParent |= removedVN.hasHiddenParent();
+            hasHiddenChild |= removedVN.hasHiddenChild();
+            prev.remove();
         }
         var newNode = new Node(logEvents.reverse());
-        curr.insertNext(newNode);
+        curr.insertPrev(newNode);
 
         var visualNode = visualGraph.getVisualNodeByNode(newNode);
         visualNode.setRadius(15);
-        visualNode.setLabel(newNode.getLogEvents().length);
+        visualNode.setLabel(logEvents.length);
+        visualNode.setHasHiddenParent(hasHiddenParent);
+        visualNode.setHasHiddenChild(hasHiddenChild);
     }
 
     var hosts = graph.getHosts();
@@ -281,20 +287,17 @@ CollapseSequentialNodesTransformation.prototype.transform = function(visualGraph
         var host = hosts[i];
 
         var groupCount = 0;
-        var prev = graph.getHead(host);
-        var curr = prev.getNext();
+        var curr = graph.getHead(host).getNext();
         while (curr != null) {
 
             if (curr.hasChildren() || curr.hasParents() || curr.isTail() || this.isExempt(curr)) {
                 if (groupCount >= this.threshold) {
-                    collapse(prev, groupCount);
+                    collapse(curr, groupCount);
                 }
-                groupCount = 0;
+                groupCount = -1;
             }
-            else {
-                groupCount++;
-            }
-            prev = curr;
+            
+            groupCount++;
             curr = curr.getNext();
         }
 

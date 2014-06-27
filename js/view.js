@@ -172,8 +172,12 @@ View.prototype.draw = function() {
     hiddenParentLinks.attr({
         "x1": 0,
         "y1": 0,
-        "x2": 15,
-        "y2": -15
+        "x2": function(d) {
+            return (Global.HIDDEN_EDGE_LENGTH + d.getRadius()) / Math.sqrt(2);
+        },
+        "y2": function(d) {
+            return -(Global.HIDDEN_EDGE_LENGTH + d.getRadius()) / Math.sqrt(2);
+        }
     });
     
     var hiddenChildLinks = node.filter(function(val) {
@@ -188,8 +192,12 @@ View.prototype.draw = function() {
     hiddenChildLinks.attr({
          "x1": 0,
          "y1": 0,
-         "x2": 15,
-         "y2": 15
+         "x2": function(d) {
+             return (Global.HIDDEN_EDGE_LENGTH + d.getRadius()) / Math.sqrt(2);
+         },
+         "y2": function(d) {
+             return (Global.HIDDEN_EDGE_LENGTH + d.getRadius()) / Math.sqrt(2);
+         }
      });
 
     var circle = node.append("circle");
