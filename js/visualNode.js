@@ -253,3 +253,4 @@ VisualNode.prototype.hasHiddenChild = function() {
 VisualNode.prototype.setHasHiddenChild = function(val) {
     this.hasHiddenChildInner = val;
 };
+
