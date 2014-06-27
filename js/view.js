@@ -165,11 +165,8 @@ View.prototype.draw = function() {
        return val.hasHiddenParent(); 
     }).append("line");
     
-    hiddenParentLinks.style({
-        "stroke": "url(#grad)",
-        "stroke-width": "1px"
-    });
     hiddenParentLinks.attr({
+        "class": "hidden-link",
         "x1": 0,
         "y1": 0,
         "x2": function(d) {
@@ -183,22 +180,18 @@ View.prototype.draw = function() {
     var hiddenChildLinks = node.filter(function(val) {
         return val.hasHiddenChild(); 
     }).append("line");
-
-    hiddenChildLinks.style({
-        "stroke": "url(#grad)",
-        "stroke-width": "1px"
-    });
     
     hiddenChildLinks.attr({
-       "x1": 0,
-       "y1": 0,
-       "x2": function(d) {
-           return (Global.HIDDEN_EDGE_LENGTH + d.getRadius()) / Math.sqrt(2);
-       },
-       "y2": function(d) {
-           return (Global.HIDDEN_EDGE_LENGTH + d.getRadius()) / Math.sqrt(2);
-       }
-   });
+        "class": "hidden-link",
+        "x1": 0,
+        "y1": 0,
+        "x2": function(d) {
+            return (Global.HIDDEN_EDGE_LENGTH + d.getRadius()) / Math.sqrt(2);
+        },
+        "y2": function(d) {
+            return (Global.HIDDEN_EDGE_LENGTH + d.getRadius()) / Math.sqrt(2);
+        }
+    });
 
     var circle = node.append("circle");
     circle.on("mouseover", function(e) {
