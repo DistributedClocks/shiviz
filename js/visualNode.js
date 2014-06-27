@@ -42,6 +42,9 @@ function VisualNode(node) {
 
     /** @private */
     this.hasHiddenChildInner = false;
+
+    /** @private */
+    this._isCollapsed = node.getLogEvents().length > 1; 
 }
 
 // Global variable used to assign each node an unique id
@@ -184,10 +187,12 @@ VisualNode.prototype.getStrokeWidth = function() {
  * @returns {String} The text
  */
 VisualNode.prototype.getText = function() {
-    if (this.isStart()) {
+    if (this.isStart())
         return this.getHost();
-    }
-    return this.node.getLogEvents()[0].getText();
+    else if (!this.isCollapsed())
+        return this.node.getLogEvents()[0].getText();
+    else
+        return this.node.getLogEvents().length + " collapsed nodes";
 };
 
 /**
@@ -274,3 +279,12 @@ VisualNode.prototype.hasHiddenChild = function() {
 VisualNode.prototype.setHasHiddenChild = function(val) {
     this.hasHiddenChildInner = val;
 };
+
+/**
+ * Determines if this VisualNode is a collapsed set of single nodes.
+ *
+ * @returns {boolean} True if this is a collapsed node.
+ */
+VisualNode.prototype.isCollapsed = function() {
+    return this._isCollapsed;
+}
