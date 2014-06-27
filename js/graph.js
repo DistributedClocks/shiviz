@@ -78,8 +78,8 @@ function Graph(logEvents) {
 
             var tail = new Node([]);
             tail.isTailInner = true;
-            head.host = host;
-            head.graph = this;
+            tail.host = host;
+            tail.graph = this;
 
             head.prev = null;
             head.next = tail;
