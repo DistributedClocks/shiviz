@@ -32,13 +32,14 @@ function View(model, global, label) {
 
     this.addTransformation(this.collapseSequentialNodesTransformation);
     
-    //TEMPORARY
     
     //-----------TEMPORARY--------------------
-    
-    var rrFinder = new RequestResponseFinder(0, 0, false);
+    var rrFinder = new RequestResponseFinder(99, 99, false);
     this.hnt = new HighlightLogEventTransformation(rrFinder, false);
     this.addTransformation(this.hnt);
+//    var bFinder = new BroadcastFinder(3, 1);
+//    this.hnt2 = this.hnt = new HighlightLogEventTransformation(bFinder, false);
+//    this.addTransformation(this.hnt2);
 }
 
 /**

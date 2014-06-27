@@ -18,19 +18,18 @@ RequestResponseFinder.prototype.find = function(graph) {
             continue;
         }
         
-        for(var j = 0; j < children.length; j++) {
+        out: for(var j = 0; j < children.length; j++) {
             var curr = children[j];
-            if(!this.allowOtherConnections && curr.getFamily().length > 1) {
+            if(!this.allowOtherConnections && (curr.getParents().length > 1 || curr.getChildren().length > 1)) {
                 continue;
             }
             
-            var trail = [curr];
+            var trail = [];
             
             for(var dist = 0; dist <= this.maxLEResponder && !curr.isTail(); dist++) {
-                curr = curr.getNext();
                 trail.push(curr);
                 
-                if(!this.allowOtherConnections && curr.getFamily().length > 1) {
+                if(!this.allowOtherConnections && curr.getFamily().length > 2 && dist > 0) {
                     break;
                 }
                 
@@ -39,20 +38,28 @@ RequestResponseFinder.prototype.find = function(graph) {
                 
                 if(curr2 != null) {
                     
-                    var count = -1;
+                    var count = 0;
                     while(curr2 != node) {
-                        count++;
+                        count += curr2.getLogEvents().length; // TODO: replace with num log events?
                         curr2 = curr2.getPrev();
                     }
                     
                     if(count <= this.maxLERequester) {
                         motif.addNode(child2);
                         motif.addNode(node);
-                        for(var a = 0; a < trail.length; trail++) {
+                        for(var a = 0; a < trail.length; a++) {
                             motif.addNode(trail[a]);
                         }
+                        
+                        motif.addEdge(node, trail[0]);
+                        for(var a = 1; a < trail.length; a++) {
+                            motif.addEdge(trail[a-1], trail[a]);
+                        }
+                        motif.addEdge(trail[trail.length - 1], child2);
+                        break out;
                     }
                 }
+                curr = curr.getNext();
             }
         }
     }
@@ -71,14 +78,15 @@ BroadcastFinder.prototype.find = function(graph) {
     var motif = new Motif();
     
     var hosts = graph.getHosts();
-    for(var host in hosts) {
+    for(var j = 0; j < hosts.length; j++) {
+        var host = hosts[j];
         var nodes = [];
         var bcCount = 0;
         var inBetween = 0;
         
         var curr = graph.getHead(host).getNext();
         while(!curr.isTail()) {
-            if(!curr.hasChildren() || curr.hasParents() || inBetween > maxInBetween) {
+            if(!curr.hasChildren() || curr.hasParents() || inBetween > this.maxInBetween) {
                 if(bcCount > this.minBroadCasts) {
                     motif.addAllNodes(nodes);
                 }
@@ -87,7 +95,7 @@ BroadcastFinder.prototype.find = function(graph) {
             }
             else {
                 var children = curr.getChildren();
-                for(var i = 0; i < children.length; i++) {
+                for(var i = 0; i < children.length; i++) { //TODO: replace with numchildren
                     bcCount++;
                     nodes.push(children[i]);
                 }

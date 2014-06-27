@@ -14,16 +14,24 @@ Motif.prototype.addAllNodes = function(nodes) {
     }
 };
 
-Motif.prototype.addEdge = function(node1, node2) {
-    this.edges[Motif.getEdgeId(node1, node2)];
-};
-
 Motif.prototype.getNodes = function() {
     var array = [];
     for(var key in this.nodes) {
         array.push(this.nodes[key]);
     }
     return array;
+};
+
+Motif.prototype.addEdge = function(node1, node2) {
+    this.edges[Motif.getEdgeId(node1, node2)] = [node1, node2];
+};
+
+Motif.prototype.getEdges = function() {
+    var edges = [];
+    for(var key in this.edges) {
+        edges.push(this.edges[key]);
+    }
+    return edges;
 };
 
 Motif.getEdgeId = function(node1, node2) {
