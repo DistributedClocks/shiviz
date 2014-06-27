@@ -297,27 +297,20 @@ HighlightLogEventTransformation.prototype.setIgnoreEdges = function(val) {
 
 HighlightLogEventTransformation.prototype.transform = function(visualGraph) {
     
-    var nodes = this.finder.find(visualGraph.getGraph()).getNodes();
-    var nodeSet = {};
-    for(var i = 0; i < nodes.length; i++) {
-        nodeSet[nodes[i].getId()] = true;
-    }
-
+    var motif = this.finder.find(visualGraph.getGraph());
+    
+    var nodes = motif.getNodes();
     for(var i = 0; i < nodes.length; i++) {
         var node = nodes[i];
-        
         var visualNode = visualGraph.getVisualNodeByNode(node);
-        // TODO: highlight here.
-        visualNode.setFillColor("#000");
-        
-        var other = node.getConnections();
-        for(var j = 0; j < other.length; j++) {
-            if(nodeSet[other[j].getId()]) {
-                var visualEdge = visualGraph.getVisualEdgeByNodes(node, other[j]);
-                //TODO: highlight here
-//                visualEdge.setWidth(3);
-            }
-        }
+        visualNode.setRadius(visualNode.getRadius() * 1.5);
+    }
+    
+    var edges = motif.getEdges();
+    for(var i = 0; i < edges.length; i++) {
+        var edge = edges[i];
+        var visualEdge = visualGraph.getVisualEdgeByNodes(edge[0], edge[1]);
+        visualEdge.setWidth(visualEdge.getWidth() * 1.5);
     }
 };
 
