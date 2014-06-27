@@ -6,7 +6,7 @@
  * that the actual drawing logic is not part of this class.
  * 
  * @param {Node} node The Node to associate with this VisualNode. This object
- *        will then be a visualization of the argument
+ *            will then be a visualization of the argument
  * @constructor
  */
 function VisualNode(node) {
@@ -30,16 +30,16 @@ function VisualNode(node) {
 
     /** @private */
     this.strokeColor = "#fff";
-    
+
     /** @private */
     this.strokeWidth = 2;
-    
+
     /** @private */
     this.label = "";
-    
+
     /** @private */
     this.hasHiddenParentInner = false;
-    
+
     /** @private */
     this.hasHiddenChildInner = false;
 }
@@ -132,13 +132,13 @@ VisualNode.prototype.getFillColor = function() {
 /**
  * Sets the fill color of the VisualNode.
  * 
- * @param {String} newFillColor The new fill color. The color must be a string that
- * parses to a valid SVG color as defined in http://www.w3.org/TR/SVG/types.html#WSP
+ * @param {String} newFillColor The new fill color. The color must be a string
+ *            that parses to a valid SVG color as defined in
+ *            http://www.w3.org/TR/SVG/types.html#WSP
  */
 VisualNode.prototype.setFillColor = function(newFillColor) {
     this.fillColor = newFillColor;
 };
-
 
 /**
  * Gets the stroke color of the VisualNode.
@@ -152,8 +152,9 @@ VisualNode.prototype.getStrokeColor = function() {
 /**
  * Sets the stroke color of the VisualNode.
  * 
- * @param {String} newStrokeColor The new stroke color. The color must be a string that
- * parses to a valid SVG color as defined in http://www.w3.org/TR/SVG/types.html#WSP
+ * @param {String} newStrokeColor The new stroke color. The color must be a
+ *            string that parses to a valid SVG color as defined in
+ *            http://www.w3.org/TR/SVG/types.html#WSP
  */
 VisualNode.prototype.setStrokeColor = function(newStrokeColor) {
     this.strokeColor = newStrokeColor;
@@ -238,19 +239,38 @@ VisualNode.prototype.isStart = function() {
     return this.node.isHead();
 };
 
+/**
+ * Determines if this should be drawn with an edge to a hidden parent.
+ * 
+ * @returns {boolean} True if edge should be drawn
+ */
 VisualNode.prototype.hasHiddenParent = function() {
     return this.hasHiddenParentInner;
 };
 
+/**
+ * Sets if this should be drawn with an edge to a hidden parent.
+ * 
+ * @param {boolean} val True if edge should be drawn
+ */
 VisualNode.prototype.setHasHiddenParent = function(val) {
     this.hasHiddenParentInner = val;
 };
 
+/**
+ * Determines if this should be drawn with an edge to a hidden child.
+ * 
+ * @returns {boolean} True if edge should be drawn
+ */
 VisualNode.prototype.hasHiddenChild = function() {
     return this.hasHiddenChildInner;
 };
 
+/**
+ * Sets if this should be drawn with an edge to a hidden child.
+ * 
+ * @param {boolean} val True if edge should be drawn
+ */
 VisualNode.prototype.setHasHiddenChild = function(val) {
     this.hasHiddenChildInner = val;
 };
-
