@@ -150,11 +150,9 @@ View.prototype.draw = function() {
         if (d3.event.shiftKey) {
             view.collapseSequentialNodesTransformation.toggleExemption(e.getNode());
             view.global.drawAll();
-        }
-        else {
+        } else if (!e.isCollapsed()) {
             selectTextareaLine($("#logField")[0], e.getLineNumber());
         }
-
     });
 
     node.append("title").text(function(d) {
