@@ -31,6 +31,7 @@ function View(model, global, label) {
     this.collapseSequentialNodesTransformation = new CollapseSequentialNodesTransformation(2);
 
     this.addTransformation(this.collapseSequentialNodesTransformation);
+    
 }
 
 /**
@@ -149,22 +150,65 @@ View.prototype.draw = function() {
         if (d3.event.shiftKey) {
             view.collapseSequentialNodesTransformation.toggleExemption(e.getNode());
             view.global.drawAll();
-        } else if (!e.isCollapsed()) {
+        }
+        else {
             selectTextareaLine($("#logField")[0], e.getLineNumber());
         }
+
     });
 
     node.append("title").text(function(d) {
         return d.getText();
+    });
+    
+    var hiddenParentLinks = node.filter(function(val) {
+       return val.hasHiddenParent(); 
+    }).append("line");
+    
+    hiddenParentLinks.attr({
+        "class": "hidden-link",
+        "x1": 0,
+        "y1": 0,
+        "x2": function(d) {
+            return (Global.HIDDEN_EDGE_LENGTH + d.getRadius()) / Math.sqrt(2);
+        },
+        "y2": function(d) {
+            return -(Global.HIDDEN_EDGE_LENGTH + d.getRadius()) / Math.sqrt(2);
+        }
+    });
+    
+    var hiddenChildLinks = node.filter(function(val) {
+        return val.hasHiddenChild(); 
+    }).append("line");
+    
+    hiddenChildLinks.attr({
+        "class": "hidden-link",
+        "x1": 0,
+        "y1": 0,
+        "x2": function(d) {
+            return (Global.HIDDEN_EDGE_LENGTH + d.getRadius()) / Math.sqrt(2);
+        },
+        "y2": function(d) {
+            return (Global.HIDDEN_EDGE_LENGTH + d.getRadius()) / Math.sqrt(2);
+        }
     });
 
     var circle = node.append("circle");
     circle.on("mouseover", function(e) {
         $("#curNode").text(e.getText());
     });
-    circle.style("fill", function(d) {
-        return d.getFillColor();
+    circle.style({
+        "fill": function(d) {
+            return d.getFillColor();
+        },
+        "stroke": function(d) {
+            return d.getStrokeColor();
+        },
+        "stroke-width": function(d) {
+            return d.getStrokeWidth() + "px";
+        }
     });
+
     circle.attr({
         "class": function(d) {
             return d.getHost();
@@ -173,7 +217,7 @@ View.prototype.draw = function() {
             return d.getRadius();
         }
     });
-
+    
     var label = node.append("text");
     label.text(function(d) {
         return d.getLabel();
@@ -206,10 +250,23 @@ View.prototype.draw = function() {
             return d.getFillColor();
         }
     });
+    rect.style({
+        "stroke": function(d) {
+            return d.getStrokeColor();
+        },
+        "stroke-width": function(d) {
+            return d.getStrokeWidth() + "px";
+        }
+    });
     rect.on("mouseover", function(e) {
         $("#curNode").text(e.getText());
     });
     rect.on("dblclick", function(e) {
-        view.global.hideHost(e.getHost());
+        if (d3.event.shiftKey) {
+            view.global.toggleHighlightHost(e.getHost());
+        }
+        else {
+            view.global.hideHost(e.getHost());
+        }
     });
 };
