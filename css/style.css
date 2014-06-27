@@ -203,3 +203,9 @@ svg {
     font-size: 10px;
     font-family: monospace;
 }
+
+#defs {
+    height: 0;
+    width: 0;
+    position: absolute;
+}
