@@ -68,18 +68,7 @@ HideHostTransformation.prototype.transform = function(visualGraph) {
         var parents = [];
         var children = [];
         while (!curr.isTail()) {
-            
-            var currChildren = curr.getChildren();
-            for(var i = 0; i < currChildren.length; i++) {
-                var currChild = currChildren[i];
-                visualGraph.getVisualNodeByNode(currChild).setHasHiddenParent(true);
-            }
-            
-            var currParents = curr.getParents();
-            for(var i = 0; i < currParents.length; i++) {
-                var currParent = currParents[i];
-                visualGraph.getVisualNodeByNode(currParent).setHasHiddenChild(true);
-            }
+            visualGraph.addHiddenEdgeToFamily(curr);
             
             if (curr.hasParents() || curr.getNext().isTail()) {
     
@@ -438,6 +427,7 @@ HighlightHostTransformation.prototype.transform = function(visualGraph) {
             }
             
             if(!keep) {
+                visualGraph.addHiddenEdgeToFamily(curr);
                 curr = curr.getPrev();
                 curr.getNext().remove();
             }
