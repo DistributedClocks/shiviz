@@ -30,12 +30,22 @@ function generateGraphFromLog(logLines) {
 
             logEvents.push(new LogEvent(log, host, vt, i));
         }
+        
+        
     }
     catch (err) {
-        alert("Error parsing input, malformed logs: " + i + err);
+        alert(err + "\n\nOn line " + (i+1) + ":\n" + logLines[i] + "\n" + logLines[i+1]);
         resetView();
         return null;
     }
 
-    return new Graph(logEvents);
+    try {
+        return new Graph(logEvents);
+    }
+   catch(err) {
+       alert(err);
+       resetView();
+       return null;
+   }
+    
 }

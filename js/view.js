@@ -210,7 +210,7 @@ View.prototype.draw = function() {
     });
 
     circle.attr({
-        "id": function(d) {
+        "class": function(d) {
             return d.getHost();
         },
         "r": function(d) {
