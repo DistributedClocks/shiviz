@@ -99,8 +99,7 @@ HideHostTransformation.prototype.transform = function(visualGraph) {
                         if (parents[i].getHost() != children[j].getHost()) {
                             parents[i].addChild(children[j]);
 
-                            visualGraph.getVisualEdgeByNodes(parents[i],
-                                    children[j]).setDashLength(5);
+                            visualGraph.getVisualEdgeByNodes(parents[i], children[j]).setDashLength(5);
                         }
                     }
                 }
@@ -141,8 +140,8 @@ HideHostTransformation.prototype.transform = function(visualGraph) {
  * group if y == x or y has no family and y's prev or next node is in x's group.
  * 
  * @param {Number} threshold Nodes are collapsed if the number of nodes in the
- *            group is greater than or equal to the threshold. The threshold
- *            must be greater than or equal to 2.
+ *        group is greater than or equal to the threshold. The threshold must be
+ *        greater than or equal to 2.
  */
 function CollapseSequentialNodesTransformation(threshold) {
 
@@ -174,8 +173,7 @@ CollapseSequentialNodesTransformation.prototype.getThreshold = function() {
  * 
  * @param {Number} threshold The new threshold
  */
-CollapseSequentialNodesTransformation.prototype.setThreshold = function(
-        threshold) {
+CollapseSequentialNodesTransformation.prototype.setThreshold = function(threshold) {
     if (threshold < 2) {
         throw "Invalid threshold. Threshold must be greater than or equal to 2";
     }
@@ -211,7 +209,7 @@ CollapseSequentialNodesTransformation.prototype.addExemption = function(node) {
  * group.
  * 
  * @param {Node} node The LogEvents of this node and the LogEvents of every node
- *            in its group will be removed as exemptions
+ *        in its group will be removed as exemptions
  */
 CollapseSequentialNodesTransformation.prototype.removeExemption = function(node) {
     if (node.hasChildren() || node.hasParents()) {
@@ -279,8 +277,7 @@ CollapseSequentialNodesTransformation.prototype.isExempt = function(node) {
  * 
  * @param {VisualGraph} visualGraph The VisualGraph to transform
  */
-CollapseSequentialNodesTransformation.prototype.transform = function(
-        visualGraph) {
+CollapseSequentialNodesTransformation.prototype.transform = function(visualGraph) {
 
     var graph = visualGraph.getGraph();
 
@@ -315,8 +312,7 @@ CollapseSequentialNodesTransformation.prototype.transform = function(
         var curr = graph.getHead(host).getNext();
         while (curr != null) {
 
-            if (curr.hasChildren() || curr.hasParents() || curr.isTail()
-                    || this.isExempt(curr)) {
+            if (curr.hasChildren() || curr.hasParents() || curr.isTail() || this.isExempt(curr)) {
                 if (groupCount >= this.threshold) {
                     collapse(curr, groupCount);
                 }
@@ -366,8 +362,7 @@ function HighlightHostTransformation(hostsToHighlight) {
  * 
  * @param {String} hostToHighlight
  */
-HighlightHostTransformation.prototype.addHostToHighlight = function(
-        hostToHighlight) {
+HighlightHostTransformation.prototype.addHostToHighlight = function(hostToHighlight) {
     this.hosts[hostToHighlight] = true;
 };
 
@@ -378,8 +373,7 @@ HighlightHostTransformation.prototype.addHostToHighlight = function(
  * 
  * @param {String} hostToHighlight
  */
-HighlightHostTransformation.prototype.removeHostToHighlight = function(
-        hostToHighlight) {
+HighlightHostTransformation.prototype.removeHostToHighlight = function(hostToHighlight) {
     delete this.hosts[hostToHighlight];
 };
 
@@ -390,8 +384,7 @@ HighlightHostTransformation.prototype.removeHostToHighlight = function(
  * 
  * @param {String} hostToHighlight
  */
-HighlightHostTransformation.prototype.toggleHostToHighlight = function(
-        hostToHighlight) {
+HighlightHostTransformation.prototype.toggleHostToHighlight = function(hostToHighlight) {
     if (!this.hosts[hostToHighlight]) {
         this.hosts[hostToHighlight] = true;
     }
@@ -470,8 +463,7 @@ HighlightHostTransformation.prototype.transform = function(visualGraph) {
                 var family = families[j];
                 keep |= this.hosts[family.getHost()];
 
-                if (this.hosts[family.getHost()]
-                        && !communicated[family.getHost()]) {
+                if (this.hosts[family.getHost()] && !communicated[family.getHost()]) {
                     communicated[family.getHost()] = true;
                     numCommunicated++;
                 }

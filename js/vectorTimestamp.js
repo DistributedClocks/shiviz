@@ -51,12 +51,12 @@ VectorTimestamp.prototype.getOwnTime = function() {
 
 VectorTimestamp.prototype.update = function(other) {
     var clock = {};
-    for(var key in this.clock) {
+    for (var key in this.clock) {
         clock[key] = this.clock[key];
     }
-    
-    for(var key in other.clock) {
-        if(!clock.hasOwnProperty(key)) {
+
+    for (var key in other.clock) {
+        if (!clock.hasOwnProperty(key)) {
             clock[key] = other.clock[key];
         }
         clock[key] = Math.max(clock[key], other.clock[key]);
@@ -66,7 +66,7 @@ VectorTimestamp.prototype.update = function(other) {
 
 VectorTimestamp.prototype.increment = function() {
     var clock = {};
-    for(var key in this.clock) {
+    for (var key in this.clock) {
         clock[key] = this.clock[key];
     }
     clock[this.host]++;
@@ -74,18 +74,18 @@ VectorTimestamp.prototype.increment = function() {
 };
 
 VectorTimestamp.prototype.equals = function(other) {
-    for(var key in this.clock) {
-        if(this.clock[key] != other.clock[key]) {
+    for (var key in this.clock) {
+        if (this.clock[key] != other.clock[key]) {
             return false;
         }
     }
-    
-    for(var key in other.clock) {
-        if(other.clock[key] != this.clock[key]) {
+
+    for (var key in other.clock) {
+        if (other.clock[key] != this.clock[key]) {
             return false;
         }
     }
-    
+
     return true;
 };
 
