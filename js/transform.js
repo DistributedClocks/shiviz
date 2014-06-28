@@ -489,8 +489,15 @@ HighlightHostTransformation.prototype.transform = function(visualGraph) {
     visualGraph.update();
 };
 
-
-function HighlightLogEventTransformation(finder, ignoreEdges) {
+/**
+ * @class
+ * 
+ * This transformation visually highlights a motif.
+ * 
+ * @param {MotifFinder} finder a MotifFinder that specifies which motif to highlight
+ * @param {boolean} ignoreEdges If true, edges will not be visually highlighted
+ */
+function HighlightMotifTransformation(finder, ignoreEdges) {
     
     this.finder = finder;
     this.setIgnoreEdges(ignoreEdges);
@@ -499,11 +506,17 @@ function HighlightLogEventTransformation(finder, ignoreEdges) {
     
 }
 
-HighlightLogEventTransformation.prototype.setIgnoreEdges = function(val) {
+/**
+ * Sets whether or not to highlight edges that are part of the motif.
+ * 
+ * @param {boolean} val If true, edges will not be visually highlighted
+ */
+HighlightMotifTransformation.prototype.setIgnoreEdges = function(val) {
     this.ignoreEdges = !!val;
 };
 
-HighlightLogEventTransformation.prototype.transform = function(visualGraph) {
+
+HighlightMotifTransformation.prototype.transform = function(visualGraph) {
     
     var motif = this.finder.find(visualGraph.getGraph());
     

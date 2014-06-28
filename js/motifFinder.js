@@ -1,3 +1,8 @@
+/**
+ * MotifFinders define an algorithm for finding a specific motif.
+ * Every MotifFinder must implement the find(graph) method.
+ */
+
 function RequestResponseFinder(maxLERequester, maxLEResponder, allowOtherConnections) {
     this.maxLERequester = maxLERequester;
     this.maxLEResponder = maxLEResponder;
@@ -14,7 +19,7 @@ RequestResponseFinder.prototype.find = function(graph) {
         var host = node.getHost();
         var children = node.getChildren();
         
-        if(!this.allowOtherConnections && (children.length > 1 || node.hasParents())) { //TODO: replace with numfamily method?
+        if(!this.allowOtherConnections && (children.length > 1 || node.hasParents())) {
             continue;
         }
         
@@ -40,7 +45,7 @@ RequestResponseFinder.prototype.find = function(graph) {
                     
                     var count = 0;
                     while(curr2 != node) {
-                        count += curr2.getLogEvents().length; // TODO: replace with num log events?
+                        count += curr2.getLogEventCount();
                         curr2 = curr2.getPrev();
                     }
                     
@@ -117,7 +122,7 @@ BroadcastFinder.prototype.find = function(graph) {
                 inBetween = 0;
             }
             
-            inBetween += curr.getLogEvents().length; //TODO: replace with numlogevents
+            inBetween += curr.getLogEventCount();
             curr = curr.getNext();
         }
     }
