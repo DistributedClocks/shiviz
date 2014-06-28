@@ -34,9 +34,13 @@ function View(model, global, label) {
     
     
     //-----------TEMPORARY--------------------
+    
+    // Request-response will be highlighted if you uncomment the following three lines:
 //    var rrFinder = new RequestResponseFinder(1, 1, false);
 //    this.hnt = new HighlightLogEventTransformation(rrFinder, false);
 //    this.addTransformation(this.hnt);
+    
+ // Boradcast will be highlighted if you uncomment the following three lines:
     var bFinder = new BroadcastFinder(3, 1);
     this.hnt2 = new HighlightLogEventTransformation(bFinder, false);
     this.addTransformation(this.hnt2);
