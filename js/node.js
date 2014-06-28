@@ -135,6 +135,15 @@ Node.prototype.getLogEvents = function() {
 };
 
 /**
+ * Gets the number of LogEvents this node holds
+ * 
+ * @returns {Number} the number of LogEvents
+ */
+Node.prototype.getLogEventCount = function() {
+    return this.logEvents.length;
+};
+
+/**
  * Gets the node's host
  * 
  * @return {String} the name of the host
