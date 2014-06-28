@@ -31,7 +31,7 @@ function View(model, global, label) {
     this.collapseSequentialNodesTransformation = new CollapseSequentialNodesTransformation(2);
 
     this.addTransformation(this.collapseSequentialNodesTransformation);
-    
+
 }
 
 /**
@@ -150,7 +150,8 @@ View.prototype.draw = function() {
         if (d3.event.shiftKey) {
             view.collapseSequentialNodesTransformation.toggleExemption(e.getNode());
             view.global.drawAll();
-        } else if (!e.isCollapsed()) {
+        }
+        else if (!e.isCollapsed()) {
             selectTextareaLine($("#logField")[0], e.getLineNumber());
         }
     });
@@ -158,11 +159,11 @@ View.prototype.draw = function() {
     node.append("title").text(function(d) {
         return d.getText();
     });
-    
+
     var hiddenParentLinks = node.filter(function(val) {
-       return val.hasHiddenParent(); 
+        return val.hasHiddenParent();
     }).append("line");
-    
+
     hiddenParentLinks.attr({
         "class": "hidden-link",
         "x1": 0,
@@ -174,11 +175,11 @@ View.prototype.draw = function() {
             return -(Global.HIDDEN_EDGE_LENGTH + d.getRadius()) / Math.sqrt(2);
         }
     });
-    
+
     var hiddenChildLinks = node.filter(function(val) {
-        return val.hasHiddenChild(); 
+        return val.hasHiddenChild();
     }).append("line");
-    
+
     hiddenChildLinks.attr({
         "class": "hidden-link",
         "x1": 0,
@@ -215,7 +216,7 @@ View.prototype.draw = function() {
             return d.getRadius();
         }
     });
-    
+
     var label = node.append("text");
     label.text(function(d) {
         return d.getLabel();

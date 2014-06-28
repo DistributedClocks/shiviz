@@ -30,11 +30,11 @@ function Global() {
 
     /** @private */
     this.scrollPastPoint = -1;
-    
+
     /** @private */
     this.highlightHostTransformation = new HighlightHostTransformation([]);
-    this.addTransformation(this.highlightHostTransformation );
-    
+    this.addTransformation(this.highlightHostTransformation);
+
     /** @private */
     this.hideHostTransformation = new HideHostTransformation();
     this.addTransformation(this.hideHostTransformation);
@@ -124,9 +124,8 @@ Global.prototype.unhideHost = function(hostId) {
     this.drawAll();
 };
 
-
 Global.prototype.toggleHighlightHost = function(host) {
-    if(this.views.length > 1) {
+    if (this.views.length > 1) {
         return;
     }
     this.highlightHostTransformation.toggleHostToHighlight(host);
