@@ -66,6 +66,7 @@
  * <li>if and only if x is a child of y, then y is a parent of x</li>
  * <li>All the children of a node belong to different hosts</li>
  * <li>All the parents of a node belong to different hosts</li>
+ * <li>Head and tail nodes have no family</li>
  * </ul>
  */
 
@@ -464,6 +465,10 @@ Node.prototype.removeParentByHost = function(host) {
  * @param {Node} node The child node to add
  */
 Node.prototype.addChild = function(node) {
+    if(node.isHead() || node.isTail()) {
+        throw "Cannot add child to head or tail node";
+    }
+    
     if (node.host == this.host) {
         throw "A node cannot be the child of another node who has the same host";
     }
@@ -496,6 +501,10 @@ Node.prototype.addChild = function(node) {
  * @param {Node} node The node to add as a parent to this
  */
 Node.prototype.addParent = function(node) {
+    if(node.isHead() || node.isTail()) {
+        throw "Cannot add parent to head or tail node";
+    }
+    
     if (node.host == this.host) {
         throw "A node cannot be the parent of another node who has the same host";
     }

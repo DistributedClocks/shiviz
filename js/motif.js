@@ -26,12 +26,23 @@ Motif.prototype.addEdge = function(node1, node2) {
     this.edges[Motif.getEdgeId(node1, node2)] = [node1, node2];
 };
 
+Motif.prototype.addAllEdges = function(edges) {
+    for(var i = 0; i < edges.length; i++) {
+        this.addEdge(edges[i][0], edges[i][1]);
+    }
+};
+
 Motif.prototype.getEdges = function() {
     var edges = [];
     for(var key in this.edges) {
         edges.push(this.edges[key]);
     }
     return edges;
+};
+
+Motif.prototype.merge = function(other) {
+    this.addAllNodes(other.getNodes());
+    this.addAllEdges(other.getEdges());
 };
 
 Motif.getEdgeId = function(node1, node2) {
