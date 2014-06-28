@@ -488,3 +488,38 @@ HighlightHostTransformation.prototype.transform = function(visualGraph) {
 
     visualGraph.update();
 };
+
+
+function HighlightLogEventTransformation(finder, ignoreEdges) {
+    
+    this.finder = finder;
+    this.setIgnoreEdges(ignoreEdges);
+    
+    this.priority = 0;
+    
+}
+
+HighlightLogEventTransformation.prototype.setIgnoreEdges = function(val) {
+    this.ignoreEdges = !!val;
+};
+
+HighlightLogEventTransformation.prototype.transform = function(visualGraph) {
+    
+    var motif = this.finder.find(visualGraph.getGraph());
+    
+    var nodes = motif.getNodes();
+    for(var i = 0; i < nodes.length; i++) {
+        var node = nodes[i];
+        var visualNode = visualGraph.getVisualNodeByNode(node);
+        visualNode.setRadius(visualNode.getRadius() * 1.5);
+    }
+    
+    var edges = motif.getEdges();
+    for(var i = 0; i < edges.length; i++) {
+        var edge = edges[i];
+        var visualEdge = visualGraph.getVisualEdgeByNodes(edge[0], edge[1]);
+        visualEdge.setWidth(visualEdge.getWidth() * 1.5);
+    }
+};
+
+

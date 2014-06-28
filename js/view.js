@@ -31,7 +31,15 @@ function View(model, global, label) {
     this.collapseSequentialNodesTransformation = new CollapseSequentialNodesTransformation(2);
 
     this.addTransformation(this.collapseSequentialNodesTransformation);
-
+    
+    
+    //-----------TEMPORARY--------------------
+    var rrFinder = new RequestResponseFinder(1, 1, false);
+    this.hnt = new HighlightLogEventTransformation(rrFinder, false);
+    this.addTransformation(this.hnt);
+//    var bFinder = new BroadcastFinder(3, 1);
+//    this.hnt2 = this.hnt = new HighlightLogEventTransformation(bFinder, false);
+//    this.addTransformation(this.hnt2);
 }
 
 /**
@@ -118,7 +126,7 @@ View.prototype.draw = function() {
 
     link.style({
         "stroke-width": function(d) {
-            return d.getWidth();
+            return d.getWidth() + "px";
         },
         "stroke-dasharray": function(d) {
             return d.getDashLength() + "," + d.getDashLength();
