@@ -80,27 +80,44 @@ BroadcastFinder.prototype.find = function(graph) {
     var hosts = graph.getHosts();
     for(var j = 0; j < hosts.length; j++) {
         var host = hosts[j];
-        var nodes = [];
         var bcCount = 0;
         var inBetween = 0;
+        var inPattern = false;
+        var currMotif = new Motif();
+        var queued = [];
         
         var curr = graph.getHead(host).getNext();
-        while(!curr.isTail()) {
-            if(!curr.hasChildren() || curr.hasParents() || inBetween > this.maxInBetween) {
-                if(bcCount > this.minBroadCasts) {
-                    motif.addAllNodes(nodes);
+        while(curr != null) {
+            queued.push(curr);
+            
+            if(inBetween > this.maxInBetween || curr.isTail()) {
+                if(bcCount >= this.minBroadcasts) {
+                    motif.merge(currMotif);
                 }
-                nodes = [];
-                bcCount = inBetween = 0;
+                inPattern = false;
             }
-            else {
+            
+            if(curr.hasChildren()) {
+                if(!inPattern) {
+                    inPattern = true;
+                    bcCount = 0;
+                    inBetween = 0;
+                    currMotif = new Motif();
+                    queued = [curr];
+                }
+                
                 var children = curr.getChildren();
-                for(var i = 0; i < children.length; i++) { //TODO: replace with numchildren
-                    bcCount++;
-                    nodes.push(children[i]);
+                currMotif.addAllNodes(children);
+                bcCount += children.length;
+                for(var i = 0; i < children.length; i++) {
+                    currMotif.addEdge(curr, children[i]);
                 }
-                inBetween++;
+                currMotif.addAllNodes(queued);
+                queued = [];
+                inBetween = 0;
             }
+            
+            inBetween += curr.getLogEvents().length; //TODO: replace with numlogevents
             curr = curr.getNext();
         }
     }
