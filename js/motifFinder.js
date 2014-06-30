@@ -95,7 +95,7 @@ BroadcastFinder.prototype.find = function(graph) {
         while(curr != null) {
             queued.push(curr);
             
-            if(inBetween > this.maxInBetween || curr.isTail()) {
+            if(inBetween > this.maxInBetween || curr.isTail() || curr.hasParents()) {
                 if(bcCount >= this.minBroadcasts) {
                     motif.merge(currMotif);
                 }

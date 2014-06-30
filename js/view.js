@@ -36,7 +36,7 @@ function View(model, global, label) {
     //-----------TEMPORARY--------------------
     
     // Request-response will be highlighted if you uncomment the following three lines:
-//    var rrFinder = new RequestResponseFinder(1, 1, false);
+//    var rrFinder = new RequestResponseFinder(5, 5, false);
 //    this.hnt = new HighlightMotifTransformation(rrFinder, false);
 //    this.addTransformation(this.hnt);
     
