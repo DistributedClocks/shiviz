@@ -161,11 +161,6 @@ svg {
     pointer-events: none;
 }
 
-#vizContainer svg line.hidden-link {
-    stroke-width: 1px;
-    stroke: url(#grad);
-}
-
 #hostBar {
     width: 760px;
     float: left;
