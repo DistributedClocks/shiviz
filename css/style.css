@@ -244,8 +244,8 @@ section.input .left {
     white-space: nowrap;
     overflow: hidden;
     background: #fff;
-    transition: background, color, font-size, line-height, box-shadow;
-    transition-duration: .1s;
+    transition: color, margin-top;
+    transition-duration: .06s;
     transition-timing-function: ease-out;
 }
 
@@ -265,7 +265,23 @@ section.input .left {
 
 .visualization .log .line.more:hover > .line:last-child,
 .visualization .log .line.more.reveal > .line:last-child {
-    box-shadow: 0 1em #fff;
+}
+
+.visualization .log .line.focus,
+.visualization .log .line.more.reveal > .line.focus {
+    white-space: normal;
+    z-index: 20;
+}
+
+.visualization .highlight {
+    position: absolute;
+    transition: top, background, height;
+    transition-duration: .06s;
+    transition-timing-function: ease-out;
+    z-index: 2;
+    padding: .4em;
+    margin: -.4em;
+    margin-left: calc(2px - .4em);
 }
 
 .visualization #graph {
@@ -297,7 +313,7 @@ svg {
 #vizContainer svg g circle {
     stroke: #fff;
     stroke-width: 2px;
-    transition: all .1s ease-out;
+    transition: all .06s ease-out;
 }
 
 #vizContainer svg g text {
