@@ -143,6 +143,9 @@ View.prototype.draw = function() {
     node.attr({
         "transform": function(d) {
             return "translate(" + d.getX() + "," + d.getY() + ")";
+        },
+        "id": function(d) {
+            return "node" + d.getId();
         }
     });
     node.on("click", function(e) {
@@ -174,16 +177,44 @@ View.prototype.draw = function() {
             "stroke-width": "4px"
         });
         $("#curNode").text(e.getText());
+
         $(".focus").css({
             "color": $(".focus").data("fill"),
             "background": ""
         }).removeClass("focus");
+
         $(".reveal").removeClass("reveal");
-        $("#line" + e.getId()).addClass("focus").css({
-            "background": e.getFillColor(),
+
+        $(".line").css("margin-top", function (i, p) {
+            return $(this).data("previous-margin") || p;
+        });
+
+        var $line = $("#line" + e.getId());
+        var $parent = $line.parent(".line").addClass("reveal");
+
+        $line.addClass("focus").css({
+            "background": "transparent",
             "color": "white"
-        }).data("fill", e.getFillColor());
-        $("#line" + e.getId()).parent(".line").addClass("reveal");
+        }).data("fill", e.getFillColor()).nextAll().slice(0, 10).css("margin-top", function (i, p) {
+            var diff = $(".line.focus").outerHeight() * (1 - i / 10);
+            var prev = $(this).data("previous-margin") || parseFloat(p);
+            $(this).data("previous-margin", prev);
+            console.log(diff);
+            return prev + diff;
+        });
+
+        var top = parseFloat($line.css("top")) || 0;
+        var ptop = parseFloat($parent.css("top")) || 0;
+        var margin = $line.data("previous-margin") || parseFloat($line.css("margin-top")) || 0;
+        var pmargin = parseFloat($parent.css("margin-top")) || 0;
+        var offset = $(".log").offset().top;
+
+        $(".highlight").css({
+            "background": e.getFillColor(),
+            "top": top + ptop + margin + pmargin + offset,
+            "width": $line.width(),
+            "height": $line.height()
+        });
     });
 
     var circle = node.append("circle");
@@ -256,11 +287,16 @@ View.prototype.draw = function() {
             var text = vn[i].getText();
             var $div = $("<div></div>").attr({
                 "id": "line" + vn[i].getId()
+            }).data({
+                "id": vn[i].getId()
             }).addClass("line").css({
                 "top": y + "px",
                 "margin-top": startMargin + "em",
                 "color": vn[i].getFillColor()
-            }).text(text);
+            }).text(text).on("mouseover", function () {
+                var id = "#node" + $(this).data("id");
+                $(id)[0].dispatchEvent(new MouseEvent("mouseover"));
+            });
             $(".log td:last-child").append($div);
             startMargin++;
         }
@@ -276,10 +312,15 @@ View.prototype.draw = function() {
                 var text = other[o].getText();
                 $div.append($("<div></div>").attr({
                     "id": "line" + other[o].getId()
+                }).data({
+                    "id": other[o].getId()
                 }).addClass("line").css({
                     "margin-top": o + "em",
                     "color": other[o].getFillColor()
-                }).text(text));
+                }).text(text).on("mouseover", function () {
+                    var id = "#node" + $(this).data("id");
+                    $(id)[0].dispatchEvent(new MouseEvent("mouseover"));
+                }));
                 startMargin++;
             }
 
