@@ -244,7 +244,7 @@ section.input .left {
     white-space: nowrap;
     overflow: hidden;
     background: #fff;
-    transition: color, margin-top;
+    transition: color;
     transition-duration: .06s;
     transition-timing-function: ease-out;
 }
@@ -279,9 +279,9 @@ section.input .left {
     transition-duration: .06s;
     transition-timing-function: ease-out;
     z-index: 2;
-    padding: .4em;
-    margin: -.4em;
-    margin-left: calc(2px - .4em);
+    padding: .2em;
+    margin: -.2em;
+    margin-left: calc(2px - .2em);
 }
 
 .visualization #graph {

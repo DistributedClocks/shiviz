@@ -185,35 +185,28 @@ View.prototype.draw = function() {
 
         $(".reveal").removeClass("reveal");
 
-        $(".line").css("margin-top", function (i, p) {
-            return $(this).data("previous-margin") || p;
-        });
-
         var $line = $("#line" + e.getId());
         var $parent = $line.parent(".line").addClass("reveal");
 
         $line.addClass("focus").css({
             "background": "transparent",
             "color": "white"
-        }).data("fill", e.getFillColor()).nextAll().slice(0, 10).css("margin-top", function (i, p) {
-            var diff = $(".line.focus").outerHeight() * (1 - i / 10);
-            var prev = $(this).data("previous-margin") || parseFloat(p);
-            $(this).data("previous-margin", prev);
-            console.log(diff);
-            return prev + diff;
+        }).data("fill", e.getFillColor())
+
+        $(".highlight").css({
+            "width": $line.width(),
+            "height": $line.height()
         });
 
         var top = parseFloat($line.css("top")) || 0;
         var ptop = parseFloat($parent.css("top")) || 0;
-        var margin = $line.data("previous-margin") || parseFloat($line.css("margin-top")) || 0;
+        var margin = parseFloat($line.css("margin-top")) || 0;
         var pmargin = parseFloat($parent.css("margin-top")) || 0;
         var offset = $(".log").offset().top;
 
         $(".highlight").css({
             "background": e.getFillColor(),
-            "top": top + ptop + margin + pmargin + offset,
-            "width": $line.width(),
-            "height": $line.height()
+            "top": top + ptop + margin + pmargin + offset
         });
     });
 
