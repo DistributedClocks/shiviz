@@ -90,12 +90,22 @@ BroadcastFinder.prototype.find = function(graph) {
         var inPattern = false;
         var currMotif = new Motif();
         var queued = [];
+        var seenHosts = {};
         
         var curr = graph.getHead(host).getNext();
         while(curr != null) {
             queued.push(curr);
             
-            if(inBetween > this.maxInBetween || curr.isTail() || curr.hasParents()) {
+            var hasValidChild = false;
+            var children = curr.getChildren();
+            for(var i = 0; i < children.length; i++) {
+                if(!seenHosts[children[i].getHost()]) {
+                    hasValidChild = true;
+                    break;
+                }
+            }
+            
+            if(inBetween > this.maxInBetween || curr.isTail() || curr.hasParents() || (curr.hasChildren() && !hasValidChild)) {
                 if(bcCount >= this.minBroadcasts) {
                     motif.merge(currMotif);
                 }
@@ -109,13 +119,17 @@ BroadcastFinder.prototype.find = function(graph) {
                     inBetween = 0;
                     currMotif = new Motif();
                     queued = [curr];
+                    seenHosts = {};
                 }
                 
-                var children = curr.getChildren();
                 currMotif.addAllNodes(children);
-                bcCount += children.length;
                 for(var i = 0; i < children.length; i++) {
                     currMotif.addEdge(curr, children[i]);
+                    var childHost = children[i].getHost();
+                    if(!seenHosts[childHost]) {
+                        bcCount++;
+                        seenHosts[childHost] = true;
+                    }
                 }
                 currMotif.addAllNodes(queued);
                 queued = [];
@@ -129,4 +143,3 @@ BroadcastFinder.prototype.find = function(graph) {
     
     return motif;
 };
-
