@@ -160,6 +160,7 @@ def main():
         data = data.replace("revision: ZZZ", "revision: %s" % revid)
         minified = open(dist_dir + 'js/min.js', 'w')
         minified.write(data)
+        minified.close()
 
         # Replace reference to js files with minified js in deployed version
         # of index.html.
