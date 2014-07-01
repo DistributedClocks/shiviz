@@ -90,6 +90,7 @@ BroadcastFinder.prototype.find = function(graph) {
         var inPattern = false;
         var currMotif = new Motif();
         var queued = [];
+        var broadcastingNodes = [];
         var seenHosts = {};
         
         var curr = graph.getHead(host).getNext();
@@ -107,6 +108,9 @@ BroadcastFinder.prototype.find = function(graph) {
             
             if(inBetween > this.maxInBetween || curr.isTail() || curr.hasParents() || (curr.hasChildren() && !hasValidChild)) {
                 if(bcCount >= this.minBroadcasts) {
+                    for(var i = 1; i < broadcastingNodes.length; i++) {
+                        currMotif.addEdge(broadcastingNodes[i-1], broadcastingNodes[i]);
+                    }
                     motif.merge(currMotif);
                 }
                 inPattern = false;
@@ -120,6 +124,7 @@ BroadcastFinder.prototype.find = function(graph) {
                     currMotif = new Motif();
                     queued = [curr];
                     seenHosts = {};
+                    broadcastingNodes = [];
                 }
                 
                 currMotif.addAllNodes(children);
@@ -132,6 +137,7 @@ BroadcastFinder.prototype.find = function(graph) {
                     }
                 }
                 currMotif.addAllNodes(queued);
+                broadcastingNodes = broadcastingNodes.concat(queued);
                 queued = [];
                 inBetween = 0;
             }
