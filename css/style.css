@@ -148,11 +148,6 @@ svg {
     vertical-align: top;
 }
 
-#vizContainer svg line {
-    stroke: #999;
-    stroke-opacity: 0.6;
-}
-
 #vizContainer svg g text {
     text-anchor: middle;
     font-size: 8pt;

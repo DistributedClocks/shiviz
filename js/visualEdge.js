@@ -12,10 +12,24 @@
  *        next node of sourceVisualNode.getNode()
  */
 function VisualEdge(sourceVisualNode, targetVisualNode) {
+    
+    /** @private */
     this.sourceVisualNode = sourceVisualNode;
+    
+    /** @private */
     this.targetVisualNode = targetVisualNode;
+    
+    /** @private */
     this.width = 1;
+    
+    /** @private */
     this.dashLength = 0;
+    
+    /** @private */
+    this.color = "#999";
+    
+    /** @private */
+    this.opacity = 0.6;
 }
 
 /**
@@ -80,4 +94,20 @@ VisualEdge.prototype.setDashLength = function(newDashLength) {
     }
 
     this.dashLength = newDashLength;
+};
+
+VisualEdge.prototype.getColor = function() {
+    return this.color;
+};
+
+VisualEdge.prototype.setColor = function(newColor) {
+    this.color = newColor;
+};
+
+VisualEdge.prototype.getOpacity = function() {
+    return this.opacity;
+};
+
+VisualEdge.prototype.setOpacity = function(newOpacity) {
+    this.opacity = newOpacity;
 };

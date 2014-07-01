@@ -134,6 +134,12 @@ View.prototype.draw = function() {
         },
         "stroke-dasharray": function(d) {
             return d.getDashLength() + "," + d.getDashLength();
+        },
+        "stroke": function(d) {
+            return d.getColor();
+        },
+        "opacity": function(d) {
+            return d.getOpacity();
         }
     });
     link.attr({
