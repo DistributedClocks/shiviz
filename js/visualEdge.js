@@ -96,18 +96,39 @@ VisualEdge.prototype.setDashLength = function(newDashLength) {
     this.dashLength = newDashLength;
 };
 
+/**
+ * Gets the color of the VisualEdge
+ * 
+ * @returns {String} The color.
+ */
 VisualEdge.prototype.getColor = function() {
     return this.color;
 };
 
+/**
+ * Sets the color of the VisualEdge
+ * 
+ * @returns {String} The color. The color must be a
+ *        string that parses to a valid SVG color as defined in
+ *        http://www.w3.org/TR/SVG/types.html#WSP
+ */
 VisualEdge.prototype.setColor = function(newColor) {
     this.color = newColor;
 };
 
+/**
+ * Gets the opacity of the VisualEdge
+ * 
+ * @returns {Number} The opacity. Will be between 0 and 1 inclusive
+ */
 VisualEdge.prototype.getOpacity = function() {
     return this.opacity;
 };
 
+/**
+ * Sets the opacity of the VisualEdge
+ * @param {Number} newOpacity The new opacity. Must be between 0 and 1 inclusive
+ */
 VisualEdge.prototype.setOpacity = function(newOpacity) {
     this.opacity = newOpacity;
 };
