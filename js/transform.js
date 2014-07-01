@@ -531,7 +531,8 @@ HighlightMotifTransformation.prototype.transform = function(visualGraph) {
     for(var i = 0; i < edges.length; i++) {
         var edge = edges[i];
         var visualEdge = visualGraph.getVisualEdgeByNodes(edge[0], edge[1]);
-        visualEdge.setWidth(visualEdge.getWidth() * 1.5);
+        visualEdge.setColor("#333");
+//        visualEdge.setWidth(visualEdge.getWidth() * 1.5);
     }
 };
 

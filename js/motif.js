@@ -6,7 +6,7 @@
  * a larger graph. The exact importance of the edges and nodes stored is left up
  * to the utilizing class.
  */
-function Motif() {
+function Motif() { //TODO: validate nodes and edges on add?
 
     /** @private */
     this.nodes = {};
