@@ -171,6 +171,7 @@ Global.prototype.resize = function() {
     var hiddenHosts = this.hideHostTransformation.getHostsToHide();
     var highHosts = this.highlightHostTransformation.getHiddenHosts();
     var totalHosts = -(hiddenHosts.length + highHosts.length);
+
     for (var i = 0; i < this.views.length; i++) {
         totalHosts += this.views[i].getHosts().length;
     }
@@ -190,7 +191,7 @@ Global.prototype.resize = function() {
     for (var i = 0; i < this.views.length; i++) {
         var view = this.views[i];
         var hosts = view.getHosts().filter(function (h) {
-            return hiddenHosts.indexOf(h) < 0;
+            return hiddenHosts.indexOf(h) < 0 && highHosts.indexOf(h) < 0;
         });
         view.setWidth(hosts.length * widthPerHost - hostMargin);
     }
@@ -219,7 +220,7 @@ Global.prototype.drawSideBar = function() {
 
     var hiddenHosts = hidden.append("svg");
     hiddenHosts.attr({
-        "width": Global.SIDE_BAR_WIDTH,
+        "width": $("#sidebar").width(),
         "height": 500,
         "class": "hidden-hosts"
     });
@@ -291,5 +292,5 @@ Global.prototype.drawSideBar = function() {
 Global.prototype.scrollHandler = function(event) {
     var x = window.pageXOffset;
     $("#hostBar").css("margin-left", -x);
-    $(".log").css("margin-left", x);
+    $(".log, .highlight").css("margin-left", x);
 };

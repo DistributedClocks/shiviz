@@ -61,7 +61,7 @@ $("#visualize").on("click", function () {
 });
 
 function visualize() {
-    d3.selectAll("svg").remove();
+    d3.selectAll("#graph svg").remove();
 
     var log = $("#input").val();
     var labels = null;

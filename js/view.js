@@ -208,7 +208,39 @@ View.prototype.draw = function() {
         $(".highlight").css({
             "background": e.getFillColor(),
             "top": top + ptop + margin + pmargin + offset
-        });
+        }).show();
+    });
+
+    var hiddenParentLinks = node.filter(function(val) {
+        return val.hasHiddenParent();
+    }).append("line");
+
+    hiddenParentLinks.attr({
+        "class": "hidden-link",
+        "x1": 0,
+        "y1": 0,
+        "x2": function(d) {
+            return (Global.HIDDEN_EDGE_LENGTH + d.getRadius()) / Math.sqrt(2);
+        },
+        "y2": function(d) {
+            return -(Global.HIDDEN_EDGE_LENGTH + d.getRadius()) / Math.sqrt(2);
+        }
+    });
+
+    var hiddenChildLinks = node.filter(function(val) {
+        return val.hasHiddenChild();
+    }).append("line");
+
+    hiddenChildLinks.attr({
+        "class": "hidden-link",
+        "x1": 0,
+        "y1": 0,
+        "x2": function(d) {
+            return (Global.HIDDEN_EDGE_LENGTH + d.getRadius()) / Math.sqrt(2);
+        },
+        "y2": function(d) {
+            return (Global.HIDDEN_EDGE_LENGTH + d.getRadius()) / Math.sqrt(2);
+        }
     });
 
     var circle = node.append("circle");
@@ -284,7 +316,10 @@ View.prototype.draw = function() {
             view.global.hideHost(e.getHost());
         }
     });
-    
+
+    // Hide line highlight
+    $(".highlight").hide();
+
     // draw the log lines
     var lines = visualGraph.lines;
     delete lines[0];

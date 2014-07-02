@@ -354,3 +354,9 @@ svg {
 #sidebar #curNode {
     word-break: break-all;
 }
+
+svg#defs {
+    height: 0;
+    width: 0;
+    position: absolute;
+}
