@@ -47,7 +47,7 @@ function resetView() {
 
     $("#curNode").html("(click to view)");
 
-    d3.selectAll("svg").remove();
+    d3.selectAll("#graph svg").remove();
 
     // Reset the color of all of the log-links.
     $(".log-link").css({

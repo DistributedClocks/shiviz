@@ -7,6 +7,12 @@
     <link href="css/style.css" type="text/css" rel="stylesheet">
     <script src="http://d3js.org/d3.v3.min.js"></script>
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    <style type="text/css">
+        #vizContainer svg line.hidden-link {
+            stroke-width: 1px;
+            stroke: url(#grad);
+        }
+    </style>
 </head>
 
 <body>
@@ -32,70 +38,109 @@
 
             <button class="try">Try out ShiViz</button>
 
-            <h3>What am I looking at?</h3>
-            <p>
-                In the visualization:
-                <ul>
-                    <li>
-                        Time flows from top to bottom.
-                    </li>
-                    <li>
-                        A vertical line with a box at the top is a <em>process
-                        timeline</em>. This represents a single thread of execution
-                        (e.g., a process).
-                    </li>
-                    <li>
-                        Circles on a process timeline are <em>events</em> that were
-                        executed by the process.
-                    </li>
-                    <li>
-                        Diagonal lines connecting two events represent the
-                        <a href="http://en.wikipedia.org/wiki/Happened-before">happened-before</a>
-                        relation between the events: the higher of the two events
-                        happened <i>before</i> the second event.
-                    </li>
-                </ul>
-            </p>
+        <h3>What am I looking at?</h3>
+        <p>
+            In the visualization:
+            <ul>
+                <li>
+                    Time flows from top to bottom.
+                </li>
+                <li>
+                    A vertical line with a box at the top is a <strong>process
+                    timeline</strong>. This represents a single thread of execution
+                    (e.g., a process).
+                </li>
+                <li>
+                    Circles on a process timeline are <strong>events</strong> that were
+                    executed by the process.
+                </li>
+                <li>
+                    Diagonal lines connecting two events represent the
+                    <a href="http://en.wikipedia.org/wiki/Happened-before">happened-before</a>
+                    relation between the events: the higher of the two events
+                    happened <i>before</i> the second event.
+                </li>
+                <li>
+                  Dashed lines represent transitive communication
+                  edges. These only appear when a host is hidden, and
+                  two processes that are not hidden communicated
+                  indirectly through this host.
+                </li>
+                <li>
+                  Larger circles represent merged local events. These
+                  have a number inside of them, indicating the number
+                  of events that they represent.
+                </li>
+                <li>
+                  Radiating lines that fade out represent
+                  communication edges to hosts that are currently
+                  hidden from view.
+                </li>
+            </ul>
+        </p>
 
-            <h3>How do I interact with the visualization?</h3>
-            <p>
-                The visualization supports the following actions:
-                <ul>
-                    <li>
-                        <strong>Hide a process timeline</strong>: double click a process box. To
-                        show the process timeline, double click on the process box in
-                        the "hidden hosts" panel.
-                    </li>
-                    <li>
-                        <strong>Show event or process text</strong>: hover over the event circle
-                        or process box. The corresponding text will appear next to
-                        "Current node:"
-                    </li>
-                </ul>
-            </p>
+        <h3>How do I interact with the visualization?</h3>
+        <p>
+            The visualization supports the following actions:
+            <ul>
+                <li>
+                    <strong>Hide a process timeline</strong>: double click a process box. To
+                    show the process timeline, double click on the process box in
+                    the "hidden hosts" panel.
+                </li>
+                <li>
+                    <strong>Show event or process text</strong>: hover over the event circle
+                    or process box. The corresponding text will appear next to
+                    "Current node:"
+                </li>
+                <li><strong>Expand/collapse non-communicating
+                events</strong>: Events that are not incident on any
+                communication edges are merged by ShiViz into
+                larger-looking nodes. These nodes can be
+                expanded/collapsed by holding SHIFT and clicking on
+                them.
+                </li>
+                <li>
+                  <strong>Filter by communication to host(s)</strong>:
+                  hold SHIFT and double click on a process box. The
+                  process box will get larger. This indicates that the
+                  graph is now filtered to show only events at the
+                  filtered host and only those hosts and their events
+                  that communicate with this host. You can filter by
+                  more than one host. Undo the filter in the same way
+                  -- hold SHIFT and double click the process box.
+                </li>
 
-            <h3>What is the input log format?</h3>
-            <p>TODO: describe log format with a short 2-event example.</p>
+            </ul>
+        </p>
 
-            <h3>How do I generate logs in this format?</h3>
-            <p>TODO: describe <a href="http://bitbucket.org/bestchai/shivector/wiki/Home">ShiVector</a></p>
+        <h3>What is the input log format?</h3>
+        <p>TODO: describe log format with a short 2-event example.</p>
 
-            <h3>How is this useful?</h3>
-            <p>
-                ShiViz is useful for:
-                <ul>
-                    <li>
-                        <strong>Understanding the communication graph.</strong> For example, to
-                        look for presence or absence of certain communication
-                        patterns.
-                    </li>
-                    <li>
-                        <strong>Reasoning about ordering in a distributed setting</strong>. For
-                        example, to figure out whether two events occurred
-                        concurrently, or if one happened before the other.
-                    </li>
-                </ul>
-            </p>
+        <h3>How do I generate logs in this format?</h3>
+        <p>Use <a href="http://bitbucket.org/bestchai/shivector/wiki/Home">ShiVector</a>.
+          ShiVector intercepts network messages and wraps those
+          messages to include a vector timestamp. ShiVector also
+          intercepts logging statements to add the current vector
+          timestamp to each existing logged message.
+        </p>
+
+        <h3 id="helpsectiontitle">How is this useful?</h3>
+        <p>
+            ShiViz is useful for:
+            <ul>
+                <li>
+                    <strong>Understanding the communication graph.</strong> For example, to
+                    look for presence or absence of certain communication
+                    patterns.
+                </li>
+                <li>
+                    <strong>Reasoning about ordering in a distributed setting</strong>. For
+                    example, to figure out whether two events occurred
+                    concurrently, or if one happened before the other.
+                </li>
+            </ul>
+        </p>
 
         </div>
     </section>
@@ -167,6 +212,14 @@
             <div class="hidden"></div>
         </div>
     </section>
+    <svg id="defs">
+        <defs>
+            <linearGradient id="grad">
+                <stop stop-color="#999" offset="0"></stop>
+                <stop stop-color="#fff" offset="1"></stop>
+            </linearGradient>
+        </defs>
+    </svg>
 
     <!-- REPLACED DURING DEPLOYMENT: -->
     <script type="text/javascript" src="js/dev.js"></script>
