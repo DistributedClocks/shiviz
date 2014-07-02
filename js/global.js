@@ -93,7 +93,6 @@ Global.prototype.addTransformation = function(transformation) {
  */
 Global.prototype.drawAll = function() {
     var hostMargin = this.resize();
-    this.drawSideBar();
 
     $("table.log").children().remove();
     var width = (240 - 12 * (this.views.length - 1)) / this.views.length;
@@ -103,8 +102,12 @@ Global.prototype.drawAll = function() {
         $("table.log").append($("<td></td>").addClass("spacer"));
     }
 
-    $("#vizContainer > svg:not(:last-child), #hostBar > svg:not(:last-child)").css("margin-right", hostMargin * 2 + "px");
+    $("#vizContainer > svg:not(:last-child), #hostBar > svg:not(:last-child)").css({
+        "margin-right": hostMargin * 2 + "px"
+    });
     $("table.log .spacer:last-child").remove();
+
+    this.drawSideBar();
 };
 
 /**
@@ -144,6 +147,7 @@ Global.prototype.toggleHighlightHost = function(host) {
         return;
     }
     this.highlightHostTransformation.toggleHostToHighlight(host);
+    this.drawAll();
     this.drawAll();
 };
 
@@ -213,7 +217,9 @@ Global.prototype.drawSideBar = function() {
     var hidden = d3.select(".hidden");
 
     // Draw hidden hosts
-    var hh = this.hideHostTransformation.getHostsToHide().concat(this.highlightHostTransformation.getHiddenHosts());
+    var hiddenHosts = this.hideHostTransformation.getHostsToHide();
+    var highHosts = this.highlightHostTransformation.getHiddenHosts();
+    var hh = hiddenHosts.concat(highHosts);
     if (hh.length <= 0) {
         return;
     }
