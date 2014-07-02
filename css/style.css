@@ -282,7 +282,6 @@ section.input .left {
     z-index: 2;
     padding: .2em;
     margin: -.2em;
-    margin-left: calc(2px - .2em);
 }
 
 .visualization #graph {

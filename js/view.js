@@ -207,7 +207,8 @@ View.prototype.draw = function() {
 
         $(".highlight").css({
             "background": e.getFillColor(),
-            "top": top + ptop + margin + pmargin + offset
+            "top": top + ptop + margin + pmargin + offset,
+            "left": $line.offset().left
         }).show();
     });
 

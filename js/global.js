@@ -174,20 +174,27 @@ Global.prototype.addView = function(view) {
 Global.prototype.resize = function() {
     var hiddenHosts = this.hideHostTransformation.getHostsToHide();
     var highHosts = this.highlightHostTransformation.getHiddenHosts();
-    var totalHosts = -(hiddenHosts.length + highHosts.length);
+    var allHidden = hiddenHosts.concat(highHosts);
+    var visibleHosts = 0;
 
     for (var i = 0; i < this.views.length; i++) {
-        totalHosts += this.views[i].getHosts().length;
+        var vh = this.views[i].getHosts();
+        var hn = 0;
+        for (var j = 0; j < vh.length; j++)
+            if (allHidden.indexOf(vh[j]) > -1)
+                hn++;
+
+        visibleHosts = visibleHosts + vh.length - hn;
     }
 
     var globalWidth = $(window).width() - $(".visualization header").outerWidth() - $("#sidebar").outerWidth();
-    var totalMargin = globalWidth - totalHosts * Global.HOST_SQUARE_SIZE;
-    var hostMargin = totalMargin / (totalHosts + this.views.length - 2);
+    var totalMargin = globalWidth - visibleHosts * Global.HOST_SQUARE_SIZE;
+    var hostMargin = totalMargin / (visibleHosts + this.views.length - 2);
 
     if (hostMargin < Global.HOST_SQUARE_SIZE) {
         hostMargin = Global.HOST_SQUARE_SIZE;
-        totalMargin = hostMargin * (totalHosts + this.views.length - 2);
-        globalWidth = totalMargin + totalHosts * Global.HOST_SQUARE_SIZE;
+        totalMargin = hostMargin * (visibleHosts + this.views.length - 2);
+        globalWidth = totalMargin + visibleHosts * Global.HOST_SQUARE_SIZE;
     }
 
     var widthPerHost = Global.HOST_SQUARE_SIZE + hostMargin;
@@ -195,7 +202,7 @@ Global.prototype.resize = function() {
     for (var i = 0; i < this.views.length; i++) {
         var view = this.views[i];
         var hosts = view.getHosts().filter(function (h) {
-            return hiddenHosts.indexOf(h) < 0 && highHosts.indexOf(h) < 0;
+            return allHidden.indexOf(h) < 0;
         });
         view.setWidth(hosts.length * widthPerHost - hostMargin);
     }
@@ -298,5 +305,10 @@ Global.prototype.drawSideBar = function() {
 Global.prototype.scrollHandler = function(event) {
     var x = window.pageXOffset;
     $("#hostBar").css("margin-left", -x);
-    $(".log, .highlight").css("margin-left", x);
+    $(".log").css("margin-left", x);
+
+    if ($(".line.focus").length)
+        $(".highlight").addClass("scroll").css({
+            "left": $(".line.focus").offset().left
+        }).removeClass("scroll");
 };
