@@ -153,11 +153,12 @@ View.prototype.draw = function() {
             view.collapseSequentialNodesTransformation.toggleExemption(e.getNode());
             view.global.drawAll();
         }
-        else {
+        else if (!e.isCollapsed()) {
             selectTextareaLine($("#logField")[0], e.getLineNumber());
         }
 
     });
+
     node.append("title").text(function(d) {
         return d.getText();
     });
@@ -211,8 +212,16 @@ View.prototype.draw = function() {
     });
 
     var circle = node.append("circle");
-    circle.style("fill", function(d) {
-        return d.getFillColor();
+    circle.style({
+        "fill": function(d) {
+            return d.getFillColor();
+        },
+        "stroke": function(d) {
+            return d.getStrokeColor();
+        },
+        "stroke-width": function(d) {
+            return d.getStrokeWidth() + "px";
+        }
     });
     circle.attr({
         "class": function(d) {
@@ -256,13 +265,26 @@ View.prototype.draw = function() {
             return d.getFillColor();
         }
     });
+    rect.style({
+        "stroke": function(d) {
+            return d.getStrokeColor();
+        },
+        "stroke-width": function(d) {
+            return d.getStrokeWidth() + "px";
+        }
+    });
     rect.on("mouseover", function(e) {
         $("#curNode").text(e.getText());
     });
     rect.on("dblclick", function(e) {
-        view.global.hideHost(e.getHost());
+        if (d3.event.shiftKey) {
+            view.global.toggleHighlightHost(e.getHost());
+        }
+        else {
+            view.global.hideHost(e.getHost());
+        }
     });
-
+    
     // draw the log lines
     var lines = visualGraph.lines;
     delete lines[0];

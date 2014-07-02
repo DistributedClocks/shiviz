@@ -13,6 +13,8 @@ Usage:
 
 - This script must be run from within the top level shiviz source directory.
 
+- This script must be run from OSX :)
+
 - This script:
 
   1. Removes the proxy hack that allows shiviz to access log files
@@ -29,6 +31,8 @@ Usage:
 
 import sys
 import os
+import httplib
+import urllib
 import subprocess
 
 
@@ -68,7 +72,7 @@ def main():
 
     # Remove previously deployed version of shiviz.
     if (os.path.exists(dist_dir)):
-        runcmd("rm " + dist_dir + "*")
+        runcmd("rm -rf " + dist_dir + "*")
     else:
         print "Error: deployment dir is not where it is expected."
         sys.exit(-1)
@@ -80,28 +84,90 @@ def main():
         print "Error: source dir is not where it is expected."
         sys.exit(-1)
 
-    # Remove the unnecessary dev.js that was copied over.
-    runcmd("rm " + dist_dir + "js/dev.js")
-
-    # Replace reference to dev.js with deployed.js in deployed version
-    # of index.html.
-    runcmd("sed -i '' 's/dev.js/deployed.js/g' " + dist_dir + "index.html")
-
     # Find out the current revision id:
     revid = get_cmd_output('hg', ['id', '-i']);
     revid = revid.rstrip()
 
-    print "Revid is : " + revid;
+    print "Revid is : " + revid
 
-    # Replace the place-holder revision with the actual revision id:
-    runcmd("sed -i '' 's/revision: ZZZ/revision: " + revid
-           + "/g' " + dist_dir + "js/deployed.js")
+    # Remove the unnecessary dev.js that was copied over.
+    runcmd("rm " + dist_dir + "js/dev.js")
 
     # Remove any files containing '#'
     runcmd("cd " + dist_dir + " && find . | grep '#' | xargs rm")
 
     # Remove any files containing '~'
     runcmd("cd " + dist_dir + " && find . | grep '~' | xargs rm")
+
+    # Remove any files containing '~'
+    runcmd("cd " + dist_dir + " && find . | grep '.orig' | xargs rm")
+
+    # Minify the code
+    print "Minifying... please wait"
+
+    params = [
+    ('code_url', 'http://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.js'),
+    ('code_url', 'http://d3js.org/d3.v3.min.js'),
+    ('compilation_level', 'SIMPLE_OPTIMIZATIONS'),
+    ('output_format', 'text'),
+    ('output_info', 'compiled_code')
+    ]
+
+    files = os.listdir(dist_dir + './js')
+
+    print "Files to minify: "
+    print files
+
+    for file in files:
+        params += [('code_url', 'https://bitbucket.org/bestchai/shiviz/raw/tip/js/' + file)]
+
+    urlparams = urllib.urlencode(params)
+    headers = {'Content-type': 'application/x-www-form-urlencoded'}
+    conn = httplib.HTTPConnection('closure-compiler.appspot.com')
+    conn.request('POST', '/compile', urlparams, headers)
+    response = conn.getresponse()
+    data = response.read()
+
+    conn.close()
+
+    print "Minified size: %i" % len(data)
+
+    if len(data) < 500:
+        print "Minification failed!"
+        params = [
+        ('code_url', 'http://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.js'),
+        ('code_url', 'http://d3js.org/d3.v3.min.js'),
+        ('compilation_level', 'SIMPLE_OPTIMIZATIONS'),
+        ('output_format', 'text'),
+        ('output_info', 'errors')
+        ]
+
+        files = os.listdir(dist_dir + './js')
+        for file in files:
+            params += [('code_url', 'https://bitbucket.org/bestchai/shiviz/raw/tip/js/' + file)]
+
+        urlparams = urllib.urlencode(params)
+        headers = {'Content-type': 'application/x-www-form-urlencoded'}
+        conn = httplib.HTTPConnection('closure-compiler.appspot.com')
+        conn.request('POST', '/compile', urlparams, headers)
+        response = conn.getresponse()
+        data = response.read()
+
+        print data
+
+        conn.close()
+    else:
+        data = data.replace("revision: ZZZ", "revision: %s" % revid)
+        minified = open(dist_dir + 'js/min.js', 'w')
+        minified.write(data)
+        minified.close()
+
+        # Replace reference to js files with minified js in deployed version
+        # of index.html.
+        runcmd("sed -i '' -e 's/<script[^>]*><\/script>//g' " + dist_dir + "index.html")
+        runcmd("sed -i '' -e 's/<\/body>/<script src=\"js\/min.js\"><\/script><\/body>/g' " + dist_dir + "index.html")
+
+        print "Minification successful!"
 
     # Add any files that are new and remove any files that no longer exist
     runcmd("cd " + dist_dir + " && hg addremove")

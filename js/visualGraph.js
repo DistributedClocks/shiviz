@@ -340,3 +340,16 @@ VisualGraph.prototype.removeVisualEdgeByNodes = function(node1, node2) {
     var edgeId = this.getEdgeId(node1, node2);
     delete this.links[edgeId];
 };
+
+VisualGraph.prototype.addHiddenEdgeToFamily = function(node) {
+    var children = node.getChildren();
+    for (var i = 0; i < children.length; i++) {
+        this.getVisualNodeByNode(children[i]).setHasHiddenParent(true);
+    }
+
+    var parents = node.getParents();
+    for (var i = 0; i < parents.length; i++) {
+        this.getVisualNodeByNode(parents[i]).setHasHiddenChild(true);
+    }
+
+};

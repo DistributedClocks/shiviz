@@ -278,6 +278,7 @@ section.input .left {
     transition: top, background, height;
     transition-duration: .06s;
     transition-timing-function: ease-out;
+    box-shadow: 0 0 0 .2em #fff;
     z-index: 2;
     padding: .2em;
     margin: -.2em;
@@ -313,7 +314,6 @@ svg {
 #vizContainer svg g circle {
     stroke: #fff;
     stroke-width: 2px;
-    transition: all .06s ease-out;
 }
 
 #vizContainer svg g text {
