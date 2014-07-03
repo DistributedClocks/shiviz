@@ -338,6 +338,13 @@ svg {
     fill: #fff;
 }
 
+#hostBar svg rect.high-rect {
+    fill: transparent;
+    stroke: #fff;
+    stroke-width: 2px;
+    pointer-events: none;
+}
+
 #sidebar {
     width: 240px;
     height: 100%;
