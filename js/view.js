@@ -296,6 +296,10 @@ View.prototype.draw = function() {
         },
         "fill": function(d) {
             return d.getFillColor();
+        },
+        "class": function(d) {
+            if (d.isHighlighted())
+                return "high-host";
         }
     });
     rect.style({
@@ -316,6 +320,23 @@ View.prototype.draw = function() {
         else {
             view.global.hideHost(e.getHost());
         }
+    });
+
+    d3.selectAll(".high-host").each(function(d) {
+        var ns = "http://www.w3.org/2000/svg";
+        var r = document.createElementNS(ns, "rect");
+        $(r).attr({
+            "class": "high-rect",
+            "width": "15",
+            "height": "15",
+            "x": function() {
+                return Math.round(d.getX() - Global.HOST_SQUARE_SIZE / 2 + 5);
+            },
+            "y": function() {
+                return d.getY() + 5;
+            }
+        });
+        this.parentNode.appendChild(r);
     });
 
     // Hide line highlight
