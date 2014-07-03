@@ -49,7 +49,9 @@ Motif.prototype.getNodes = function() {
 };
 
 /**
- * Adds an edge to this motif, given the two nodes that the edge connects
+ * Adds an edge to this motif, given the two nodes that the edge connects. Note that 
+ * this class does not check that the added edge actually exists anywhere or is otherwise meaningful
+ * in any way. Such checks are the responsibility of classes utilizing Motif
  * 
  * @param {Node} node1 One of the nodes the edge connects. Must not be identical
  *        to node2
