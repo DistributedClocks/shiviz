@@ -169,14 +169,18 @@ View.prototype.draw = function() {
         "y": -24
     });
     node.on("mouseover", function(e) {
-        $("circle[style*='stroke-width: 4px']").css({
-            "stroke": "",
-            "stroke-width": ""
+        $("circle").filter(function(i,c) {
+            return $(c).data("focus");
+        }).attr("r", function() {
+            return $(this).data("r");
+        }).data("focus", false);
+
+        $(this).find("circle").data({
+            "focus": true
+        }).attr({
+            "r": $(this).find("circle").data("r") + 2 
         });
-        $(this).find("circle").css({
-            "stroke": e.getFillColor(),
-            "stroke-width": "4px"
-        });
+
         $("#curNode").text(e.getText());
 
         $(".focus").css({
@@ -261,6 +265,9 @@ View.prototype.draw = function() {
             return d.getHost();
         },
         "r": function(d) {
+            return d.getRadius();
+        },
+        "data-r": function(d) {
             return d.getRadius();
         }
     });
