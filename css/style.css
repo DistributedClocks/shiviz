@@ -244,7 +244,7 @@ section.input .left {
     white-space: nowrap;
     overflow: hidden;
     background: #fff;
-    transition: color;
+    transition: color, margin;
     transition-duration: .06s;
     transition-timing-function: ease-out;
 }
@@ -271,6 +271,7 @@ section.input .left {
 .visualization .log .line.more.reveal > .line.focus {
     white-space: normal;
     z-index: 3;
+    margin-left: 2em;
 }
 
 .visualization .highlight {
@@ -282,6 +283,23 @@ section.input .left {
     z-index: 2;
     padding: .2em;
     margin: -.2em;
+    margin-left: 1.6em;
+}
+
+.visualization .highlight:before {
+    position: absolute;
+    display: block;
+    content: attr(data-ln);
+    width: 2em;
+    height: 1.2em;
+    padding: .2em;
+    font: 8pt monospace;
+    left: -2.4em;
+    top: 0;
+    text-align: center;
+    background: inherit;
+    color: rgba(255,255,255,.6);
+    box-shadow: 0 -2px #fff, 0 2px #fff;
 }
 
 .visualization #graph {
