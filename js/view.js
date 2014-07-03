@@ -185,7 +185,8 @@ View.prototype.draw = function() {
 
         $(".focus").css({
             "color": $(".focus").data("fill"),
-            "background": ""
+            "background": "",
+            "width": "inherit"
         }).removeClass("focus");
 
         $(".reveal").removeClass("reveal");
@@ -195,7 +196,8 @@ View.prototype.draw = function() {
 
         $line.addClass("focus").css({
             "background": "transparent",
-            "color": "white"
+            "color": "white",
+            "width": "calc(" + $line.width() + "px - 1em)"
         }).data("fill", e.getFillColor())
 
         $(".highlight").css({
@@ -212,7 +214,9 @@ View.prototype.draw = function() {
         $(".highlight").css({
             "background": e.getFillColor(),
             "top": top + ptop + margin + pmargin + offset,
-            "left": $line.offset().left
+            "left": $line.offset().left - $line.css("margin-left")
+        }).attr({
+            "data-ln": e.getLineNumber()
         }).show();
     });
 

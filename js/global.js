@@ -308,7 +308,7 @@ Global.prototype.scrollHandler = function(event) {
     $(".log").css("margin-left", x);
 
     if ($(".line.focus").length)
-        $(".highlight").addClass("scroll").css({
-            "left": $(".line.focus").offset().left
+        $(".highlight").css({
+            "left": $(".line.focus").offset().left - $(".line.focus").css("margin-left")
         }).removeClass("scroll");
 };
