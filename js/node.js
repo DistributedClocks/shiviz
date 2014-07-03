@@ -40,6 +40,12 @@
  * x and before y</li>
  * </ul>
  * 
+ * between: A node n is between nodes x and y if n happens after x and before y
+ * OR n happens after y and before x
+ * 
+ * consecutive: a sequence S of nodes n_1, n_2 ... n_k are consecutive if n_i is
+ * the previous node of n_(i+1) for all i between 1 and k-1 inclusive
+ * 
  * "happens before" and "happens after": A node x happens before y if and only
  * if x preceeds y in time. When the nodes are first generated in the graph,
  * this temporal relation is based on the nodes' LogEvents' vector clocks, but
@@ -52,8 +58,8 @@
  * | /|  |     -- A is the previous node of X. A is NOT a parent of X
  * |/ |  |     -- B is the next node of X. B is NOT the child of X
  * X  D  F     -- C is NOT a parent of G nor is G a child of C
- * |  |\ |
- * |  | \|
+ * |  |\ |     -- A X B are consecutive nodes
+ * |  | \|     -- X is between A and B
  * B  |  G
  * |  |  |
  * </pre>
@@ -474,10 +480,10 @@ Node.prototype.removeParentByHost = function(host) {
  * @param {Node} node The child node to add
  */
 Node.prototype.addChild = function(node) {
-    if(node.isHead() || node.isTail()) {
+    if (node.isHead() || node.isTail()) {
         throw "Cannot add child to head or tail node";
     }
-    
+
     if (node.host == this.host) {
         throw "A node cannot be the child of another node who has the same host";
     }
@@ -510,10 +516,10 @@ Node.prototype.addChild = function(node) {
  * @param {Node} node The node to add as a parent to this
  */
 Node.prototype.addParent = function(node) {
-    if(node.isHead() || node.isTail()) {
+    if (node.isHead() || node.isTail()) {
         throw "Cannot add parent to head or tail node";
     }
-    
+
     if (node.host == this.host) {
         throw "A node cannot be the parent of another node who has the same host";
     }
