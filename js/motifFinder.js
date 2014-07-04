@@ -51,21 +51,22 @@ RequestResponseFinder.prototype.find = function(graph) {
 
     var nodes = graph.getNodes();
     var motif = new Motif();
+    var seen = {};
 
     for (var i = 0; i < nodes.length; i++) {
         var node = nodes[i];
         var host = node.getHost();
         var children = node.getChildren();
 
-        if (!this.allowOtherConnections
-                && (children.length > 1 || node.hasParents())) {
+        if (seen[node.getId()] || (!this.allowOtherConnections
+                && (children.length > 1 || node.hasParents()))) {
             continue;
         }
 
         out: for (var j = 0; j < children.length; j++) {
             var curr = children[j];
-            if (!this.allowOtherConnections
-                    && (curr.getParents().length > 1 || curr.getChildren().length > 1)) {
+            if (seen[node.getId()] || (!this.allowOtherConnections
+                    && (curr.getParents().length > 1 || curr.getChildren().length > 1))) {
                 continue;
             }
 
@@ -74,8 +75,8 @@ RequestResponseFinder.prototype.find = function(graph) {
             for (var dist = 0; dist <= this.maxLEResponder && !curr.isTail(); dist++) {
                 trail.push(curr);
 
-                if (!this.allowOtherConnections && curr.getFamily().length > 2
-                        && dist > 0) {
+                if (seen[node.getId()] || (!this.allowOtherConnections && curr.getFamily().length > 2
+                        && dist > 0)) {
                     break;
                 }
 
@@ -92,9 +93,13 @@ RequestResponseFinder.prototype.find = function(graph) {
 
                     if (count <= this.maxLERequester) {
                         motif.addNode(child2);
+                        seen[child2.getId()] = true;
                         motif.addNode(node);
+                        seen[node.getId()] = true;
+                        
                         for (var a = 0; a < trail.length; a++) {
                             motif.addNode(trail[a]);
+                            seen[trail[a].getId()] = true;
                         }
 
                         motif.addEdge(node, trail[0]);
