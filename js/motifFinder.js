@@ -144,8 +144,8 @@ RequestResponseFinder.prototype.find = function(graph) {
  * children of a node in S. It also contains all edges that connect any two
  * nodes in S and all edges that connect any node in S its children.
  * 
- * @param minBroadcasts
- * @param maxInBetween
+ * @param {int} minBroadcasts See above for the purpose of this parameter
+ * @param {int} maxInBetween See above for the purpose of this parameter
  * @returns
  */
 function BroadcastFinder(minBroadcasts, maxInBetween) {
@@ -153,13 +153,178 @@ function BroadcastFinder(minBroadcasts, maxInBetween) {
     this.maxInBetween = maxInBetween;
 };
 
-BroadcastFinder.prototype.find2 = function(graph) {
+BroadcastFinder.GREEDY_THRESHOLD = 300;
 
-    var motif = new Motif();
+BroadcastFinder.prototype.find = function(graph) {
 
-    var hosts = graph.getHosts();
-    for (var j = 0; j < hosts.length; j++) {
-        var host = hosts[j];
+    var context = this;
+    var finalMotif = new Motif();
+    var disjoints = findDisjoint();
+
+    for (var d = 0; d < disjoints.length; d++) {
+        var disjoint = disjoints[d];
+
+        if (disjoint.length <= BroadcastFinder.GREEDY_THRESHOLD) {
+            var score = findAllBroadcasts(disjoint);
+            var groups = findBestGroups(disjoint, score);
+            addToMotif(groups, finalMotif);
+        }
+        else {
+            findGreedy(disjoint, finalMotif);
+        }
+    }
+
+    return finalMotif;
+
+    function findDisjoint() {
+        var ret = [];
+        var hosts = graph.getHosts();
+        for (var h = 0; h < hosts.length; h++) {
+            var host = hosts[h];
+            var group = [];
+            var inBetween = 0;
+
+            var curr = graph.getHead(host).getNext();
+            while (curr != null) {
+                if (inBetween > context.maxInBetween || curr.isTail()
+                        || curr.hasParents()) {
+                    if (group.length != 0) {
+                        ret.push(group);
+                    }
+                    group = [];
+                    inBetween = 0;
+                }
+
+                if (curr.hasChildren()) {
+                    inBetween = 1 - curr.getLogEventCount();
+                }
+
+                group.push(curr);
+                inBetween += curr.getLogEventCount();
+                curr = curr.getNext();
+            }
+        }
+        return ret;
+    }
+
+    function findAllBroadcasts(group) {
+
+        var score = [];
+
+        for (var i = 0; i < group.length; i++) {
+
+            var bcCount = 0;
+            var inBetween = 0;
+            var seenHosts = {};
+            score[i] = [];
+
+            for (var j = i; j < group.length; j++) {
+                var curr = group[j];
+
+                var hasValidChild = false;
+                var children = curr.getChildren();
+                for (var k = 0; k < children.length; k++) {
+                    if (!seenHosts[children[k].getHost()]) {
+                        hasValidChild = true;
+                        break;
+                    }
+                }
+
+                if (inBetween > context.maxInBetween || curr.hasParents()
+                        || (curr.hasChildren() && !hasValidChild)) {
+                    break;
+                }
+
+                if (curr.hasChildren()) {
+
+                    for (var k = 0; k < children.length; k++) {
+                        var childHost = children[k].getHost();
+                        if (!seenHosts[childHost]) {
+                            bcCount++;
+                            seenHosts[childHost] = true;
+                        }
+                    }
+                    inBetween = 1 - curr.getLogEventCount();
+                    score[i][j] = bcCount;
+                }
+
+                inBetween += curr.getLogEventCount();
+            }
+        }
+
+        return score;
+    }
+
+    function findBestGroups(nodes, score) {
+        var best = [];
+        var parent = [];
+        for (var i = 0; i < nodes.length; i++) {
+            var max = -1;
+            for (var j = 0; j <= i; j++) {
+                var newScore = 0;
+                var ownScore = score[j][i];
+                if (!!ownScore && ownScore >= context.minBroadcasts) {
+                    newScore += ownScore;
+                }
+                if (j > 0) {
+                    newScore += best[j - 1];
+                }
+                if (newScore > max) {
+                    max = newScore;
+                    parent[i] = j - 1;
+                }
+            }
+            best[i] = max;
+        }
+
+        var groups = [];
+        var loc = nodes.length - 1;
+        while (loc != -1) {
+            var ploc = parent[loc];
+            var groupStart = nodes[ploc + 1];
+            var groupEnd = nodes[loc];
+            var currScore = score[ploc + 1][loc];
+            if (!!currScore && currScore >= context.minBroadcasts) {
+                groups.push([ groupStart, groupEnd ]);
+            }
+            loc = parent[loc];
+        }
+
+        return groups;
+    }
+
+    function addToMotif(groups, motif) {
+        for (var j = 0; j < groups.length; j++) {
+            var curr = groups[j][0];
+            var groupEnd = groups[j][1].getNext();
+            var prev = null;
+            var seenHosts = {};
+
+            while (curr != groupEnd) {
+                motif.addNode(curr);
+                if (prev != null) {
+                    motif.addEdge(curr, prev);
+                }
+
+                if (curr.hasChildren()) {
+                    var children = curr.getChildren();
+                    for (var i = 0; i < children.length; i++) {
+                        motif.addEdge(curr, children[i]);
+                        motif.addNode(children[i]);
+                        var childHost = children[i].getHost();
+                        if (!seenHosts[childHost]) {
+                            seenHosts[childHost] = true;
+                        }
+                    }
+                }
+
+                prev = curr;
+                curr = curr.getNext();
+            }
+        }
+    }
+
+    function findGreedy(group, motif) {
         var bcCount = 0;
         var inBetween = 0;
         var inPattern = false;
@@ -168,8 +333,8 @@ BroadcastFinder.prototype.find2 = function(graph) {
         var broadcastingNodes = [];
         var seenHosts = {};
 
-        var curr = graph.getHead(host).getNext();
-        while (curr != null) {
+        for (var g = 0; g < group.length; g++) {
+            var curr = group[g];
             queued.push(curr);
 
             var hasValidChild = false;
@@ -181,10 +346,10 @@ BroadcastFinder.prototype.find2 = function(graph) {
                 }
             }
 
-            if (inBetween > this.maxInBetween || curr.isTail()
+            if (inBetween > context.maxInBetween || (g == group.length - 1)
                     || curr.hasParents()
                     || (curr.hasChildren() && !hasValidChild)) {
-                if (bcCount >= this.minBroadcasts) {
+                if (bcCount >= context.minBroadcasts) {
                     for (var i = 1; i < broadcastingNodes.length; i++) {
                         currMotif.addEdge(broadcastingNodes[i - 1],
                                 broadcastingNodes[i]);
@@ -221,136 +386,7 @@ BroadcastFinder.prototype.find2 = function(graph) {
             }
 
             inBetween += curr.getLogEventCount();
-            curr = curr.getNext();
         }
     }
 
-    return motif;
-};
-
-BroadcastFinder.prototype.find = function(graph) {
-
-    function getPairId(node1, node2) {
-        return Math.min(node1.getId(), node2.getId()) + ":"
-                + Math.max(node1.getId(), node2.getId());
-    }
-
-    var motif = new Motif();
-
-    var hosts = graph.getHosts();
-    for (var h = 0; h < hosts.length; h++) {
-        var host = hosts[h];
-        var score = {};
-        var nodes = [];
-
-        var start = graph.getHead(host).getNext();
-        while (!start.isTail()) {
-            var bcCount = 0;
-            var inBetween = 0;
-            var seenHosts = {};
-            nodes.push(start);
-
-            var curr = start;
-            while (curr != null) {
-
-                var hasValidChild = false;
-                var children = curr.getChildren();
-                for (var i = 0; i < children.length; i++) {
-                    if (!seenHosts[children[i].getHost()]) {
-                        hasValidChild = true;
-                        break;
-                    }
-                }
-
-                if (inBetween > this.maxInBetween || curr.isTail()
-                        || curr.hasParents()
-                        || (curr.hasChildren() && !hasValidChild)) {
-                    break;
-                }
-
-                if (curr.hasChildren()) {
-
-                    for (var i = 0; i < children.length; i++) {
-                        var childHost = children[i].getHost();
-                        if (!seenHosts[childHost]) {
-                            bcCount++;
-                            seenHosts[childHost] = true;
-                        }
-                    }
-                    inBetween = 1 - curr.getLogEventCount();
-                    score[getPairId(curr, start)] = bcCount;
-                }
-
-                inBetween += curr.getLogEventCount();
-                curr = curr.getNext();
-            }
-
-            start = start.getNext();
-        }
-
-        var best = [];
-        var parent = [];
-        for (var i = 0; i < nodes.length; i++) {
-            var max = -1;
-            for (var j = 0; j <= i; j++) {
-                var newScore = 0;
-                var ownScore = score[getPairId(nodes[j], nodes[i])];
-                if (!!ownScore && ownScore >= this.minBroadcasts) {
-                    newScore += ownScore;
-                }
-                if (j > 0) {
-                    newScore += best[j - 1];
-                }
-                if (newScore > max) {
-                    max = newScore;
-                    parent[i] = j - 1;
-                }
-            }
-            best[i] = max;
-        }
-
-        var groups = [];
-        var loc = nodes.length - 1;
-        while (loc != -1) {
-            var ploc = parent[loc];
-            var groupStart = nodes[ploc + 1];
-            var groupEnd = nodes[loc];
-            var currScore = score[getPairId(groupStart, groupEnd)];
-            if (!!currScore && currScore >= this.minBroadcasts) {
-                groups.push([ groupStart, groupEnd ]);
-            }
-            loc = parent[loc];
-        }
-
-        for (var j = 0; j < groups.length; j++) {
-            var curr = groups[j][0];
-            var groupEnd = groups[j][1].getNext();
-            var prev = null;
-            var seenHosts = {};
-
-            while (curr != groupEnd) {
-                motif.addNode(curr);
-                if (prev != null) {
-                    motif.addEdge(curr, prev);
-                }
-
-                if (curr.hasChildren()) {
-                    var children = curr.getChildren();
-                    for (var i = 0; i < children.length; i++) {
-                        motif.addEdge(curr, children[i]);
-                        motif.addNode(children[i]);
-                        var childHost = children[i].getHost();
-                        if (!seenHosts[childHost]) {
-                            seenHosts[childHost] = true;
-                        }
-                    }
-                }
-
-                prev = curr;
-                curr = curr.getNext();
-            }
-        }
-    }
-
-    return motif;
 };
