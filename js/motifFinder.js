@@ -163,6 +163,7 @@ BroadcastFinder.prototype.find = function(graph) {
 
     for (var d = 0; d < disjoints.length; d++) {
         var disjoint = disjoints[d];
+        console.log(disjoint);
 
         if (disjoint.length <= BroadcastFinder.GREEDY_THRESHOLD) {
             var score = findAllBroadcasts(disjoint);
@@ -183,19 +184,25 @@ BroadcastFinder.prototype.find = function(graph) {
             var host = hosts[h];
             var group = [];
             var inBetween = 0;
+            var inPattern = false;
 
             var curr = graph.getHead(host).getNext();
             while (curr != null) {
                 if (inBetween > context.maxInBetween || curr.isTail()
                         || curr.hasParents()) {
-                    if (group.length != 0) {
+                    if (inPattern && group.length != 0) {
                         ret.push(group);
+                        group = [];
+                        inPattern = false;
                     }
-                    group = [];
-                    inBetween = 0;
+                    
                 }
 
                 if (curr.hasChildren()) {
+                    if(!inPattern) {
+                        inPattern = true;
+                        group = [];
+                    }
                     inBetween = 1 - curr.getLogEventCount();
                 }
 
