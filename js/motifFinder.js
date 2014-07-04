@@ -163,7 +163,6 @@ BroadcastFinder.prototype.find = function(graph) {
 
     for (var d = 0; d < disjoints.length; d++) {
         var disjoint = disjoints[d];
-        console.log(disjoint);
 
         if (disjoint.length <= BroadcastFinder.GREEDY_THRESHOLD) {
             var score = findAllBroadcasts(disjoint);
