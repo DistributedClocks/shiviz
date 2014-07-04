@@ -41,7 +41,7 @@ function View(model, global, label) {
 //    this.addTransformation(this.hnt);
     
  // Boradcast will be highlighted if you uncomment the following three lines:
-    var bFinder = new BroadcastFinder(3, 1);
+    var bFinder = new BroadcastFinder(3, 2);
     this.hnt2 = new HighlightMotifTransformation(bFinder, false);
     this.addTransformation(this.hnt2);
 }
