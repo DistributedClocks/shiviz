@@ -244,7 +244,7 @@ section.input .left {
     white-space: nowrap;
     overflow: hidden;
     background: #fff;
-    transition: color, margin;
+    transition: margin;
     transition-duration: .06s;
     transition-timing-function: ease-out;
 }
@@ -284,7 +284,7 @@ section.input .left {
     z-index: 2;
     padding: 1px;
     margin: -1px;
-    margin-left: 20pt;
+    margin-left: calc(20pt - 2px);
 }
 
 .visualization .highlight:before {

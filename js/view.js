@@ -214,7 +214,7 @@ View.prototype.draw = function() {
         $(".highlight").css({
             "background": e.getFillColor(),
             "top": top + ptop + margin + pmargin + offset,
-            "left": $line.offset().left - $line.css("margin-left")
+            "left": $line.offset().left - parseFloat($line.css("margin-left"))
         }).attr({
             "data-ln": e.getLineNumber()
         }).show();
