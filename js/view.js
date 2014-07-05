@@ -35,6 +35,9 @@ function View(model, global, label) {
     // --------- Temporary ----------
     var finder = new BroadcastGatherFinder(3, 1, false);
     this.addTransformation(new HighlightMotifTransformation(finder, false));
+    
+    var bn = new BuilderNode();
+    console.log(bn.getChildren());
 }
 
 /**
