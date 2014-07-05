@@ -13,6 +13,8 @@ Usage:
 
 - This script must be run from within the top level shiviz source directory.
 
+- This script must be run from OSX :)
+
 - This script:
 
   1. Removes the proxy hack that allows shiviz to access log files
@@ -91,6 +93,15 @@ def main():
     # Remove the unnecessary dev.js that was copied over.
     runcmd("rm " + dist_dir + "js/dev.js")
 
+    # Remove any files containing '#'
+    runcmd("cd " + dist_dir + " && find . | grep '#' | xargs rm")
+
+    # Remove any files containing '~'
+    runcmd("cd " + dist_dir + " && find . | grep '~' | xargs rm")
+
+    # Remove any files containing '~'
+    runcmd("cd " + dist_dir + " && find . | grep '.orig' | xargs rm")
+
     # Minify the code
     print "Minifying... please wait"
 
@@ -149,19 +160,14 @@ def main():
         data = data.replace("revision: ZZZ", "revision: %s" % revid)
         minified = open(dist_dir + 'js/min.js', 'w')
         minified.write(data)
+        minified.close()
 
         # Replace reference to js files with minified js in deployed version
         # of index.html.
-        runcmd("sed -i -e 's/<script[^>]*><\/script>//g' " + dist_dir + "index.html")
-        runcmd("sed -i -e 's/<\/body>/<script src=\"js\/min.js\"><\/script><\/body>/g' " + dist_dir + "index.html")
+        runcmd("sed -i '' -e 's/<script[^>]*><\/script>//g' " + dist_dir + "index.html")
+        runcmd("sed -i '' -e 's/<\/body>/<script src=\"js\/min.js\"><\/script><\/body>/g' " + dist_dir + "index.html")
 
         print "Minification successful!"
-
-    # Remove any files containing '#'
-    runcmd("cd " + dist_dir + " && find . | grep '#' | xargs rm")
-
-    # Remove any files containing '~'
-    runcmd("cd " + dist_dir + " && find . | grep '~' | xargs rm")
 
     # Add any files that are new and remove any files that no longer exist
     runcmd("cd " + dist_dir + " && hg addremove")
