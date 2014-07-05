@@ -40,8 +40,7 @@
  * @param {int} allowOtherConnections See above for the purpose of this
  *            parameter
  */
-function RequestResponseFinder(maxLERequester, maxLEResponder,
-        allowOtherConnections) {
+function RequestResponseFinder(maxLERequester, maxLEResponder, allowOtherConnections) {
     this.maxLERequester = maxLERequester;
     this.maxLEResponder = maxLEResponder;
     this.allowOtherConnections = allowOtherConnections;
@@ -58,15 +57,13 @@ RequestResponseFinder.prototype.find = function(graph) {
         var host = node.getHost();
         var children = node.getChildren();
 
-        if (seen[node.getId()] || (!this.allowOtherConnections
-                && (children.length > 1 || node.hasParents()))) {
+        if (seen[node.getId()] || (!this.allowOtherConnections && (children.length > 1 || node.hasParents()))) {
             continue;
         }
 
         out: for (var j = 0; j < children.length; j++) {
             var curr = children[j];
-            if (seen[node.getId()] || (!this.allowOtherConnections
-                    && (curr.getParents().length > 1 || curr.getChildren().length > 1))) {
+            if (seen[node.getId()] || (!this.allowOtherConnections && (curr.getParents().length > 1 || curr.getChildren().length > 1))) {
                 continue;
             }
 
@@ -75,8 +72,7 @@ RequestResponseFinder.prototype.find = function(graph) {
             for (var dist = 0; dist <= this.maxLEResponder && !curr.isTail(); dist++) {
                 trail.push(curr);
 
-                if (seen[node.getId()] || (!this.allowOtherConnections && curr.getFamily().length > 2
-                        && dist > 0)) {
+                if (seen[node.getId()] || (!this.allowOtherConnections && curr.getFamily().length > 2 && dist > 0)) {
                     break;
                 }
 
@@ -96,7 +92,7 @@ RequestResponseFinder.prototype.find = function(graph) {
                         seen[child2.getId()] = true;
                         motif.addNode(node);
                         seen[node.getId()] = true;
-                        
+
                         for (var a = 0; a < trail.length; a++) {
                             motif.addNode(trail[a]);
                             seen[trail[a].getId()] = true;
@@ -192,18 +188,17 @@ BroadcastFinder.prototype.find = function(graph) {
 
             var curr = graph.getHead(host).getNext();
             while (curr != null) {
-                if (inBetween > context.maxInBetween || curr.isTail()
-                        || curr.hasParents()) {
+                if (inBetween > context.maxInBetween || curr.isTail() || curr.hasParents()) {
                     if (inPattern && group.length != 0) {
                         ret.push(group);
                         group = [];
                         inPattern = false;
                     }
-                    
+
                 }
 
                 if (curr.hasChildren()) {
-                    if(!inPattern) {
+                    if (!inPattern) {
                         inPattern = true;
                         group = [];
                     }
@@ -241,8 +236,7 @@ BroadcastFinder.prototype.find = function(graph) {
                     }
                 }
 
-                if (inBetween > context.maxInBetween || curr.hasParents()
-                        || (curr.hasChildren() && !hasValidChild)) {
+                if (inBetween > context.maxInBetween || curr.hasParents() || (curr.hasChildren() && !hasValidChild)) {
                     break;
                 }
 
@@ -357,13 +351,10 @@ BroadcastFinder.prototype.find = function(graph) {
                 }
             }
 
-            if (inBetween > context.maxInBetween || (g == group.length - 1)
-                    || curr.hasParents()
-                    || (curr.hasChildren() && !hasValidChild)) {
+            if (inBetween > context.maxInBetween || (g == group.length - 1) || curr.hasParents() || (curr.hasChildren() && !hasValidChild)) {
                 if (bcCount >= context.minBroadcasts) {
                     for (var i = 1; i < broadcastingNodes.length; i++) {
-                        currMotif.addEdge(broadcastingNodes[i - 1],
-                                broadcastingNodes[i]);
+                        currMotif.addEdge(broadcastingNodes[i - 1], broadcastingNodes[i]);
                     }
                     motif.merge(currMotif);
                 }

@@ -31,19 +31,6 @@ function View(model, global, label) {
     this.collapseSequentialNodesTransformation = new CollapseSequentialNodesTransformation(2);
 
     this.addTransformation(this.collapseSequentialNodesTransformation);
-    
-    
-    //-----------TEMPORARY--------------------
-    
-    // Request-response will be highlighted if you uncomment the following three lines:
-//    var rrFinder = new RequestResponseFinder(5, 5, false);
-//    this.hnt = new HighlightMotifTransformation(rrFinder, false);
-//    this.addTransformation(this.hnt);
-    
- // Boradcast will be highlighted if you uncomment the following three lines:
-    var bFinder = new BroadcastFinder(3, 2);
-    this.hnt2 = new HighlightMotifTransformation(bFinder, false);
-    this.addTransformation(this.hnt2);
 }
 
 /**

@@ -140,8 +140,8 @@ HideHostTransformation.prototype.transform = function(visualGraph) {
  * group if y == x or y has no family and y's prev or next node is in x's group.
  * 
  * @param {Number} threshold Nodes are collapsed if the number of nodes in the
- *        group is greater than or equal to the threshold. The threshold must be
- *        greater than or equal to 2.
+ *            group is greater than or equal to the threshold. The threshold
+ *            must be greater than or equal to 2.
  */
 function CollapseSequentialNodesTransformation(threshold) {
 
@@ -209,7 +209,7 @@ CollapseSequentialNodesTransformation.prototype.addExemption = function(node) {
  * group.
  * 
  * @param {Node} node The LogEvents of this node and the LogEvents of every node
- *        in its group will be removed as exemptions
+ *            in its group will be removed as exemptions
  */
 CollapseSequentialNodesTransformation.prototype.removeExemption = function(node) {
     if (node.hasChildren() || node.hasParents()) {
@@ -494,16 +494,17 @@ HighlightHostTransformation.prototype.transform = function(visualGraph) {
  * 
  * This transformation visually highlights a motif.
  * 
- * @param {MotifFinder} finder a MotifFinder that specifies which motif to highlight
+ * @param {MotifFinder} finder a MotifFinder that specifies which motif to
+ *            highlight
  * @param {boolean} ignoreEdges If true, edges will not be visually highlighted
  */
 function HighlightMotifTransformation(finder, ignoreEdges) {
-    
+
     this.finder = finder;
     this.setIgnoreEdges(ignoreEdges);
-    
+
     this.priority = 0;
-    
+
 }
 
 /**
@@ -515,25 +516,22 @@ HighlightMotifTransformation.prototype.setIgnoreEdges = function(val) {
     this.ignoreEdges = !!val;
 };
 
-
 HighlightMotifTransformation.prototype.transform = function(visualGraph) {
-    
+
     var motif = this.finder.find(visualGraph.getGraph());
-    
+
     var nodes = motif.getNodes();
-    for(var i = 0; i < nodes.length; i++) {
+    for (var i = 0; i < nodes.length; i++) {
         var node = nodes[i];
         var visualNode = visualGraph.getVisualNodeByNode(node);
         visualNode.setRadius(visualNode.getRadius() * 1.5);
     }
-    
+
     var edges = motif.getEdges();
-    for(var i = 0; i < edges.length; i++) {
+    for (var i = 0; i < edges.length; i++) {
         var edge = edges[i];
         var visualEdge = visualGraph.getVisualEdgeByNodes(edge[0], edge[1]);
         visualEdge.setColor("#333");
-//        visualEdge.setWidth(visualEdge.getWidth() * 1.5);
+        // visualEdge.setWidth(visualEdge.getWidth() * 1.5);
     }
 };
-
-
