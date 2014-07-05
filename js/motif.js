@@ -6,7 +6,7 @@
  * a larger graph. The exact importance of the edges and nodes stored is left up
  * to the utilizing class.
  */
-function Motif() { //TODO: validate nodes and edges on add?
+function Motif() {
 
     /** @private */
     this.nodes = {};
@@ -42,21 +42,22 @@ Motif.prototype.addAllNodes = function(nodes) {
  */
 Motif.prototype.getNodes = function() {
     var array = [];
-    for ( var key in this.nodes) {
+    for (var key in this.nodes) {
         array.push(this.nodes[key]);
     }
     return array;
 };
 
 /**
- * Adds an edge to this motif, given the two nodes that the edge connects. Note that 
- * this class does not check that the added edge actually exists anywhere or is otherwise meaningful
- * in any way. Such checks are the responsibility of classes utilizing Motif
+ * Adds an edge to this motif, given the two nodes that the edge connects. Note
+ * that this class does not check that the added edge actually exists anywhere
+ * or is otherwise meaningful in any way. Such checks are the responsibility of
+ * classes utilizing Motif
  * 
  * @param {Node} node1 One of the nodes the edge connects. Must not be identical
- *        to node2
+ *            to node2
  * @param {Node} node2 One of the nodes the edge connects. Must not be identical
- *        to node1
+ *            to node1
  */
 Motif.prototype.addEdge = function(node1, node2) {
     this.edges[Motif.getEdgeId(node1, node2)] = [ node1, node2 ];
@@ -66,9 +67,10 @@ Motif.prototype.addEdge = function(node1, node2) {
  * Adds multiple edges to this motif.
  * 
  * @param {Array<Array<Node>>} edges The edges to add. edges[i] is the i-th
- *        edge to be added. edge[i][0] and edge[i][1] are the two nodes the i-th
- *        edge connects. For example, if you want to add two edges: one from x
- *        to y and another from t to w, edges would be [ [x, y], [t, w] ]
+ *            edge to be added. edge[i][0] and edge[i][1] are the two nodes the
+ *            i-th edge connects. For example, if you want to add two edges: one
+ *            from x to y and another from t to w, edges would be [ [x, y], [t,
+ *            w] ]
  */
 Motif.prototype.addAllEdges = function(edges) {
     for (var i = 0; i < edges.length; i++) {
@@ -87,7 +89,7 @@ Motif.prototype.addAllEdges = function(edges) {
  */
 Motif.prototype.getEdges = function() {
     var edges = [];
-    for ( var key in this.edges) {
+    for (var key in this.edges) {
         edges.push(this.edges[key]);
     }
     return edges;
