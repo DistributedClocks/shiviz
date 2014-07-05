@@ -149,9 +149,10 @@ RequestResponseFinder.prototype.find = function(graph) {
  * @param {int} maxInBetween See above for the purpose of this parameter
  * @returns
  */
-function BroadcastFinder(minBroadcasts, maxInBetween) {
+function BroadcastFinder(minBroadcasts, maxInBetween, broadcast) {
     this.minBroadcasts = minBroadcasts;
     this.maxInBetween = maxInBetween;
+    this.broadcast = broadcast;
 };
 
 BroadcastFinder.GREEDY_THRESHOLD = 300;
@@ -188,7 +189,10 @@ BroadcastFinder.prototype.find = function(graph) {
 
             var curr = graph.getHead(host).getNext();
             while (curr != null) {
-                if (inBetween > context.maxInBetween || curr.isTail() || curr.hasParents()) {
+                var hasBadLink = context.broadcast ? curr.hasParents() : curr.hasChildren();
+                var hasGoodLink = context.broadcast ? curr.hasChildren() : curr.hasParents();
+                
+                if (inBetween > context.maxInBetween || curr.isTail() || hasBadLink) {
                     if (inPattern && group.length != 0) {
                         ret.push(group);
                         group = [];
@@ -197,7 +201,7 @@ BroadcastFinder.prototype.find = function(graph) {
 
                 }
 
-                if (curr.hasChildren()) {
+                if (hasGoodLink) {
                     if (!inPattern) {
                         inPattern = true;
                         group = [];
@@ -227,23 +231,27 @@ BroadcastFinder.prototype.find = function(graph) {
             for (var j = i; j < group.length; j++) {
                 var curr = group[j];
 
-                var hasValidChild = false;
-                var children = curr.getChildren();
-                for (var k = 0; k < children.length; k++) {
-                    if (!seenHosts[children[k].getHost()]) {
-                        hasValidChild = true;
+                var hasValidLink = false;
+                var links = context.broadcast ? curr.getChildren() : curr.getParents();
+                for (var k = 0; k < links.length; k++) {
+                    if (!seenHosts[links[k].getHost()]) {
+                        hasValidLink = true;
                         break;
                     }
                 }
 
-                if (inBetween > context.maxInBetween || curr.hasParents() || (curr.hasChildren() && !hasValidChild)) {
+                var hasBadLink = context.broadcast ? curr.hasParents() : curr.hasChildren();
+                var hasGoodLink = context.broadcast ? curr.hasChildren() : curr.hasParents();
+                var allowBadLink = context.broadcast && j == i;
+                
+                if (inBetween > context.maxInBetween || (hasBadLink && !allowBadLink) || (hasGoodLink && !hasValidLink)) {
                     break;
                 }
 
-                if (curr.hasChildren()) {
+                if (hasGoodLink) {
 
-                    for (var k = 0; k < children.length; k++) {
-                        var childHost = children[k].getHost();
+                    for (var k = 0; k < links.length; k++) {
+                        var childHost = links[k].getHost();
                         if (!seenHosts[childHost]) {
                             bcCount++;
                             seenHosts[childHost] = true;
@@ -311,15 +319,13 @@ BroadcastFinder.prototype.find = function(graph) {
                     motif.addEdge(curr, prev);
                 }
 
-                if (curr.hasChildren()) {
-                    var children = curr.getChildren();
-                    for (var i = 0; i < children.length; i++) {
-                        motif.addEdge(curr, children[i]);
-                        motif.addNode(children[i]);
-                        var childHost = children[i].getHost();
-                        if (!seenHosts[childHost]) {
-                            seenHosts[childHost] = true;
-                        }
+                var links = context.broadcast ? curr.getChildren() : curr.getParents();
+                for (var i = 0; i < links.length; i++) {
+                    motif.addEdge(curr, links[i]);
+                    motif.addNode(links[i]);
+                    var linkHost = links[i].getHost();
+                    if (!seenHosts[linkHost]) {
+                        seenHosts[linkHost] = true;
                     }
                 }
 
@@ -335,33 +341,37 @@ BroadcastFinder.prototype.find = function(graph) {
         var inPattern = false;
         var currMotif = new Motif();
         var queued = [];
-        var broadcastingNodes = [];
+        var nodes = [];
         var seenHosts = {};
+        group = group.concat([ new Node([]) ]);
 
         for (var g = 0; g < group.length; g++) {
             var curr = group[g];
             queued.push(curr);
 
-            var hasValidChild = false;
-            var children = curr.getChildren();
-            for (var i = 0; i < children.length; i++) {
-                if (!seenHosts[children[i].getHost()]) {
-                    hasValidChild = true;
+            var hasValidLink = false;
+            var links = context.broadcast ? curr.getChildren() : curr.getParents();
+            for (var i = 0; i < links.length; i++) {
+                if (!seenHosts[links[i].getHost()]) { 
+                    hasValidLink = true;
                     break;
                 }
             }
+            
+            var hasBadLink = context.broadcast ? curr.hasParents() : curr.hasChildren();
+            var hasGoodLink = context.broadcast ? curr.hasChildren() : curr.hasParents();
 
-            if (inBetween > context.maxInBetween || (g == group.length - 1) || curr.hasParents() || (curr.hasChildren() && !hasValidChild)) {
+            if (inBetween > context.maxInBetween || (g == group.length - 1) || hasBadLink || (hasGoodLink && !hasValidLink)) {
                 if (bcCount >= context.minBroadcasts) {
-                    for (var i = 1; i < broadcastingNodes.length; i++) {
-                        currMotif.addEdge(broadcastingNodes[i - 1], broadcastingNodes[i]);
+                    for (var i = 1; i < nodes.length; i++) {
+                        currMotif.addEdge(nodes[i - 1], nodes[i]);
                     }
                     motif.merge(currMotif);
                 }
                 inPattern = false;
             }
 
-            if (curr.hasChildren()) {
+            if (hasGoodLink && (context.broadcast || !hasBadLink)) {
                 if (!inPattern) {
                     inPattern = true;
                     bcCount = 0;
@@ -369,20 +379,20 @@ BroadcastFinder.prototype.find = function(graph) {
                     currMotif = new Motif();
                     queued = [ curr ];
                     seenHosts = {};
-                    broadcastingNodes = [];
+                    nodes = [];
                 }
 
-                currMotif.addAllNodes(children);
-                for (var i = 0; i < children.length; i++) {
-                    currMotif.addEdge(curr, children[i]);
-                    var childHost = children[i].getHost();
-                    if (!seenHosts[childHost]) {
+                currMotif.addAllNodes(links);
+                for (var i = 0; i < links.length; i++) {
+                    currMotif.addEdge(curr, links[i]);
+                    var linkHost = links[i].getHost();
+                    if (!seenHosts[linkHost]) {
                         bcCount++;
-                        seenHosts[childHost] = true;
+                        seenHosts[linkHost] = true;
                     }
                 }
                 currMotif.addAllNodes(queued);
-                broadcastingNodes = broadcastingNodes.concat(queued);
+                nodes = nodes.concat(queued);
                 queued = [];
                 inBetween = 1 - curr.getLogEventCount();
             }
