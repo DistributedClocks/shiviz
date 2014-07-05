@@ -33,7 +33,7 @@ function View(model, global, label) {
     this.addTransformation(this.collapseSequentialNodesTransformation);
     
     // --------- Temporary ----------
-    var finder = new BroadcastFinder(3, 1, false);
+    var finder = new BroadcastGatherFinder(3, 1, false);
     this.addTransformation(new HighlightMotifTransformation(finder, false));
 }
 
