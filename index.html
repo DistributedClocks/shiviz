@@ -7,6 +7,12 @@
     <link href="css/style.css" type="text/css" rel="stylesheet">
     <script src="http://d3js.org/d3.v3.min.js"></script>
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    <style type="text/css">
+        #vizContainer svg line.hidden-link {
+            stroke-width: 1px;
+            stroke: url(#grad);
+        }
+    </style>
 </head>
 
 <body>
@@ -173,7 +179,7 @@
                 
             </div>
         </div>
-        <svg id="defs">
+        <svg version="1.1" xmlns="http://www.w3.org/2000/svg" id="defs">
             <defs>
                 <linearGradient id="grad">
                     <stop stop-color="#999" offset="0"></stop>
