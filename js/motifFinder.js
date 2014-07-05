@@ -50,41 +50,49 @@ RequestResponseFinder.prototype.find = function(graph) {
 
     var nodes = graph.getNodes();
     var motif = new Motif();
-    var seen = {}; // Nodes already part of a motif 
+    var seen = {}; // Nodes already part of a motif
 
     for (var i = 0; i < nodes.length; i++) {
-        var node = nodes[i]; // Node on sender's host that is part of the request
+        var node = nodes[i]; // Node on sender's host that is part of the
+        // request
         var host = node.getHost();
         var children = node.getChildren();
 
-        // Disqualify current node if it's been seen or it has extra disallowed connections
+        // Disqualify current node if it's been seen or it has extra disallowed
+        // connections
         if (seen[node.getId()] || (!this.allowOtherConnections && (children.length > 1 || node.hasParents()))) {
             continue;
         }
 
         out: for (var j = 0; j < children.length; j++) {
             var curr = children[j]; // Nodes on receiver's host
-            
-            // Disqualify current node if it's been seen or it has extra disallowed connections
+
+            // Disqualify current node if it's been seen or it has extra
+            // disallowed connections
             if (seen[node.getId()] || (!this.allowOtherConnections && (curr.getParents().length > 1 || curr.getChildren().length > 1))) {
                 continue;
             }
 
             var trail = []; // Nodes encountered from start to end node
 
-            // Keep checking for a node that sends a message back to original host while dist <= maxLEResponder
+            // Keep checking for a node that sends a message back to original
+            // host while dist <= maxLEResponder
             for (var dist = 0; dist <= this.maxLEResponder && !curr.isTail(); dist++) {
                 trail.push(curr);
 
-                // Disqualify current node if it's been seen or it has extra disallowed connections
+                // Disqualify current node if it's been seen or it has extra
+                // disallowed connections
                 if (seen[node.getId()] || (!this.allowOtherConnections && curr.getFamily().length > 2 && dist > 0)) {
                     break;
                 }
 
-                var child2 = curr.getChildByHost(host); // Node on sender's host that is part of the response
+                var child2 = curr.getChildByHost(host); // Node on sender's host
+                // that is part of the
+                // response
                 var curr2 = child2;
 
-                // Check that no more than maxLERequester nodes are between node and child2
+                // Check that no more than maxLERequester nodes are between node
+                // and child2
                 if (curr2 != null) {
 
                     var count = 0;
@@ -124,10 +132,11 @@ RequestResponseFinder.prototype.find = function(graph) {
 /**
  * @class
  * 
- * This class is responsible for finding broadcast motif.
+ * This class is responsible for finding broadcast or gather motif.
  * 
  * Intuitively, a broadcast motif is a communication pattern where a host sends
- * messages to other hosts in quick succession.
+ * messages to other hosts in quick succession. A gather motif then is where
+ * multiple hosts send messages to a single one in quick succession.
  * 
  * More formally, a broadcast motif is sequence S of k nodes n_1, n_2, n_3 ...
  * n_k
@@ -145,37 +154,49 @@ RequestResponseFinder.prototype.find = function(graph) {
  * maxInBetween</li>
  * <li>Let Hosts be the set of hosts of all nodes in the set of nodes that are
  * a child of a node in S. The cardinality of Hosts must be greater than or
- * equal to the parameter minBroadcasts.
+ * equal to the parameter minBroadcastGather.
  * </ul>
  * 
  * The actual motif itself comprises all nodes in S and all nodes that are
  * children of a node in S. It also contains all edges that connect any two
  * nodes in S and all edges that connect any node in S its children.
  * 
- * @param {int} minBroadcasts See above for the purpose of this parameter
- * @param {int} maxInBetween See above for the purpose of this parameter
- * @returns
+ * The formal definition of a gather motif is analogous to broadcast. In the
+ * formal definition above, replace child(ren) with parent(s) and parent(s) with
+ * child(ren). One difference for gather is that no nodes in S INCLUDING n_1 may
+ * have any parents.
+ * 
+ * @param {int} minBroadcastGather Minimum amount of broadcasts or gathers
+ *            needed to accept a motif
+ * @param {int} maxInBetween Maximum number of non-broadcasting or gathering
+ *            nodes allowed since previous broadcasting or gathering one. This
+ *            number includes the last broadcasting or gathering node itself.
+ *            For example, if you set this to 1, the finder will allow ZERO
+ *            nodes between broadcast/gather nodes (in other words, ONE node
+ *            since the previous broadcast/gather node including that one)
+ * @param {boolean} broadcast Set to true to find broadcasts. Set to false to
+ *            find gathers
  */
-function BroadcastFinder(minBroadcasts, maxInBetween, broadcast) {
-    this.minBroadcasts = minBroadcasts;
+function BroadcastGatherFinder(minBroadcastGather, maxInBetween, broadcast) {
+    this.minBroadcastGather = minBroadcastGather;
     this.maxInBetween = maxInBetween;
     this.broadcast = broadcast;
 };
 
-BroadcastFinder.GREEDY_THRESHOLD = 300;
+BroadcastGatherFinder.GREEDY_THRESHOLD = 300;
 
-BroadcastFinder.prototype.find = function(graph) {
+BroadcastGatherFinder.prototype.find = function(graph) {
 
     var context = this; // Used by inner functions
-    
+
     var finalMotif = new Motif();
     var disjoints = findDisjoint();
 
     for (var d = 0; d < disjoints.length; d++) {
         var disjoint = disjoints[d];
 
-        if (disjoint.length <= BroadcastFinder.GREEDY_THRESHOLD) {
-            var score = findAllBroadcasts(disjoint);
+        if (disjoint.length <= BroadcastGatherFinder.GREEDY_THRESHOLD) {
+            var score = findAll(disjoint);
             var groups = findBestGroups(disjoint, score);
             addToMotif(groups, finalMotif);
         }
@@ -189,7 +210,7 @@ BroadcastFinder.prototype.find = function(graph) {
     // Finds disjoint groups of potential broadcasts/gathers
     function findDisjoint() {
         var ret = [];
-        
+
         var hosts = graph.getHosts();
         for (var h = 0; h < hosts.length; h++) {
             var host = hosts[h];
@@ -199,11 +220,12 @@ BroadcastFinder.prototype.find = function(graph) {
 
             var curr = graph.getHead(host).getNext();
             while (curr != null) {
-                
+
                 var hasBadLink = context.broadcast ? curr.hasParents() : curr.hasChildren();
                 var hasGoodLink = context.broadcast ? curr.hasChildren() : curr.hasParents();
-                
-                // If curr can't be part of the current group, push group and start a new group for curr
+
+                // If curr can't be part of the current group, push group and
+                // start a new group for curr
                 if (inBetween > context.maxInBetween || curr.isTail() || hasBadLink) {
                     if (inPattern && group.length != 0) {
                         ret.push(group);
@@ -231,25 +253,27 @@ BroadcastFinder.prototype.find = function(graph) {
     }
 
     /*
-     * Finds a broadcasts/gathers within the group. O(n^2)
-     * returns score array where score[i][j] = number of broadcasts between ith and jth node in group inclusive
-     * ONLY IF they form a valid broadcast motif
-     */    
-    function findAllBroadcasts(group) {
+     * Finds a broadcasts/gathers within the group. O(n^2) returns score array
+     * where score[i][j] = number of broadcasts between ith and jth node in
+     * group inclusive ONLY IF they form a valid broadcast motif
+     */
+    function findAll(group) {
 
         var score = [];
 
         for (var i = 0; i < group.length; i++) {
 
             var count = 0; // current broadcast/gather count
-            var inBetween = 0; // Nodes since last valid broadcasting/gathering node
+            var inBetween = 0; // Nodes since last valid broadcasting/gathering
+            // node
             var seenHosts = {};
             score[i] = [];
 
             for (var j = i; j < group.length; j++) {
                 var curr = group[j];
 
-                // Check if curr has a valid link (a link to a host that hasn't been seen yet)
+                // Check if curr has a valid link (a link to a host that hasn't
+                // been seen yet)
                 var hasValidLink = false;
                 var links = context.broadcast ? curr.getChildren() : curr.getParents();
                 for (var k = 0; k < links.length; k++) {
@@ -261,9 +285,11 @@ BroadcastFinder.prototype.find = function(graph) {
 
                 var hasBadLink = context.broadcast ? curr.hasParents() : curr.hasChildren();
                 var hasGoodLink = context.broadcast ? curr.hasChildren() : curr.hasParents();
-                var allowBadLink = context.broadcast && j == i; // we allow parent links for the first node of a broadcast
-                
-                // (hasGoodLink && !hasValidLink) == has children/parents, but all of them are to hosts already seen
+                // we allow parent links for the first node of a broadcast
+                var allowBadLink = context.broadcast && j == i;
+
+                // (hasGoodLink && !hasValidLink) == has children/parents, but
+                // all of them are to hosts already seen
                 if (inBetween > context.maxInBetween || (hasBadLink && !allowBadLink) || (hasGoodLink && !hasValidLink)) {
                     break;
                 }
@@ -289,17 +315,17 @@ BroadcastFinder.prototype.find = function(graph) {
 
     // Finds the best partition of nodes into broadcast motifs
     function findBestGroups(nodes, score) {
-        var best = []; // best[i] = max score using up to and including the ith node
+        var best = []; // best[i] = max score using nodes 0 to i inclusive
         var parent = [];
-        
+
         // Find max score using O(n^2) dynamic programming
-        // dp recurrence: best[i] = max(best[j-1] + score[j][i]) for all 0 <= j <= i
+        // dp recurrence: best[i] = max(best[j-1] + score[j][i]) for all 0<=j<=i
         for (var i = 0; i < nodes.length; i++) {
             var max = -1;
             for (var j = 0; j <= i; j++) {
                 var newScore = 0;
                 var ownScore = score[j][i];
-                if (!!ownScore && ownScore >= context.minBroadcasts) {
+                if (!!ownScore && ownScore >= context.minBroadcastGather) {
                     newScore += ownScore;
                 }
                 if (j > 0) {
@@ -321,7 +347,7 @@ BroadcastFinder.prototype.find = function(graph) {
             var groupStart = nodes[ploc + 1];
             var groupEnd = nodes[loc];
             var currScore = score[ploc + 1][loc];
-            if (!!currScore && currScore >= context.minBroadcasts) {
+            if (!!currScore && currScore >= context.minBroadcastGather) {
                 groups.push([ groupStart, groupEnd ]);
             }
             loc = parent[loc];
@@ -378,17 +404,17 @@ BroadcastFinder.prototype.find = function(graph) {
             var hasValidLink = false;
             var links = context.broadcast ? curr.getChildren() : curr.getParents();
             for (var i = 0; i < links.length; i++) {
-                if (!seenHosts[links[i].getHost()]) { 
+                if (!seenHosts[links[i].getHost()]) {
                     hasValidLink = true;
                     break;
                 }
             }
-            
+
             var hasBadLink = context.broadcast ? curr.hasParents() : curr.hasChildren();
             var hasGoodLink = context.broadcast ? curr.hasChildren() : curr.hasParents();
 
             if (inBetween > context.maxInBetween || (g == group.length - 1) || hasBadLink || (hasGoodLink && !hasValidLink)) {
-                if (bcCount >= context.minBroadcasts) {
+                if (bcCount >= context.minBroadcastGather) {
                     for (var i = 1; i < nodes.length; i++) {
                         currMotif.addEdge(nodes[i - 1], nodes[i]);
                     }
