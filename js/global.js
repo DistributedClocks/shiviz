@@ -187,7 +187,9 @@ Global.prototype.resize = function() {
         visibleHosts = visibleHosts + vh.length - hn;
     }
 
-    var globalWidth = $(window).width() - $(".visualization header").outerWidth() - $("#sidebar").outerWidth();
+    var headerWidth = $(".visualization header").outerWidth();
+    var sidebarWidth = $("#sidebar").outerWidth();
+    var globalWidth = $(window).width() - headerWidth - sidebarWidth;
     var totalMargin = globalWidth - visibleHosts * Global.HOST_SQUARE_SIZE;
     var hostMargin = totalMargin / (visibleHosts + this.views.length - 2);
 

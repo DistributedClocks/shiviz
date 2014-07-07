@@ -126,7 +126,7 @@ section.home .content {
 
 /* Icon nav */
 header.icon {
-    width: 10em;
+    width: 10.1em;
     font-family: "Icon";
     font-size: 24pt;
     overflow: hidden;
@@ -306,7 +306,7 @@ section.input .left {
 
 .visualization #graph {
     margin-left: 264pt;
-    padding-right: calc(240px - 2em);
+    padding-right: 240px;
 }
 
 svg {

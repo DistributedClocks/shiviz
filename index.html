@@ -244,46 +244,5 @@
     <script type="text/javascript" src="js/view.js"></script>  
 
     <script type="text/javascript" src="js/shiviz.js"></script>
-
-    <script type="text/javascript">
-        function go (index, store, force) {
-            $("section").hide();
-            $(window).scrollTop();
-            switch (index) {
-                case 0:
-                $(".home").show();
-                break;
-                case 1:
-                $(".input").show();
-                inputHeight();
-                $(window).on("load resize", inputHeight);
-                break;
-                case 2:
-                $(".visualization").show();
-                if (!$("#graph svg").length || force)
-                    visualize();
-                break;
-            }
-
-            if (store)
-                history.pushState({index: index}, null, null);
-        }
-
-        function inputHeight () {
-            $(".input #input").outerHeight(0).outerHeight(Math.max($(".input .left").height(), $(window).height() - parseFloat($("body").css("padding-top")) * 2) - $("#examples").outerHeight());
-        }
-
-        $(".tabs li").on("click", function () {
-            go($(this).index(), true)
-        });
-
-        $(".try").on("click", function () {
-            go(1, true);
-        });
-
-        $(window).on("popstate", function (e) {
-            go(e.originalEvent.state == null ? 0 : e.originalEvent.state.index, false);
-        });
-    </script>
 </body>
 </html>
