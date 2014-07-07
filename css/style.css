@@ -1,134 +1,312 @@
-html {
-    min-width: 1000px;
+@font-face {
+    font-family: "Icon";
+    src: url("/fonts/icons.woff") format("woff");
 }
 
 body {
+    font-size: 12pt;
     font-family: "Helvetica Neue", Helvetica, sans-serif;
-    margin: 1em auto 4em auto;
-    width: 920px;
-}
-
-/* Help popup */
-.black_overlay {
-    display: none;
-    position: fixed;
-    top: 0%;
-    left: 0%;
-    width: 100%;
-    height: 100%;
-    background-color: black;
-    z-index: 1001;
-    -moz-opacity: 0.5;
-    opacity: .50;
-    filter: alpha(opacity=50);
-}
-
-.overlay_content {
-    display: none;
-    position: fixed;
-    top: 10%;
-    left: 25%;
-    width: 50%;
-    height: 75%;
-    z-index: 1002;
-    overflow: auto;
-    background-color: white;
-    font-family: "Helvetica Neue", Helvetica, sans-serif;
-    margin: 1em auto 4em auto;
-    width: 500px;
-    padding: 10px;
-    border: 1px #ccc solid;
-}
-
-#close_help {
-    position: fixed;
-    margin-left: 475px;
-    margin-top: -10px;
-    background: white;
-    padding: 4px;
-    border: 1px steelblue solid;
-}
-
-/* Main */
-#content {
-    position: relative;
-}
-
-#helpsectiontitle {
-    margin-bottom: 3px;
-}
-
-#examplelogs {
-    font-size: 15px;
-    font-weight: 350;
-    margin-top: 0px;
-}
-
-h1 {
-    font-size: 64px;
-    font-weight: 300;
-    letter-spacing: -2px;
-    margin: .3em 0 .1em 0;
-}
-
-h2 {
-    margin-top: 2em;
-}
-
-h1, h2 {
+    margin: 0;
+    padding: 2em;
+    box-sizing: border-box;
     text-rendering: optimizeLegibility;
 }
 
-h2 a {
-    color: #ccc;
-    left: -20px;
-    position: absolute;
-    width: 740px;
+h1 {
+    font-size: 48pt;
+    font-weight: 300;
+    letter-spacing: -2px;
+    margin: 24pt 0 24pt -2px;
 }
 
-#body > p, li > p {
-    line-height: 1.5em;
+h2 {
+    font-weight: 300;
+    margin: 24pt 0;
+    -webkit-hyphens: auto;
+    -moz-hyphens: auto;
+}
+
+h3 {
+    margin: 2em 0 1em;
 }
 
 a {
-    color: steelblue;
+    color: #04a;
 }
-
+a:hover {
+    color: #15b;
+}
+a:active {
+    color: #048;
+}
 a:not(:hover) {
     text-decoration: none;
 }
 
 header > a,
-#examplelogs a:not(:first-child) {
+#examples a:not(:first-child) {
     margin-left: 1em;
 }
 
-#sideBar .arrow {
-    opacity: .4;
+section:not(.home) {
+    display: none;
 }
 
-#sideBar line {
-    stroke: #000;
-    stroke-width: 2px;
+input[type="text"], textarea, button {
+    display: block;
+    box-sizing: border-box;
+    width: 100%;
+    margin: 1em 0;
 }
 
-#sideBar text {
-    font-weight: bold;
+.option, button {
+    margin: 2em 0;
 }
 
-#sideBar .hidden-hosts text {
-    opacity: .4;
+input, textarea {
+    outline: none;
+    border: 1px solid #aaa;
+    padding: .4em;
 }
 
-#curNode {
-    color: steelblue;
-    background-color: #fff;
+select {
+    outline: none;
+    font-size: 12pt;
+    margin: 0;
+    padding: 0;
 }
 
-#logField {
-    width: 920px;
-    height: 200px;
+input:focus, textarea:focus {
+    border-color: black;
+}
+
+button {
+    background: #04a;
+    border: none;
+    color: #eee;
+    padding: 1em;
+    outline: none;
+    text-transform: uppercase;
+    cursor: pointer;
+}
+button:hover {
+    background: #15b;
+    color: #fff;
+}
+button:active {
+    background: #048;
+    color: #aaa;
+}
+button:disabled {
+    background: #aaa;
+    pointer-events: none;
+}
+
+.load {
+    visibility: hidden;
+    font-family: "Icon";
+    position: absolute;
+}
+
+/* Home */
+section.home .content {
+    width: calc(100% - 720px);
+}
+
+#versionContainer {
+    position: absolute;
+    top: 24pt;
+    right: 24pt;
+    height: 30px;
+    text-align: right;
+    color: grey;
+    font-size: 8pt;
     font-family: monospace;
+}
+
+/* Icon nav */
+header.icon {
+    width: 10em;
+    font-family: "Icon";
+    font-size: 24pt;
+    overflow: hidden;
+    margin-left: -.1em;
+}
+header.icon ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+header.icon ul li {
+    float: left;
+    color: #aaa;
+    cursor: pointer;
+}
+header.icon ul li:hover {
+    color: #04a;
+}
+header.icon ul li.active {
+    color: #04a;
+    pointer-events: none;
+}
+header.icon ul.tabs li {
+    margin-right: 1em;
+}
+header.icon ul.tabs li.disabled {
+    color: #ddd;
+    pointer-events: none;
+}
+header.icon ul.links li {
+    margin-left: 1em;
+}
+header.icon ul.links li a {
+    color: #aaa;
+}
+header.icon ul.links li a:hover {
+    color: #04a;
+    text-decoration: none;
+}
+
+/* Input */
+section.input .right textarea#input {
+    resize: none;
+    height: calc(100% - 2em);
+}
+
+section.input {
+    width: 100%;
+}
+
+section.input table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+section.input td {
+    vertical-align: top;
+    padding: 0;
+}
+
+section.input .left {
+    width: 240pt;
+    min-width: 240pt;
+    padding-right: 2em;
+}
+
+#input {
+    margin: 0;
+}
+
+#examples {
+    font-size: 10pt;
+    padding-bottom: 1em;
+}
+
+
+/* Visualization */
+.visualization .bg {
+    position: fixed;
+    background: #fff;
+    width: 240pt;
+    height: 100%;
+    padding: 24pt;
+    top: 0;
+    left: 0;
+}
+
+.visualization header {
+    position: fixed;
+    background: #fff;
+    padding: 24pt;
+    top: 0;
+    left: 0;
+    z-index: 4;
+}
+
+.visualization .log {
+    position: absolute;
+    border-collapse: collapse;
+    border-spacing: 0;
+    font-size: 10pt;
+    font-family: monospace;
+    margin-top: -6px;
+    line-height: 1em;
+}
+
+.visualization .log td.spacer {
+    width: 12pt;
+    min-width: 12pt;
+}
+
+.visualization .log .line {
+    position: absolute;
+    width: inherit;
+    white-space: nowrap;
+    overflow: hidden;
+    background: #fff;
+    transition: margin;
+    transition-duration: .06s;
+    transition-timing-function: ease-out;
+}
+
+.visualization .log .line.more:hover,
+.visualization .log .line.more.reveal {
+    overflow: visible;
+    font-size: 0;
+    line-height: 1em;
+}
+
+.visualization .log .line.more:hover > .line,
+.visualization .log .line.more.reveal > .line {
+    z-index: 1;
+    font-size: 10pt;
+    line-height: 1em;
+}
+
+.visualization .log .line.more:hover > .line:last-child,
+.visualization .log .line.more.reveal > .line:last-child {
+}
+
+.visualization .log .line.focus,
+.visualization .log .line.more.reveal > .line.focus {
+    white-space: normal;
+    z-index: 3;
+    margin-left: 2em;
+    word-break: break-all;
+}
+
+.visualization .highlight {
+    position: absolute;
+    transition: top, background, height;
+    transition-duration: .06s;
+    transition-timing-function: ease-out;
+    box-shadow: 0 0 0 1px #fff;
+    z-index: 2;
+    padding: 1px;
+    margin: -1px;
+    margin-left: calc(20pt - 2px);
+}
+
+.visualization .highlight:before {
+    position: absolute;
+    display: block;
+    content: attr(data-ln);
+    width: 20pt;
+    height: inherit;
+    max-height: 10pt;
+    padding: 1px 0;
+    font: 8pt monospace;
+    left: -20pt;
+    top: 0;
+    text-align: center;
+    background: inherit;
+    color: rgba(255,255,255,.6);
+    box-shadow: 0 -1px #fff, 0 1px #fff;
+}
+
+.visualization #graph {
+    margin-left: 264pt;
+    padding-right: calc(240px - 2em);
 }
 
 svg {
@@ -139,13 +317,22 @@ svg {
 }
 
 #vizContainer {
-    width: 760px;
-    float: left;
+    margin-top: 2em;
     white-space: nowrap;
 }
 
 #vizContainer svg {
     vertical-align: top;
+}
+
+#vizContainer svg line {
+    stroke: #999;
+    stroke-opacity: 0.6;
+}
+
+#vizContainer svg g circle {
+    stroke: #fff;
+    stroke-width: 2px;
 }
 
 #vizContainer svg g text {
@@ -156,50 +343,45 @@ svg {
     pointer-events: none;
 }
 
-#hostBar {
-    width: 760px;
-    float: left;
-    white-space: nowrap;
-}
-.fixed #hostBar {
-    position: fixed;
-    top: 50px;
+#vizContainer svg g rect {
+    fill: transparent;
 }
 
-#hostBar svg {
-    height: 55px;
+#hostBar {
+    top: 0;
+    position: fixed;
+    padding-top: 2em;
+    background: white;
 }
 
 #hostBar svg rect.bg {
     fill: #fff;
 }
 
-#topBar {
-    width: 100%;
-    background-color: white;
+#hostBar svg rect.high-rect {
+    fill: transparent;
+    stroke: #fff;
+    stroke-width: 2px;
+    pointer-events: none;
 }
-.fixed #topBar {
+
+#sidebar {
+    width: 240px;
+    height: 100%;
+    padding: 2em;
+    box-sizing: border-box;
     position: fixed;
+    right: 0;
     top: 0;
+    background: #fff;
+    z-index: 1;
 }
 
-.fixed #sideBar {
-    position: fixed;
+#sidebar #curNode {
+    word-break: break-all;
 }
 
-#versionContainer {
-    float: right;
-    left: 80%;
-    top: 0px;
-    height: 30px;
-    width: 19%;
-    text-align: right;
-    color: grey;
-    font-size: 10px;
-    font-family: monospace;
-}
-
-#defs {
+svg#defs {
     height: 0;
     width: 0;
     position: absolute;
