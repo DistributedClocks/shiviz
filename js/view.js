@@ -174,7 +174,7 @@ View.prototype.draw = function() {
         "y": -24
     });
     node.on("mouseover", function(e) {
-        $("circle").filter(function(i,c) {
+        $("circle").filter(function(i, c) {
             return $(c).data("focus");
         }).attr("r", function() {
             return $(this).data("r");
@@ -183,7 +183,7 @@ View.prototype.draw = function() {
         $(this).find("circle").data({
             "focus": true
         }).attr({
-            "r": $(this).find("circle").data("r") + 2 
+            "r": $(this).find("circle").data("r") + 2
         });
 
         $("#curNode").text(e.getText());
@@ -203,7 +203,7 @@ View.prototype.draw = function() {
             "background": "transparent",
             "color": "white",
             "width": "calc(" + $line.width() + "px - 1em)"
-        }).data("fill", e.getFillColor())
+        }).data("fill", e.getFillColor());
 
         $(".highlight").css({
             "width": $line.width(),
@@ -363,13 +363,12 @@ View.prototype.draw = function() {
     delete lines[0];
 
     for (var y in lines) {
+        var other = null;
         var vn = lines[y];
         var startMargin = (1 - Math.min(vn.length, 3)) / 2;
 
         if (vn.length > 3)
-            var other = vn.splice(2, vn.length);
-        else
-            var other = false;
+            other = vn.splice(2, vn.length);
 
         for (var i in vn) {
             var text = vn[i].getText();
@@ -381,7 +380,7 @@ View.prototype.draw = function() {
                 "top": y + "px",
                 "margin-top": startMargin + "em",
                 "color": vn[i].getFillColor()
-            }).text(text).on("mouseover", function () {
+            }).text(text).on("mouseover", function() {
                 var id = "#node" + $(this).data("id");
                 $(id)[0].dispatchEvent(new MouseEvent("mouseover"));
             });
@@ -389,7 +388,7 @@ View.prototype.draw = function() {
             startMargin++;
         }
 
-        if (other) {
+        if (other != null) {
             var $div = $("<div></div>").addClass("line more").css({
                 "top": y + "px",
                 "margin-top": (startMargin * 10) + "pt",
@@ -405,7 +404,7 @@ View.prototype.draw = function() {
                 }).addClass("line").css({
                     "margin-top": o + "em",
                     "color": other[o].getFillColor()
-                }).text(text).on("mouseover", function () {
+                }).text(text).on("mouseover", function() {
                     var id = "#node" + $(this).data("id");
                     $(id)[0].dispatchEvent(new MouseEvent("mouseover"));
                 }));

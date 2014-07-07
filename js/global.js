@@ -210,7 +210,7 @@ Global.prototype.resize = function() {
     $("#graph").width(globalWidth);
 
     return hostMargin;
-}
+};
 
 /**
  * Draws the hidden hosts, if any exist.
