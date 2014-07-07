@@ -45,6 +45,9 @@ function VisualNode(node) {
 
     /** @private */
     this._isCollapsed = node.getLogEvents().length > 1;
+
+    /** @private */
+    this._isHighlighted = false;
 }
 
 // Global variable used to assign each node an unique id
@@ -287,4 +290,22 @@ VisualNode.prototype.setHasHiddenChild = function(val) {
  */
 VisualNode.prototype.isCollapsed = function() {
     return this._isCollapsed;
+}
+
+/**
+ * Determines if this VisualNode is highlighted.
+ * 
+ * @returns {boolean} True if this node is highlighted
+ */
+VisualNode.prototype.isHighlighted = function() {
+    return this._isHighlighted
+}
+
+/**
+ * Sets if this VisualNode is highlighted.
+ * 
+ * @param {boolean} val True if this node is highlighted
+ */
+VisualNode.prototype.setHighlight = function(val) {
+    this._isHighlighted = val;
 }

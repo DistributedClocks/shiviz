@@ -33,6 +33,9 @@ function VisualGraph(graph, layout, hostColors) {
     /** @private A mapping of edge IDs to VisualEdges */
     this.links = {};
 
+    /** @private A mapping of y coordinates to VisualNodes **/
+    this.lines = {};
+
     graph.addObserver(AddNodeEvent, this, function(event, g) {
         g.addVisualNodeByNode(event.getNewNode());
         g.removeVisualEdgeByNodes(event.getPrev(), event.getNext());
@@ -102,6 +105,16 @@ function VisualGraph(graph, layout, hostColors) {
 VisualGraph.prototype.update = function() {
     this.layout.start(this);
 
+    this.lines = {};
+    var visualNodes = this.getVisualNodes();
+    for (var i in visualNodes) {
+        var node = visualNodes[i];
+        var y = node.getY();
+        if (this.lines[y] === undefined)
+            this.lines[y] = [node];
+        else
+            this.lines[y].push(node);
+    }
 };
 
 /**
