@@ -309,6 +309,6 @@ Global.prototype.scrollHandler = function(event) {
 
     if ($(".line.focus").length)
         $(".highlight").css({
-            "left": $(".line.focus").offset().left - $(".line.focus").css("margin-left")
-        }).removeClass("scroll");
+            "left": $(".line.focus").offset().left - parseFloat($(".line.focus").css("margin-left"))
+        });
 };
