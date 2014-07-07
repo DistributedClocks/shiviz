@@ -1,11 +1,9 @@
-function CustomMotifFinder(graph, builderGraph) {
-    this.graph = graph;
+function CustomMotifFinder(builderGraph) {
     this.builderGraph = builderGraph;
 }
 
-CustomMotifFinder.prototype.find = function() {
+CustomMotifFinder.prototype.find = function(graph) {
     var context = this;
-    var graph = this.graph;
     var builderGraph = this.builderGraph;
     
     var hostMatch = {}; // graph host to builderGraph host
@@ -15,22 +13,49 @@ CustomMotifFinder.prototype.find = function() {
     
     var startBuilderNode = builderGraph.getNodes()[0];
     var nodes = graph.getNodes();
-    for(var i = 0; i < nodes.length; i++) {
-        var node = nodes[i];
+    for(var n = 0; n < nodes.length; n++) {
+        var node = nodes[n];
         setNodeMatch(startBuilderNode, node);
         if(searchNode(startBuilderNode)) {
             console.log("FOUND!!!"); //TODO replace
+            var motif = new Motif();
+            for(var key in bNodeMatch) {
+                motif.addNode(bNodeMatch[key]);
+            }
+            return motif;
         }
         removeNodeMatch(node);
     }
+    console.log("find fail");
     
     function searchNode(builderNode) {
         var node = bNodeMatch[builderNode.getId()];
         
+//        if(builderNode.getNext() != null && !builderNode.getNext().isTail()) {
+//            if(node.getNext() == null || node.getNext().isTail()) {
+//                return false;
+//            }
+//            else if(!tryAssign([builderNode.getNext()], [node.getNext()])) {
+////                console.log(builderNode.getNext(), node.getNext());
+//                return false;
+//            }
+//        }
+//        
+//        if(builderNode.getPrev() != null && !builderNode.getPrev().isHead()) {
+//            if(node.getPrev() == null || node.getPrev().isHead()) {
+//                return false;
+//            }
+//            else if(!tryAssign([builderNode.getPrev()], [node.getPrev()])) {
+//                return false;
+//            }
+//        }
+        
+        
+        
         return tryAssign(builderNode.getChildren(), node.getChildren())
-        || tryAssign(builderNode.getParents(), node.getParents())
-        || tryAssign([builderNode.getNext()], [node.getNext()])
-        || tryAssign([builderNode.getPrev()], [node.getPrev()]);
+        || tryAssign(builderNode.getParents(), node.getParents());
+//        || tryAssign([builderNode.getNext()], [node.getNext()])
+//        || tryAssign([builderNode.getPrev()], [node.getPrev()]);
     }
     
     function tryAssign(bNodeGroup, nodeGroup) {
@@ -60,9 +85,9 @@ CustomMotifFinder.prototype.find = function() {
         
         var freeNodeGroup = [];
         for(var i = 0; i < nodeGroup.length; i ++) {
-            var match = nodeMatch(nodeGroup[i]);
+            var match = nodeMatch[nodeGroup[i].getId()];
             if(!match) {
-                freeNodeGroup.push(match);
+                freeNodeGroup.push(nodeGroup[i]);
             }
             else if(!bNodeGroupSet[match.getId()]){
                 return false;
@@ -73,7 +98,12 @@ CustomMotifFinder.prototype.find = function() {
             return false;
         }
         
+        if(freeBNodeGroup.length == 0) {
+            return true;
+        }
+        
         tryPermutations(freeNodeGroup, [], [], 0);
+        console.log(freeNodeGroup.length);
         
         function tryPermutations(group, perm, taken, nextLoc) {
             if(nextLoc >= group.length) {
@@ -91,7 +121,9 @@ CustomMotifFinder.prototype.find = function() {
                 }
 //                    perm[nextLoc] = group[loc]; //todo: no need?
                 var node = group[loc];
-                setNodeMatch(freeBNodeGroup[loc], node);
+//                console.log(group);
+//                console.log(freeBNodeGroup, nextLoc);
+                setNodeMatch(freeBNodeGroup[nextLoc], node);
                 taken[loc] = true;
                 
                 tryPermutations(group, perm, taken, nextLoc + 1);
