@@ -84,7 +84,7 @@ View.prototype.draw = function() {
 
     // Apply all transformations applied to this view an those applied to global
     var currentModel = this.initialModel.clone();
-    var layout = new SpaceTimeLayout(this.width, 48);
+    var layout = new SpaceTimeLayout(this.width, 56);
 
     var visualGraph = new VisualGraph(currentModel, layout, this.global.hostColors);
 

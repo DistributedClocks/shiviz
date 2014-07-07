@@ -24,6 +24,19 @@ $("#examples a").on("click", function(e) {
     });
 });
 
+$(".tabs li").on("click", function () {
+    go($(this).index(), true)
+});
+
+$(".try").on("click", function () {
+    go(1, true);
+});
+
+// Listener for history popstate
+$(window).on("popstate", function (e) {
+    go(e.originalEvent.state == null ? 0 : e.originalEvent.state.index, false);
+});
+
 $("#versionContainer").html(versionText);
 
 // variables to store last node in a process
@@ -141,45 +154,45 @@ function createLastNodeElements() {
     }
 }
 
-function selectTextareaLine(tarea, lineNum) {
-    var lineLength = 131;
-    var lines = tarea.value.split("\n");
-    var numLines = 0;
-
-    // calculate start/end
-    var startPos = 0;
-    for (var x = 0; x < lines.length; x++) {
-        if (x == lineNum) {
-            break;
-        }
-        startPos += (lines[x].length + 1);
-        numLines += Math.ceil(lines[x].length / lineLength);
+/**
+ * Navigates to tab index and pushes history state to browser
+ * so user can use back button to navigate between tabs.
+ * 
+ * @param  {Number} index The index of the tab: 0 of home, 1 for
+ *                        input, 2 for visualization
+ * @param  {Boolean} store Whether or not to store the history state
+ * @param  {Boolean} force Whether or not to force redrawing of graph
+ */
+function go(index, store, force) {
+    $("section").hide();
+    $(window).scrollTop();
+    switch (index) {
+        case 0:
+        $(".home").show();
+        break;
+        case 1:
+        $(".input").show();
+        inputHeight();
+        $(window).on("load resize", inputHeight);
+        break;
+        case 2:
+        $(".visualization").show();
+        if (!$("#graph svg").length || force)
+            visualize();
+        break;
     }
 
-    tarea.scrollTop = numLines * 13 - 20;
-    var endPos = lines[lineNum].length + startPos;
+    if (store)
+        history.pushState({index: index}, null, null);
+}
 
-    // do selection
-    // Chrome / Firefox
+function inputHeight() {
+    $(".input #input").outerHeight(0);
 
-    if (typeof (tarea.selectionStart) != "undefined") {
-        tarea.focus();
-        tarea.selectionStart = startPos;
-        tarea.selectionEnd = endPos;
-        return true;
-    }
+    var bodyPadding = parseFloat($("body").css("padding-top")) * 2;
+    var exampleHeight = $("#examples").outerHeight()
+    var fillHeight = $(window).height() - bodyPadding - exampleHeight;
+    var properHeight = Math.max($(".input .left").height(), fillHeight);
 
-    // IE
-    if (document.selection && document.selection.createRange) {
-        tarea.focus();
-        tarea.select();
-        var range = document.selection.createRange();
-        range.collapse(true);
-        range.moveEnd("character", endPos);
-        range.moveStart("character", startPos);
-        range.select();
-        return true;
-    }
-
-    return false;
+    $(".input #input").outerHeight(properHeight);
 }
