@@ -16,13 +16,12 @@ function generateGraphFromLog(logLines) {
 
     var i = 0;
     try {
-        for (i = 0; i < logLines.length; i += 2) {
+        for (i = 0; i < logLines.length; i++) {
             var log = logLines[i];
-            if (log.length == 0) {
-                i -= 1;
+            if (log.length == 0)
                 continue;
-            }
-            var stamp = logLines[i + 1];
+            i++;
+            var stamp = logLines[i];
             var spacer = stamp.indexOf(" ");
             var host = stamp.substring(0, spacer);
             var clock = JSON.parse(stamp.substring(spacer));
