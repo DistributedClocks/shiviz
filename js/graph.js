@@ -108,7 +108,7 @@ function Graph(logEvents) {
 
         for (var i = 0; i < array.length; i++) {
 
-                throw "Bad vector clock";
+            var node = array[i];
             var logEvent = node.getLogEvents()[0];
             var vt = logEvent.getVectorTimestamp();
             var time = vt.getOwnTime();
@@ -170,13 +170,13 @@ function Graph(logEvents) {
                     clock[otherHost] = time;
 
                     if (hostSet[otherHost] == undefined) {
-                        throw "Unrecognized host: " + otherHost;
+                        var message = "The following event's vector clock contains an entry for " + "an unrecognized host \"" + otherHost + "\".";
                         message += attachEvent(currNode.logEvents[0]);
                         throw message;
                     }
 
                     if (time < 1 || time > hostToNodes[otherHost].length) {
-                        throw "Invalid vector clock time value";
+                        var message = "The following event's vector clock contains an invalid clock value " + time + " for " + "host \"" + otherHost + "\".";
                         message += attachEvent(currNode.logEvents[0]);
                         throw message;
                     }
@@ -340,7 +340,7 @@ Graph.prototype.hasHost = function(host) {
 Graph.prototype.removeHost = function(host) {
     var index = this.hosts.indexOf(host);
     if (index < 0) {
-        throw new Exception("Host not found: " + host);
+        throw "Host not found: " + host;
     }
 
     this.hosts.splice(index, 1);
@@ -541,7 +541,7 @@ Graph.prototype.clone = function() {
  */
 Graph.prototype.addObserver = function(type, context, callback) {
     if (Graph.validEvents.indexOf(type) < 0) {
-        throw new Exception(type + " is not a valid event");
+        throw type + " is not a valid event";
     }
 
     this.observers[type][callback] = {
@@ -562,7 +562,7 @@ Graph.prototype.addObserver = function(type, context, callback) {
  */
 Graph.prototype.removeObserver = function(type, callback) {
     if (Graph.validEvents.indexOf(type) < 0) {
-        throw new Exception(type + " is not a valid event");
+        throw type + " is not a valid event";
     }
 
     delete this.observers[type][callback];
@@ -583,11 +583,11 @@ Graph.prototype.removeObserver = function(type, callback) {
  */
 Graph.prototype.notify = function(event) {
     if (Graph.validEvents.indexOf(event.constructor) < 0) {
-        throw new Exception(type + " is not a valid event");
+        throw type + " is not a valid event";
     }
 
     if (event.constructor == ChangeEvent) {
-        throw new Exception("You cannot directly dispatch a ChangeEvent.");
+        throw "You cannot directly dispatch a ChangeEvent.";
     }
 
     var params = this.observers[event.constructor];

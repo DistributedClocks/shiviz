@@ -32,14 +32,9 @@ function generateGraphFromLog(logLines) {
 
     }
     catch (err) {
-        if(err.constructor == Exception) {
-            err.prepend("Error parsing input, malformed logs: " + i + "\n");
-        }
-        else {
-            err = new Exception("Error parsing input, malformed logs: " + i + "\n" + err);
-        }
+        alert(err + "\n\nOn line " + (i + 1) + ":\n" + logLines[i] + "\n" + logLines[i + 1]);
         resetView();
-        throw err;
+        return null;
     }
 
     try {
