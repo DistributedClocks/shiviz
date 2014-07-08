@@ -277,23 +277,6 @@ assert("getHostColors", function () {
     return colors.a && colors.b;
 });
 
-assert("drawSideBar", function () {
-    global.drawSideBar();
-    var $svg = $("#sideBar svg");
-    var $text = $("#sideBar text");
-    var $line = $("#sideBar line");
-
-    var sw = $svg.width() == 60;
-    var sh = $svg.height() == 200;
-    var t = $text.text() == "Time";
-    var ly = $line.attr("y2") - $line.attr("y1") == 70;
-    var lx = $line.attr("x1") == $line.attr("x2");
-
-    $svg.remove();
-
-    return sw && sh && t && ly && lx;
-});
-
 /**
  * View
  */
