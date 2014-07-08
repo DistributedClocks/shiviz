@@ -31,11 +31,21 @@ CustomMotifFinder.prototype.find = function(graph) {
     return motif;
 
     function handleFound() {
-
-        for ( var key in bNodeMatch) {
-            var nodeToAdd = bNodeMatch[key];
+        
+        var bNodes = builderGraph.getNodes();
+        for(var i = 0; i < bNodes.length; i++) {
+            var currBNode = bNodes[i];
+            var nodeToAdd = bNodeMatch[currBNode.getId()];
             motif.addNode(nodeToAdd);
             used[nodeToAdd.getId()] = true;
+            
+            var connections = currBNode.getConnections();
+            
+            for(var j = 0; j < connections.length; j++) {
+                if(!connections[j].isHead() && !connections[j].isTail()) {
+                    motif.addEdge(bNodeMatch[connections[j].getId()], nodeToAdd);
+                }
+            }
         }
 
         hostMatch = {}; // graph host to builderGraph host
@@ -51,11 +61,15 @@ CustomMotifFinder.prototype.find = function(graph) {
             return false;
         }
 
-        if (!builderNode.getNext().isTail() && (node.getNext().isTail() || !tryAssign([ builderNode.getNext() ], [ node.getNext() ]))) {
+        var bNodeNext = builderNode.getNext();
+        var nodeNext = node.getNext();
+        if (!bNodeNext.isTail() && (nodeNext.isTail() || !tryAssign([ bNodeNext ], [ nodeNext ]))) {
             return false;
         }
 
-        if (!builderNode.getPrev().isHead() && (node.getPrev().isHead() || !tryAssign([ builderNode.getPrev() ], [ node.getPrev() ]))) {
+        var bNodePrev = builderNode.getPrev();
+        var nodePrev = node.getPrev();
+        if (!bNodePrev.isHead() && (nodePrev.isHead() || !tryAssign([ bNodePrev ], [ nodePrev ]))) {
             return false;
         }
 
