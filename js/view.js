@@ -31,10 +31,6 @@ function View(model, global, label) {
     this.collapseSequentialNodesTransformation = new CollapseSequentialNodesTransformation(2);
 
     this.addTransformation(this.collapseSequentialNodesTransformation);
-    
-    // --------- Temporary ----------
-    var finder = new BroadcastGatherFinder(3, 1, false);
-    this.addTransformation(new HighlightMotifTransformation(finder, false));
 }
 
 /**
