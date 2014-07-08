@@ -33,7 +33,7 @@
         <div class="content">
             <h1>ShiViz</h1>
             <h2>
-                <strong>ShiViz</strong> is a vis&shy;ual&shy;izat&shy;ion engi&shy;ne that gene&shy;r&shy;ate&shy;s high level gra&shy;phic&shy;al sum&shy;mar&shy;ies of dis&shy;tri&shy;but&shy;ed sys&shy;tem exe&shy;cut&shy;ion logs.
+                The <strong>ShiViz</strong> vis&shy;ual&shy;izat&shy;ion engi&shy;ne gene&shy;r&shy;ate&shy;s inter&shy;active comm&shy;uni&shy;ca&shy;tion graphs from dis&shy;tri&shy;but&shy;ed sys&shy;tem exe&shy;cut&shy;ion logs.
             </h2>
 
             <button class="try">Try out ShiViz</button>
@@ -44,6 +44,13 @@
             <ul>
                 <li>
                     Time flows from top to bottom.
+                </li>
+                <li>
+                  The left panel shows the log and the middle panel
+                  displays
+                  a <a href="http://en.wikipedia.org/wiki/Directed_acyclic_graph">DAG</a>
+                  of the partially ordered vector timestamps recorded
+                  in the input log.
                 </li>
                 <li>
                     A vertical line with a box at the top is a <strong>process
@@ -62,9 +69,9 @@
                 </li>
                 <li>
                   Dashed lines represent transitive communication
-                  edges. These only appear when a host is hidden, and
+                  edges. These only appear when a process is hidden, and
                   two processes that are not hidden communicated
-                  indirectly through this host.
+                  indirectly through this process.
                 </li>
                 <li>
                   Larger circles represent merged local events. These
@@ -73,8 +80,15 @@
                 </li>
                 <li>
                   Radiating lines that fade out represent
-                  communication edges to hosts that are currently
+                  communication edges to processes that are currently
                   hidden from view.
+                </li>
+                <li>
+                  Each process is associated with a unique color. Log
+                  entries in the left column have the corresponding
+                  process color. By default, the log entries are
+                  sorted in the order in which the entries appear in
+                  the graph.
                 </li>
             </ul>
         </p>
@@ -84,14 +98,17 @@
             The visualization supports the following actions:
             <ul>
                 <li>
-                    <strong>Hide a process timeline</strong>: double click a process box. To
-                    show the process timeline, double click on the process box in
-                    the "hidden hosts" panel.
+                    <strong>Hide a process timeline</strong>:
+                    double-click a process box. To show the process
+                    timeline, double-click on the process box in the
+                    "hidden processes" panel.
                 </li>
                 <li>
-                    <strong>Show event or process text</strong>: hover over the event circle
-                    or process box. The corresponding text will appear next to
-                    "Current node:"
+                    <strong>Show event or process name</strong>: hover
+                    over an event circle or a process box. The
+                    corresponding text will appear in the top right
+                    corner. For events, the log entry for the event
+                    will be highlighted in the left panel.
                 </li>
                 <li><strong>Expand/collapse non-communicating
                 events</strong>: Events that are not incident on any
@@ -101,21 +118,71 @@
                 them.
                 </li>
                 <li>
-                  <strong>Filter by communication to host(s)</strong>:
-                  hold SHIFT and double click on a process box. The
-                  process box will get larger. This indicates that the
-                  graph is now filtered to show only events at the
-                  filtered host and only those hosts and their events
-                  that communicate with this host. You can filter by
-                  more than one host. Undo the filter in the same way
-                  -- hold SHIFT and double click the process box.
+                  <strong>Filter by communication to
+                  process(es)</strong>: hold SHIFT and double-click on
+                  a process box. The process box will be marked with a
+                  white square. This indicates that the graph is now
+                  filtered to show only events at the filtered process
+                  and only those processes and their events that
+                  communicated with this process. You can filter by
+                  more than one process. Undo the filter in the same
+                  way -- hold SHIFT and double-click the process box.
                 </li>
 
             </ul>
         </p>
 
-        <h3>What is the input log format?</h3>
-        <p>TODO: describe log format with a short 2-event example.</p>
+        <h3 id="helpsectiontitle">How is this tool useful?</h3>
+        <p>
+            Here are three use-cases that ShiViz helps to support:
+            <ul>
+                <li>
+                    <strong>Understanding the communication
+                    graph.</strong> Quickly scan the graph to identify
+                    the presence or absence of certain communication
+                    patterns.
+                </li>
+                <li>
+                    <strong>Reasoning about ordering in a concurrent
+                    or distributed setting</strong>. Visualize
+                    concurrency and the happened-before relation to
+                    understand if two events occurred concurrently, or
+                    if one happened before the other.
+                </li>
+                <li>
+                    <strong>Analyzing activity at processes that
+                    matter</strong>. Hide processes (and their log
+                    lines) for a more focused visualization. Filter by
+                    communication to a process to see only those
+                    events at other processes that were likely to have
+                    influenced the execution of a process you care
+                    about.
+                </li>
+
+            </ul>
+        </p>
+
+        <h3>What is the input log format to the tool?</h3>
+
+        <p>At the moment ShiViz only parses logs in the format
+        generated
+        by <a href="http://bitbucket.org/bestchai/shivector/wiki/Home">ShiVector</a>,
+        in which each log event is a single log line followed by a
+        vector-timestamped line that looks like:<br/> <i>localProcessId {
+        "process1" : time1, "process2" : time2, ..., "processN" : timeN
+        }</i>
+        </p>
+
+        <p>
+          Here is an example of an event entry that ShiViz expects:<br/>
+
+          <i>24.22.130.14 5/27/2013 10:56:22 AM GET /timeline uid=alice location=kansas<br/>
+          alice {"alice":5, "loadBalancer": 4, "eastDC":8, "westDC": 3}
+            </i>
+
+        </p>
+
+          
 
         <h3>How do I generate logs in this format?</h3>
         <p>Use <a href="http://bitbucket.org/bestchai/shivector/wiki/Home">ShiVector</a>.
@@ -125,22 +192,6 @@
           timestamp to each existing logged message.
         </p>
 
-        <h3 id="helpsectiontitle">How is this useful?</h3>
-        <p>
-            ShiViz is useful for:
-            <ul>
-                <li>
-                    <strong>Understanding the communication graph.</strong> For example, to
-                    look for presence or absence of certain communication
-                    patterns.
-                </li>
-                <li>
-                    <strong>Reasoning about ordering in a distributed setting</strong>. For
-                    example, to figure out whether two events occurred
-                    concurrently, or if one happened before the other.
-                </li>
-            </ul>
-        </p>
 
         </div>
     </section>
@@ -165,8 +216,8 @@
                         <label>Multiple execution delimiter: <input type="text" id="delimiter"></label>
                     </div>
                     <div class="option">
-                        Sort hosts in <select><option>ascending</option><option selected>descending</option></select> order by:<br>
-                        <label><input name="host_sort" type="radio" checked> # nodes</label> <label><input name="host_sort" type="radio"> appearance in log</label>
+                        Sort processes in <select><option>ascending</option><option selected>descending</option></select> order by:<br>
+                        <label><input name="host_sort" type="radio" checked> # events</label> <label><input name="host_sort" type="radio"> appearance in log</label>
                     </div>
                     <button id="visualize" disabled>Visualize</button>
                 </td>
