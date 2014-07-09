@@ -32,6 +32,10 @@ $(".try").on("click", function () {
     go(1, true);
 });
 
+$("#errorbox").on("click", function () {
+    $("#errorbox").css("display", "none");
+});
+
 // Listener for history popstate
 $(window).on("popstate", function (e) {
     go(e.originalEvent.state == null ? 0 : e.originalEvent.state.index, false);
@@ -208,6 +212,6 @@ function handleError(err) {
         throw err;
     }
     
-    alert(err.getMessage());
-//    err.getHTML();
+    $("#errorbox").html(err.getHTMLMessage());
+    $("#errorbox").css("display", "inline");
 }
