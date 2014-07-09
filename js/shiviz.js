@@ -18,9 +18,7 @@ $("#examples a").on("click", function(e) {
             pointerEvents: "none"
         });
     }).fail(function() {
-        var errText = 'Unable to retrieve example log: ' + url;
-        console.log(errText);
-        alert(errText);
+        throw new Exception("Unable to retrieve example log from: " + url, true);
     });
 });
 
@@ -199,7 +197,7 @@ function inputHeight() {
     $(".input #input").outerHeight(0);
 
     var bodyPadding = parseFloat($("body").css("padding-top")) * 2;
-    var exampleHeight = $("#examples").outerHeight()
+    var exampleHeight = $("#examples").outerHeight();
     var fillHeight = $(window).height() - bodyPadding - exampleHeight;
     var properHeight = Math.max($(".input .left").height(), fillHeight);
 
@@ -212,6 +210,14 @@ function handleError(err) {
         throw err;
     }
     
-    $("#errorbox").html(err.getHTMLMessage());
+    var errhtml = err.getHTMLMessage();
+    
+    if(!err.isUserFriendly()) {
+        var pretext = "An unexpected error was encountered. The technical error message is:</br></br>";
+        errhtml = pretext + "<span style=\"font-size : 11px;\">" + errhtml + "</span>";
+    }
+    
+    $("#errorbox").html(errhtml);
     $("#errorbox").css("display", "inline");
+    go(0);
 }
