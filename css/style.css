@@ -389,11 +389,11 @@ svg#defs {
 
 #errorbox {
     display: none;
-    width: 400px;
+    width: 50%;
     box-sizing: border-box;
     position: fixed;
     top: 200px;
-    left: calc(50% - 200px);
+    left: 25%;
     z-index: 99;
     background: #c44;
     color: #fff;
@@ -402,7 +402,7 @@ svg#defs {
 #errorbox pre {
     overflow: auto;
     padding: .4em;
-    background: #fff;
+    background: #FDD;
     color: #444;
 }
 #errorbox pre:last-child {
