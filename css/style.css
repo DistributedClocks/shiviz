@@ -386,3 +386,17 @@ svg#defs {
     width: 0;
     position: absolute;
 }
+
+#errorbox {
+    z-index: 1;
+    position: absolute;
+    right: 0;
+    top: 150px;
+    width: 40%;
+
+    background-color: #000;
+    color: white;
+
+    padding: 15px;
+    display: none;
+}
