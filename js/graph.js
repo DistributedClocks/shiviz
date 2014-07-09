@@ -243,7 +243,13 @@ function Graph(logEvents) {
         }
     }
 
-    var sortedNodes = this.getNodesTopologicallySorted();
+    var sortedNodes = null;
+    try {
+        sortedNodes = this.getNodesTopologicallySorted();
+    }
+    catch (e) {
+        throw new Exception("An error occured. The log is intransitive. That is, there are three events x, y, and z such that x occurs before y, y occurs before z, and z before x.", true)
+    }
 
     for (var i = 0; i < sortedNodes.length; i++) {
         var curr = sortedNodes[i];
@@ -425,8 +431,12 @@ Graph.prototype.getAllNodes = function() {
 };
 
 /**
+ * Returns the non-dummy nodes of the graph in topologically sorted order. A
+ * topologically sorted order is one where, for all i and j such that j > i,
+ * there does not exist a directed edge from nodes[j] to nodes[i].
  * 
- * @returns
+ * @returns {Array<Node>} the nodes in topologically sorted order.
+ * @throws An exception if the graph contains a cycle.
  */
 Graph.prototype.getNodesTopologicallySorted = function() {
     toposort = [];
@@ -461,10 +471,14 @@ Graph.prototype.getNodesTopologicallySorted = function() {
             inDegree[other.getId()]--;
 
             if (inDegree[other.getId()] == 0) {
-
                 ready.push(other);
-
             }
+        }
+    }
+
+    for (var key in inDegree) {
+        if (inDegree[key] > 0) {
+            throw new Exception("Graph.prototype.getNodesTopologicallySorted: Cannot perform topological sort - graph is not acyclic");
         }
     }
 
