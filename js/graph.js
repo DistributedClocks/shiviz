@@ -115,9 +115,10 @@ function Graph(logEvents) {
 
             if (time != i + 1) {
                 if (i == 0) {
-                    var message = "Logical clock values for each host must start at 0.\n" + "The clock value for the first event for host \"" + node.getHost() + "\" is " + time + ".";
-                    message += attachEvent(logEvent);
-                    throw message;
+                    var exception = new Exception("Logical clock values for each host must start at 1.\n" + "The clock value for the first event for host \"" + node.getHost() + "\" is " + time + ".");
+                    attachEvent(logEvent, exception);
+                    exception.setUserFriendly(true);
+                    throw exception;
                 }
                 else {
                     var lastNode = array[i - i];
@@ -125,11 +126,11 @@ function Graph(logEvents) {
                     var lastVt = lastLogEvent.getVectorTimestamp();
                     var lastTime = lastVt.getOwnTime();
 
-                    var message = "Clock values for a host must increase monotonically by 1.\n" + "The clock for host \"" + node.getHost() + "\" goes from " + lastTime + " to " + time + " in the following two events:";
-
-                    message += attachEvent(lastLogEvent);
-                    message += attachEvent(logEvent);
-                    throw message;
+                    var exception = new Exception("Clock values for a host must increase monotonically by 1.\n" + "The clock for host \"" + node.getHost() + "\" goes from " + lastTime + " to " + time + " in the following two events:");
+                    attachEvent(lastLogEvent, exception);
+                    attachEvent(logEvent, exception);
+                    exception.setUserFriendly(true);
+                    throw exception;
                 }
             }
         }
@@ -170,15 +171,17 @@ function Graph(logEvents) {
                     clock[otherHost] = time;
 
                     if (hostSet[otherHost] == undefined) {
-                        var message = "The following event's vector clock contains an entry for " + "an unrecognized host \"" + otherHost + "\".";
-                        message += attachEvent(currNode.logEvents[0]);
-                        throw message;
+                        var exception = new Exception("The following event's vector clock contains an entry for " + "an unrecognized host \"" + otherHost + "\".");
+                        attachEvent(currNode.logEvents[0], exception);
+                        exception.setUserFriendly(true);
+                        throw exception;
                     }
 
                     if (time < 1 || time > hostToNodes[otherHost].length) {
-                        var message = "The following event's vector clock contains an invalid clock value " + time + " for " + "host \"" + otherHost + "\".";
-                        message += attachEvent(currNode.logEvents[0]);
-                        throw message;
+                        var exception = new Exception("The following event's vector clock contains an invalid clock value " + time + " for " + "host \"" + otherHost + "\".");
+                        attachEvent(currNode.logEvents[0], exception);
+                        exception.setUserFriendly(true);
+                        throw exception;
                     }
 
                     candidates.push(hostToNodes[otherHost][time - 1]);
@@ -259,18 +262,19 @@ function Graph(logEvents) {
         }
 
         if (!clocks[host][time].equals(curr.getLogEvents()[0].getVectorTimestamp())) {
-            var message = "The following event has an impermissible vector clock.\n";
-            message += attachEvent(curr.getLogEvents()[0]);
-            message += "\n\nWe think it should be:\n" + JSON.stringify(clocks[host][time].clock);
-            throw message;
-
+            var exception = new Exception("The following event has an impermissible vector clock.\n");
+            attachEvent(curr.getLogEvents()[0], exception);
+            exception.append("\n\nWe think it should be:\n");
+            exception.append(JSON.stringify(clocks[host][time].clock), "code");
+            exception.setUserFriendly(true);
+            throw exception;
         }
     }
 
-    function attachEvent(event) {
+    function attachEvent(event, exception) {
         var vt = event.getVectorTimestamp();
-
-        return "\n\nOn line " + (event.getLineNumber() + 1) + ":\n" + event.getText() + "\n" + JSON.stringify(vt.clock);
+        exception.append("\nOn line " + (event.getLineNumber() + 1) + ":\n");
+        exception.append(event.getText() + "\n" + JSON.stringify(vt.clock), "code")
     }
 
 }
@@ -333,14 +337,14 @@ Graph.prototype.hasHost = function(host) {
 
 /**
  * Removes a host from the model. All connections to and from this host will be
- * removed. The host must be a valid host in the current Graph.
+ * removed. If the host doesn't exist, this method does nothing
  * 
  * @param {String} host the name of the host to hide
  */
 Graph.prototype.removeHost = function(host) {
     var index = this.hosts.indexOf(host);
     if (index < 0) {
-        throw "Host not found: " + host;
+        return;
     }
 
     this.hosts.splice(index, 1);
@@ -541,7 +545,7 @@ Graph.prototype.clone = function() {
  */
 Graph.prototype.addObserver = function(type, context, callback) {
     if (Graph.validEvents.indexOf(type) < 0) {
-        throw type + " is not a valid event";
+        throw new Exception("Graph.prototype.addObserver: " + type + " is not a valid event");
     }
 
     this.observers[type][callback] = {
@@ -562,7 +566,7 @@ Graph.prototype.addObserver = function(type, context, callback) {
  */
 Graph.prototype.removeObserver = function(type, callback) {
     if (Graph.validEvents.indexOf(type) < 0) {
-        throw type + " is not a valid event";
+        throw new Exception("Graph.prototype.removeObserver: " + type + " is not a valid event");
     }
 
     delete this.observers[type][callback];
@@ -583,11 +587,11 @@ Graph.prototype.removeObserver = function(type, callback) {
  */
 Graph.prototype.notify = function(event) {
     if (Graph.validEvents.indexOf(event.constructor) < 0) {
-        throw type + " is not a valid event";
+        throw new Exception("Graph.prototype.notify: " + type + " is not a valid event");
     }
 
     if (event.constructor == ChangeEvent) {
-        throw "You cannot directly dispatch a ChangeEvent.";
+        throw new Exception("Graph.prototype.notify: You cannot directly dispatch a ChangeEvent.");
     }
 
     var params = this.observers[event.constructor];

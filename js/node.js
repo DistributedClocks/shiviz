@@ -248,7 +248,7 @@ Node.prototype.insertNext = function(node) {
     }
 
     if (this.isTail()) {
-        throw "You cannot insert a node after a tail node";
+        throw new Exception("Node.prototype.insertNext: You cannot insert a node after a tail node");
     }
 
     node.remove();
@@ -276,7 +276,7 @@ Node.prototype.insertPrev = function(node) {
     }
 
     if (this.isHead()) {
-        throw "You cannot insert a node before a head node";
+        throw new Exception("Node.prototype.insertPrev: You cannot insert a node before a head node");
     }
 
     node.remove();
@@ -310,7 +310,7 @@ Node.prototype.insertPrev = function(node) {
  */
 Node.prototype.remove = function() {
     if (this.isHead() || this.isTail()) {
-        throw "Head and tail nodes cannot be removed";
+        throw new Exception("Node.prototype.remove: Head and tail nodes cannot be removed");
     }
 
     // nodes that have already been removed will have this.prev == null and
@@ -481,11 +481,11 @@ Node.prototype.removeParentByHost = function(host) {
  */
 Node.prototype.addChild = function(node) {
     if (node.isHead() || node.isTail()) {
-        throw "Cannot add child to head or tail node";
+        throw new Exception("Node.prototype.addChild: Cannot add child to head or tail node");
     }
 
     if (node.host == this.host) {
-        throw "A node cannot be the child of another node who has the same host";
+        throw new Exception("Node.prototype.addChild: A node cannot be the child of another node who has the same host");
     }
 
     if (this.getChildByHost(node.host) == node) {
@@ -517,11 +517,11 @@ Node.prototype.addChild = function(node) {
  */
 Node.prototype.addParent = function(node) {
     if (node.isHead() || node.isTail()) {
-        throw "Cannot add parent to head or tail node";
+        throw new Exception("Node.prototype.addParent: Cannot add parent to head or tail node");
     }
 
     if (node.host == this.host) {
-        throw "A node cannot be the parent of another node who has the same host";
+        throw new Exception("Node.prototype.addParent: A node cannot be the parent of another node who has the same host");
     }
 
     if (this.getParentByHost(node.host) == node) {
