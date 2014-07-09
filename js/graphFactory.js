@@ -4,46 +4,42 @@
  * format 'localHostId {hostId_1:time_1, ..., hostId_n:time_n}'
  */
 function generateGraphFromLog(logLines) {
-
-    // TODO: fail gracefully
-
-    if (logLines.length <= 1) {
-        alert("No logs to display :(");
-        return false;
-    }
-
     var logEvents = [];
 
-    var i = 0;
-    try {
-        for (i = 0; i < logLines.length; i++) {
-            var log = logLines[i];
-            if (log.length == 0)
-                continue;
-            i++;
-            var stamp = logLines[i];
-            var spacer = stamp.indexOf(" ");
-            var host = stamp.substring(0, spacer);
-            var clock = JSON.parse(stamp.substring(spacer));
+    for (var i = 0; i < logLines.length; i++) {
+        var log = logLines[i];
+        if (log.length == 0)
+            continue;
+        i++;
+        var stamp = logLines[i];
+        var spacer = stamp.indexOf(" ");
+        var host = stamp.substring(0, spacer);
+        
+        var clock = null;
+        try {
+            clock = JSON.parse(stamp.substring(spacer));
+        }
+        catch (err) {
+            var exception = new Exception("An error occured while trying to parse the vector timestamp on line " + (i + 1) + ":");
+            exception.append(stamp.substring(spacer + 1), "code");
+            exception.append("The error message from the JSON parser reads:\n");
+            exception.append(err.toString(), "italic");
+            exception.setUserFriendly(true);
+            throw exception;
+        }
+        
+        try {
             var vt = new VectorTimestamp(clock, host);
-
             logEvents.push(new LogEvent(log, host, vt, i));
         }
-
+        catch (exception) {
+            exception.prepend("An error occured while trying to parse the vector timestamp on line " + (i + 1) + ":\n\n");
+            exception.append(stamp.substring(spacer + 1), "code");
+            exception.setUserFriendly(true);
+            throw exception;
+        }
     }
-    catch (err) {
-        alert(err + "\n\nOn line " + (i + 1) + ":\n" + logLines[i] + "\n" + logLines[i + 1]);
-        resetView();
-        return null;
-    }
-
-    try {
-        return new Graph(logEvents);
-    }
-    catch (err) {
-        alert(err);
-        resetView();
-        return null;
-    }
+    
+    return new Graph(logEvents);
 
 }

@@ -386,3 +386,39 @@ svg#defs {
     width: 0;
     position: absolute;
 }
+
+#errorbox {
+    display: none;
+    width: 50%;
+    box-sizing: border-box;
+    position: fixed;
+    top: 200px;
+    left: 25%;
+    z-index: 99;
+    background: #c44;
+    color: #fff;
+    padding: 1em;
+}
+#errorbox pre {
+    overflow: auto;
+    padding: .4em;
+    background: #FDD;
+    color: #444;
+}
+#errorbox pre:last-child {
+    margin-bottom: 0;
+}
+#errorbox pre + br {
+    display: none;
+}
+
+#errorcover {
+    display: none;
+    width: 100%;
+    height: 100%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 98;
+    background: rgba(255,255,255,.8);
+}
