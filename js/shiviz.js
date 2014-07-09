@@ -213,8 +213,8 @@ function handleError(err) {
     var errhtml = err.getHTMLMessage();
     
     if(!err.isUserFriendly()) {
-        var pretext = "An unexpected error was encountered. The technical error message is:</br></br>";
-        errhtml = pretext + "<span style=\"font-size : 11px;\">" + errhtml + "</span>";
+        console.log(errhtml);
+        errhtml = "An unexpected error was encountered. Sorry!";
     }
     
     $("#errorbox").html(errhtml);
