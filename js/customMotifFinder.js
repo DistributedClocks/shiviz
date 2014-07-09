@@ -5,6 +5,10 @@ function CustomMotifFinder(builderGraph) {
 CustomMotifFinder.prototype.find = function(graph) {
     var context = this;
     var builderGraph = this.builderGraph;
+    
+    if(!validateBGraph(builderGraph)) {
+        throw new Exception("User defined motifs must be one contiguous graph.", true);
+    }
 
     // we don't need host tracking, since prev/next connectivity constrains host
     // already
@@ -29,6 +33,33 @@ CustomMotifFinder.prototype.find = function(graph) {
     }
 
     return motif;
+    
+    function validateBGraph(bGraph) {
+        var bNodes = bGraph.getNodes();
+        var seen = {};
+        
+        seen[bNodes[0].getId()] = true;
+        var stack = [bNodes[0]];
+        while(stack.length > 0) {
+            var curr = stack.pop();
+            
+            var nextNodes = curr.getConnections();
+            for(var i = 0; i < nextNodes.length; i++) {
+                var nextNode = nextNodes[i];
+                if(nextNode != null && !seen[nextNode.getId()]) {
+                    seen[nextNode.getId()] = true;
+                    stack.push(nextNode);
+                }
+            }
+        }
+        
+        for(var i = 0; i < bNodes.length; i++) {
+            if(!seen[bNodes[i].getId()]) {
+                return false;
+            }
+        }
+        return true;
+    }
 
     function handleFound() {
         
