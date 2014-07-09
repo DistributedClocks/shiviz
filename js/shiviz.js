@@ -74,58 +74,63 @@ $("#visualize").on("click", function () {
 });
 
 function visualize() {
-    d3.selectAll("#graph svg").remove();
-
-    var log = $("#input").val();
-    var labels = null;
-    if ($("#delimiter").val().length > 0) {
-        var delimiter = new NamedRegExp($("#delimiter").val(), "m");
-        var executions = log.split(delimiter.no);
-        if (delimiter.names.indexOf("trace") >= 0) {
-            labels = [ "" ];
-            var match;
-            while (match = delimiter.exec(log))
-                labels.push(match.trace);
+    try {
+        d3.selectAll("#graph svg").remove();
+    
+        var log = $("#input").val();
+        var labels = null;
+        if ($("#delimiter").val().length > 0) {
+            var delimiter = new NamedRegExp($("#delimiter").val(), "m");
+            var executions = log.split(delimiter.no);
+            if (delimiter.names.indexOf("trace") >= 0) {
+                labels = [ "" ];
+                var match;
+                while (match = delimiter.exec(log))
+                    labels.push(match.trace);
+            }
         }
-    }
-    else {
-        executions = [ log ];
-    }
-
-    executions = executions.filter(function(e, i) {
-        if (e.trim().length == 0) {
-            if (labels)
-                labels[i] = "//REMOVE";
-            return false;
+        else {
+            executions = [ log ];
         }
-        return true;
-    });
-
-    if (!!labels)
-        labels = labels.filter(function(e) {
-            return !(e == "//REMOVE");
+    
+        executions = executions.filter(function(e, i) {
+            if (e.trim().length == 0) {
+                if (labels)
+                    labels[i] = "//REMOVE";
+                return false;
+            }
+            return true;
         });
-
-    // We need a variable share across all views/executions to keep them in
-    // sync.
-    var global = new Global(); // Global.getInstance();
-
-    // Make a view for each execution, then draw it
-    executions.map(function(v, i) {
-        var lines = v.split('\n');
-        var model = generateGraphFromLog(lines);
-        var view = new View(model, global, labels ? labels[i] : "");
-
-        global.addView(view);
-
-        return view;
-    });
-
-    global.drawAll();
-
-    // Check for vertical overflow
-    if ($(document).height() > $(window).height())
+    
+        if (!!labels)
+            labels = labels.filter(function(e) {
+                return !(e == "//REMOVE");
+            });
+    
+        // We need a variable share across all views/executions to keep them in
+        // sync.
+        var global = new Global(); // Global.getInstance();
+    
+        // Make a view for each execution, then draw it
+        executions.map(function(v, i) {
+            var lines = v.split('\n');
+            var model = generateGraphFromLog(lines);
+            var view = new View(model, global, labels ? labels[i] : "");
+    
+            global.addView(view);
+    
+            return view;
+        });
+    
         global.drawAll();
+    
+        // Check for vertical overflow
+        if ($(document).height() > $(window).height())
+            global.drawAll();
+    }
+    catch(err) {
+        handleError(err);
+    }
 };
 
 /**
@@ -195,4 +200,14 @@ function inputHeight() {
     var properHeight = Math.max($(".input .left").height(), fillHeight);
 
     $(".input #input").outerHeight(properHeight);
+}
+
+
+function handleError(err) {
+    if(err.constructor != Exception) {
+        throw err;
+    }
+    
+    alert(err.getMessage());
+//    err.getHTML();
 }
