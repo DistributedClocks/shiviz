@@ -19,23 +19,22 @@ function generateGraphFromLog(logLines) {
         try {
             clock = JSON.parse(stamp.substring(spacer));
         }
-        catch(err) {
-            var exception = new Exception("An error occured trying to parse this vector timestamp on line " + (i + 1) + ":\n");
-            exception.append(stamp.substring(spacer), "code");
-            exception.append("\n\nThe error message from the JSON parser reads:\n");
+        catch (err) {
+            var exception = new Exception("An error occured while trying to parse the vector timestamp on line " + (i + 1) + ":");
+            exception.append(stamp.substring(spacer + 1), "code");
+            exception.append("The error message from the JSON parser reads:\n");
             exception.append(err.toString(), "italic");
             exception.setUserFriendly(true);
             throw exception;
         }
         
-        try{
+        try {
             var vt = new VectorTimestamp(clock, host);
-
             logEvents.push(new LogEvent(log, host, vt, i));
         }
-        catch(exception) {
-            exception.prepend("An error occured while trying to parse the following vector timestamp. ");
-            exception.append(stamp.substring(spacer), "code");
+        catch (exception) {
+            exception.prepend("An error occured while trying to parse the vector timestamp on line " + (i + 1) + ":\n\n");
+            exception.append(stamp.substring(spacer + 1), "code");
             exception.setUserFriendly(true);
             throw exception;
         }

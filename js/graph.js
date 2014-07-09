@@ -126,7 +126,7 @@ function Graph(logEvents) {
                     var lastVt = lastLogEvent.getVectorTimestamp();
                     var lastTime = lastVt.getOwnTime();
 
-                    var exception = new Exception("Clock values for a host must increase monotonically by 1.\n" + "The clock for host \"" + node.getHost() + "\" goes from " + lastTime + " to " + time + " in the following two events:");
+                    var exception = new Exception("Clock values for a host must increase monotonically by 1.\n" + "The clock for host \"" + node.getHost() + "\" goes from " + lastTime + " to " + time + " in the following two events:\n");
                     attachEvent(lastLogEvent, exception);
                     attachEvent(logEvent, exception);
                     exception.setUserFriendly(true);
@@ -264,7 +264,7 @@ function Graph(logEvents) {
         if (!clocks[host][time].equals(curr.getLogEvents()[0].getVectorTimestamp())) {
             var exception = new Exception("The following event has an impermissible vector clock.\n");
             attachEvent(curr.getLogEvents()[0], exception);
-            exception.append("\n\nWe think it should be:\n");
+            exception.append("We think it should be:");
             exception.append(JSON.stringify(clocks[host][time].clock), "code");
             exception.setUserFriendly(true);
             throw exception;
@@ -273,7 +273,7 @@ function Graph(logEvents) {
 
     function attachEvent(event, exception) {
         var vt = event.getVectorTimestamp();
-        exception.append("\nOn line " + (event.getLineNumber() + 1) + ":\n");
+        exception.append("\nOn line " + event.getLineNumber() + ":");
         exception.append(event.getText() + "\n" + JSON.stringify(vt.clock), "code")
     }
 

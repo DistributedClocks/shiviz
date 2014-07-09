@@ -107,13 +107,14 @@ Exception.prototype.getHTML = function(string, style) {
         return string;
     }
     if (style == 'bold') {
-        return "<b>" + string + "</b>";
+        return "<strong>" + string + "</strong>";
     }
     if (style == "italic") {
         return "<em>" + string + "</em>";
     }
     if (style == "code") {
-        return "<code>" + string + "</code>";
+        return "<pre>" + string + "</pre>";
     }
+
     throw new Exception("Exception.prototype.getHTML: Invalid style argument.");
 };

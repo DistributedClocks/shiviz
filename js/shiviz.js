@@ -30,8 +30,8 @@ $(".try").on("click", function () {
     go(1, true);
 });
 
-$("#errorbox").on("click", function () {
-    $("#errorbox").css("display", "none");
+$("#errorcover").on("click", function () {
+    $(".error").hide();
 });
 
 // Listener for history popstate
@@ -204,20 +204,28 @@ function inputHeight() {
     $(".input #input").outerHeight(properHeight);
 }
 
-
 function handleError(err) {
-    if(err.constructor != Exception) {
+    if (err.constructor != Exception) {
         throw err;
     }
     
     var errhtml = err.getHTMLMessage();
     
-    if(!err.isUserFriendly()) {
-        console.log(errhtml);
+    if (!err.isUserFriendly()) {
+        console.log(err.getMessage());
         errhtml = "An unexpected error was encountered. Sorry!";
     }
     
     $("#errorbox").html(errhtml);
-    $("#errorbox").css("display", "inline");
-    go(0);
+    $(".error").show();
+
+    // Let users close errors with esc
+    $(window).on('keydown', function(e) {
+        if (e.keyCode == 27) {
+            $(".error").hide();
+            $(window).unbind('keydown');
+        }
+    });
+
+    go(1);
 }
