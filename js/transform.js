@@ -175,7 +175,7 @@ CollapseSequentialNodesTransformation.prototype.getThreshold = function() {
  */
 CollapseSequentialNodesTransformation.prototype.setThreshold = function(threshold) {
     if (threshold < 2) {
-        throw "Invalid threshold. Threshold must be greater than or equal to 2";
+        throw new Exception("CollapseSequentialNodesTransformation.prototype.setThreshold: Invalid threshold. Threshold must be greater than or equal to 2");
     }
 
     this.threshold = threshold;
