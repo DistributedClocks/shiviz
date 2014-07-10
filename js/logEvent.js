@@ -11,7 +11,7 @@
  * @param {VectorTimestamp} vectorTimestamp the vector timestamp of the log
  * @param {Number} lineNum the line number of the event in the log
  */
-function LogEvent(text, host, vectorTimestamp, lineNum) {
+function LogEvent(text, vectorTimestamp, lineNum) {
     /** @private */
     this.id = LogEvent.id++;
 
@@ -19,7 +19,7 @@ function LogEvent(text, host, vectorTimestamp, lineNum) {
     this.text = text;
 
     /** @private */
-    this.host = host;
+    this.host = vectorTimestamp.getOwnHost();
 
     /** @private */
     this.vectorTimestamp = vectorTimestamp;
