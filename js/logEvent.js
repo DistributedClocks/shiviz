@@ -6,12 +6,14 @@
 
 /**
  * @constructor
- * @param {String} text the text of the log (description)
- * @param {String} host the host the event belongs to
+ * @param {String} text     the text of the log (description)
+ * @param {String} host     the host the event belongs to
  * @param {VectorTimestamp} vectorTimestamp the vector timestamp of the log
- * @param {Number} lineNum the line number of the event in the log
+ * @param {Number} lineNum  the line number of the event in the log
+ * @param {Object} fields   extra fields parsed from the log event
+ *                          (date, ip, etc)
  */
-function LogEvent(text, host, vectorTimestamp, lineNum) {
+function LogEvent(text, host, vectorTimestamp, lineNum, fields) {
     /** @private */
     this.id = LogEvent.id++;
 
@@ -26,6 +28,9 @@ function LogEvent(text, host, vectorTimestamp, lineNum) {
 
     /** @private */
     this.lineNum = lineNum;
+
+    /** @private */
+    this.fields = fields || {};
 }
 
 LogEvent.id = 0;
@@ -75,3 +80,22 @@ LogEvent.prototype.getVectorTimestamp = function() {
 LogEvent.prototype.getLineNumber = function() {
     return this.lineNum;
 };
+
+/**
+ * Returns all fields contained in the event
+ * 
+ * @return {Object}
+ */
+LogEvent.prototype.getFields = function() {
+    return this.fields;
+}
+
+/**
+ * Returns the value of a field in the log event
+ *
+ * @param  {String} field the key to retrieve the value from
+ * @return {any} the value of the field
+ */
+LogEvent.prototype.getField = function(field) {
+    return this.fields[field];
+}
