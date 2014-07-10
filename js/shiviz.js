@@ -104,6 +104,8 @@ function visualize() {
             return true;
         });
     
+        
+        
         if (!!labels)
             labels = labels.filter(function(e) {
                 return !(e == "//REMOVE");
