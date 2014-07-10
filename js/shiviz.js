@@ -13,6 +13,7 @@ $("#examples a").on("click", function(e) {
         $("#input").val(response);
         resetView();
         $("#delimiter").val($(e.target).data("delimiter"));
+        $("#parser").val("(?<event>.*)\\n(?<host>\\w*) (?<clock>.*)")
         $(e.target).css({
             color: "gray",
             pointerEvents: "none"
@@ -112,11 +113,13 @@ function visualize() {
         // We need a variable share across all views/executions to keep them in
         // sync.
         var global = new Global(); // Global.getInstance();
+
+        // Read the log parser RegExp
+        var parser = new NamedRegExp($("#parser").val(), "m");
     
         // Make a view for each execution, then draw it
         executions.map(function(v, i) {
-            var lines = v.split('\n');
-            var model = generateGraphFromLog(lines);
+            var model = generateGraphFromLog(v, parser);
             var view = new View(model, global, labels ? labels[i] : "");
     
             global.addView(view);
