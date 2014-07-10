@@ -1,7 +1,15 @@
 /**
- * Generates and returns a model from log lines. logLines is an array of
- * alternating log event, vector timestamp pairs. Assumes timestamps are in the
- * format 'localHostId {hostId_1:time_1, ..., hostId_n:time_n}'
+ * Generates and returns a model from log.
+ * 
+ * @param  {String}      log    Raw input log to be parsed
+ * @param  {NamedRegExp} regexp Named regular expression used
+ *                              to parse log. Must contain three capture
+ *                              groups:
+ *                               - clock for the vector timestamp
+ *                               - host for the timestamp's host
+ *                               - event for the log event's description
+ * 
+ * @return {Graph} Parsed graph model 
  */
 function generateGraphFromLog(log, regexp) {
     var logEvents = [];
