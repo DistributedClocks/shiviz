@@ -3,25 +3,24 @@
  * alternating log event, vector timestamp pairs. Assumes timestamps are in the
  * format 'localHostId {hostId_1:time_1, ..., hostId_n:time_n}'
  */
-function generateGraphFromLog(logLines) {
+function generateGraphFromLog(log, regexp) {
     var logEvents = [];
 
-    for (var i = 0; i < logLines.length; i++) {
-        var log = logLines[i];
-        if (log.length == 0)
-            continue;
-        i++;
-        var stamp = logLines[i];
-        var spacer = stamp.indexOf(" ");
-        var host = stamp.substring(0, spacer);
-        
-        var clock = null;
+    var match;
+    while (match = regexp.exec(log)) {
+        var n = log.substr(0, match.index).match(/\n/g);
+        var ln = n ? n.length + 1 : 1;
+
+        var clock = match.clock;
+        var host = match.host;
+        var event = match.event;
+
         try {
-            clock = JSON.parse(stamp.substring(spacer));
+            clock = JSON.parse(clock);
         }
         catch (err) {
-            var exception = new Exception("An error occured while trying to parse the vector timestamp on line " + (i + 1) + ":");
-            exception.append(stamp.substring(spacer + 1), "code");
+            var exception = new Exception("An error occured while trying to parse the vector timestamp on line " + ln + ":");
+            exception.append(match.clock, "code");
             exception.append("The error message from the JSON parser reads:\n");
             exception.append(err.toString(), "italic");
             exception.setUserFriendly(true);
@@ -30,16 +29,15 @@ function generateGraphFromLog(logLines) {
         
         try {
             var vt = new VectorTimestamp(clock, host);
-            logEvents.push(new LogEvent(log, host, vt, i));
+            logEvents.push(new LogEvent(event, host, vt, ln));
         }
         catch (exception) {
-            exception.prepend("An error occured while trying to parse the vector timestamp on line " + (i + 1) + ":\n\n");
-            exception.append(stamp.substring(spacer + 1), "code");
+            exception.prepend("An error occured while trying to parse the vector timestamp on line " + ln + ":\n\n");
+            exception.append(match.clock, "code");
             exception.setUserFriendly(true);
             throw exception;
         }
     }
     
     return new Graph(logEvents);
-
 }
