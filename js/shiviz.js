@@ -111,19 +111,23 @@ function visualize() {
     
         // We need a variable share across all views/executions to keep them in
         // sync.
-        var global = new Global(); // Global.getInstance();
+        var global = new Global();
+        
+        var hp = new LengthPermutation(true);
     
         // Make a view for each execution, then draw it
         executions.map(function(v, i) {
             var lines = v.split('\n');
             var model = generateGraphFromLog(lines);
-            var view = new View(model, global, labels ? labels[i] : "");
+            var view = new View(model, global, hp, labels ? labels[i] : "");
     
             global.addView(view);
+            hp.addGraph(model);
     
             return view;
         });
     
+        hp.update();
         global.drawAll();
     
         // Check for vertical overflow

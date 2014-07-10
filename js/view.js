@@ -8,9 +8,13 @@
  * @constructor
  * @param {Graph} model
  * @param {Global} global
+ * @param {HostPermutation} hostPermutation
  * @param {String} label
  */
-function View(model, global, label) {
+function View(model, global, hostPermutation, label) {
+    
+    /** @private */
+    this.hostPermutation = hostPermutation;
 
     /** @private */
     this.label = label;
@@ -86,7 +90,7 @@ View.prototype.draw = function() {
     var currentModel = this.initialModel.clone();
     var layout = new SpaceTimeLayout(this.width, 56);
 
-    var visualGraph = new VisualGraph(currentModel, layout, this.global.hostColors);
+    var visualGraph = new VisualGraph(currentModel, layout, this.hostPermutation); // TODO: is it a good idea to re-create this on each draw?
 
     var transformations = this.global.getTransformations().concat(this.transformations);
     transformations.sort(function(a, b) {
