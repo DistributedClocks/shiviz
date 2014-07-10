@@ -227,10 +227,10 @@
                 <td class="right">
                     <div id="examples">
                         Examples:
-                        <a class="log-link" href="" data-log="log/facebook.log">Facebook data-center log</a>
-                        <a class="log-link" href="" data-log="log/voldemort.log">Voldemort log</a>
+                        <a class="log-link" href="" data-log="log/facebook.log" data-parser="(?<ip>(\d{1,3}\.){3}\d{1,3}) (?<date>(\d{1,2}/){2}\d{4} (\d{2}:){2}\d{2} (AM|PM)) (?<action>(INFO|GET|POST)) (?<event>.*)\n(?<host>\w*) (?<clock>.*)">Facebook data-center log</a>
+                        <a class="log-link" href="" data-log="log/voldemort.log" data-parser="\[(?<date>\d{4}-\d{2}-\d{2} (\d{2}:){2}\d{2},\d{3}) (?<path>\S*)\] (?<priority>(INFO|WARN)) (?<event>.*)\n(?<host>\S*) (?<clock>{.*})">Voldemort log</a>
                         <a class="log-link" href="" data-log="log/simpledb.log">SimpleDB log</a>
-                        <a class="log-link" href="" data-log="log/facebook-multiple.log" data-delimiter="^=== (?<trace>.*) ===$">Facebook log with multiple executions</a>
+                        <a class="log-link" href="" data-log="log/facebook-multiple.log" data-delimiter="^=== (?<trace>.*) ===$" data-parser="(?<ip>(\d{1,3}\.){3}\d{1,3}) (?<date>(\d{1,2}/){2}\d{4} (\d{2}:){2}\d{2} (AM|PM)) (?<action>(I|POSTNFO|GET)) (?<event>.*)\n(?<host>\w*) (?<clock>.*)">Facebook log with multiple executions</a>
                     </div>
                     <textarea id="input" spellcheck="false"></textarea>
                 </td>
@@ -262,7 +262,8 @@
             <div id="vizContainer"></div>
         </div>
         <div id="sidebar">
-            <div id="curNode"></div>
+            <div class="event"></div>
+            <table class="fields"></table>
             <div class="hidden"></div>
         </div>
     </section>

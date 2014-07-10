@@ -13,7 +13,7 @@ $("#examples a").on("click", function(e) {
         $("#input").val(response);
         resetView();
         $("#delimiter").val($(e.target).data("delimiter"));
-        $("#parser").val("(?<event>.*)\\n(?<host>\\w*) (?<clock>.*)")
+        $("#parser").val($(e.target).data("parser") || "(?<event>.*)\\n(?<host>\\S*) (?<clock>{.*})");
         $(e.target).css({
             color: "gray",
             pointerEvents: "none"
@@ -61,7 +61,8 @@ function resetView() {
         $(".icon .tabs li:last-child").removeClass("disabled");
     }
 
-    $("#curNode").html("(click to view)");
+    $(".event").html("");
+    $(".fields").html("");
 
     d3.selectAll("#graph svg").remove();
 
