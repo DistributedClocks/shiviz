@@ -54,6 +54,6 @@ function generateGraphFromLog(log, regexp) {
             throw exception;
         }
     }
-    
+
     return new Graph(logEvents);
 }
