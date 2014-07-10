@@ -23,6 +23,14 @@ function generateGraphFromLog(log, regexp) {
         var host = match.host;
         var event = match.event;
 
+        var fields = {};
+        regexp.names.forEach(function (name, i) {
+            if (name == "clock" || name == "host" || name == "event")
+                return;
+
+            fields[name] = match[name];
+        });
+
         try {
             clock = JSON.parse(clock);
         }
@@ -37,7 +45,7 @@ function generateGraphFromLog(log, regexp) {
         
         try {
             var vt = new VectorTimestamp(clock, host);
-            logEvents.push(new LogEvent(event, host, vt, ln));
+            logEvents.push(new LogEvent(event, host, vt, ln, fields));
         }
         catch (exception) {
             exception.prepend("An error occured while trying to parse the vector timestamp on line " + ln + ":\n\n");
