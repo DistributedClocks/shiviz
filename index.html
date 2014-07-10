@@ -38,161 +38,107 @@
 
             <button class="try">Try out ShiViz</button>
 
-        <h3>What am I looking at?</h3>
-        <p>
-            In the visualization:
-            <ul>
-                <li>
-                    Time flows from top to bottom.
-                </li>
-                <li>
-                  The left panel shows the log and the middle panel
-                  displays
-                  a <a href="http://en.wikipedia.org/wiki/Directed_acyclic_graph">DAG</a>
-                  of the partially ordered vector timestamps recorded
-                  in the input log.
-                </li>
-                <li>
-                    A vertical line with a box at the top is a <strong>process
-                    timeline</strong>. This represents a single thread of execution
-                    (e.g., a process).
-                </li>
-                <li>
-                    Circles on a process timeline are <strong>events</strong> that were
-                    executed by the process.
-                </li>
-                <li>
-                    Diagonal lines connecting two events represent the
-                    <a href="http://en.wikipedia.org/wiki/Happened-before">happened-before</a>
-                    relation between the events: the higher of the two events
-                    happened <i>before</i> the second event.
-                </li>
-                <li>
-                  Dashed lines represent transitive communication
-                  edges. These only appear when a process is hidden, and
-                  two processes that are not hidden communicated
-                  indirectly through this process.
-                </li>
-                <li>
-                  Larger circles represent merged local events. These
-                  have a number inside of them, indicating the number
-                  of events that they represent.
-                </li>
-                <li>
-                  Radiating lines that fade out represent
-                  communication edges to processes that are currently
-                  hidden from view.
-                </li>
-                <li>
-                  Each process is associated with a unique color. Log
-                  entries in the left column have the corresponding
-                  process color. By default, the log entries are
-                  sorted in the order in which the entries appear in
-                  the graph.
-                </li>
-            </ul>
-        </p>
+            <h3>What am I looking at?</h3>
+            <p>
+                In the visualization:
+                <ul>
+                    <li>
+                        Time flows from top to bottom.
+                    </li>
+                    <li>
+                        The left panel shows the log and the middle panel displays a <a href="http://en.wikipedia.org/wiki/Directed_acyclic_graph">DAG</a> of the partially ordered vector timestamps recorded in the input log.
+                    </li>
+                    <li>
+                        A vertical line with a box at the top is a <strong>process timeline</strong>. This represents a single thread of execution (e.g., a process).
+                    </li>
+                    <li>
+                        Circles on a process timeline are <strong>events</strong> that were executed by the process.
+                    </li>
+                    <li>
+                        Diagonal lines connecting two events represent the
+                        <a href="http://en.wikipedia.org/wiki/Happened-before">happened-before</a> relation between the events: the higher of the two events happened <i>before</i> the second event.
+                    </li>
+                    <li>
+                        Dashed lines represent transitive communication edges. These only appear when a process is hidden, and two processes that are not hidden communicated indirectly through this process.
+                    </li>
+                    <li>
+                        Larger circles represent merged local events. These have a number inside of them, indicating the number of events that they represent.
+                    </li>
+                    <li>
+                        Radiating lines that fade out represent communication edges to processes that are currently hidden from view.
+                    </li>
+                    <li>
+                        Each process is associated with a unique color. Log entries in the left column have the corresponding process color. By default, the log entries are sorted in the order in which the entries appear in the graph.
+                    </li>
+                </ul>
+            </p>
 
-        <h3>How do I interact with the visualization?</h3>
-        <p>
-            The visualization supports the following actions:
-            <ul>
-                <li>
-                    <strong>Hide a process timeline</strong>:
-                    double-click a process box. To show the process
-                    timeline, double-click on the process box in the
-                    "hidden processes" panel.
-                </li>
-                <li>
-                    <strong>Show event or process name</strong>: hover
-                    over an event circle or a process box. The
-                    corresponding text will appear in the top right
-                    corner. For events, the log entry for the event
-                    will be highlighted in the left panel.
-                </li>
-                <li><strong>Expand/collapse non-communicating
-                events</strong>: Events that are not incident on any
-                communication edges are merged by ShiViz into
-                larger-looking nodes. These nodes can be
-                expanded/collapsed by holding SHIFT and clicking on
-                them.
-                </li>
-                <li>
-                  <strong>Filter by communication to
-                  process(es)</strong>: hold SHIFT and double-click on
-                  a process box. The process box will be marked with a
-                  white square. This indicates that the graph is now
-                  filtered to show only events at the filtered process
-                  and only those processes and their events that
-                  communicated with this process. You can filter by
-                  more than one process. Undo the filter in the same
-                  way -- hold SHIFT and double-click the process box.
-                </li>
+            <h3>How do I interact with the visualization?</h3>
+            <p>
+                The visualization supports the following actions:
+                <ul>
+                    <li>
+                        <strong>Hide a process timeline</strong>
+                        <br>
+                        double-click a process box. To show the process timeline, double-click on the process box in the "hidden processes" panel.
+                    </li>
+                    <li>
+                        <strong>Show event or process name</strong>
+                        <br>
+                        hover over an event circle or a process box. The corresponding text will appear in the top right corner. For events, the log entry for the event will be highlighted in the left panel.
+                    </li>
+                    <li>
+                        <strong>Expand/collapse non-communicating events</strong>
+                        <br>
+                        Events that are not incident on any communication edges are merged by ShiViz into larger-looking nodes. These nodes can be expanded/collapsed by holding SHIFT and clicking on them.
+                    </li>
+                    <li>
+                        <strong>Filter by communication to process(es)</strong>
+                        <br>
+                        hold SHIFT and double-click on a process box. The process box will be marked with a white square. This indicates that the graph is now filtered to show only events at the filtered process and only those processes and their events that communicated with this process. You can filter by more than one process. Undo the filter in the same way -- hold SHIFT and double-click the process box.
+                    </li>
+                </ul>
+            </p>
 
-            </ul>
-        </p>
+            <h3 id="helpsectiontitle">How is this tool useful?</h3>
+            <p>
+                Here are three use-cases that ShiViz helps to support:
+                <ul>
+                    <li>
+                        <strong>Understanding the communication graph.</strong>
+                        <br>
+                        Quickly scan the graph to identify the presence or absence of certain communication patterns.
+                    </li>
+                    <li>
+                        <strong>Reasoning about ordering in a concurrent or distributed setting</strong>.
+                        <br>
+                        Visualize concurrency and the happened-before relation to understand if two events occurred concurrently, or if one happened before the other.
+                    </li>
+                    <li>
+                        <strong>Analyzing activity at processes that matter</strong>.
+                        <br>
+                        Hide processes (and their log lines) for a more focused visualization. Filter by communication to a process to see only those events at other processes that were likely to have influenced the execution of a process you care about.
+                    </li>
+                </ul>
+            </p>
 
-        <h3 id="helpsectiontitle">How is this tool useful?</h3>
-        <p>
-            Here are three use-cases that ShiViz helps to support:
-            <ul>
-                <li>
-                    <strong>Understanding the communication
-                    graph.</strong> Quickly scan the graph to identify
-                    the presence or absence of certain communication
-                    patterns.
-                </li>
-                <li>
-                    <strong>Reasoning about ordering in a concurrent
-                    or distributed setting</strong>. Visualize
-                    concurrency and the happened-before relation to
-                    understand if two events occurred concurrently, or
-                    if one happened before the other.
-                </li>
-                <li>
-                    <strong>Analyzing activity at processes that
-                    matter</strong>. Hide processes (and their log
-                    lines) for a more focused visualization. Filter by
-                    communication to a process to see only those
-                    events at other processes that were likely to have
-                    influenced the execution of a process you care
-                    about.
-                </li>
+            <h3>What is the input log format to the tool?</h3>
 
-            </ul>
-        </p>
+            <p>
+                At the moment ShiViz only parses logs in the format generated by <a href="http://bitbucket.org/bestchai/shivector/wiki/Home">ShiVector</a>, in which each log event is a single log line followed by a vector-timestamped line that looks like:
+                <pre>localProcessId {"process1" : time1, "process2" : time2, ..., "processN" : timeN}</pre>
+            </p>
 
-        <h3>What is the input log format to the tool?</h3>
+            <p>
+                Here is an example of an event entry that ShiViz expects:
+                <pre>24.22.130.14 5/27/2013 10:56:22 AM GET /timeline uid=alice location=kansas<br>alice {"alice":5, "loadBalancer": 4, "eastDC":8, "westDC": 3}</pre>
+            </p>
 
-        <p>At the moment ShiViz only parses logs in the format
-        generated
-        by <a href="http://bitbucket.org/bestchai/shivector/wiki/Home">ShiVector</a>,
-        in which each log event is a single log line followed by a
-        vector-timestamped line that looks like:<br/> <i>localProcessId {
-        "process1" : time1, "process2" : time2, ..., "processN" : timeN
-        }</i>
-        </p>
+            <h3>How do I generate logs in this format?</h3>
 
-        <p>
-          Here is an example of an event entry that ShiViz expects:<br/>
-
-          <i>24.22.130.14 5/27/2013 10:56:22 AM GET /timeline uid=alice location=kansas<br/>
-          alice {"alice":5, "loadBalancer": 4, "eastDC":8, "westDC": 3}
-            </i>
-
-        </p>
-
-          
-
-        <h3>How do I generate logs in this format?</h3>
-        <p>Use <a href="http://bitbucket.org/bestchai/shivector/wiki/Home">ShiVector</a>.
-          ShiVector intercepts network messages and wraps those
-          messages to include a vector timestamp. ShiVector also
-          intercepts logging statements to add the current vector
-          timestamp to each existing logged message.
-        </p>
-
-
+            <p>
+                Use <a href="http://bitbucket.org/bestchai/shivector/wiki/Home">ShiVector</a>. ShiVector intercepts network messages and wraps those messages to include a vector timestamp. ShiVector also intercepts logging statements to add the current vector timestamp to each existing logged message.
+            </p>
         </div>
     </section>
 
@@ -263,6 +209,10 @@
             <div class="hidden"></div>
         </div>
     </section>
+
+    <div id="errorbox" class="error"></div>
+    <div id="errorcover" class="error"></div>
+
     <svg id="defs">
         <defs>
             <linearGradient id="gedge">
@@ -271,18 +221,15 @@
             </linearGradient>
         </defs>
     </svg>
-    
-    <div id="errorbox" class="error"></div>
-    <div id="errorcover" class="error"></div>
 
     <!-- REPLACED DURING DEPLOYMENT: -->
     <script type="text/javascript" src="js/dev.js"></script>
     <!-- -->
-        
+
     <script type="text/javascript" src="js/exception.js"></script> 
 
-	<script type="text/javascript" src="js/motif.js"></script>  
-	<script type="text/javascript" src="js/motifFinder.js"></script>  
+    <script type="text/javascript" src="js/motif.js"></script>  
+    <script type="text/javascript" src="js/motifFinder.js"></script>  
     <script type="text/javascript" src="js/visualGraph.js"></script>  
     <script type="text/javascript" src="js/visualNode.js"></script>
     <script type="text/javascript" src="js/visualEdge.js"></script>

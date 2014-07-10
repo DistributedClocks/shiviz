@@ -112,6 +112,13 @@ button:disabled {
 section.home .content {
     width: calc(100% - 720px);
 }
+section.home .content li {
+    margin: 1em 0;
+}
+section.home .content pre {
+    padding: .2em 0;
+    overflow: auto;
+}
 
 #versionContainer {
     position: absolute;
