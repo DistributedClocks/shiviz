@@ -1,33 +1,52 @@
+/**
+ * LogParser can be used to transform raw log text to LogEvents The LogParser
+ * class per se is only responsible for dividing the raw text into different
+ * executions according to the supplied delimiter. It then creates one
+ * ExecutionParser for each execution to which to task for parsing is then
+ * delegated.
+ * 
+ * The raw log potentially contains text for multiple executions. Delimiters
+ * demarcate where one execution's text ends and another begins. Labels can be
+ * given to executions by specifying a "trace" capture group within the
+ * delimiter regex. (So the label text must be part of the delimiter). This
+ * label can later be used to identify an execution. If an execution's text is
+ * not preceeded by a delimiter, it is given the empty string as its label.
+ * 
+ * @class
+ * @constructor
+ * @param {String} rawString the raw log text
+ * @param {NamedRegExp} delimiter a regex that specifies the delimiter. Anything
+ *            that matches the regex will be treated as a delimiter. A delimiter
+ *            acts to separate different executions.
+ */
 function LogParser(rawString, delimiter) {
-    
+
     /** @private */
     this.rawString = rawString.trim();
-    
+
     /** @private */
     this.delimiter = delimiter;
-    
+
     /** @private */
     this.labels = [];
-    
+
     /** @private */
     this.executions = {};
 
-    if(this.delimiter != null && this.delimiter.trim() != "") {
-        this.delimiter = this.delimiter.trim();
-        
-        var delimRegex = new NamedRegExp(delimiter, "m");
-        var currExecs = this.rawString.split(delimRegex.no);
-        var currLabels = [""];
-        
-        if (delimRegex.names.indexOf("trace") >= 0) {
+    if (this.delimiter != null) {
+
+        var currExecs = this.rawString.split(this.delimiter.no);
+        var currLabels = [ "" ];
+
+        if (this.delimiter.names.indexOf("trace") >= 0) {
             var match;
-            while (match = delimRegex.exec(this.rawString)) {
+            while (match = this.delimiter.exec(this.rawString)) {
                 currLabels.push(match.trace);
             }
         }
-        
-        for(var i = 0; i < currExecs.length; i++) {
-            if(currExecs[i].trim().length > 0) {
+
+        for ( var i = 0; i < currExecs.length; i++) {
+            if (currExecs[i].trim().length > 0) {
                 this.executions[currLabels[i]] = new ExecutionParser(currExecs[i], currLabels[i]);
                 this.labels.push(currLabels[i]);
             }
@@ -40,67 +59,86 @@ function LogParser(rawString, delimiter) {
 
 }
 
+/**
+ * Gets all of the labels of the executions
+ * 
+ * @returns {Array<String>} An array of all the labels.
+ */
 LogParser.prototype.getLabels = function() {
     return this.labels.slice();
 };
 
+/**
+ * Gets the ExecutionParser for the execution with the specified label. The
+ * ExecutionParser object can then be used to retrieve data parsed from that
+ * execution's text.
+ * 
+ * @param {String} label The label of the execution you want to retrieve.
+ * @returns {ExecutionParser} The execution parser associated with the specified
+ *          execution
+ */
 LogParser.prototype.getExecutionParser = function(label) {
-    if(!this.executions[label]) {
+    if (!this.executions[label]) {
         return null;
     }
     return this.executions[label];
 };
 
-
+/**
+ * ExecutionParser parses the raw text for one execution.
+ * 
+ * @class
+ * @constructor
+ * @private
+ * @param {String} rawString
+ * @param {Label} label
+ * @returns
+ */
 function ExecutionParser(rawString, label) {
-    
+
     /** @private */
     this.rawString = rawString;
-    
+
     /** @private */
     this.label = label;
-    
+
     /** @private */
     this.rawLines = [];
-    
+
     /** @private */
     this.textStrings = [];
-   
+
     /** @private */
     this.timestampStrings = [];
-    
+
     /** @private */
     this.timestamps = [];
-    
+
     /** @private */
     this.logEvents = [];
-    
-    /** @private */
-    this.graph = null;
-     
-        
+
     this.rawLines = this.rawString.split("\n");
-    
+
     var loc = 0;
-    while(loc < this.rawLines.length) {
-        while(loc < this.rawLines.length && this.rawLines[loc].trim() == "") {
+    while (loc < this.rawLines.length) {
+        while (loc < this.rawLines.length && this.rawLines[loc].trim() == "") {
             loc++;
         }
-        if(loc >= this.rawLines.length) {
+        if (loc >= this.rawLines.length) {
             break;
         }
-        
+
         var lineNum = loc;
         var text = this.rawLines[loc++].trim();
         this.textStrings.push(text);
-        
-        while(loc < this.rawLines.length && this.rawLines[loc].trim() == "") {
+
+        while (loc < this.rawLines.length && this.rawLines[loc].trim() == "") {
             loc++;
         }
-        if(loc >= this.rawLines.length) {
+        if (loc >= this.rawLines.length) {
             throw new Exception("The last event in the log appears to be missing a vector timestamp", true);
         }
-        
+
         var timestampString = this.rawLines[loc].trim();
         this.timestampStrings.push(timestampString);
         var vt = parseTimestamp(timestampString, loc);
@@ -108,14 +146,12 @@ function ExecutionParser(rawString, label) {
         this.logEvents.push(new LogEvent(text, vt, lineNum));
         loc++;
     }
-    
-    this.graph = new Graph(this.logEvents);
 
-    
     function parseTimestamp(text, line) {
         var i = text.indexOf(" ");
-        var parts = [text.slice(0,i), text.slice(i+1)]; //TODO: make better
-        
+        var parts = [ text.slice(0, i), text.slice(i + 1) ]; // TODO: make
+        // better
+
         var clock = null;
         try {
             clock = JSON.parse(parts[1].trim());
@@ -129,9 +165,9 @@ function ExecutionParser(rawString, label) {
             exception.setUserFriendly(true);
             throw exception;
         }
-        
+
         try {
-            var ret = new VectorTimestamp(clock, parts[0].trim()); 
+            var ret = new VectorTimestamp(clock, parts[0].trim());
             return ret;
         }
         catch (exception) {
@@ -141,12 +177,8 @@ function ExecutionParser(rawString, label) {
             throw exception;
         }
     }
-    
-}
 
-ExecutionParser.prototype.getGraph = function() {
-    return this.graph;
-};
+}
 
 ExecutionParser.prototype.getLogEvents = function() {
     return this.logEvents;
