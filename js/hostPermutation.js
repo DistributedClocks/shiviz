@@ -123,10 +123,30 @@ LengthPermutation.prototype.update = function() {
 };
 
 
-function LogOrderPermutation() {
+LogOrderPermutation.prototype = Object.create(HostPermutation.prototype);
+LogOrderPermutation.prototype.constructor = LogOrderPermutation;
+
+function LogOrderPermutation(reverse) {
+    HostPermutation.call(this, reverse);
     
+    /** @private */
+    this.logs = [];
 }
 
-function AutoPermutation() {
+LogOrderPermutation.prototype.addLogs = function(logs) {
+    this.logs = this.logs.concat(logs);
+};
+
+LogOrderPermutation.prototype.update = function() {
+    this.assignHostColors();
     
-}
+    var hostSet = {};
+    
+    for(var i = 0; i < this.logs.length; i++) {
+        var log = this.logs[i];
+        if(!hostSet[log.getHost()]) {
+            hostSet[log.getHost()] = true;
+            this.hosts.push(log.getHost());
+        }
+    }
+};

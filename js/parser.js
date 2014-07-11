@@ -12,7 +12,7 @@ function LogParser(rawString, delimiter) {
     /** @private */
     this.executions = {};
 
-    if(this.delimiter != null) {
+    if(this.delimiter != null && this.delimiter.trim() != "") {
         this.delimiter = this.delimiter.trim();
         
         var delimRegex = new NamedRegExp(delimiter, "m");
@@ -21,24 +21,35 @@ function LogParser(rawString, delimiter) {
         
         if (delimRegex.names.indexOf("trace") >= 0) {
             var match;
-            while (match = delimRegex.exec(log)) {
-                this.currLabels.push(match.trace);
+            while (match = delimRegex.exec(this.rawString)) {
+                currLabels.push(match.trace);
             }
         }
         
         for(var i = 0; i < currExecs.length; i++) {
             if(currExecs[i].trim().length > 0) {
-                this.executions[currLabels[i]] = new ExecutionParseResult(currExecs[i], currLabels[i]);
+                this.executions[currLabels[i]] = new ExecutionParser(currExecs[i], currLabels[i]);
                 this.labels.push(currLabels[i]);
             }
         }
     }
     else {
         this.labels.push("");
-        this.executions[""] = new ExecutionParseResult(this.rawString, "");
+        this.executions[""] = new ExecutionParser(this.rawString, "");
     }
 
 }
+
+LogParser.prototype.getLabels = function() {
+    return this.labels.slice();
+};
+
+LogParser.prototype.getExecutionParser = function(label) {
+    if(!this.executions[label]) {
+        return null;
+    }
+    return this.executions[label];
+};
 
 
 function ExecutionParser(rawString, label) {
@@ -90,26 +101,29 @@ function ExecutionParser(rawString, label) {
             throw new Exception("The last event in the log appears to be missing a vector timestamp", true);
         }
         
-        var timestampString = this.rawLines[loc++].trim();
+        var timestampString = this.rawLines[loc].trim();
         this.timestampStrings.push(timestampString);
-        var vt = parseTimestamp(timestampString);
+        var vt = parseTimestamp(timestampString, loc);
         this.timestamps.push(vt);
         this.logEvents.push(new LogEvent(text, vt, lineNum));
+        loc++;
     }
     
-    this.graph = new Graph(this.logEvents[i]);
+    this.graph = new Graph(this.logEvents);
 
     
-    function parseTimestamp(text) {
-        var parts = text.split(/\s/);
+    function parseTimestamp(text, line) {
+        var i = text.indexOf(" ");
+        var parts = [text.slice(0,i), text.slice(i+1)]; //TODO: make better
         
         var clock = null;
         try {
             clock = JSON.parse(parts[1].trim());
         }
         catch (err) {
-            var exception = new Exception("An error occured while trying to parse the vector timestamp on line " + (i + 1) + ":");
-            exception.append(stamp.substring(spacer + 1), "code");
+            console.log(parts[1].trim());
+            var exception = new Exception("An error occured while trying to parse the vector timestamp on line " + (line + 1) + ":");
+            exception.append(text, "code");
             exception.append("The error message from the JSON parser reads:\n");
             exception.append(err.toString(), "italic");
             exception.setUserFriendly(true);
@@ -117,14 +131,23 @@ function ExecutionParser(rawString, label) {
         }
         
         try {
-            this.timestamps[i].push(new VectorTimestamp(clock, parts[0].trim())); 
+            var ret = new VectorTimestamp(clock, parts[0].trim()); 
+            return ret;
         }
         catch (exception) {
-            exception.prepend("An error occured while trying to parse the vector timestamp on line " + (i + 1) + ":\n\n");
-            exception.append(stamp.substring(spacer + 1), "code");
+            exception.prepend("An error occured while trying to parse the vector timestamp on line " + (line + 1) + ":\n\n");
+            exception.append(text, "code");
             exception.setUserFriendly(true);
             throw exception;
         }
     }
     
 }
+
+ExecutionParser.prototype.getGraph = function() {
+    return this.graph;
+};
+
+ExecutionParser.prototype.getLogEvents = function() {
+    return this.logEvents;
+};
