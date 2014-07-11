@@ -80,7 +80,8 @@ function visualize() {
         d3.selectAll("#graph svg").remove();
 
         var log = $("#input").val();
-        var delimiter = $("#delimiter").val();
+        var delimiterString = $("#delimiter").val().trim();
+        var delimiter = delimiterString == "" ? null : new NamedRegExp(delimiterString, "m");
         var parser = new LogParser(log, delimiter);
         
         var global = new Global();
@@ -102,7 +103,7 @@ function visualize() {
         for(var i = 0; i < labels.length; i++) {
             var label = labels[i];
             var executionParser = parser.getExecutionParser(label);
-            var graph = executionParser.getGraph();
+            var graph = new Graph(executionParser.getLogEvents());
             var view = new View(graph, global, hostPermutation, label);
             global.addView(view);
             hostPermutation.addGraph(graph);
