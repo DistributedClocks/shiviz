@@ -33,6 +33,9 @@ function Global() {
     this.scrollPastPoint = -1;
 
     /** @private */
+    this.controller = new Controller(this);
+
+    /** @private */
     this.highlightHostTransformation = new HighlightHostTransformation([]);
     this.addTransformation(this.highlightHostTransformation);
 
