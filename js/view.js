@@ -28,9 +28,8 @@ function View(model, global, label) {
     this.width = 500;
 
     /** @private */
-    this.collapseSequentialNodesTransformation = new CollapseSequentialNodesTransformation(2);
-
-    this.addTransformation(this.collapseSequentialNodesTransformation);
+    this.collapse = new CollapseSequentialNodesTransformation(2);
+    this.addTransformation(this.collapse);
 }
 
 /**
@@ -73,7 +72,7 @@ View.prototype.setWidth = function(newWidth) {
 };
 
 /**
- * Clears the current visualization and re-draws the current model.
+ * Clears the current visualization and draws the current model.
  */
 View.prototype.draw = function() {
     // Assign a unique ID to each execution so we can distinguish
@@ -112,10 +111,25 @@ View.prototype.draw = function() {
         "class": this.id
     });
 
-    // Draw links
-    var link = svg.selectAll().data(visualGraph.getVisualEdges()).enter().append("line");
+    this.drawLinks(visualGraph, svg);
+    this.drawNodes(visualGraph, svg);
+    this.drawHosts(visualGraph, svg);
+    this.drawLogLines(visualGraph);
 
-    link.style({
+    // Hide line highlight
+    $(".highlight").hide();
+};
+
+/**
+ * Draws the links
+ * 
+ * @param  {VisualGraph} visualGraph The graph to draw links for
+ * @param  {DOMElement}  svg         The SVG element to draw in
+ */
+View.prototype.drawLinks = function(visualGraph, svg) {
+    var vedg = visualGraph.getVisualEdges();
+    var links = svg.selectAll().data(vedg).enter().append("line");
+    links.style({
         "stroke-width": function(d) {
             return d.getWidth() + "px";
         },
@@ -129,7 +143,7 @@ View.prototype.draw = function() {
             return d.getOpacity();
         }
     });
-    link.attr({
+    links.attr({
         "x1": function(d) {
             return d.getSourceVisualNode().getX();
         },
@@ -143,10 +157,18 @@ View.prototype.draw = function() {
             return d.getTargetVisualNode().getY();
         }
     });
+}
 
-    // draw non-start nodes
-    var node = svg.selectAll().data(visualGraph.getNonStartVisualNodes()).enter().append("g");
-    node.attr({
+/**
+ * Draws the nodes
+ * 
+ * @param  {VisualGraph} visualGraph The graph to draw nodes for
+ * @param  {DOMElement}  svg         The SVG element to draw in
+ */
+View.prototype.drawNodes = function(visualGraph, svg) {
+    var vn = visualGraph.getNonStartVisualNodes();
+    var nodes = svg.selectAll().data(vn).enter().append("g");
+    nodes.attr({
         "transform": function(d) {
             return "translate(" + d.getX() + "," + d.getY() + ")";
         },
@@ -154,110 +176,47 @@ View.prototype.draw = function() {
             return "node" + d.getId();
         }
     });
-    node.on("click", function(e) {
-        if (d3.event.shiftKey) {
-            view.collapseSequentialNodesTransformation.toggleExemption(e.getNode());
-            view.global.drawAll();
-        }
-        else if (!e.isCollapsed()) {
-            selectTextareaLine($("#logField")[0], e.getLineNumber());
-        }
-    });
-
-    node.append("title").text(function(d) {
+    nodes.append("title").text(function(d) {
         return d.getText();
     });
-    node.append("rect").attr({
+    nodes.append("rect").attr({
         "width": 48,
         "height": 48,
         "x": -24,
         "y": -24
     });
-    node.on("mouseover", function(e) {
-        $("circle").filter(function(i, c) {
-            return $(c).data("focus");
-        }).attr("r", function() {
-            return $(this).data("r");
-        }).data("focus", false);
 
-        $(this).find("circle").data({
-            "focus": true
-        }).attr({
-            "r": $(this).find("circle").data("r") + 2
-        });
-
-        $("#curNode").text(e.getText());
-
-        $(".focus").css({
-            "color": $(".focus").data("fill"),
-            "background": "",
-            "width": "inherit"
-        }).removeClass("focus");
-
-        $(".reveal").removeClass("reveal");
-
-        var $line = $("#line" + e.getId());
-        var $parent = $line.parent(".line").addClass("reveal");
-
-        $line.addClass("focus").css({
-            "background": "transparent",
-            "color": "white",
-            "width": "calc(" + $line.width() + "px - 1em)"
-        }).data("fill", e.getFillColor());
-
-        $(".highlight").css({
-            "width": $line.width(),
-            "height": $line.height()
-        });
-
-        var top = parseFloat($line.css("top")) || 0;
-        var ptop = parseFloat($parent.css("top")) || 0;
-        var margin = parseFloat($line.css("margin-top")) || 0;
-        var pmargin = parseFloat($parent.css("margin-top")) || 0;
-        var offset = $(".log").offset().top;
-
-        $(".highlight").css({
-            "background": e.getFillColor(),
-            "top": top + ptop + margin + pmargin + offset,
-            "left": $line.offset().left - parseFloat($line.css("margin-left"))
-        }).attr({
-            "data-ln": e.getLineNumber()
-        }).show();
-    });
-
-    var hiddenParentLinks = node.filter(function(val) {
+    // Draw faded hidden links
+    var hiddenParentLinks = nodes.filter(function(val) {
         return val.hasHiddenParent();
     }).append("line");
-
     hiddenParentLinks.attr({
         "class": "hidden-link",
         "x1": 0,
         "y1": 0,
         "x2": function(d) {
-            return (Global.HIDDEN_EDGE_LENGTH + d.getRadius()) / Math.sqrt(2);
+            return (Global.HIDDEN_EDGE_LENGTH + d.getRadius());
         },
         "y2": function(d) {
-            return -(Global.HIDDEN_EDGE_LENGTH + d.getRadius()) / Math.sqrt(2);
+            return -(Global.HIDDEN_EDGE_LENGTH + d.getRadius());
         }
     });
-
-    var hiddenChildLinks = node.filter(function(val) {
+    var hiddenChildLinks = nodes.filter(function(val) {
         return val.hasHiddenChild();
     }).append("line");
-
     hiddenChildLinks.attr({
         "class": "hidden-link",
         "x1": 0,
         "y1": 0,
         "x2": function(d) {
-            return (Global.HIDDEN_EDGE_LENGTH + d.getRadius()) / Math.sqrt(2);
+            return (Global.HIDDEN_EDGE_LENGTH + d.getRadius());
         },
         "y2": function(d) {
-            return (Global.HIDDEN_EDGE_LENGTH + d.getRadius()) / Math.sqrt(2);
+            return (Global.HIDDEN_EDGE_LENGTH + d.getRadius());
         }
     });
 
-    var circle = node.append("circle");
+    var circle = nodes.append("circle");
     circle.style({
         "fill": function(d) {
             return d.getFillColor();
@@ -281,12 +240,23 @@ View.prototype.draw = function() {
         }
     });
 
-    var label = node.append("text");
+    var label = nodes.append("text");
     label.text(function(d) {
         return d.getLabel();
     });
 
-    // draw the host bar
+    // Bind the nodes
+    this.global.controller.bind(nodes);
+}
+
+/**
+ * Draws the hosts
+ * 
+ * @param  {VisualGraph} visualGraph The graph to draw hosts for
+ * @param  {DOMElement}  svg         The SVG element to draw in
+ */
+View.prototype.drawHosts = function(visualGraph, svg) {
+    // Draw the host bar
     var hostSvg = d3.select("#hostBar").append("svg");
     hostSvg.attr({
         "width": visualGraph.getWidth(),
@@ -301,9 +271,10 @@ View.prototype.draw = function() {
         "class": "bg"
     });
 
-    // draw the hosts
-    var rect = hostSvg.selectAll().data(visualGraph.getStartVisualNodes()).enter().append("rect");
-    rect.attr({
+    // Draw the hosts
+    var svn = visualGraph.getStartVisualNodes();
+    var hosts = hostSvg.selectAll().data(svn).enter().append("rect");
+    hosts.attr({
         "width": Global.HOST_SQUARE_SIZE,
         "height": Global.HOST_SQUARE_SIZE,
         "y": 0,
@@ -318,7 +289,7 @@ View.prototype.draw = function() {
                 return "high-host";
         }
     });
-    rect.style({
+    hosts.style({
         "stroke": function(d) {
             return d.getStrokeColor();
         },
@@ -326,18 +297,8 @@ View.prototype.draw = function() {
             return d.getStrokeWidth() + "px";
         }
     });
-    rect.on("mouseover", function(e) {
-        $("#curNode").text(e.getText());
-    });
-    rect.on("dblclick", function(e) {
-        if (d3.event.shiftKey) {
-            view.global.toggleHighlightHost(e.getHost());
-        }
-        else {
-            view.global.hideHost(e.getHost());
-        }
-    });
 
+    // Draw highlighting for highlighted hosts
     d3.selectAll(".high-host").each(function(d) {
         var ns = "http://www.w3.org/2000/svg";
         var r = document.createElementNS(ns, "rect");
@@ -346,7 +307,8 @@ View.prototype.draw = function() {
             "width": "15",
             "height": "15",
             "x": function() {
-                return Math.round(d.getX() - Global.HOST_SQUARE_SIZE / 2 + 5);
+                var px = d.getX() - Global.HOST_SQUARE_SIZE / 2 + 5;
+                return Math.round(px);
             },
             "y": function() {
                 return d.getY() + 5;
@@ -355,24 +317,30 @@ View.prototype.draw = function() {
         this.parentNode.appendChild(r);
     });
 
-    // Hide line highlight
-    $(".highlight").hide();
+    // Bind the hosts
+    this.global.controller.bind(null, hosts);
+}
 
-    // draw the log lines
+/**
+ * Draws the log lines
+ * 
+ * @param  {VisualGraph} visualGraph The graph to draw log lines for
+ */
+View.prototype.drawLogLines = function(visualGraph) {
     var lines = visualGraph.lines;
     delete lines[0];
 
     for (var y in lines) {
-        var other = null;
+        var overflow = null;
         var vn = lines[y];
         var startMargin = (1 - Math.min(vn.length, 3)) / 2;
 
         if (vn.length > 3)
-            other = vn.splice(2, vn.length);
+            overflow = vn.splice(2, vn.length);
 
         for (var i in vn) {
             var text = vn[i].getText();
-            var $div = $("<div></div>").attr({
+            var $div = $("<div></div>", {
                 "id": "line" + vn[i].getId()
             }).data({
                 "id": vn[i].getId()
@@ -380,38 +348,35 @@ View.prototype.draw = function() {
                 "top": y + "px",
                 "margin-top": startMargin + "em",
                 "color": vn[i].getFillColor()
-            }).text(text).on("mouseover", function() {
-                var id = "#node" + $(this).data("id");
-                $(id)[0].dispatchEvent(new MouseEvent("mouseover"));
-            });
+            }).text(text);
             $(".log td:last-child").append($div);
             startMargin++;
         }
 
-        if (other != null) {
+        if (overflow != null) {
             var $div = $("<div></div>").addClass("line more").css({
                 "top": y + "px",
                 "margin-top": (startMargin * 10) + "pt",
                 "color": "#ddd"
-            }).text("+ " + other.length + " more");
+            }).text("+ " + overflow.length + " more");
 
-            for (var o in other) {
-                var text = other[o].getText();
-                $div.append($("<div></div>").attr({
-                    "id": "line" + other[o].getId()
+            for (var o in overflow) {
+                var text = overflow[o].getText();
+                $div.append($("<div></div>", {
+                    "id": "line" + overflow[o].getId()
                 }).data({
-                    "id": other[o].getId()
+                    "id": overflow[o].getId()
                 }).addClass("line").css({
                     "margin-top": o + "em",
-                    "color": other[o].getFillColor()
-                }).text(text).on("mouseover", function() {
-                    var id = "#node" + $(this).data("id");
-                    $(id)[0].dispatchEvent(new MouseEvent("mouseover"));
-                }));
+                    "color": overflow[o].getFillColor()
+                }).text(text));
                 startMargin++;
             }
 
             $(".log td:last-child").append($div);
         }
     }
-};
+
+    // Bind the log lines
+    this.global.controller.bind(null, null, $(".log .line:not(.more)"));
+}
