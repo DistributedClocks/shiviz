@@ -13,6 +13,7 @@ $("#examples a").on("click", function(e) {
         $("#input").val(response);
         resetView();
         $("#delimiter").val($(e.target).data("delimiter"));
+        $("#parser").val($(e.target).data("parser") || "(?<event>.*)\\n(?<host>\\S*) (?<clock>{.*})");
         $(e.target).css({
             color: "gray",
             pointerEvents: "none"
@@ -60,7 +61,8 @@ function resetView() {
         $(".icon .tabs li:last-child").removeClass("disabled");
     }
 
-    $("#curNode").html("(click to view)");
+    $(".event").html("");
+    $(".fields").html("");
 
     d3.selectAll("#graph svg").remove();
 
@@ -112,11 +114,13 @@ function visualize() {
         // We need a variable share across all views/executions to keep them in
         // sync.
         var global = new Global(); // Global.getInstance();
+
+        // Read the log parser RegExp
+        var parser = new NamedRegExp($("#parser").val(), "m");
     
         // Make a view for each execution, then draw it
         executions.map(function(v, i) {
-            var lines = v.split('\n');
-            var model = generateGraphFromLog(lines);
+            var model = generateGraphFromLog(v, parser);
             var view = new View(model, global, labels ? labels[i] : "");
     
             global.addView(view);
