@@ -16,8 +16,8 @@
  * @constructor
  * @param {String} rawString the raw log text
  * @param {NamedRegExp} delimiter a regex that specifies the delimiter. Anything
- *            that matches the regex will be treated as a delimiter. A delimiter
- *            acts to separate different executions.
+ *        that matches the regex will be treated as a delimiter. A delimiter
+ *        acts to separate different executions.
  */
 function LogParser(rawString, delimiter) {
 
@@ -45,7 +45,7 @@ function LogParser(rawString, delimiter) {
             }
         }
 
-        for ( var i = 0; i < currExecs.length; i++) {
+        for (var i = 0; i < currExecs.length; i++) {
             if (currExecs[i].trim().length > 0) {
                 this.executions[currLabels[i]] = new ExecutionParser(currExecs[i], currLabels[i]);
                 this.labels.push(currLabels[i]);
@@ -60,7 +60,9 @@ function LogParser(rawString, delimiter) {
 }
 
 /**
- * Gets all of the labels of the executions
+ * Gets all of the labels of the executions. The ordering of labels in the
+ * returned array is guarenteed to be the same as the order in which they are
+ * encountered in the raw log text
  * 
  * @returns {Array<String>} An array of all the labels.
  */
@@ -90,8 +92,8 @@ LogParser.prototype.getExecutionParser = function(label) {
  * @class
  * @constructor
  * @private
- * @param {String} rawString
- * @param {Label} label
+ * @param {String} rawString The raw string of the execution's log
+ * @param {Label} label The label that should be associated with this execution
  * @returns
  */
 function ExecutionParser(rawString, label) {
@@ -149,15 +151,15 @@ function ExecutionParser(rawString, label) {
 
     function parseTimestamp(text, line) {
         var i = text.indexOf(" ");
-        var parts = [ text.slice(0, i), text.slice(i + 1) ]; // TODO: make
-        // better
+        var hostString = text.slice(0, i).trim();
+        var clockString = text.slice(i + 1).trim();
 
         var clock = null;
         try {
-            clock = JSON.parse(parts[1].trim());
+            clock = JSON.parse(clockString);
         }
         catch (err) {
-            console.log(parts[1].trim());
+            console.log(clockString);
             var exception = new Exception("An error occured while trying to parse the vector timestamp on line " + (line + 1) + ":");
             exception.append(text, "code");
             exception.append("The error message from the JSON parser reads:\n");
@@ -167,7 +169,7 @@ function ExecutionParser(rawString, label) {
         }
 
         try {
-            var ret = new VectorTimestamp(clock, parts[0].trim());
+            var ret = new VectorTimestamp(clock, hostString);
             return ret;
         }
         catch (exception) {
@@ -180,6 +182,13 @@ function ExecutionParser(rawString, label) {
 
 }
 
+/**
+ * Returns the LogEvents parsed by this. The ordering of LogEvents in the
+ * returned array is guaranteed to be the same as the order in which they were
+ * encountered in the raw log text
+ * 
+ * @returns {Array} An array of LogEvents
+ */
 ExecutionParser.prototype.getLogEvents = function() {
     return this.logEvents;
 };
