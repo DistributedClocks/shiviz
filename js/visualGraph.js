@@ -13,10 +13,9 @@
  *        visualization of
  * @param {Layout} layout A layout object that is responsible for setting the
  *        positions of VisualNodes and Edges
- * @param {Object<String, Number>} hostColors A mapping of host names to colors
- *        describing the color scheme for each host
+ * @param {HostPermutation} hostPermutation
  */
-function VisualGraph(graph, layout, hostColors) {
+function VisualGraph(graph, layout, hostPermutation) {
 
     /** @private */
     this.initialGraph = graph;
@@ -28,7 +27,7 @@ function VisualGraph(graph, layout, hostColors) {
     this.layout = layout;
 
     /** @private */
-    this.hostColors = hostColors;
+    this.hostPermutation = hostPermutation;
 
     /** @private */
     this.nodeIdToVisualNode = {};
@@ -85,7 +84,7 @@ VisualGraph.prototype.revert = function() {
         if (!node.isTail()) {
             var visualNode = new VisualNode(node);
             this.nodeIdToVisualNode[node.getId()] = visualNode;
-            visualNode.setFillColor(hostColors[visualNode.getHost()]);
+            visualNode.setFillColor(this.hostPermutation.getHostColor(visualNode.getHost()));
         }
     }
 
@@ -111,11 +110,11 @@ VisualGraph.prototype.revert = function() {
 
     }
 
-    this.layout.start(this);
+    this.layout.start(this, this.hostPermutation);
 }
 
 VisualGraph.prototype.update = function() {
-    this.layout.start(this);
+    this.layout.start(this, this.hostPermutation);
 
     this.lines = {};
     var visualNodes = this.getVisualNodes();
@@ -126,8 +125,6 @@ VisualGraph.prototype.update = function() {
             this.lines[y] = [node];
         else
             this.lines[y].push(node);
-
-        node.setFillColor(this.hostColors[node.getHost()]);
     }
 };
 
@@ -307,7 +304,7 @@ VisualGraph.prototype.getEdgeId = function(node1, node2) {
 VisualGraph.prototype.addVisualNodeByNode = function(node) {
     if (!this.nodeIdToVisualNode[node.getId()]) {
         var visualNode = new VisualNode(node);
-        visualNode.setFillColor(this.hostColors[visualNode.getHost()]);
+        visualNode.setFillColor(this.hostPermutation.getHostColor(visualNode.getHost()));
         this.nodeIdToVisualNode[node.getId()] = visualNode;
     }
     return this.nodeIdToVisualNode[node.getId()];

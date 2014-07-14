@@ -8,9 +8,13 @@
  * @constructor
  * @param {Graph} model
  * @param {Global} global
+ * @param {HostPermutation} hostPermutation
  * @param {String} label
  */
-function View(model, global, label) {
+function View(model, global, hostPermutation, label) {
+    
+    /** @private */
+    this.hostPermutation = hostPermutation;
 
     /** @private */
     this.label = label;
@@ -25,17 +29,13 @@ function View(model, global, label) {
     this.currentModel = this.initialModel.clone();
 
     /** @private */
-    this.visualGraph = new VisualGraph(this.currentModel, new SpaceTimeLayout(0, 56), this.global.hostColors);
+    this.visualGraph = new VisualGraph(this.currentModel, new SpaceTimeLayout(0, 56), this.hostPermutation);
 
     /** @private */
     this.transformations = [];
 
     /** @private */
     this.width = 500;
-
-    /** @private */
-    this.collapse = new CollapseSequentialNodesTransformation(2);
-    this.addTransformation(this.collapse);
 }
 
 /**
@@ -96,7 +96,7 @@ View.prototype.setWidth = function(newWidth) {
 };
 
 /**
- * Clears the current visualization and draws the current model.
+ * Clears the current visualization and re-draws the current model.
  */
 View.prototype.draw = function() {
     // Assign a unique ID to each execution so we can distinguish
