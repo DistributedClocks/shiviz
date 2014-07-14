@@ -19,7 +19,10 @@
 function VisualGraph(graph, layout, hostColors) {
 
     /** @private */
-    this.graph = graph;
+    this.initialGraph = graph;
+
+    /** @private */
+    this.graph = undefined;
 
     /** @private */
     this.layout = layout;
@@ -36,7 +39,16 @@ function VisualGraph(graph, layout, hostColors) {
     /** @private A mapping of y coordinates to VisualNodes **/
     this.lines = {};
 
-    graph.addObserver(AddNodeEvent, this, function(event, g) {
+    this.revert();
+}
+
+VisualGraph.prototype.revert = function() {
+    this.graph = this.initialGraph.clone();
+    this.nodeIdToVisualNode = {};
+    this.links = {};
+    this.lines = {};
+
+    this.graph.addObserver(AddNodeEvent, this, function(event, g) {
         g.addVisualNodeByNode(event.getNewNode());
         g.removeVisualEdgeByNodes(event.getPrev(), event.getNext());
         g.addVisualEdgeByNodes(event.getPrev(), event.getNewNode());
@@ -45,7 +57,7 @@ function VisualGraph(graph, layout, hostColors) {
         }
     });
 
-    graph.addObserver(RemoveNodeEvent, this, function(event, g) {
+    this.graph.addObserver(RemoveNodeEvent, this, function(event, g) {
         g.removeVisualEdgeByNodes(event.getPrev(), event.getRemovedNode());
         g.removeVisualEdgeByNodes(event.getRemovedNode(), event.getNext());
         if (!event.getNext().isTail()) {
@@ -54,20 +66,20 @@ function VisualGraph(graph, layout, hostColors) {
         g.removeVisualNodeByNode(event.getRemovedNode());
     });
 
-    graph.addObserver(AddFamilyEvent, this, function(event, g) {
+    this.graph.addObserver(AddFamilyEvent, this, function(event, g) {
         g.addVisualEdgeByNodes(event.getParent(), event.getChild());
     });
 
-    graph.addObserver(RemoveFamilyEvent, this, function(event, g) {
+    this.graph.addObserver(RemoveFamilyEvent, this, function(event, g) {
         g.removeVisualEdgeByNodes(event.getParent(), event.getChild());
     });
 
-    graph.addObserver(RemoveHostEvent, this, function(event, g) {
+    this.graph.addObserver(RemoveHostEvent, this, function(event, g) {
         delete g.nodeIdToVisualNode[event.getHead().getId()];
     });
 
     // Create nodes
-    var nodes = graph.getAllNodes();
+    var nodes = this.graph.getAllNodes();
     for (var i = 0; i < nodes.length; i++) {
         var node = nodes[i];
         if (!node.isTail()) {
@@ -99,7 +111,7 @@ function VisualGraph(graph, layout, hostColors) {
 
     }
 
-    layout.start(this);
+    this.layout.start(this);
 }
 
 VisualGraph.prototype.update = function() {

@@ -21,7 +21,7 @@ function Global() {
     this.hostColors = {};
 
     /** @private */
-    this.hiddenHosts = [];
+    this.hiddenHosts = {};
 
     /** @private */
     this.color = d3.scale.category20();
@@ -84,7 +84,10 @@ Global.prototype.getHostColors = function() {
  * @param {String} host The host to add
  */
 Global.prototype.addHiddenHost = function(host) {
-    this.hiddenHosts.push(host);
+    if (this.hiddenHosts[host])
+        this.hiddenHosts[host] = this.hiddenHosts[host] + 1;
+    else
+        this.hiddenHosts[host] = 1;
 }
 
 /**
@@ -93,8 +96,11 @@ Global.prototype.addHiddenHost = function(host) {
  * @param {String} host The host to remove
  */
 Global.prototype.removeHiddenHost = function(host) {
-    var a = this.hiddenHosts;
-    a.splice(a.indexOf(host), 1);
+    if (this.hiddenHosts[host]) {
+        this.hiddenHosts[host] = this.hiddenHosts[host] - 1;
+        if (this.hiddenHosts[host] == 0)
+            delete this.hiddenHosts[host];
+    }
 }
 
 /**
@@ -130,6 +136,12 @@ Global.prototype.drawAll = function() {
 
     this.drawSideBar();
 };
+
+Global.prototype.revertAll = function() {
+    this.views.forEach(function (v) {
+        v.visualGraph.revert();
+    });
+}
 
 /**
  * Gets the transformations belonging to this global as an array
@@ -185,7 +197,9 @@ Global.prototype.addView = function(view) {
             this.hostColors[host] = this.color(host);
         }
     }
+
     this.views.push(view);
+    this.controller.addView(view);
     this.resize();
 };
 
@@ -213,16 +227,16 @@ Global.prototype.getVisualModels = function() {
  * Resizes the graph
  */
 Global.prototype.resize = function() {
-    var highHosts = this.highlightHostTransformation.getHiddenHosts();
-    var allHidden = this.hiddenHosts.concat(highHosts);
+    var global = this;
     var visibleHosts = 0;
 
     for (var i = 0; i < this.views.length; i++) {
         var vh = this.views[i].getHosts();
         var hn = 0;
-        for (var j = 0; j < vh.length; j++)
-            if (allHidden.indexOf(vh[j]) > -1)
+        vh.forEach(function(h) {
+            if (h in global.hiddenHosts)
                 hn++;
+        })
 
         visibleHosts = visibleHosts + vh.length - hn;
     }
@@ -244,7 +258,7 @@ Global.prototype.resize = function() {
     for (var i = 0; i < this.views.length; i++) {
         var view = this.views[i];
         var hosts = view.getHosts().filter(function (h) {
-            return allHidden.indexOf(h) < 0;
+            return !(h in global.hiddenHosts);
         });
         view.setWidth(hosts.length * widthPerHost - hostMargin);
     }
@@ -266,8 +280,7 @@ Global.prototype.drawSideBar = function() {
     var hidden = d3.select(".hidden");
 
     // Draw hidden hosts
-    var highHosts = this.highlightHostTransformation.getHiddenHosts();
-    var hh = this.hiddenHosts.concat(highHosts);
+    var hh = Object.keys(this.hiddenHosts);
     if (hh.length <= 0) {
         return;
     }
