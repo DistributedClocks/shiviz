@@ -8,13 +8,16 @@
  * 
  * @constructor
  */
-function Global() {
+function Global(hostPermutation) {
 
     /** @private */
     this.views = [];
 
     /** @private */
     this.transformations = [];
+    
+    /** @private */
+    this.hostPermutation = hostPermutation;
 
     /** @private */
     this.highlightHostTransformation = new HighlightHostTransformation([]);
@@ -231,7 +234,7 @@ Global.prototype.drawSideBar = function() {
     rect.attr("width", Global.HOST_SQUARE_SIZE);
     rect.attr("height", Global.HOST_SQUARE_SIZE);
     rect.style("fill", function(host) {
-        return global.hostColors[host];
+        return global.hostPermutation.getHostColor(host);
     });
     rect.on("dblclick", function(e) {
         global.unhideHost(e);
