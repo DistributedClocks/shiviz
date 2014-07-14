@@ -21,108 +21,58 @@
  * host, then this transformation does nothing
  * 
  * @constructor
- * @param {String} hostToHide The host to hide from the model
+ * @param {String}      host  The host to hide
+ * @param {VisualGraph} model The visual graph to transform
  */
-function HideHostTransformation() {
-
-    this.priority = 80;
+function HideHostTransformation(host, model) {
+    /** @private */
+    this.host = host;
 
     /** @private */
-    this.hostsToHide = {};
+    this.model = model;
 }
 
 /**
- * Adds a host. The added host will be hidden by the transformation
- * 
- * @param {String} host The host
- */
-HideHostTransformation.prototype.addHost = function(host) {
-    this.hostsToHide[host] = true;
-};
-
-/**
- * Removes a host. The removed host will no longer be hidden by the
- * transformation. If the host does not exist or was never specified to be
- * hidden, this method does nothing
- * 
- * @param {String} host The host
- */
-HideHostTransformation.prototype.removeHost = function(host) {
-    delete this.hostsToHide[host];
-};
-
-/**
- * Removes all hosts. After invoking this method, no hosts will be hidden by
- * this transformation.
- */
-HideHostTransformation.prototype.clearHosts = function() {
-    this.hostsToHide = {};
-};
-
-/**
- * Gets all the hosts that are to be hidden by this transformation as an Array.
- * 
- * @returns {Array<String>}
- */
-HideHostTransformation.prototype.getHostsToHide = function() {
-    var hosts = [];
-    for (var host in this.hostsToHide) {
-        hosts.push(host);
-    }
-    ;
-    return hosts;
-};
-
-/**
- * Performs the transformation on the given visualGraph. The VisualGraph and its
+ * Performs the transformation on the model. The VisualGraph and its
  * underlying Graph are modified in place
- * 
- * @param {VisualGraph} visualGraph The VisualGraph to transform
  */
-HideHostTransformation.prototype.transform = function(visualGraph) {
+HideHostTransformation.prototype.transform = function() {
+    var graph = this.model.getGraph();
+    var curr = graph.getHead(this.host).getNext();
+    var parents = [];
+    var children = [];
 
-    var graph = visualGraph.getGraph();
+    while (!curr.isTail()) {
+        this.model.addHiddenEdgeToFamily(curr);
 
-    for (var host in this.hostsToHide) {
+        if (curr.hasParents() || curr.getNext().isTail()) {
+            for (var i = 0; i < parents.length; i++) {
+                for (var j = 0; j < children.length; j++) {
+                    if (parents[i].getHost() != children[j].getHost()) {
+                        parents[i].addChild(children[j]);
 
-        var curr = graph.getHead(host).getNext();
-
-        var parents = [];
-        var children = [];
-        while (!curr.isTail()) {
-            visualGraph.addHiddenEdgeToFamily(curr);
-
-            if (curr.hasParents() || curr.getNext().isTail()) {
-
-                for (var i = 0; i < parents.length; i++) {
-                    for (var j = 0; j < children.length; j++) {
-                        if (parents[i].getHost() != children[j].getHost()) {
-                            parents[i].addChild(children[j]);
-
-                            visualGraph.getVisualEdgeByNodes(parents[i], children[j]).setDashLength(5);
-                        }
+                        this.model.getVisualEdgeByNodes(parents[i], children[j]).setDashLength(5);
                     }
                 }
-
-                if (children.length > 0) {
-                    children = [];
-                    parents = [];
-                }
-                parents = parents.concat(curr.getParents());
             }
 
-            if (curr.hasChildren()) {
-                children = children.concat(curr.getChildren());
+            if (children.length > 0) {
+                children = [];
+                parents = [];
             }
 
-            curr = curr.getNext();
+            parents = parents.concat(curr.getParents());
         }
 
-        graph.removeHost(host);
+        if (curr.hasChildren()) {
+            children = children.concat(curr.getChildren());
+        }
+
+        curr = curr.getNext();
     }
 
-    visualGraph.update();
-
+    graph.removeHost(this.host);
+    this.model.update();
 };
 
 /**

@@ -46,8 +46,10 @@ Controller.prototype.removeTransformation = function(tf) {
  */
 Controller.prototype.transform = function() {
     this.transformations.forEach(function (t) {
-        t.transform(t.model);
+        t.transform();
     });
+
+    this.global.drawAll();
 }
 
 /**
@@ -56,8 +58,11 @@ Controller.prototype.transform = function() {
  * @param  {d3.selection} nodes A D3 selection of the drawn nodes
  * @param  {d3.selection} hosts A D3 selection of the drawn hosts
  * @param  {jQuery.selection} lines A jQuery selection of the log lines
+ * @param  {d3.selection} hh A D3 selection of the hidden hosts
  */
-Controller.prototype.bind = function(nodes, hosts, lines) {
+Controller.prototype.bind = function(nodes, hosts, lines, hh) {
+    var controller = this;
+
     if (nodes) {
         nodes.on("click", function(e) {
             if (d3.event.shiftKey) {
@@ -126,9 +131,15 @@ Controller.prototype.bind = function(nodes, hosts, lines) {
         }).on("dblclick", function(e) {
             if (d3.event.shiftKey) {
                 view.global.toggleHighlightHost(e.getHost());
-            }
-            else {
-                view.global.hideHost(e.getHost());
+            } else {
+                var models = controller.global.getVisualModels();
+                for (var i in models) {
+                    var hhtf = new HideHostTransformation(e.getHost(), models[i]);
+                    controller.global.addHiddenHost(e.getHost());
+                    controller.addTransformation(hhtf);
+                }
+
+                controller.transform();
             }
         });
     }
@@ -137,6 +148,15 @@ Controller.prototype.bind = function(nodes, hosts, lines) {
         lines.unbind().on("mouseover", function() {
             var id = "#node" + $(this).data("id");
             $(id)[0].dispatchEvent(new MouseEvent("mouseover"));
+        });
+    }
+
+    if (hh) {
+        hh.on("dblclick", function(e) {
+            // Unhide host (e)
+        }).on("mouseover", function(e) {
+            console.log(e);
+            $("#curNode").text(e);
         });
     }
 }
