@@ -216,7 +216,8 @@ Node.prototype.getFamily = function() {
 /**
  * Returns the nodes this one is connected to as an array. In the context of
  * this function, a node is said to be connected to this one if it's the
- * previous node, the next node, a parent, or a child
+ * previous node, the next node, a parent, or a child. Note that if prev or next
+ * is a head or tail or null, it will still be returned.
  * 
  * This function makes no guarantees about the ordering of nodes in the array
  * returned. Also note that a new array is created to prevent modification of
