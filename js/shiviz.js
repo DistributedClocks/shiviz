@@ -84,8 +84,6 @@ function visualize() {
         var delimiter = delimiterString == "" ? null : new NamedRegExp(delimiterString, "m");
         var parser = new LogParser(log, delimiter);
         
-        var global = new Global();
-        
         var sortType = $("input[name=host_sort]:checked").attr("id").trim();
         var descending = $("#ordering option:selected").text().trim() == "descending";
         var hostPermutation = null;
@@ -98,6 +96,8 @@ function visualize() {
         else {
             throw new Exception("You must select a way to sort processes.", true);
         }
+        
+        var global = new Global(hostPermutation);
         
         var labels = parser.getLabels();
         for(var i = 0; i < labels.length; i++) {
