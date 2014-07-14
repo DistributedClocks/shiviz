@@ -13,14 +13,22 @@ function Controller(global) {
 
     /** @private */
     this.transformations = [];
+
+    /** @private */
+    this.defaultTransformations = [];
 }
 
 /**
  * Adds a transformation
  * @param {Transformation} tf The transformation to add
+ * @param {Boolean} isDefault Whether the transformation is a
+ *                            default transformation
  */
-Controller.prototype.addTransformation = function(tf) {
-    this.transformations.push(tf);
+Controller.prototype.addTransformation = function(tf, isDefault) {
+    if (isDefault)
+        this.defaultTransformations.push(tf);
+    else
+        this.transformations.push(tf);
 }
 
 /**
@@ -38,6 +46,14 @@ Controller.prototype.removeTransformation = function(tf) {
         else
             return !(tf == t);
     });
+
+    this._dirty = true;
+}
+
+Controller.prototype.addView = function(view) {
+    var cstf = new CollapseSequentialNodesTransformation(view.getVisualModel(), 2);
+    this.addTransformation(cstf, true);
+    this.transform();
 }
 
 /**
@@ -45,11 +61,13 @@ Controller.prototype.removeTransformation = function(tf) {
  * provided in the list
  */
 Controller.prototype.transform = function() {
-    this.transformations.forEach(function (t) {
+    this.global.revertAll();
+
+    var tfs = this.transformations.concat(this.defaultTransformations);
+
+    tfs.forEach(function(t) {
         t.transform();
     });
-
-    this.global.drawAll();
 }
 
 /**
@@ -66,11 +84,15 @@ Controller.prototype.bind = function(nodes, hosts, lines, hh) {
     if (nodes) {
         nodes.on("click", function(e) {
             if (d3.event.shiftKey) {
-                view.collapseSequentialNodesTransformation.toggleExemption(e.getNode());
-                view.global.drawAll();
-            }
-            else if (!e.isCollapsed()) {
-                selectTextareaLine($("#logField")[0], e.getLineNumber());
+                var dtfs = controller.defaultTransformations;
+                dtfs.filter(function(t) {
+                    return t.constructor == CollapseSequentialNodesTransformation;
+                }).forEach(function(t) {
+                    t.toggleExemption(e.getNode());
+                });
+
+                controller.transform();
+                controller.global.drawAll();
             }
         }).on("mouseover", function(e) {
             $("circle").filter(function(i, c) {
@@ -130,16 +152,59 @@ Controller.prototype.bind = function(nodes, hosts, lines, hh) {
             $("#curNode").text(e.getText());
         }).on("dblclick", function(e) {
             if (d3.event.shiftKey) {
-                view.global.toggleHighlightHost(e.getHost());
+                var existing = controller.transformations.filter(function(t) {
+                    return t.constructor == HighlightHostTransformation && t.host == e.getHost();
+                })[0];
+
+                if (existing) {
+                    var hightfs = controller.transformations.filter(function(t) {
+                        return t.constructor == HighlightHostTransformation;
+                    });
+
+                    hightfs.forEach(function(t) {
+                        t.getHiddenHosts().forEach(function(h) {
+                            controller.global.removeHiddenHost(h);
+                        });
+                    });
+
+                    controller.removeTransformation(existing);
+                    controller.transform();
+
+                    controller.transformations.filter(function(t) {
+                        return t.constructor == HighlightHostTransformation;
+                    }).forEach(function(t) {
+                        t.getHiddenHosts().forEach(function(h) {
+                            controller.global.addHiddenHost(h);
+                        });
+                    });
+
+                    controller.global.drawAll();
+                    controller.global.drawAll();
+                    return;
+                }
+
+                var vms = controller.global.getVisualModels();
+                if (vms.length > 1)
+                    return;
+
+                var hightf = new HighlightHostTransformation(vms[0], e.getHost());
+                controller.addTransformation(hightf);
+                controller.transform();
+                hightf.getHiddenHosts().forEach(function(h) {
+                    controller.global.addHiddenHost(h);
+                })
+                controller.global.drawAll();
             } else {
                 var models = controller.global.getVisualModels();
                 for (var i in models) {
-                    var hhtf = new HideHostTransformation(e.getHost(), models[i]);
+                    var hhtf = new HideHostTransformation(models[i], e.getHost());
                     controller.global.addHiddenHost(e.getHost());
                     controller.addTransformation(hhtf);
                 }
 
                 controller.transform();
+                controller.global.drawAll();
+                controller.global.drawAll();
             }
         });
     }
@@ -153,9 +218,21 @@ Controller.prototype.bind = function(nodes, hosts, lines, hh) {
 
     if (hh) {
         hh.on("dblclick", function(e) {
-            // Unhide host (e)
+            var high = controller.transformations.filter(function(t) {
+                return t.constructor == HighlightHostTransformation && t.getHiddenHosts().indexOf(e) > -1;
+            });
+
+            if (high.length > 0)
+                return;
+
+            controller.removeTransformation(function (t) {
+                return t.constructor == HideHostTransformation && t.host == e;
+            });
+            controller.transform();
+            controller.global.removeHiddenHost(e);
+            controller.global.drawAll();
+            controller.global.drawAll();
         }).on("mouseover", function(e) {
-            console.log(e);
             $("#curNode").text(e);
         });
     }

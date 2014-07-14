@@ -308,7 +308,7 @@ View.prototype.draw = function() {
                     return d.getY() + 5;
                 }
             });
-            view.parentNode.appendChild(r);
+            this.parentNode.appendChild(r);
         });
 
         // Bind the hosts
