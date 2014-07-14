@@ -32,9 +32,6 @@ function View(model, global, hostPermutation, label) {
     this.visualGraph = new VisualGraph(this.currentModel, new SpaceTimeLayout(0, 56), this.hostPermutation);
 
     /** @private */
-    this.transformations = [];
-
-    /** @private */
     this.width = 500;
 }
 
@@ -45,18 +42,6 @@ function View(model, global, hostPermutation, label) {
  */
 View.prototype.getGlobal = function() {
     return this.global;
-};
-
-/**
- * Adds a transformation. The transformation is not applied until the draw
- * method is invoked. The difference between view.addTransformation and
- * global.addTransformation is that the global version adds applies the
- * transformation to all views.
- * 
- * @param {Transform} transformation The new transformation
- */
-View.prototype.addTransformation = function(transformation) {
-    this.transformations.push(transformation);
 };
 
 /**
