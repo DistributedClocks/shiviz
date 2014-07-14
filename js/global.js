@@ -14,9 +14,6 @@ function Global() {
     this.views = [];
 
     /** @private */
-    this.transformations = [];
-
-    /** @private */
     this.hiddenHosts = {};
 
     /** @private */
@@ -72,18 +69,6 @@ Global.prototype.removeHiddenHost = function(host) {
 }
 
 /**
- * Adds a transformation that is to be applied to all views. The transformation
- * for a view will not be applied until it is redrawn (i.e by calling
- * view.draw() to redraw a single view or global.drawAll() to redraw all views
- * belonging to this global)
- * 
- * @param {Transform} transformation The transformation to add
- */
-Global.prototype.addTransformation = function(transformation) {
-    this.transformations.push(transformation);
-};
-
-/**
  * Redraws the global.
  */
 Global.prototype.drawAll = function() {
@@ -110,47 +95,6 @@ Global.prototype.revertAll = function() {
         v.visualGraph.revert();
     });
 }
-
-/**
- * Gets the transformations belonging to this global as an array
- * 
- * @returns {Array.<Transformation>} The transformations
- */
-Global.prototype.getTransformations = function() {
-    return this.transformations.slice();
-};
-
-/**
- * Hides a host from all views and re-draws this global.
- * 
- * @param {String} hostId The host to hide.
- */
-Global.prototype.hideHost = function(hostId) {
-    this.hideHostTransformation.addHost(hostId);
-    this.highlightHostTransformation.clearHostsToHighlight();
-    this.drawAll();
-};
-
-/**
- * Unhides a host from all views and re-draws this global. If the specified host
- * doesn't exist or is not currently hidden, this method does nothing.
- * 
- * @param {String} hostId The host to unhide
- */
-Global.prototype.unhideHost = function(hostId) {
-    this.hideHostTransformation.removeHost(hostId);
-    this.highlightHostTransformation.clearHostsToHighlight();
-    this.drawAll();
-};
-
-Global.prototype.toggleHighlightHost = function(host) {
-    if (this.views.length > 1) {
-        return;
-    }
-    this.highlightHostTransformation.toggleHostToHighlight(host);
-    this.drawAll();
-    this.drawAll();
-};
 
 /**
  * Adds a View to this global.
