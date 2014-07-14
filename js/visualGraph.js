@@ -114,6 +114,8 @@ VisualGraph.prototype.update = function() {
             this.lines[y] = [node];
         else
             this.lines[y].push(node);
+
+        node.setFillColor(this.hostColors[node.getHost()]);
     }
 };
 
@@ -247,6 +249,15 @@ VisualGraph.prototype.getVisualEdgeByNodes = function(node1, node2) {
  */
 VisualGraph.prototype.getWidth = function() {
     return this.layout.getWidth();
+};
+
+/**
+ * Sets the width of the VisualGraph
+ * 
+ * @params {Number} width The width
+ */
+VisualGraph.prototype.setWidth = function(width) {
+    this.layout.setWidth(width);
 };
 
 /**

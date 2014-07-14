@@ -21,6 +21,9 @@ function Global() {
     this.hostColors = {};
 
     /** @private */
+    this.hiddenHosts = [];
+
+    /** @private */
     this.color = d3.scale.category20();
 
     /** @private */
@@ -38,10 +41,6 @@ function Global() {
     /** @private */
     this.highlightHostTransformation = new HighlightHostTransformation([]);
     this.addTransformation(this.highlightHostTransformation);
-
-    /** @private */
-    this.hideHostTransformation = new HideHostTransformation();
-    this.addTransformation(this.hideHostTransformation);
 
     $("#sidebar").css({
         width: Global.SIDE_BAR_WIDTH + "px",
@@ -78,6 +77,25 @@ Global.prototype.getHostColors = function() {
     }
     return colors;
 };
+
+/**
+ * Adds a hidden host to the list
+ * 
+ * @param {String} host The host to add
+ */
+Global.prototype.addHiddenHost = function(host) {
+    this.hiddenHosts.push(host);
+}
+
+/**
+ * Removes a hidden host to the list
+ * 
+ * @param {String} host The host to remove
+ */
+Global.prototype.removeHiddenHost = function(host) {
+    var a = this.hiddenHosts;
+    a.splice(a.indexOf(host), 1);
+}
 
 /**
  * Adds a transformation that is to be applied to all views. The transformation
@@ -172,12 +190,31 @@ Global.prototype.addView = function(view) {
 };
 
 /**
+ * Gets the list of Views
+ * 
+ * @returns {[View]} The list of views
+ */
+Global.prototype.getViews = function() {
+    return this.views;
+}
+
+/**
+ * Gets the list of current VisualGraphs
+ *
+ * @returns {[VisualGraph]} The current models from each View
+ */
+Global.prototype.getVisualModels = function() {
+    return this.views.map(function (v) {
+        return v.getVisualModel();
+    });
+}
+
+/**
  * Resizes the graph
  */
 Global.prototype.resize = function() {
-    var hiddenHosts = this.hideHostTransformation.getHostsToHide();
     var highHosts = this.highlightHostTransformation.getHiddenHosts();
-    var allHidden = hiddenHosts.concat(highHosts);
+    var allHidden = this.hiddenHosts.concat(highHosts);
     var visibleHosts = 0;
 
     for (var i = 0; i < this.views.length; i++) {
@@ -229,9 +266,8 @@ Global.prototype.drawSideBar = function() {
     var hidden = d3.select(".hidden");
 
     // Draw hidden hosts
-    var hiddenHosts = this.hideHostTransformation.getHostsToHide();
     var highHosts = this.highlightHostTransformation.getHiddenHosts();
-    var hh = hiddenHosts.concat(highHosts);
+    var hh = this.hiddenHosts.concat(highHosts);
     if (hh.length <= 0) {
         return;
     }
@@ -270,12 +306,6 @@ Global.prototype.drawSideBar = function() {
     rect.style("fill", function(host) {
         return global.hostColors[host];
     });
-    rect.on("dblclick", function(e) {
-        global.unhideHost(e);
-    });
-    rect.on("mouseover", function(e) {
-        $("#curNode").innerHTML = e;
-    });
     rect.append("title").text("Double click to view");
 
     var hostsPerLine = Math.floor((Global.SIDE_BAR_WIDTH + 5) / (Global.HOST_SQUARE_SIZE + 5));
@@ -299,6 +329,8 @@ Global.prototype.drawSideBar = function() {
         }
         return x;
     });
+
+    this.controller.bind(null, null, null, rect);
 };
 
 /**
