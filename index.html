@@ -162,8 +162,8 @@
                         <label>Multiple execution delimiter: <input type="text" id="delimiter"></label>
                     </div>
                     <div class="option">
-                        Sort processes in <select><option>ascending</option><option selected>descending</option></select> order by:<br>
-                        <label><input name="host_sort" type="radio" checked> # events</label> <label><input name="host_sort" type="radio"> appearance in log</label>
+                        Sort processes in <select id="ordering"><option>ascending</option><option selected>descending</option></select> order by:<br>
+                        <label><input name="host_sort" type="radio" checked id="1"> # events</label> <label><input name="host_sort" type="radio" id="2"> appearance in log</label>
                     </div>
                     <button id="visualize" disabled>Visualize</button>
                 </td>
@@ -228,6 +228,7 @@
 
     <script type="text/javascript" src="js/exception.js"></script> 
 
+	<script type="text/javascript" src="js/hostPermutation.js"></script>  
     <script type="text/javascript" src="js/motif.js"></script>  
     <script type="text/javascript" src="js/motifFinder.js"></script>  
     <script type="text/javascript" src="js/visualGraph.js"></script>  
@@ -238,7 +239,7 @@
     <script type="text/javascript" src="js/vectorTimestamp.js"></script>
     <script type="text/javascript" src="js/logEvent.js"></script>
 
-    <script type="text/javascript" src="js/graphFactory.js"></script>  
+    <script type="text/javascript" src="js/parser.js"></script>  
     <script type="text/javascript" src="js/layout.js"></script>    
     <script type="text/javascript" src="js/transform.js"></script> 
     <script type="text/javascript" src="js/regexp.js"></script>

@@ -9,7 +9,6 @@
  * @constructor
  */
 function Global() {
-    var g = this;
 
     /** @private */
     this.views = [];
@@ -18,29 +17,10 @@ function Global() {
     this.transformations = [];
 
     /** @private */
-    this.hostColors = {};
-
-    /** @private */
     this.hiddenHosts = {};
 
     /** @private */
-    this.color = d3.scale.category20();
-
-    /** @private */
-    this.overflow = null;
-
-    /** @private */
-    this.scrollPast = null;
-
-    /** @private */
-    this.scrollPastPoint = -1;
-
-    /** @private */
     this.controller = new Controller(this);
-
-    /** @private */
-    this.highlightHostTransformation = new HighlightHostTransformation([]);
-    this.addTransformation(this.highlightHostTransformation);
 
     $("#sidebar").css({
         width: Global.SIDE_BAR_WIDTH + "px",
@@ -54,6 +34,8 @@ function Global() {
         data: this
     });
 
+    var g = this;
+    
     $(window).unbind("resize");
     $(window).on("resize", function() {
         g.drawAll.call(g);
@@ -63,20 +45,6 @@ function Global() {
 Global.SIDE_BAR_WIDTH = 240;
 Global.HOST_SQUARE_SIZE = 25;
 Global.HIDDEN_EDGE_LENGTH = 40;
-
-/**
- * Gets a mapping of host names to its designated color
- * 
- * @returns {Object<String, Number>} A mapping of host names to its designated
- *          color
- */
-Global.prototype.getHostColors = function() {
-    var colors = {};
-    for (var host in this.hostColors) {
-        colors[host] = this.hostColors[host];
-    }
-    return colors;
-};
 
 /**
  * Adds a hidden host to the list
@@ -190,14 +158,6 @@ Global.prototype.toggleHighlightHost = function(host) {
  * @param {View} view The view to add
  */
 Global.prototype.addView = function(view) {
-    var newHosts = view.getHosts();
-    for (var i = 0; i < newHosts.length; i++) {
-        var host = newHosts[i];
-        if (!this.hostColors[host]) {
-            this.hostColors[host] = this.color(host);
-        }
-    }
-
     this.views.push(view);
     this.controller.addView(view);
     this.resize();
@@ -236,7 +196,7 @@ Global.prototype.resize = function() {
         vh.forEach(function(h) {
             if (h in global.hiddenHosts)
                 hn++;
-        })
+        });
 
         visibleHosts = visibleHosts + vh.length - hn;
     }
