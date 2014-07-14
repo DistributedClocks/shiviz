@@ -304,10 +304,18 @@ function HighlightHostTransformation(model, host) {
     this.hiddenHosts = [];
 };
 
+/**
+ * Gets the model of the transformation
+ * @return {VisualGraph} The model
+ */
 HighlightHostTransformation.prototype.getModel = function() {
     return this.model;
 };
 
+/**
+ * Gets the host that is highlighted by this transformation
+ * @return {String} The host
+ */
 HighlightHostTransformation.prototype.getHost = function() {
     return this.host;
 };

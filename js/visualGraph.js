@@ -41,6 +41,9 @@ function VisualGraph(graph, layout, hostPermutation) {
     this.revert();
 }
 
+/**
+ * Reverts the VisualGraph to its original state
+ */
 VisualGraph.prototype.revert = function() {
     this.graph = this.initialGraph.clone();
     this.nodeIdToVisualNode = {};
@@ -113,6 +116,9 @@ VisualGraph.prototype.revert = function() {
     this.layout.start(this, this.hostPermutation);
 }
 
+/**
+ * Updates the VisualGraph and its layout
+ */
 VisualGraph.prototype.update = function() {
     this.layout.start(this, this.hostPermutation);
 
