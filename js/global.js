@@ -90,6 +90,9 @@ Global.prototype.drawAll = function() {
     this.drawSideBar();
 };
 
+/**
+ * Reverts all visual graphs to original state
+ */
 Global.prototype.revertAll = function() {
     this.views.forEach(function (v) {
         v.visualGraph.revert();
