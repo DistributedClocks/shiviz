@@ -36,7 +36,12 @@ var start = Date.now();
 
 var log = 'a1\na {"a":1}\na2\na {"a":2,"b":2}\nb1\nb {"b":1,"a":1}\nb2\nb {"b":2,"a":1}';
 var lines = log.split('\n');
-var graph = generateGraphFromLog(lines);
+var parser = new LogParser(log, null);
+var hostPermutation = new LengthPermutation(true);
+var graph = new Graph(parser.getExecutionParser("").getLogEvents());
+
+hostPermutation.addGraph(graph);
+hostPermutation.update();
 
 /**
  * Graph.js
@@ -116,7 +121,7 @@ assert("removeHost", function () {
  */
 
 beginSection("Node.js");
-graph = generateGraphFromLog(lines);
+graph = new Graph(parser.getExecutionParser("").getLogEvents());
 
 assert("getId", function () {
     return graph.getNodes()[0].getId();
@@ -229,7 +234,7 @@ assert("addChild for invalid child", function () {
     try {
         graph.getNodes()[0].addChild(graph.getNodes()[1]);
     } catch (e) {
-        return e.indexOf("cannot be the child") > -1;
+        return e.rawString.indexOf("cannot be the child") > -1;
     }
     return false;
 });
@@ -253,7 +258,7 @@ assert("addParent for invalid parent", function () {
     try {
         graph.getNodes()[0].addParent(graph.getNodes()[1]);
     } catch (e) {
-        return e.indexOf("cannot be the parent") > -1;
+        return e.rawString.indexOf("cannot be the parent") > -1;
     }
     return false;
 });
@@ -264,17 +269,12 @@ assert("addParent for invalid parent", function () {
 beginSection("Global.js");
 $("body").append($("<div id='sideBar'></div>"));
 $("body").append($("<div id='reference'></div>"));
-var global = new Global();
-var view = new View(graph, global, "lable");
+var global = new Global(hostPermutation);
+var view = new View(graph, global, hostPermutation, "lable");
 
 assert("addView", function () {
     global.addView(view);
     return global.views.length == 1;
-});
-
-assert("getHostColors", function () {
-    var colors = global.getHostColors();
-    return colors.a && colors.b;
 });
 
 /**
@@ -316,7 +316,7 @@ assert("draw: host ordering", function () {
 });
 
 assert("draw: host colors", function () {
-    return $hosts[0].getAttribute("fill") == global.getHostColors().a;
+    return $hosts[0].getAttribute("fill") == global.hostPermutation.getHostColors().a;
 });
 
 assert("draw: node ordering", function () {
