@@ -18,7 +18,10 @@
 function VisualGraph(graph, layout, hostPermutation) {
 
     /** @private */
-    this.graph = graph;
+    this.initialGraph = graph;
+
+    /** @private */
+    this.graph = undefined;
 
     /** @private */
     this.layout = layout;
@@ -35,7 +38,19 @@ function VisualGraph(graph, layout, hostPermutation) {
     /** @private A mapping of y coordinates to VisualNodes **/
     this.lines = {};
 
-    graph.addObserver(AddNodeEvent, this, function(event, g) {
+    this.revert();
+}
+
+/**
+ * Reverts the VisualGraph to its original state
+ */
+VisualGraph.prototype.revert = function() {
+    this.graph = this.initialGraph.clone();
+    this.nodeIdToVisualNode = {};
+    this.links = {};
+    this.lines = {};
+
+    this.graph.addObserver(AddNodeEvent, this, function(event, g) {
         g.addVisualNodeByNode(event.getNewNode());
         g.removeVisualEdgeByNodes(event.getPrev(), event.getNext());
         g.addVisualEdgeByNodes(event.getPrev(), event.getNewNode());
@@ -44,7 +59,7 @@ function VisualGraph(graph, layout, hostPermutation) {
         }
     });
 
-    graph.addObserver(RemoveNodeEvent, this, function(event, g) {
+    this.graph.addObserver(RemoveNodeEvent, this, function(event, g) {
         g.removeVisualEdgeByNodes(event.getPrev(), event.getRemovedNode());
         g.removeVisualEdgeByNodes(event.getRemovedNode(), event.getNext());
         if (!event.getNext().isTail()) {
@@ -53,20 +68,20 @@ function VisualGraph(graph, layout, hostPermutation) {
         g.removeVisualNodeByNode(event.getRemovedNode());
     });
 
-    graph.addObserver(AddFamilyEvent, this, function(event, g) {
+    this.graph.addObserver(AddFamilyEvent, this, function(event, g) {
         g.addVisualEdgeByNodes(event.getParent(), event.getChild());
     });
 
-    graph.addObserver(RemoveFamilyEvent, this, function(event, g) {
+    this.graph.addObserver(RemoveFamilyEvent, this, function(event, g) {
         g.removeVisualEdgeByNodes(event.getParent(), event.getChild());
     });
 
-    graph.addObserver(RemoveHostEvent, this, function(event, g) {
+    this.graph.addObserver(RemoveHostEvent, this, function(event, g) {
         delete g.nodeIdToVisualNode[event.getHead().getId()];
     });
 
     // Create nodes
-    var nodes = graph.getAllNodes();
+    var nodes = this.graph.getAllNodes();
     for (var i = 0; i < nodes.length; i++) {
         var node = nodes[i];
         if (!node.isTail()) {
@@ -98,9 +113,12 @@ function VisualGraph(graph, layout, hostPermutation) {
 
     }
 
-    layout.start(this, this.hostPermutation);
+    this.layout.start(this, this.hostPermutation);
 }
 
+/**
+ * Updates the VisualGraph and its layout
+ */
 VisualGraph.prototype.update = function() {
     this.layout.start(this, this.hostPermutation);
 
@@ -246,6 +264,15 @@ VisualGraph.prototype.getVisualEdgeByNodes = function(node1, node2) {
  */
 VisualGraph.prototype.getWidth = function() {
     return this.layout.getWidth();
+};
+
+/**
+ * Sets the width of the VisualGraph
+ * 
+ * @params {Number} width The width
+ */
+VisualGraph.prototype.setWidth = function(width) {
+    this.layout.setWidth(width);
 };
 
 /**

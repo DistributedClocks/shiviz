@@ -104,16 +104,17 @@ function visualize() {
             var label = labels[i];
             var executionParser = parser.getExecutionParser(label);
             var graph = new Graph(executionParser.getLogEvents());
+            hostPermutation.addGraph(graph);
+            hostPermutation.update();
+            
             var view = new View(graph, global, hostPermutation, label);
             global.addView(view);
-            hostPermutation.addGraph(graph);
             
             if(sortType == "2") {
                 hostPermutation.addLogs(executionParser.getLogEvents());
             }
         }
     
-        hostPermutation.update();
         global.drawAll();
     
         // Check for vertical overflow
