@@ -20,16 +20,13 @@ function View(model, global, hostPermutation, label) {
     this.label = label;
 
     /** @private */
-    this.initialModel = model;
+    this.model = model;
 
     /** @private */
     this.global = global;
 
     /** @private */
-    this.currentModel = this.initialModel.clone();
-
-    /** @private */
-    this.visualGraph = new VisualGraph(this.currentModel, new SpaceTimeLayout(0, 56), this.hostPermutation);
+    this.visualGraph = new VisualGraph(this.model, new SpaceTimeLayout(0, 56), this.hostPermutation);
 
     /** @private */
     this.width = 500;
@@ -50,16 +47,16 @@ View.prototype.getGlobal = function() {
  * @returns {Array<String>} The hosts
  */
 View.prototype.getHosts = function() {
-    return this.initialModel.getHosts();
+    return this.model.getHosts();
 };
 
 /**
- * Gets the current model
+ * Gets the model
  * 
- * @returns {Graph} The current model
+ * @returns {Graph} The model
  */
 View.prototype.getModel = function() {
-    return this.currentModel;
+    return this.model;
 }
 
 /**
