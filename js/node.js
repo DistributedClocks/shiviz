@@ -80,7 +80,7 @@
  * @constructor
  * @param {Array<LogEvent>} logEvent The LogEvents that this node represents
  */
-function Node(logEvents) {
+function Node() {
 
     /** @private */
     this.id = Node.number++;
@@ -96,9 +96,6 @@ function Node(logEvents) {
 
     /** @private */
     this.hostToParent = {};
-
-    /** @private */
-    this.logEvents = logEvents;
 
     /** @private */
     this.host = null;
@@ -124,29 +121,6 @@ Node.number = 0;
  */
 Node.prototype.getId = function() {
     return this.id;
-};
-
-/**
- * Gets the log events associated with the node
- * 
- * This function makes no guarantees about the ordering of LogEvents in the
- * array returned. Also note that a new array is created to prevent modification
- * of the underlying private data structure, so this function takes linear
- * rather than constant time on the number of LogEvents.
- * 
- * @return {Array<LogEvent>} an array of associated log events
- */
-Node.prototype.getLogEvents = function() {
-    return this.logEvents.slice();
-};
-
-/**
- * Gets the number of LogEvents this node holds
- * 
- * @returns {Number} the number of LogEvents
- */
-Node.prototype.getLogEventCount = function() {
-    return this.logEvents.length;
 };
 
 /**

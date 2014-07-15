@@ -1,28 +1,20 @@
+BuilderGraph.prototype = Object.create(Graph.prototype);
+BuilderGraph.prototype.constructor = BuilderGraph;
+
 function BuilderGraph(hosts) {
-    /** @private */
-    this.hosts = [];
-
-    // Dictionaries linking the host name to the head/tail node for that host
-    /** @private */
-    this.hostToHead = {};
-
-    /** @private */
-    this.hostToTail = {};
-
-    /** @private */
-    this.observers = {};
+   Graph.call(this);
     
     for(var i = 0; i < hosts.length; i++) {
         var host = hosts[i];
         
         this.hosts.push(host);
         
-        var head = new Node([]);
+        var head = new BuilderNode();
         head.isHeadInner = true;
         head.host = host;
         head.graph = this;
 
-        var tail = new Node([]);
+        var tail = new BuilderNode();
         tail.isTailInner = true;
         tail.host = host;
         tail.graph = this;
@@ -37,6 +29,3 @@ function BuilderGraph(hosts) {
         this.hostToTail[host] = tail;
     }
 }
-
-BuilderGraph.prototype = Object.create(Graph.prototype);
-BuilderGraph.prototype.constructor = BuilderGraph;
