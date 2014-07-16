@@ -35,9 +35,6 @@ function VisualGraph(graph, layout, hostPermutation) {
     /** @private A mapping of edge IDs to VisualEdges */
     this.links = {};
 
-    /** @private A mapping of y coordinates to VisualNodes **/
-    this.lines = {};
-
     this.revert();
 }
 
@@ -45,6 +42,9 @@ function VisualGraph(graph, layout, hostPermutation) {
  * Reverts the VisualGraph to its original state
  */
 VisualGraph.prototype.revert = function() {
+    if (this.graph)
+        this.graph.removeAllObservers();
+    
     this.graph = this.initialGraph.clone();
     this.nodeIdToVisualNode = {};
     this.links = {};
@@ -121,17 +121,6 @@ VisualGraph.prototype.revert = function() {
  */
 VisualGraph.prototype.update = function() {
     this.layout.start(this, this.hostPermutation);
-
-    this.lines = {};
-    var visualNodes = this.getVisualNodes();
-    for (var i in visualNodes) {
-        var node = visualNodes[i];
-        var y = node.getY();
-        if (this.lines[y] === undefined)
-            this.lines[y] = [node];
-        else
-            this.lines[y].push(node);
-    }
 };
 
 /**
@@ -256,6 +245,21 @@ VisualGraph.prototype.getVisualEdgeByNodes = function(node1, node2) {
     }
     return this.links[linkId];
 };
+
+VisualGraph.prototype.getLines = function() {
+    var lines = {};
+    var visualNodes = this.getVisualNodes();
+    for (var i in visualNodes) {
+        var node = visualNodes[i];
+        var y = node.getY();
+        if (lines[y] === undefined)
+            lines[y] = [node];
+        else
+            lines[y].push(node);
+    }
+
+    return lines;
+}
 
 /**
  * Gets the width of the VisualGraph

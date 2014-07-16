@@ -587,6 +587,21 @@ Graph.prototype.removeObserver = function(type, callback) {
 };
 
 /**
+ * Removes all observers of the given type, or all observers if the
+ * type is not given
+ * 
+ * @param  {Function} type The type of observers to remove, or falsy
+ *                         to remove all types
+ */
+Graph.prototype.removeAllObservers = function(type) {
+    if (type)
+        this.observers[type] = {};
+    else
+        for (var type in this.observers)
+            this.observers[type] = {};
+}
+
+/**
  * Notifies all registered observers of an event. Dispatching any event will
  * also dispatch a ChangeEvent. Note that you cannot directly dispatch a
  * ChangeEvent.

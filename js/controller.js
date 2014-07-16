@@ -222,8 +222,31 @@ Controller.prototype.bind = function(nodes, hosts, lines, hh) {
                 return t.constructor == HighlightHostTransformation && t.getHiddenHosts().indexOf(e) > -1;
             });
 
-            if (high.length > 0)
-                return;
+            if (high.length > 0) {
+                controller.transformations.filter(function(t) {
+                    return t.constructor == HighlightHostTransformation;
+                }).forEach(function(t) {
+                    t.getHiddenHosts().forEach(function(h) {
+                        controller.global.removeHiddenHost(h);
+                    });
+                });
+
+                high.forEach(function(h) {
+                    controller.removeTransformation(h);
+                });
+
+                controller.transform();
+                controller.transformations.filter(function(t) {
+                    return t.constructor == HighlightHostTransformation;
+                }).forEach(function(t) {
+                    t.getHiddenHosts().forEach(function(h) {
+                        controller.global.addHiddenHost(h);
+                    });
+                });
+
+                controller.global.drawAll();
+                controller.global.drawAll();
+            }
 
             controller.removeTransformation(function (t) {
                 return t.constructor == HideHostTransformation && t.host == e;
