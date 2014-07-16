@@ -1,12 +1,10 @@
-ModelNode.prototype = Object.create(Node.prototype);
-ModelNode.prototype.constructor = ModelNode;
-
 /**
- * 
+ * ModelNodes are part of ModelGraphs. Together, they model a set of LogEvents.
+ * A ModelNode by itself can model one or more LogEvents
  */
 function ModelNode(logEvents) {
     Node.call(this);
-    
+
     /** @private */
     this.logEvents = logEvents;
 }
@@ -37,3 +35,7 @@ Node.prototype.getFirstLogEvent = function() {
 Node.prototype.getLogEventCount = function() {
     return this.logEvents.length;
 };
+
+// ModelNode extends Node
+ModelNode.prototype = Object.create(Node.prototype);
+ModelNode.prototype.constructor = ModelNode;
