@@ -298,7 +298,7 @@ View.prototype.draw = function() {
     }
 
     function drawLogLines() {
-        var lines = view.visualGraph.lines;
+        var lines = view.getVisualModel().getLines();
         delete lines[0];
 
         for (var y in lines) {
