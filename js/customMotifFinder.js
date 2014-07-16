@@ -153,9 +153,6 @@ CustomMotifFinder.prototype.find = function(graph) {
         }
         nodeGroup = unusedNodeGroup;
 
-        // if a builder node is already matched, and that match is not in
-        // nodeGroup, return false
-
         /*
          * For each bNode, we check to see if it has already been matched. If
          * not, then we add it to an array containing un-matched bNodes.

@@ -1,22 +1,24 @@
-ModelGraph.prototype = Object.create(Graph.prototype);
-ModelGraph.prototype.constructor = ModelGraph;
-
-
 /**
+ * A ModelGraph models a set of LogEvents as a graph. The graph is generated
+ * based on the LogEvents passed to the constructor. One ModelNode is created
+ * for each LogEvent The "ordering" of ModelNodes and the hosts to which they
+ * belong is based on the natural ordering of the LogEvents.
  * 
+ * @param {Array<LogEvent>} logEvents The array of LogEvents from which to
+ *        generate the model.
  */
 function ModelGraph(logEvents) {
-    
+
     Graph.call(this);
-    
+
     // Dictionary linking host name to array of nodes
     var hostToNodes = {};
 
     // Set of existing hosts
     var hostSet = {};
-    
+
     var mg = this;
-    
+
     initHosts();
     initPrevNext();
     initParentChild();
@@ -47,10 +49,10 @@ function ModelGraph(logEvents) {
                 tail.isTailInner = true;
                 tail.host = host;
                 tail.graph = mg;
-                
+
                 head.prev = null;
                 head.next = tail;
-                
+
                 tail.prev = head;
                 tail.next = null;
 
@@ -61,10 +63,10 @@ function ModelGraph(logEvents) {
             hostToNodes[host].push(node);
         }
     }
-    
- // Generate linear linked list among nodes in same host
+
+    // Generate linear linked list among nodes in same host
     function initPrevNext() {
-        for (var host in hostToNodes) {
+        for ( var host in hostToNodes) {
             var array = hostToNodes[host];
             array.sort(function(a, b) {
                 return getVT(a).compareToLocal(getVT(b));
@@ -73,7 +75,7 @@ function ModelGraph(logEvents) {
             for (var i = 0; i < array.length; i++) {
                 var node = array[i];
                 if (getTime(node) != i + 1) {
-                    throw i == 0 ? getStartValueException(node) : getClockIncrementException(node, array[i-1]);
+                    throw i == 0 ? getStartValueException(node) : getClockIncrementException(node, array[i - 1]);
                 }
             }
 
@@ -87,9 +89,10 @@ function ModelGraph(logEvents) {
         }
     }
 
+    // Generates parent and child connections
     function initParentChild() {
-     // Generates parent/child connections
-        for (var host in hostSet) {
+        // Generates parent/child connections
+        for ( var host in hostSet) {
             // Latest clock
             var clock = {};
             var currNode = mg.hostToHead[host].next;
@@ -105,7 +108,7 @@ function ModelGraph(logEvents) {
 
                 // Looks to see if a timestamp for a host in the
                 // vector clock has been updated from the last one
-                for (var otherHost in currVT.clock) {
+                for ( var otherHost in currVT.clock) {
                     var time = currVT.clock[otherHost]; // TODO: use method
 
                     // If the timestamp for the host has been updated
@@ -136,7 +139,7 @@ function ModelGraph(logEvents) {
 
                 for (var i = 0; i < candidates.length; i++) {
                     var vt = candidates[i].logEvents[0].getVectorTimestamp();
-                    for (var otherHost in vt.clock) {
+                    for ( var otherHost in vt.clock) {
                         if (otherHost != vt.getOwnHost()) {
                             var id = otherHost + ":" + vt.clock[otherHost];
                             delete connections[id];
@@ -145,7 +148,7 @@ function ModelGraph(logEvents) {
                 }
 
                 // figure out which child to keep
-                for (var key in connections) {
+                for ( var key in connections) {
                     var node = connections[key];
                     var currParentOnHost = currNode.hostToParent[node.getHost()];
                     if (!currParentOnHost) {
@@ -166,12 +169,13 @@ function ModelGraph(logEvents) {
 
     function stepThroughAndVerify() {
         // Step through and verify that the vector clocks make sense
-        var clocks = {}; // clocks[x][y] = vector clock of host x at local time y
-        for (var host in hostSet) {
+        var clocks = {}; // clocks[x][y] = vector clock of host x at local
+                            // time y
+        for ( var host in hostSet) {
             clocks[host] = {};
         }
 
-        for (var host in hostSet) {
+        for ( var host in hostSet) {
             var curr = mg.getHead(host).getNext();
             var time = 0;
             while (!curr.isTail()) {
@@ -217,28 +221,27 @@ function ModelGraph(logEvents) {
         }
     }
 
-
     function attachEvent(event, exception) {
         var vt = event.getVectorTimestamp();
         exception.append("\nOn line " + event.getLineNumber() + ":");
         exception.append(event.getText() + "\n" + JSON.stringify(vt.clock), "code");
     }
-    
+
     function getVT(node) {
         return node.getFirstLogEvent().getVectorTimestamp();
     }
-    
+
     function getTime(node) {
         return getVT(node).getOwnTime();
     }
-    
+
     function getStartValueException(node) {
         var exception = new Exception("Logical clock values for each host must start at 1.\n" + "The clock value for the first event for host \"" + node.getHost() + "\" is " + getTime(node) + ".");
         attachEvent(node.getFirstLogEvent(), exception);
         exception.setUserFriendly(true);
         return exception;
     }
-    
+
     function getClockIncrementException(node, lastNode) {
         var exception = new Exception("Clock values for a host must increase monotonically by 1.\n" + "The clock for host \"" + node.getHost() + "\" goes from " + getTime(lastNode) + " to " + getTime(node) + " in the following two events:\n");
         attachEvent(lastNode.getFirstLogEvent(), exception);
@@ -246,14 +249,14 @@ function ModelGraph(logEvents) {
         exception.setUserFriendly(true);
         return exception;
     }
-    
+
     function getBadHostException(node, host) {
         var exception = new Exception("The following event's vector clock contains an entry for " + "an unrecognized host \"" + host + "\".");
         attachEvent(node.getFirstLogEvent(), exception);
         exception.setUserFriendly(true);
         return exception;
     }
-    
+
     function getOutOfBoundsTimeException(node, host, time) {
         var exception = new Exception("The following event's vector clock contains an invalid clock value " + time + " for " + "host \"" + host + "\".");
         attachEvent(node.getFirstLogEvent(), exception);
@@ -262,13 +265,12 @@ function ModelGraph(logEvents) {
     }
 }
 
-
 /**
  * Returns a copy of the graph. The new graph has nodes connected in exactly the
  * same way as the original. The new graph has exactly the same set of hosts.
  * The node themselves are shallow copies provided by node.clone()
  * 
- * @return {Graph} The copy of the graph
+ * @return {ModelGraph} The copy of the graph
  */
 Graph.prototype.clone = function() {
     var newGraph = new ModelGraph([]);
@@ -286,12 +288,12 @@ Graph.prototype.clone = function() {
         oldToNewNode[node.getId()] = newNode;
     }
 
-    for (var host in this.hostToHead) {
+    for ( var host in this.hostToHead) {
         var node = this.hostToHead[host];
         newGraph.hostToHead[host] = oldToNewNode[node.getId()];
     }
 
-    for (var host in this.hostToTail) {
+    for ( var host in this.hostToTail) {
         var node = this.hostToTail[host];
         newGraph.hostToTail[host] = oldToNewNode[node.getId()];
     }
@@ -318,3 +320,7 @@ Graph.prototype.clone = function() {
 
     return newGraph;
 };
+
+// ModelGraph extends Graph
+ModelGraph.prototype = Object.create(Graph.prototype);
+ModelGraph.prototype.constructor = ModelGraph;

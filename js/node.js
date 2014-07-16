@@ -41,15 +41,22 @@
  * </ul>
  * 
  * between: A node n is between nodes x and y if n happens after x and before y
- * OR n happens after y and before x
+ * OR n happens after y and before x. In addition, nodes x, y, and n must all
+ * belong to the same host
  * 
  * consecutive: a sequence S of nodes n_1, n_2 ... n_k are consecutive if n_i is
  * the previous node of n_(i+1) for all i between 1 and k-1 inclusive
  * 
- * "happens before" and "happens after": A node x happens before y if and only
- * if x preceeds y in time. When the nodes are first generated in the graph,
- * this temporal relation is based on the nodes' LogEvents' vector clocks, but
- * this may change as graph transformations are applied
+ * "happens before" and "happens after": There is a notion of ordering between
+ * nodes. More formally, there is a comparison function f(n1, n2) that indicates
+ * the ordering of two nodes n1 and n2. For a pair of nodes with the same host,
+ * n1 must either happen before (be ordered before) n2 or happens after (be
+ * ordered after) n1. If a pair of nodes have different hosts, it could also be
+ * the case that neither node happens before or after the other. A node x
+ * happens after node y if and only if node y happens before node x. This notion
+ * of ordering - this comparison function - may be different for each concrete
+ * class that extends node, and it is up to subclasses to precisely define their
+ * comparison function, subject to the restrictions above.
  * 
  * <pre>
  * Pictorially:
@@ -81,6 +88,10 @@
  * @param {Array<LogEvent>} logEvent The LogEvents that this node represents
  */
 function Node() {
+
+    if (this.constructor == Node) {
+        throw new Exception("Cannot instantiate Node; Node is an abstract class");
+    }
 
     /** @private */
     this.id = Node.number++;
@@ -302,13 +313,13 @@ Node.prototype.remove = function() {
     this.prev = null;
     this.next = null;
 
-    for (var host in this.hostToParent) {
+    for ( var host in this.hostToParent) {
         var otherNode = this.hostToParent[host];
         delete otherNode.hostToChild[this.host];
         this.notifyGraph(new RemoveFamilyEvent(otherNode, this));
     }
 
-    for (var host in this.hostToChild) {
+    for ( var host in this.hostToChild) {
         var otherNode = this.hostToChild[host];
         delete otherNode.hostToParent[this.host];
         this.notifyGraph(new RemoveFamilyEvent(this, otherNode));
@@ -368,7 +379,7 @@ Node.prototype.hasFamily = function() {
  */
 Node.prototype.getParents = function() {
     var result = [];
-    for (var key in this.hostToParent) {
+    for ( var key in this.hostToParent) {
         result.push(this.hostToParent[key]);
     }
     return result;
@@ -386,7 +397,7 @@ Node.prototype.getParents = function() {
  */
 Node.prototype.getChildren = function() {
     var result = [];
-    for (var key in this.hostToChild) {
+    for ( var key in this.hostToChild) {
         result.push(this.hostToChild[key]);
     }
     return result;
@@ -565,7 +576,7 @@ Node.prototype.removeFamily = function(node) {
  * at the top of this document.
  */
 Node.prototype.clearChildren = function() {
-    for (var host in this.hostToChild) {
+    for ( var host in this.hostToChild) {
         this.removeChild(this.hostToChild[host]);
     }
 };
@@ -575,7 +586,7 @@ Node.prototype.clearChildren = function() {
  * at the top of this document.
  */
 Node.prototype.clearParents = function() {
-    for (var host in this.hostToParent) {
+    for ( var host in this.hostToParent) {
         this.removeParent(this.hostToParent[host]);
     }
 };

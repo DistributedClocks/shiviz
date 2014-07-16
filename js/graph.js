@@ -32,6 +32,11 @@
  *        log input
  */
 function Graph() {
+    
+    if(this.constructor == Graph) {
+        throw new Exception("Cannot instantiate Graph; Graph is an abstract class");
+    }
+    
     /** @private */
     this.hosts = [];
 
