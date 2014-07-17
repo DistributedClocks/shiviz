@@ -47,6 +47,70 @@ function RequestResponseFinder(maxLERequester, maxLEResponder, allowOtherConnect
 }
 
 RequestResponseFinder.prototype.find = function(graph) {
+    var nodes = graph.getNodes();
+    var motif = new Motif();
+    var seen = {}; // Nodes already part of a motif
+    var context = this;
+    
+    for (var i = 0; i < nodes.length; i++) {
+        var snode = nodes[i]; 
+        
+        var traversal = new DFSGraphTraversal();
+        traversal.addNode(snode, "1", null);
+        
+        traversal.setVisitFunction("1", function(gt, node, state, data) {
+            
+            var children = node.getChildren();
+            
+            if (seen[node.getId()] || (!context.allowOtherConnections && (children.length > 1 || node.hasParents()))) {
+                gt.end();
+                return;
+            }
+            
+            var children = node.getChildren();
+            for (var j = 0; j < children.length; j++) {
+                gt.addNode(children[j], "2", 0);
+            }
+            
+        });
+        
+        traversal.setVisitFunction("2", function(gt, node, state, data) {
+            
+            if (node.isTail() || data > context.maxLEResponder || seen[node.getId()] || (!context.allowOtherConnections && (node.getParents().length > 1 || node.getChildren().length > 1))) {
+                return;
+            }
+
+            var children = node.getChildren();
+            for (var j = 0; j < children.length; j++) {
+                gt.addNode(children[j], "3", 0);
+            }
+            
+            gt.addNode(node.getNext(), "2", data + 1);
+            
+        });
+        
+        traversal.setVisitFunction("3", function(gt, node, state, data) {
+            
+            if(node.getHost() != snode.getHost()) {
+                return;
+            }
+            
+            var trail = gt.getTrail();
+            for(var j = 0; j < trail.length; j++) {
+                motif.addNode(trail[j]);
+            }
+            gt.end();
+            
+        });
+        
+        traversal.run();
+        
+    }
+
+    return motif;
+};
+
+RequestResponseFinder.prototype.find2 = function(graph) {
 
     var nodes = graph.getNodes();
     var motif = new Motif();
