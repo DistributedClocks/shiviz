@@ -153,8 +153,12 @@
                             <li class="disabled">a</li>
                         </ul>
                         <ul class="links">
-                            <li><a title="Documentation" href="//bitbucket.org/bestchai/shiviz/wiki/Home">d</a></li>
-                            <li><a title="Source" href="//bitbucket.org/bestchai/shiviz/src">s</a></li>
+                            <li>
+                                <a title="Documentation" href="//bitbucket.org/bestchai/shiviz/wiki/Home">d</a>
+                            </li>
+                            <li>
+                                <a title="Source" href="//bitbucket.org/bestchai/shiviz/src">s</a>
+                            </li>
                         </ul>
                     </header>
                     <h3>Options</h3>
@@ -165,8 +169,14 @@
                         <label>Log parser RegExp: <input type="text" id="parser"></label>
                     </div>
                     <div class="option">
-                        Sort processes in <select><option>ascending</option><option selected>descending</option></select> order by:<br>
-                        <label><input name="host_sort" type="radio" checked> # events</label> <label><input name="host_sort" type="radio"> appearance in log</label>
+                        Sort processes in
+                        <select id="ordering">
+                            <option value="ascending">ascending</option>
+                            <option value="descending" selected>descending</option>
+                        </select> order by:
+                        <br>
+                        <label><input name="host_sort" type="radio" checked value="length"> # events</label>
+                        <label><input name="host_sort" type="radio" value="order"> appearance in log</label>
                     </div>
                     <button id="visualize" disabled>Visualize</button>
                 </td>
@@ -232,6 +242,7 @@
 
     <script type="text/javascript" src="js/exception.js"></script> 
 
+	<script type="text/javascript" src="js/hostPermutation.js"></script>  
     <script type="text/javascript" src="js/motif.js"></script>  
     <script type="text/javascript" src="js/motifFinder.js"></script>  
     <script type="text/javascript" src="js/visualGraph.js"></script>  
@@ -242,7 +253,7 @@
     <script type="text/javascript" src="js/vectorTimestamp.js"></script>
     <script type="text/javascript" src="js/logEvent.js"></script>
 
-    <script type="text/javascript" src="js/graphFactory.js"></script>  
+    <script type="text/javascript" src="js/parser.js"></script>  
     <script type="text/javascript" src="js/layout.js"></script>    
     <script type="text/javascript" src="js/transform.js"></script> 
     <script type="text/javascript" src="js/regexp.js"></script>
