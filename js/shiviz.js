@@ -9,11 +9,13 @@ $("#examples a").on("click", function(e) {
 
     // logUrlPrefix is defined in dev.js & deployed.js
     var url = logUrlPrefix + $(this).data("log");
+    var defaultParser = "(?<event>.*)\\n(?<host>\\S*) (?<clock>{.*})";
+
     $.get(url, function(response) {
         $("#input").val(response);
         resetView();
         $("#delimiter").val($(e.target).data("delimiter"));
-        $("#parser").val($(e.target).data("parser") || "(?<event>.*)\\n(?<host>\\S*) (?<clock>{.*})");
+        $("#parser").val($(e.target).data("parser") || defaultParser);
         $(e.target).css({
             color: "gray",
             pointerEvents: "none"
@@ -61,7 +63,7 @@ function resetView() {
         $(".icon .tabs li:last-child").removeClass("disabled");
     }
 
-    $(".event").html("");
+    $(".event").text("(click to view)");
     $(".fields").html("");
 
     d3.selectAll("#graph svg").remove();
@@ -80,54 +82,47 @@ $("#visualize").on("click", function () {
 function visualize() {
     try {
         d3.selectAll("#graph svg").remove();
-    
-        var log = $("#input").val();
-        var labels = null;
-        if ($("#delimiter").val().length > 0) {
-            var delimiter = new NamedRegExp($("#delimiter").val(), "m");
-            var executions = log.split(delimiter.no);
-            if (delimiter.names.indexOf("trace") >= 0) {
-                labels = [ "" ];
-                var match;
-                while (match = delimiter.exec(log))
-                    labels.push(match.trace);
-            }
-        }
-        else {
-            executions = [ log ];
-        }
-    
-        executions = executions.filter(function(e, i) {
-            if (e.trim().length == 0) {
-                if (labels)
-                    labels[i] = "//REMOVE";
-                return false;
-            }
-            return true;
-        });
-    
-        if (!!labels)
-            labels = labels.filter(function(e) {
-                return !(e == "//REMOVE");
-            });
-    
-        // We need a variable share across all views/executions to keep them in
-        // sync.
-        var global = new Global(); // Global.getInstance();
 
-        // Read the log parser RegExp
-        var parser = new NamedRegExp($("#parser").val(), "m");
-    
-        // Make a view for each execution, then draw it
-        executions.map(function(v, i) {
-            var model = generateGraphFromLog(v, parser);
-            var view = new View(model, global, labels ? labels[i] : "");
-    
+        var log = $("#input").val();
+        var delimiterString = $("#delimiter").val().trim();
+        var delimiter = delimiterString == "" ? null : new NamedRegExp(delimiterString, "m");
+        var regexpString = $("#parser").val().trim();
+
+        if (regexpString == "")
+            throw new Exception("The parser regexp field must not be empty");
+
+        var regexp = new NamedRegExp(regexpString, "m");
+        var parser = new LogParser(log, delimiter, regexp);
+        
+        var sortType = $("input[name=host_sort]:checked").val().trim();
+        var descending = $("#ordering option:selected").val().trim() == "descending";
+        var hostPermutation = null;
+
+        if (sortType == "length") {
+            hostPermutation = new LengthPermutation(descending);
+        } else if (sortType == "order") {
+            hostPermutation = new LogOrderPermutation(descending);
+        } else {
+            throw new Exception("You must select a way to sort processes.", true);
+        }
+        
+        var global = new Global(hostPermutation);
+        
+        var labels = parser.getLabels();
+        for(var i = 0; i < labels.length; i++) {
+            var label = labels[i];
+            var graph = new Graph(parser.getLogEvents(label));
+            var view = new View(graph, global, hostPermutation, label);
+
             global.addView(view);
+            hostPermutation.addGraph(graph);
+            
+            if(sortType == "2") {
+                hostPermutation.addLogs(parser.getLogEvents(label));
+            }
+        }
     
-            return view;
-        });
-    
+        hostPermutation.update();
         global.drawAll();
     
         // Check for vertical overflow

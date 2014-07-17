@@ -8,8 +8,14 @@
  * @param {Number} delta The vertical distance between nodes
  */
 function SpaceTimeLayout(width, delta) {
+    
+    /** @private */
     this.width = width;
+    
+    /** @private */
     this.delta = delta;
+    
+    /** @private */
     this.height = 0;
 }
 
@@ -20,9 +26,10 @@ function SpaceTimeLayout(width, delta) {
  * VisualNode's Node is greater than that of it's prev and parent Nodes
  * 
  * @param {VisualGraph} visualGraph The visualGraph to lay out
+ * @param {HostPermutation} hostPermutation
  */
-SpaceTimeLayout.prototype.start = function(visualGraph) {
-
+SpaceTimeLayout.prototype.start = function(visualGraph, hostPermutation) {
+    
     this.height = 0;
 
     var nodeToNumParents = {};
@@ -53,7 +60,7 @@ SpaceTimeLayout.prototype.start = function(visualGraph) {
         }
     }
 
-    var hosts = visualGraph.getHosts();
+    var hosts = hostPermutation.getHostsAndFilter(visualGraph.getHosts());
     var hostNameToIndex = {};
     for (var i = 0; i < hosts.length; i++) {
         hostNameToIndex[hosts[i]] = i;

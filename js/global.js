@@ -8,29 +8,16 @@
  * 
  * @constructor
  */
-function Global() {
-    var g = this;
+function Global(hostPermutation) {
 
     /** @private */
     this.views = [];
 
     /** @private */
     this.transformations = [];
-
+    
     /** @private */
-    this.hostColors = {};
-
-    /** @private */
-    this.color = d3.scale.category20();
-
-    /** @private */
-    this.overflow = null;
-
-    /** @private */
-    this.scrollPast = null;
-
-    /** @private */
-    this.scrollPastPoint = -1;
+    this.hostPermutation = hostPermutation;
 
     /** @private */
     this.highlightHostTransformation = new HighlightHostTransformation([]);
@@ -52,6 +39,8 @@ function Global() {
         data: this
     });
 
+    var g = this;
+    
     $(window).unbind("resize");
     $(window).on("resize", function() {
         g.drawAll.call(g);
@@ -62,19 +51,6 @@ Global.SIDE_BAR_WIDTH = 240;
 Global.HOST_SQUARE_SIZE = 25;
 Global.HIDDEN_EDGE_LENGTH = 40;
 
-/**
- * Gets a mapping of host names to its designated color
- * 
- * @returns {Object<String, Number>} A mapping of host names to its designated
- *          color
- */
-Global.prototype.getHostColors = function() {
-    var colors = {};
-    for (var host in this.hostColors) {
-        colors[host] = this.hostColors[host];
-    }
-    return colors;
-};
 
 /**
  * Adds a transformation that is to be applied to all views. The transformation
@@ -157,13 +133,6 @@ Global.prototype.toggleHighlightHost = function(host) {
  * @param {View} view The view to add
  */
 Global.prototype.addView = function(view) {
-    var newHosts = view.getHosts();
-    for (var i = 0; i < newHosts.length; i++) {
-        var host = newHosts[i];
-        if (!this.hostColors[host]) {
-            this.hostColors[host] = this.color(host);
-        }
-    }
     this.views.push(view);
     this.resize();
 };
@@ -265,13 +234,13 @@ Global.prototype.drawSideBar = function() {
     rect.attr("width", Global.HOST_SQUARE_SIZE);
     rect.attr("height", Global.HOST_SQUARE_SIZE);
     rect.style("fill", function(host) {
-        return global.hostColors[host];
+        return global.hostPermutation.getHostColor(host);
     });
     rect.on("dblclick", function(e) {
         global.unhideHost(e);
     });
     rect.on("mouseover", function(e) {
-        $("#curNode").innerHTML = e;
+        $(".event").innerHTML = e;
     });
     rect.append("title").text("Double click to view");
 
