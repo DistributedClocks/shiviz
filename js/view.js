@@ -35,6 +35,11 @@ function View(model, global, hostPermutation, label) {
     this.collapseSequentialNodesTransformation = new CollapseSequentialNodesTransformation(2);
 
     this.addTransformation(this.collapseSequentialNodesTransformation);
+    
+    // ---------- Temporary ----------
+    var finder = new RequestResponseFinder(1, 1, false);
+    var hmt = new HighlightMotifTransformation(finder, false);
+    this.addTransformation(hmt);
 }
 
 /**
