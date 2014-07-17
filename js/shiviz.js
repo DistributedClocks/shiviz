@@ -89,7 +89,7 @@ function visualize() {
         var regexpString = $("#parser").val().trim();
 
         if (regexpString == "")
-            throw new Exception("The parser regexp field must not be empty");
+            throw new Exception("The parser regexp field must not be empty.", true);
 
         var regexp = new NamedRegExp(regexpString, "m");
         var parser = new LogParser(log, delimiter, regexp);
@@ -117,7 +117,7 @@ function visualize() {
             global.addView(view);
             hostPermutation.addGraph(graph);
             
-            if(sortType == "2") {
+            if (sortType == "order") {
                 hostPermutation.addLogs(parser.getLogEvents(label));
             }
         }
