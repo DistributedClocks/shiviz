@@ -35,21 +35,6 @@ function View(model, global, hostPermutation, label) {
     this.collapseSequentialNodesTransformation = new CollapseSequentialNodesTransformation(2);
 
     this.addTransformation(this.collapseSequentialNodesTransformation);
-    
-    var bg = new BuilderGraph(["a", "b"]);
-    var node1 = new BuilderNode();
-    var node2 = new BuilderNode();
-    var node3 = new BuilderNode();
-    var node4 = new BuilderNode();
-    bg.getHead("a").insertNext(node1);
-    bg.getHead("b").insertNext(node2);
-    node2.insertNext(node3);
-    node1.insertNext(node4);
-    node1.addChild(node2);
-    node3.addChild(node4);
-    
-    var cmf = new CustomMotifFinder(bg);
-    this.addTransformation(new HighlightMotifTransformation(cmf, false));
 
 }
 
