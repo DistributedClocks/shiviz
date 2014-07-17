@@ -103,7 +103,7 @@ function visualize() {
         for(var i = 0; i < labels.length; i++) {
             var label = labels[i];
             var executionParser = parser.getExecutionParser(label);
-            var graph = new Graph(executionParser.getLogEvents());
+            var graph = new ModelGraph(executionParser.getLogEvents());
             var view = new View(graph, global, hostPermutation, label);
             global.addView(view);
             hostPermutation.addGraph(graph);

@@ -395,7 +395,7 @@ BroadcastGatherFinder.prototype.find = function(graph) {
         var queued = [];
         var nodes = [];
         var seenHosts = {};
-        group = group.concat([ new Node([]) ]);
+        group = group.concat([ new ModelNode([]) ]);
 
         for (var g = 0; g < group.length; g++) {
             var curr = group[g];

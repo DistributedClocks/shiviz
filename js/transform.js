@@ -294,7 +294,7 @@ CollapseSequentialNodesTransformation.prototype.transform = function(visualGraph
             hasHiddenChild |= removedVN.hasHiddenChild();
             prev.remove();
         }
-        var newNode = new Node(logEvents.reverse());
+        var newNode = new ModelNode(logEvents.reverse());
         curr.insertPrev(newNode);
 
         var visualNode = visualGraph.getVisualNodeByNode(newNode);
