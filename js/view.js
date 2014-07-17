@@ -35,6 +35,7 @@ function View(model, global, hostPermutation, label) {
     this.collapseSequentialNodesTransformation = new CollapseSequentialNodesTransformation(2);
 
     this.addTransformation(this.collapseSequentialNodesTransformation);
+
 }
 
 /**
