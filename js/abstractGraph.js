@@ -31,10 +31,10 @@
  * @param {[LogEvent]} logEvents an array of log events extracted from the raw
  *        log input
  */
-function Graph() {
+function AbstractGraph() {
     
-    if(this.constructor == Graph) {
-        throw new Exception("Cannot instantiate Graph; Graph is an abstract class");
+    if(this.constructor == AbstractGraph) {
+        throw new Exception("Cannot instantiate AbstractGraph; AbstractGraph is an abstract class");
     }
     
     /** @private */
@@ -50,8 +50,8 @@ function Graph() {
     /** @private */
     this.observers = {};
 
-    for (var i = 0; i < Graph.validEvents.length; i++) {
-        this.observers[Graph.validEvents[i]] = {};
+    for (var i = 0; i < AbstractGraph.validEvents.length; i++) {
+        this.observers[AbstractGraph.validEvents[i]] = {};
     }
 }
 
@@ -61,7 +61,7 @@ function Graph() {
  * @static
  * @private
  */
-Graph.validEvents = [ AddNodeEvent, RemoveNodeEvent, AddFamilyEvent, RemoveFamilyEvent, RemoveHostEvent, ChangeEvent ];
+AbstractGraph.validEvents = [ AddNodeEvent, RemoveNodeEvent, AddFamilyEvent, RemoveFamilyEvent, RemoveHostEvent, ChangeEvent ];
 
 /**
  * Gets the head node for a host
@@ -69,7 +69,7 @@ Graph.validEvents = [ AddNodeEvent, RemoveNodeEvent, AddFamilyEvent, RemoveFamil
  * @param {String} host the name of the host
  * @return {Node} the head node, or null if none is found
  */
-Graph.prototype.getHead = function(host) {
+AbstractGraph.prototype.getHead = function(host) {
     if (!this.hostToHead[host]) {
         return null;
     }
@@ -82,7 +82,7 @@ Graph.prototype.getHead = function(host) {
  * @param {String} host the name of the host
  * @return {Node} the tail node, or null if none is found
  */
-Graph.prototype.getTail = function(host) {
+AbstractGraph.prototype.getTail = function(host) {
     if (!this.hostToTail[host]) {
         return null;
     }
@@ -94,7 +94,7 @@ Graph.prototype.getTail = function(host) {
  * 
  * @return {[String]} a copy of the array of host names
  */
-Graph.prototype.getHosts = function() {
+AbstractGraph.prototype.getHosts = function() {
     return this.hosts.slice(0);
 };
 
@@ -104,7 +104,7 @@ Graph.prototype.getHosts = function() {
  * @param {String} host The host to check for
  * @returns {Boolean} True if the host exists
  */
-Graph.prototype.hasHost = function(host) {
+AbstractGraph.prototype.hasHost = function(host) {
     if (!this.hostToTail[host]) {
         return false;
     }
@@ -117,7 +117,7 @@ Graph.prototype.hasHost = function(host) {
  * 
  * @param {String} host the name of the host to hide
  */
-Graph.prototype.removeHost = function(host) {
+AbstractGraph.prototype.removeHost = function(host) {
     var index = this.hosts.indexOf(host);
     if (index < 0) {
         return;
@@ -151,7 +151,7 @@ Graph.prototype.removeHost = function(host) {
  * 
  * @return {[Node]} an array of all non-dummy nodes
  */
-Graph.prototype.getNodes = function() {
+AbstractGraph.prototype.getNodes = function() {
     var nodes = [];
     for (var i = 0; i < this.hosts.length; i++) {
         var curr = this.getHead(this.hosts[i]).getNext();
@@ -174,7 +174,7 @@ Graph.prototype.getNodes = function() {
  * 
  * @return {[Node]} an array of all dummy nodes
  */
-Graph.prototype.getDummyNodes = function() {
+AbstractGraph.prototype.getDummyNodes = function() {
     var nodes = [];
     for (var host in this.hostToHead) {
         nodes.push(this.hostToHead[host]);
@@ -196,7 +196,7 @@ Graph.prototype.getDummyNodes = function() {
  * 
  * @return {[Node]} an array of all nodes in the model
  */
-Graph.prototype.getAllNodes = function() {
+AbstractGraph.prototype.getAllNodes = function() {
     return this.getNodes().concat(this.getDummyNodes());
 };
 
@@ -208,7 +208,7 @@ Graph.prototype.getAllNodes = function() {
  * @returns {Array<Node>} the nodes in topologically sorted order.
  * @throws An exception if the graph contains a cycle.
  */
-Graph.prototype.getNodesTopologicallySorted = function() {
+AbstractGraph.prototype.getNodesTopologicallySorted = function() {
     toposort = [];
 
     var inDegree = {}; // mapping of node ID to current in degree
@@ -248,7 +248,7 @@ Graph.prototype.getNodesTopologicallySorted = function() {
 
     for (var key in inDegree) {
         if (inDegree[key] > 0) {
-            throw new Exception("Graph.prototype.getNodesTopologicallySorted: Cannot perform topological sort - graph is not acyclic");
+            throw new Exception("AbstractGraph.prototype.getNodesTopologicallySorted: Cannot perform topological sort - graph is not acyclic");
         }
     }
 
@@ -271,9 +271,9 @@ Graph.prototype.getNodesTopologicallySorted = function() {
  * @param {Function} callback The callback function. The parameters of the
  *        callback should be event, context
  */
-Graph.prototype.addObserver = function(type, context, callback) {
-    if (Graph.validEvents.indexOf(type) < 0) {
-        throw new Exception("Graph.prototype.addObserver: " + type + " is not a valid event");
+AbstractGraph.prototype.addObserver = function(type, context, callback) {
+    if (AbstractGraph.validEvents.indexOf(type) < 0) {
+        throw new Exception("AbstractGraph.prototype.addObserver: " + type + " is not a valid event");
     }
 
     this.observers[type][callback] = {
@@ -292,9 +292,9 @@ Graph.prototype.addObserver = function(type, context, callback) {
  *        "AddNodeEvent".
  * @param {Function} callback The callback function.
  */
-Graph.prototype.removeObserver = function(type, callback) {
-    if (Graph.validEvents.indexOf(type) < 0) {
-        throw new Exception("Graph.prototype.removeObserver: " + type + " is not a valid event");
+AbstractGraph.prototype.removeObserver = function(type, callback) {
+    if (AbstractGraph.validEvents.indexOf(type) < 0) {
+        throw new Exception("AbstractGraph.prototype.removeObserver: " + type + " is not a valid event");
     }
 
     delete this.observers[type][callback];
@@ -313,13 +313,13 @@ Graph.prototype.removeObserver = function(type, callback) {
  * @private
  * @param {Event} event The event object to dispatch.
  */
-Graph.prototype.notify = function(event) {
-    if (Graph.validEvents.indexOf(event.constructor) < 0) {
-        throw new Exception("Graph.prototype.notify: " + type + " is not a valid event");
+AbstractGraph.prototype.notify = function(event) {
+    if (AbstractGraph.validEvents.indexOf(event.constructor) < 0) {
+        throw new Exception("AbstractGraph.prototype.notify: " + type + " is not a valid event");
     }
 
     if (event.constructor == ChangeEvent) {
-        throw new Exception("Graph.prototype.notify: You cannot directly dispatch a ChangeEvent.");
+        throw new Exception("AbstractGraph.prototype.notify: You cannot directly dispatch a ChangeEvent.");
     }
 
     var params = this.observers[event.constructor];

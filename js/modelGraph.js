@@ -9,7 +9,7 @@
  */
 function ModelGraph(logEvents) {
 
-    Graph.call(this);
+    AbstractGraph.call(this);
 
     // Dictionary linking host name to array of nodes
     var hostToNodes = {};
@@ -265,6 +265,10 @@ function ModelGraph(logEvents) {
     }
 }
 
+//ModelGraph extends AbstractGraph
+ModelGraph.prototype = Object.create(AbstractGraph.prototype);
+ModelGraph.prototype.constructor = ModelGraph;
+
 /**
  * Returns a copy of the graph. The new graph has nodes connected in exactly the
  * same way as the original. The new graph has exactly the same set of hosts.
@@ -272,7 +276,7 @@ function ModelGraph(logEvents) {
  * 
  * @return {ModelGraph} The copy of the graph
  */
-Graph.prototype.clone = function() {
+ModelGraph.prototype.clone = function() {
     var newGraph = new ModelGraph([]);
     newGraph.hosts = this.getHosts();
 
@@ -320,7 +324,3 @@ Graph.prototype.clone = function() {
 
     return newGraph;
 };
-
-// ModelGraph extends Graph
-ModelGraph.prototype = Object.create(Graph.prototype);
-ModelGraph.prototype.constructor = ModelGraph;
