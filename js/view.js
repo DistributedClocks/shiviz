@@ -344,6 +344,7 @@ View.prototype.draw = function() {
     });
     rect.on("mouseover", function(e) {
         $(".event").text(e.getText());
+        $(".fields").html("");
     });
     rect.on("dblclick", function(e) {
         if (d3.event.shiftKey) {
