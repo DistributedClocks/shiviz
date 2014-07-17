@@ -9,18 +9,18 @@
  * @param {Array<String>} hosts The initial set of hosts
  */
 function BuilderGraph(hosts) {
-    Graph.call(this);
+    AbstractGraph.call(this);
 
     /** @private */
     this.hostSet = {};
 
     for (var i = 0; i < hosts.length; i++) {
-        addHost(hosts[i]);
+        this.addHost(hosts[i]);
     }
 }
 
 // BuilderGraph extends Graph
-BuilderGraph.prototype = Object.create(Graph.prototype);
+BuilderGraph.prototype = Object.create(AbstractGraph.prototype);
 BuilderGraph.prototype.constructor = BuilderGraph;
 
 /**

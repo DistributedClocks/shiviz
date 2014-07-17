@@ -3,11 +3,15 @@
  * A ModelNode by itself can model one or more LogEvents
  */
 function ModelNode(logEvents) {
-    Node.call(this);
+    AbstractNode.call(this);
 
     /** @private */
     this.logEvents = logEvents;
 }
+
+//ModelNode extends AbstractNode
+ModelNode.prototype = Object.create(AbstractNode.prototype);
+ModelNode.prototype.constructor = ModelNode;
 
 /**
  * Gets the log events associated with the node
@@ -19,11 +23,11 @@ function ModelNode(logEvents) {
  * 
  * @return {Array<LogEvent>} an array of associated log events
  */
-Node.prototype.getLogEvents = function() {
+ModelNode.prototype.getLogEvents = function() {
     return this.logEvents.slice();
 };
 
-Node.prototype.getFirstLogEvent = function() {
+ModelNode.prototype.getFirstLogEvent = function() {
     return this.logEvents[0];
 };
 
@@ -32,10 +36,6 @@ Node.prototype.getFirstLogEvent = function() {
  * 
  * @returns {Number} the number of LogEvents
  */
-Node.prototype.getLogEventCount = function() {
+ModelNode.prototype.getLogEventCount = function() {
     return this.logEvents.length;
 };
-
-// ModelNode extends Node
-ModelNode.prototype = Object.create(Node.prototype);
-ModelNode.prototype.constructor = ModelNode;

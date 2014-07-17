@@ -5,10 +5,10 @@
  * named becaused they are the result of the user-facing graph builder.
  */
 function BuilderNode() {
-    Node.apply(this);
+    AbstractNode.apply(this);
 
 }
 
 // BuilderNode extends Node
-BuilderNode.prototype = Object.create(Node.prototype);
+BuilderNode.prototype = Object.create(AbstractNode.prototype);
 BuilderNode.prototype.constructor = BuilderNode;
