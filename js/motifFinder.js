@@ -40,10 +40,9 @@
  * @param {int} allowOtherConnections See above for the purpose of this
  *            parameter
  */
-function RequestResponseFinder(maxLERequester, maxLEResponder, allowOtherConnections) {
+function RequestResponseFinder(maxLERequester, maxLEResponder) {
     this.maxLERequester = maxLERequester;
     this.maxLEResponder = maxLEResponder;
-    this.allowOtherConnections = allowOtherConnections;
 }
 
 RequestResponseFinder.prototype.find = function(graph) {
@@ -51,143 +50,79 @@ RequestResponseFinder.prototype.find = function(graph) {
     var motif = new Motif();
     var seen = {}; // Nodes already part of a motif
     var context = this;
-    
-    for (var i = 0; i < nodes.length; i++) {
-        var snode = nodes[i]; 
-        
-        var traversal = new DFSGraphTraversal();
-        traversal.addNode(snode, "1", null);
-        
-        traversal.setVisitFunction("1", function(gt, node, state, data) {
-            
-            var children = node.getChildren();
-            
-            if (seen[node.getId()] || (!context.allowOtherConnections && (children.length > 1 || node.hasParents()))) {
-                gt.end();
-                return;
-            }
-            
-            var children = node.getChildren();
-            for (var j = 0; j < children.length; j++) {
-                gt.addNode(children[j], "2", 0);
-            }
-            
-        });
-        
-        traversal.setVisitFunction("2", function(gt, node, state, data) {
-            
-            if (node.isTail() || data > context.maxLEResponder || seen[node.getId()] || (!context.allowOtherConnections && (node.getParents().length > 1 || node.getChildren().length > 1))) {
-                return;
-            }
 
-            var children = node.getChildren();
-            for (var j = 0; j < children.length; j++) {
-                gt.addNode(children[j], "3", 0);
-            }
-            
-            gt.addNode(node.getNext(), "2", data + 1);
-            
-        });
+    var traversal = new DFSGraphTraversal(); // define a strategy for traversing the graph
+
+    traversal.setVisitFunction("startNode", function(gt, startNode, state, data) {
         
-        traversal.setVisitFunction("3", function(gt, node, state, data) {
-            
-            if(node.getHost() != snode.getHost()) {
-                return;
-            }
-            
-            var trail = gt.getTrail();
-            for(var j = 0; j < trail.length; j++) {
-                motif.addNode(trail[j]);
-            }
-            gt.end();
-            
-        });
+        var fail = seen[startNode.getId()]; // fail if node is already part of another motif
+        fail |= startNode.getChildren().length > 1; 
+        fail |= startNode.hasParents();
+
+        if (fail) {
+            return;
+        }
+
+        gt.addAllNodes(startNode.getChildren(), "responderChain", 0);
+
+    });
+
+    traversal.setVisitFunction("responderChain", function(gt, node, state, chainLength) {
+
+        var fail = seen[node.getId()]; // fail if node is already part of another motif
+        fail |= node.getParents().length > 1; 
+        fail |= (node.hasParents() && chainLength != 0); // or if node isn't the first node in the responder chain and has parents
+        fail |= node.isTail(); 
+        fail |= node.getChildren().length > 1;
+        fail |= chainLength > context.maxLEResponder;
+
+        if(fail) {
+            return;
+        }
+
+        gt.addAllNodes(node.getChildren(), "endNode", null);
+        gt.addNode(node.getNext(), "responderChain", chainLength + 1);
+
+    });
+
+    traversal.setVisitFunction("endNode", function(gt, node, state, data) {
         
+        var trail = gt.getTrail();
+        var startNode = trail[trail.length - 1];
+        
+        var fail = seen[node.getId()]; // fail if node is already part of another motif
+        fail |= node.hasChildren();
+        fail |= node.getParents().length > 1;
+        fail |= node.getHost() != startNode.getHost(); // start and end nodes must have same host
+
+        if(fail) {
+            return;
+        }
+
+        var dist = 0;
+        while(node != startNode) {
+            node = node.getPrev();
+            dist++;
+        }
+        
+        if(dist > context.maxLERequester) {
+            return;
+        }
+
+        motif.addTrail(trail);
+
+        for ( var i = 0; i < trail.length; i++) {
+            seen[trail[i].getId()] = true;
+        }
+
+        gt.end();
+
+    });
+
+    for ( var i = 0; i < nodes.length; i++) {
+        traversal.reset();
+        traversal.addNode(nodes[i], "startNode", null);
         traversal.run();
-        
-    }
-
-    return motif;
-};
-
-RequestResponseFinder.prototype.find2 = function(graph) {
-
-    var nodes = graph.getNodes();
-    var motif = new Motif();
-    var seen = {}; // Nodes already part of a motif
-
-    for (var i = 0; i < nodes.length; i++) {
-        var node = nodes[i]; // Node on sender's host that is part of the
-        // request
-        var host = node.getHost();
-        var children = node.getChildren();
-
-        // Disqualify current node if it's been seen or it has extra disallowed
-        // connections
-        if (seen[node.getId()] || (!this.allowOtherConnections && (children.length > 1 || node.hasParents()))) {
-            continue;
-        }
-
-        out: for (var j = 0; j < children.length; j++) {
-            var curr = children[j]; // Nodes on receiver's host
-
-            // Disqualify current node if it's been seen or it has extra
-            // disallowed connections
-            if (seen[node.getId()] || (!this.allowOtherConnections && (curr.getParents().length > 1 || curr.getChildren().length > 1))) {
-                continue;
-            }
-
-            var trail = []; // Nodes encountered from start to end node
-
-            // Keep checking for a node that sends a message back to original
-            // host while dist <= maxLEResponder
-            for (var dist = 0; dist <= this.maxLEResponder && !curr.isTail(); dist++) {
-                trail.push(curr);
-
-                // Disqualify current node if it's been seen or it has extra
-                // disallowed connections
-                if (seen[node.getId()] || (!this.allowOtherConnections && curr.getFamily().length > 2 && dist > 0)) {
-                    break;
-                }
-
-                var child2 = curr.getChildByHost(host); // Node on sender's host
-                // that is part of the
-                // response
-                var curr2 = child2;
-
-                // Check that no more than maxLERequester nodes are between node
-                // and child2
-                if (curr2 != null) {
-
-                    var count = 0;
-                    while (curr2 != node) {
-                        count += curr2.getLogEventCount();
-                        curr2 = curr2.getPrev();
-                    }
-
-                    // On success, add everything to motif
-                    if (count <= this.maxLERequester) {
-                        motif.addNode(child2);
-                        seen[child2.getId()] = true;
-                        motif.addNode(node);
-                        seen[node.getId()] = true;
-
-                        for (var a = 0; a < trail.length; a++) {
-                            motif.addNode(trail[a]);
-                            seen[trail[a].getId()] = true;
-                        }
-
-                        motif.addEdge(node, trail[0]);
-                        for (var a = 1; a < trail.length; a++) {
-                            motif.addEdge(trail[a - 1], trail[a]);
-                        }
-                        motif.addEdge(trail[trail.length - 1], child2);
-                        break out;
-                    }
-                }
-                curr = curr.getNext();
-            }
-        }
     }
 
     return motif;
@@ -256,7 +191,7 @@ BroadcastGatherFinder.prototype.find = function(graph) {
     var finalMotif = new Motif();
     var disjoints = findDisjoint();
 
-    for (var d = 0; d < disjoints.length; d++) {
+    for ( var d = 0; d < disjoints.length; d++) {
         var disjoint = disjoints[d];
 
         if (disjoint.length <= BroadcastGatherFinder.GREEDY_THRESHOLD) {
@@ -276,7 +211,7 @@ BroadcastGatherFinder.prototype.find = function(graph) {
         var ret = [];
 
         var hosts = graph.getHosts();
-        for (var h = 0; h < hosts.length; h++) {
+        for ( var h = 0; h < hosts.length; h++) {
             var host = hosts[h];
             var group = []; // The current disjoint group
             var inBetween = 0;
@@ -325,7 +260,7 @@ BroadcastGatherFinder.prototype.find = function(graph) {
 
         var score = [];
 
-        for (var i = 0; i < group.length; i++) {
+        for ( var i = 0; i < group.length; i++) {
 
             var count = 0; // current broadcast/gather count
             var inBetween = 0; // Nodes since last valid broadcasting/gathering
@@ -333,14 +268,14 @@ BroadcastGatherFinder.prototype.find = function(graph) {
             var seenHosts = {};
             score[i] = [];
 
-            for (var j = i; j < group.length; j++) {
+            for ( var j = i; j < group.length; j++) {
                 var curr = group[j];
 
                 // Check if curr has a valid link (a link to a host that hasn't
                 // been seen yet)
                 var hasValidLink = false;
                 var links = context.broadcast ? curr.getChildren() : curr.getParents();
-                for (var k = 0; k < links.length; k++) {
+                for ( var k = 0; k < links.length; k++) {
                     if (!seenHosts[links[k].getHost()]) {
                         hasValidLink = true;
                         break;
@@ -359,7 +294,7 @@ BroadcastGatherFinder.prototype.find = function(graph) {
                 }
 
                 if (hasGoodLink) {
-                    for (var k = 0; k < links.length; k++) {
+                    for ( var k = 0; k < links.length; k++) {
                         var childHost = links[k].getHost();
                         if (!seenHosts[childHost]) {
                             count++;
@@ -384,9 +319,9 @@ BroadcastGatherFinder.prototype.find = function(graph) {
 
         // Find max score using O(n^2) dynamic programming
         // dp recurrence: best[i] = max(best[j-1] + score[j][i]) for all 0<=j<=i
-        for (var i = 0; i < nodes.length; i++) {
+        for ( var i = 0; i < nodes.length; i++) {
             var max = -1;
-            for (var j = 0; j <= i; j++) {
+            for ( var j = 0; j <= i; j++) {
                 var newScore = 0;
                 var ownScore = score[j][i];
                 if (!!ownScore && ownScore >= context.minBroadcastGather) {
@@ -422,7 +357,7 @@ BroadcastGatherFinder.prototype.find = function(graph) {
 
     // Adds the groups to the motif
     function addToMotif(groups, motif) {
-        for (var j = 0; j < groups.length; j++) {
+        for ( var j = 0; j < groups.length; j++) {
             var curr = groups[j][0];
             var groupEnd = groups[j][1].getNext();
             var prev = null;
@@ -435,7 +370,7 @@ BroadcastGatherFinder.prototype.find = function(graph) {
                 }
 
                 var links = context.broadcast ? curr.getChildren() : curr.getParents();
-                for (var i = 0; i < links.length; i++) {
+                for ( var i = 0; i < links.length; i++) {
                     motif.addEdge(curr, links[i]);
                     motif.addNode(links[i]);
                     var linkHost = links[i].getHost();
@@ -461,13 +396,13 @@ BroadcastGatherFinder.prototype.find = function(graph) {
         var seenHosts = {};
         group = group.concat([ new Node([]) ]);
 
-        for (var g = 0; g < group.length; g++) {
+        for ( var g = 0; g < group.length; g++) {
             var curr = group[g];
             queued.push(curr);
 
             var hasValidLink = false;
             var links = context.broadcast ? curr.getChildren() : curr.getParents();
-            for (var i = 0; i < links.length; i++) {
+            for ( var i = 0; i < links.length; i++) {
                 if (!seenHosts[links[i].getHost()]) {
                     hasValidLink = true;
                     break;
@@ -479,7 +414,7 @@ BroadcastGatherFinder.prototype.find = function(graph) {
 
             if (inBetween > context.maxInBetween || (g == group.length - 1) || hasBadLink || (hasGoodLink && !hasValidLink)) {
                 if (bcCount >= context.minBroadcastGather) {
-                    for (var i = 1; i < nodes.length; i++) {
+                    for ( var i = 1; i < nodes.length; i++) {
                         currMotif.addEdge(nodes[i - 1], nodes[i]);
                     }
                     motif.merge(currMotif);
@@ -499,7 +434,7 @@ BroadcastGatherFinder.prototype.find = function(graph) {
                 }
 
                 currMotif.addAllNodes(links);
-                for (var i = 0; i < links.length; i++) {
+                for ( var i = 0; i < links.length; i++) {
                     currMotif.addEdge(curr, links[i]);
                     var linkHost = links[i].getHost();
                     if (!seenHosts[linkHost]) {
