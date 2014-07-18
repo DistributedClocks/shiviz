@@ -68,6 +68,9 @@ input, textarea {
     border: 1px solid #aaa;
     padding: .4em;
 }
+input.mono {
+    font-family: monospace;
+}
 
 select {
     outline: none;

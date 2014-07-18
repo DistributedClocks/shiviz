@@ -1,6 +1,4 @@
-// an alternative to the above commented out code. This resolves issue 18
-// and prevents the innocuos keys such as 'ctrl' from resetting the view
-$("#input").on('input propertychange', function(e) {
+$(".input input, .input textarea").on('input propertychange', function(e) {
     resetView();
 });
 

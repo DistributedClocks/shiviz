@@ -193,15 +193,17 @@ View.prototype.draw = function() {
         $(".event").text(e.getText());
 
         $(".fields").children().remove();
-        var fields = e.getNode().getLogEvents()[0].getFields();
-        var fieldText = "";
-        for (var i in fields) {
-            var $f = $("<tr>", { "class": "field" });
-            var $t = $("<th>", { "class": "title" }).text(i + ":");
-            var $v = $("<td>", { "class": "value" }).text(fields[i]);
+        if (!e.isCollapsed()) {
+            var fields = e.getNode().getLogEvents()[0].getFields();
+            var fieldText = "";
+            for (var i in fields) {
+                var $f = $("<tr>", { "class": "field" });
+                var $t = $("<th>", { "class": "title" }).text(i + ":");
+                var $v = $("<td>", { "class": "value" }).text(fields[i]);
 
-            $f.append($t).append($v);
-            $(".fields").append($f);
+                $f.append($t).append($v);
+                $(".fields").append($f);
+            }
         }
 
         $(".focus").css({

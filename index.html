@@ -163,10 +163,10 @@
                     </header>
                     <h3>Options</h3>
                     <div class="option">
-                        <label>Multiple execution delimiter: <input type="text" id="delimiter"></label>
+                        <label>Multiple execution delimiter: <input class="mono" type="text" id="delimiter"></label>
                     </div>
                     <div class="option">
-                        <label>Log parser RegExp: <input type="text" id="parser"></label>
+                        <label>Log parser RegExp: <input class="mono" type="text" id="parser"></label>
                     </div>
                     <div class="option">
                         Sort processes in
@@ -186,7 +186,7 @@
                         <a class="log-link" href="" data-log="log/facebook.log" data-parser="(?<ip>(\d{1,3}\.){3}\d{1,3}) (?<date>(\d{1,2}/){2}\d{4} (\d{2}:){2}\d{2} (AM|PM)) (?<action>(INFO|GET|POST)) (?<event>.*)\n(?<host>\w*) (?<clock>.*)">Facebook data-center log</a>
                         <a class="log-link" href="" data-log="log/voldemort.log" data-parser="\[(?<date>\d{4}-\d{2}-\d{2} (\d{2}:){2}\d{2},\d{3}) (?<path>\S*)\] (?<priority>(INFO|WARN)) (?<event>.*)\n(?<host>\S*) (?<clock>{.*})">Voldemort log</a>
                         <a class="log-link" href="" data-log="log/simpledb.log">SimpleDB log</a>
-                        <a class="log-link" href="" data-log="log/facebook-multiple.log" data-delimiter="^=== (?<trace>.*) ===$" data-parser="(?<ip>(\d{1,3}\.){3}\d{1,3}) (?<date>(\d{1,2}/){2}\d{4} (\d{2}:){2}\d{2} (AM|PM)) (?<action>(I|POSTNFO|GET)) (?<event>.*)\n(?<host>\w*) (?<clock>.*)">Facebook log with multiple executions</a>
+                        <a class="log-link" href="" data-log="log/facebook-multiple.log" data-delimiter="^=== (?<trace>.*) ===$" data-parser="(?<ip>(\d{1,3}\.){3}\d{1,3}) (?<date>(\d{1,2}/){2}\d{4} (\d{2}:){2}\d{2} (AM|PM)) (?<action>(INFO|GET|POST)) (?<event>.*)\n(?<host>\w*) (?<clock>.*)">Facebook log with multiple executions</a>
                     </div>
                     <textarea id="input" spellcheck="false"></textarea>
                 </td>
