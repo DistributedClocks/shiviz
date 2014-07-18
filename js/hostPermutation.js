@@ -1,4 +1,6 @@
 /**
+ * @clasdesc
+ * 
  * A HostPermutation is responsible for determining the order in which hosts
  * should be displayed in the visualization of the graph. This class is also
  * responsible for determining the hosts' visualization's color. This is because
@@ -13,7 +15,6 @@
  * class that extends HostPermutation should be written and the update method
  * should be overriden.
  * 
- * @class
  * @constructor
  * @param {Boolean} reverse If true, the ordering of hosts is reversed
  */
@@ -128,9 +129,13 @@ LengthPermutation.prototype = Object.create(HostPermutation.prototype);
 LengthPermutation.prototype.constructor = LengthPermutation;
 
 /**
+ * @classdesc
+ * 
  * LengthPermutation arranges hosts based on the number of LogEvents the host
  * contains
  * 
+ * @constructor
+ * @param {Boolean} reverse
  */
 function LengthPermutation(reverse) {
     HostPermutation.call(this, reverse);
@@ -185,8 +190,12 @@ LogOrderPermutation.prototype = Object.create(HostPermutation.prototype);
 LogOrderPermutation.prototype.constructor = LogOrderPermutation;
 
 /**
+ * @classdesc
+ * 
  * LogOrderPermutation orders hosts based on the order they appear in logs
  * 
+ * @constructor
+ * @param {Boolean} reverse
  */
 function LogOrderPermutation(reverse) {
     HostPermutation.call(this, reverse);

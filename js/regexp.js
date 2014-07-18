@@ -1,6 +1,9 @@
 /**
+ * @clasdesc
+ * 
  * A RegExp extension that allows named capture groups in the syntax /(?<name>regexp)/
  * 
+ * @constructor
  * @param {String} regexp a string describing a regular expression. All
  *        backslashes must be escaped, e.g. \\d
  * @param {String} flags a string of regexp flags, e.g. "mi" for multiline

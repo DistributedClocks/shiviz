@@ -5,7 +5,7 @@
  */
 
 /**
- * @class
+ * @classdesc
  * 
  * This class is responsible for finding Request-Response motifs.
  * 
@@ -35,6 +35,7 @@
  * The motif itself comprises all nodes in S plus all edges that connect nodes
  * adjacent in the sequence S.
  * 
+ * @constructor
  * @param {int} maxLERequester See above for the purpose of this parameter
  * @param {int} maxLEResponder See above for the purpose of this parameter
  * @param {int} allowOtherConnections See above for the purpose of this

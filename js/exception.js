@@ -1,4 +1,6 @@
 /**
+ * @classdesc
+ * 
  * Exceptions represent unexpected errors or circumstances that may be caught.
  * In Shiviz, you should ONLY ever throw Exception objects (as opposed to say,
  * raw strings). Exceptions contain a message that can be retrieved in HTML form
@@ -6,7 +8,6 @@
  * non-user-friendly. A user-friendly message is one that would make sense to a
  * reasonable end-user who has knowledge of Shiviz's internal workings.
  * 
- * @class
  * @constructor
  * @param {String} message The message
  * @param {boolean} isUserFriendly true if this message is user-friendly

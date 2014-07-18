@@ -12,6 +12,8 @@
  */
 
 /**
+ * @classdesc
+ * 
  * This transformation generates a transformed model by removing this
  * Transformation's hostToHide from the provided model. It removes all nodes for
  * the hostToHide and any edges touching a node for the hostToHide and adds
@@ -126,7 +128,7 @@ HideHostTransformation.prototype.transform = function(visualGraph) {
 };
 
 /**
- * @class
+ * @classdesc
  * 
  * CollapseSequentialNodeTransformation groups local consecutive events that
  * have no remote dependencies. The collapsed nodes will have an increased
@@ -139,6 +141,7 @@ HideHostTransformation.prototype.transform = function(visualGraph) {
  * events that have no remote dependencies. More formally, a node y is in x's
  * group if y == x or y has no family and y's prev or next node is in x's group.
  * 
+ * @constructor
  * @param {Number} threshold Nodes are collapsed if the number of nodes in the
  *            group is greater than or equal to the threshold. The threshold
  *            must be greater than or equal to 2.
@@ -330,7 +333,7 @@ CollapseSequentialNodesTransformation.prototype.transform = function(visualGraph
 };
 
 /**
- * @class
+ * @classdesc
  * 
  * HighlightHostTransformation "highlights" a set of hosts by removing all edges
  * not incident on the set of highlighted nodes. The highlighted hosts are drawn
@@ -340,6 +343,7 @@ CollapseSequentialNodesTransformation.prototype.transform = function(visualGraph
  * does nothing. In the case that a specified host does not exist, it is
  * ignored.
  * 
+ * @constructor
  * @param {Array<String>} hostsToHighlight The array of hosts to highlight.
  */
 function HighlightHostTransformation(hostsToHighlight) {
@@ -489,10 +493,11 @@ HighlightHostTransformation.prototype.transform = function(visualGraph) {
 };
 
 /**
- * @class
+ * @classdesc
  * 
  * This transformation visually highlights a motif.
  * 
+ * @constructor
  * @param {MotifFinder} finder a MotifFinder that specifies which motif to
  *            highlight
  * @param {boolean} ignoreEdges If true, edges will not be visually highlighted

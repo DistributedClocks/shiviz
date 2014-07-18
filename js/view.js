@@ -1,5 +1,5 @@
 /**
- * @class
+ * @classdesc
  * 
  * A View for a ShiViz graph. A View is responsible for drawing a single
  * VisualGraph. It also collects transformations that generate new iterations of

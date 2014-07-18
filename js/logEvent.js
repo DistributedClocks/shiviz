@@ -1,10 +1,10 @@
 /**
+ * @classdesc
+ * 
  * A LogEvent represents a single event from the raw log and contains the text
  * of the log, a reference to the vector timestamp, and other contextual
  * information.
- */
-
-/**
+ * 
  * @constructor
  * @param {String} text the text of the log (description)
  * @param {String} host the host the event belongs to

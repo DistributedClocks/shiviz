@@ -1,9 +1,10 @@
 /**
- * @class
+ * @classdesc
  * 
  * SpaceTimeLayout arranges a VisualGraph as a space-time diagram with hosts
  * laid out horizontally and time increasing with y coordinate.
  * 
+ * @constructor
  * @param {Number} width The maximum width of the resulting layout
  * @param {Number} delta The vertical distance between nodes
  */

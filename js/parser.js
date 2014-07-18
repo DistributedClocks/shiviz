@@ -1,4 +1,6 @@
 /**
+ * @classdesc
+ * 
  * LogParser can be used to transform raw log text to LogEvents The LogParser
  * class per se is only responsible for dividing the raw text into different
  * executions according to the supplied delimiter. It then creates one
@@ -12,7 +14,6 @@
  * label can later be used to identify an execution. If an execution's text is
  * not preceeded by a delimiter, it is given the empty string as its label.
  * 
- * @class
  * @constructor
  * @param {String} rawString the raw log text
  * @param {NamedRegExp} delimiter a regex that specifies the delimiter. Anything
@@ -87,9 +88,10 @@ LogParser.prototype.getExecutionParser = function(label) {
 };
 
 /**
+ * @classdesc
+ * 
  * ExecutionParser parses the raw text for one execution.
  * 
- * @class
  * @constructor
  * @private
  * @param {String} rawString The raw string of the execution's log
