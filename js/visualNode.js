@@ -44,9 +44,6 @@ function VisualNode(node) {
     this.hasHiddenChildInner = false;
 
     /** @private */
-    this._isCollapsed = node.getLogEvents().length > 1;
-
-    /** @private */
     this._isHighlighted = false;
 }
 
@@ -289,8 +286,8 @@ VisualNode.prototype.setHasHiddenChild = function(val) {
  * @returns {boolean} True if this is a collapsed node.
  */
 VisualNode.prototype.isCollapsed = function() {
-    return this._isCollapsed;
-}
+    return this.node.getLogEvents().length > 1;
+};
 
 /**
  * Determines if this VisualNode is highlighted.
@@ -298,8 +295,8 @@ VisualNode.prototype.isCollapsed = function() {
  * @returns {boolean} True if this node is highlighted
  */
 VisualNode.prototype.isHighlighted = function() {
-    return this._isHighlighted
-}
+    return this._isHighlighted;
+};
 
 /**
  * Sets if this VisualNode is highlighted.
@@ -308,4 +305,4 @@ VisualNode.prototype.isHighlighted = function() {
  */
 VisualNode.prototype.setHighlight = function(val) {
     this._isHighlighted = val;
-}
+};

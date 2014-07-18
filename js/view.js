@@ -37,7 +37,7 @@ function View(model, global, hostPermutation, label) {
     this.addTransformation(this.collapseSequentialNodesTransformation);
     
     // ---------- Temporary ----------
-    var finder = new RequestResponseFinder(1, 1, false);
+    var finder = new RequestResponseFinder(1, 1);
     var hmt = new HighlightMotifTransformation(finder, false);
     this.addTransformation(hmt);
 }

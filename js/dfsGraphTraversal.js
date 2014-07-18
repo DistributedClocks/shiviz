@@ -1,43 +1,94 @@
+/**
+ * A DFSGraphTraversal specifies a strategy for traversing an AbstractGraph in
+ * depth-first-search order.
+ * 
+ * @constructor
+ * @class
+ */
+function DFSGraphTraversal() {
+    GraphTraversal.call(this);
+
+    /** @private */
+    this.stack = [];
+
+    /** @private */
+    this.parent = {};
+
+    this.reset();
+}
+
+// DFSGraphTraversal extends GraphTraversal
 DFSGraphTraversal.prototype = Object.create(GraphTraversal.prototype);
 DFSGraphTraversal.prototype.constructor = DFSGraphTraversal;
 
-function DFSGraphTraversal() {
-    GraphTraversal.call(this);
-    
-    this.stack = [];
-}
+DFSGraphTraversal.prototype.reset = function() {
+    GraphTraversal.prototype.reset.call(this);
 
+    this.stack = [];
+};
+
+/**
+ * Adds a node to the stack. When the node is visited, the current state and
+ * data object will be set to the ones provided
+ * 
+ * @param {AbstractNode} node
+ * @param {String} state
+ * @param {Object} data
+ */
 DFSGraphTraversal.prototype.addNode = function(node, state, data) {
     this.stack.push({
         node: node,
         state: state,
         data: data
     });
-    
+
     this.parent[node.getId()] = this.currentNode;
+};
+
+/**
+ * Adds all nodes to the stack.
+ * 
+ * @param {Array<AbstractNode>} nodes
+ * @param {String} state
+ * @param {Object} data
+ */
+DFSGraphTraversal.prototype.addAllNodes = function(nodes, state, data) {
+    for ( var i = 0; i < nodes.length; i++) {
+        this.addNode(nodes[i], state, data);
+    }
 };
 
 DFSGraphTraversal.prototype.step = function() {
 
-    if(this.stack.length == 0 || this.hasEnded) {
+    if (this.stack.length == 0 || this.hasEnded) {
         return false;
     }
-    
+
     var curr = this.stack.pop();
-    
+
     this.currentNode = curr.node;
     this.state = curr.state;
     this.currentData = curr.data;
-    
-    if(this.state == null || !this.visitFunctions[this.state]) {
-        if(this.defaultVisitFunction == null) {
-            throw new Exception(); //TODO: fill in exception
-        }
-        this.defaultVisitFunction(this, this.currentNode, this.state, this.currentData);
+
+    return GraphTraversal.prototype.step.call(this);
+};
+
+/**
+ * Gets the "trail" of nodes, starting at the one provided. The trail is list of
+ * nodes that were visited in order to get the the parameter.
+ * 
+ * @param {AbstractNode} node
+ * @returns {Array}
+ */
+GraphTraversal.prototype.getTrail = function(node) {
+    if (!node) {
+        node = this.currentNode;
     }
-    else {
-        this.visitFunctions[this.state](this, this.currentNode, this.state, this.currentData);
+
+    var trail = [];
+    while (node != null) {
+        trail.push(node);
+        node = this.parent[node.getId()];
     }
-    
-    return true;
+    return trail;
 };
