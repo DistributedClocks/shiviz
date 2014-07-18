@@ -24,7 +24,7 @@
  * <li>n_2 is the child of n_1</li>
  * <li>n_k is the child of n_(k-1)</li>
  * <li>Apart from the two family relations above, no nodes in S may have any
- * family if the parameter allowOtherConnections is true</li>
+ * family</li>
  * <li>nodes n_2 to n_(k-1) inclusive are consecutive</li>
  * <li>The number of nodes between n_2 and n_(k-1) is less than or equal to the
  * parameter maxLEResponder</li>
@@ -37,8 +37,6 @@
  * 
  * @param {int} maxLERequester See above for the purpose of this parameter
  * @param {int} maxLEResponder See above for the purpose of this parameter
- * @param {int} allowOtherConnections See above for the purpose of this
- *            parameter
  */
 function RequestResponseFinder(maxLERequester, maxLEResponder) {
     this.maxLERequester = maxLERequester;
