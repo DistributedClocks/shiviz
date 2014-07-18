@@ -10,15 +10,24 @@ function NamedRegExp(regexp, flags) {
     var match, names = [];
     flags = flags || "";
 
-    this.no = new RegExp(regexp.replace(/\(\?<\w+?>(.+?)\)/g, "\(\?\:$1\)"), "g" + flags);
+    try {
+        this.no = new RegExp(regexp.replace(/\(\?<\w+?>(.+?)\)/g, "\(\?\:$1\)"), "g" + flags);
 
-    regexp = regexp.replace(/\((?!\?(=|!|<|:))/g, "(?:");
-    while (match = regexp.match(/\(\?<(\w+?)>.+\)/)) {
-        names.push(match[1]);
-        regexp = regexp.replace(/\(\?<\w+?>(.+)\)/, '\($1\)');
+        regexp = regexp.replace(/\((?!\?(=|!|<|:))/g, "(?:");
+        while (match = regexp.match(/\(\?<(\w+?)>.+\)/)) {
+            names.push(match[1]);
+            regexp = regexp.replace(/\(\?<\w+?>(.+)\)/, '\($1\)');
+        }
+
+        this.reg = new RegExp(regexp, "g" + flags);
+    } catch (e) {
+        var exception = new Exception("The regular expression you entered was invalid.\n", true);
+        exception.append("The error given by the browser is: \n");
+        exception.append(e.message, "code");
+        throw exception;
     }
 
-    this.reg = new RegExp(regexp, "g" + flags);
+    /** @private */
     this.names = names;
 }
 
@@ -58,3 +67,12 @@ NamedRegExp.prototype.exec = function(string) {
 NamedRegExp.prototype.test = function(string) {
     return this.no.test(string);
 };
+
+/**
+ * Gets array of capture group labels
+ * 
+ * @return {[String]} Capture group labels
+ */
+NamedRegExp.prototype.getNames = function() {
+    return this.names;
+}

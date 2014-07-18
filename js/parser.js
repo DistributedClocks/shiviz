@@ -40,11 +40,18 @@ function LogParser(rawString, delimiter, regexp) {
     /** @private */
     this.executions = {};
 
+    var names = this.regexp.getNames();
+    if (names.indexOf("clock") < 0 || names.indexOf("host") < 0 || names.indexOf("event") < 0) {
+        var e = new Exception("The parser RegExp you entered does not have the necessary named capture groups.\n", true)
+        e.append("Please see the documentation for details.");
+        throw e;
+    }
+
     if (this.delimiter != null) {
         var currExecs = this.rawString.split(this.delimiter.no);
         var currLabels = [ "" ];
 
-        if (this.delimiter.names.indexOf("trace") >= 0) {
+        if (this.delimiter.getNames().indexOf("trace") >= 0) {
             var match;
             while (match = this.delimiter.exec(this.rawString)) {
                 currLabels.push(match.trace);
@@ -122,7 +129,7 @@ function ExecutionParser(rawString, label, regexp) {
         var event = match.event;
 
         var fields = {};
-        regexp.names.forEach(function(name, i) {
+        regexp.getNames().forEach(function(name, i) {
             if (name == "clock" || name == "host" || name == "event")
                 return;
 
@@ -133,6 +140,9 @@ function ExecutionParser(rawString, label, regexp) {
         this.timestamps.push(timestamp);
         this.logEvents.push(new LogEvent(event, timestamp, ln, fields));
     }
+
+    if (this.logEvents.length == 0)
+        throw new Exception("The parser RegExp you entered does not capture any events for the execution " + label, true);
 
     function parseTimestamp(clockString, hostString) {
         try {
