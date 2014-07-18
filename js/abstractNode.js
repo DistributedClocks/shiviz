@@ -1,10 +1,12 @@
 /**
- * A Node represents an event in the model and contains references to the
+ * @classdesc
+ * 
+ * An AbstractNode represents an event in the model and contains references to the
  * corresponding log event, its parents and children, as well as the previous
- * and next adjacent nodes. A Graph is made up of Nodes.
- * 
+ * and next adjacent nodes. An {@link AbstractGraph} is made up of AbstractNodes.
+ * <br/><br/>
  * Definitions of specific terms:
- * 
+ * <br/>
  * parent: x is a parent of y if and only if:
  * <ul>
  * <li>x happens before y and</li>
@@ -71,7 +73,7 @@
  * |  |  |
  * </pre>
  * 
- * The node class makes the following guarantees:
+ * The AbstractNode class makes the following guarantees:
  * <ul>
  * <li>node.getID() is globally unique</li>
  * <li>if node.getNext() != false, then node == node.getNext().getPrev()</li>
@@ -81,9 +83,8 @@
  * <li>All the parents of a node belong to different hosts</li>
  * <li>Head and tail nodes have no family</li>
  * </ul>
- */
-
-/**
+ * 
+ * @abstract
  * @constructor
  * @param {Array<LogEvent>} logEvent The LogEvents that this node represents
  */
