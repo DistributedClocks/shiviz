@@ -29,11 +29,11 @@ function VisualGraph(graph, layout, hostPermutation) {
     /** @private */
     this.nodeIdToVisualNode = {};
 
-    /** @private A mapping of edge IDs to VisualEdges */
-    this.links = {};
+    /** @private */
+    this.links = {}; // A mapping of edge IDs to VisualEdges 
 
-    /** @private A mapping of y coordinates to VisualNodes **/
-    this.lines = {};
+    /** @private **/
+    this.lines = {}; // A mapping of y coordinates to VisualNodes
 
     graph.addObserver(AddNodeEvent, this, function(event, g) {
         g.addVisualNodeByNode(event.getNewNode());

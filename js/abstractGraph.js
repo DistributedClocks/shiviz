@@ -28,7 +28,7 @@
 
 /**
  * @constructor
- * @param {[LogEvent]} logEvents an array of log events extracted from the raw
+ * @param {Array<LogEvent>} logEvents an array of log events extracted from the raw
  *        log input
  */
 function AbstractGraph() {
@@ -92,7 +92,7 @@ AbstractGraph.prototype.getTail = function(host) {
 /**
  * Gets the hosts as an array
  * 
- * @return {[String]} a copy of the array of host names
+ * @return {Array<string>} a copy of the array of host names
  */
 AbstractGraph.prototype.getHosts = function() {
     return this.hosts.slice(0);
@@ -101,7 +101,7 @@ AbstractGraph.prototype.getHosts = function() {
 /**
  * Checks if this graph has the specified host
  * 
- * @param {String} host The host to check for
+ * @param {string} host The host to check for
  * @returns {Boolean} True if the host exists
  */
 AbstractGraph.prototype.hasHost = function(host) {
@@ -149,7 +149,7 @@ AbstractGraph.prototype.removeHost = function(host) {
  * the underlying private data structure, so this function takes linear rather
  * than constant time on the number of nodes.
  * 
- * @return {[Node]} an array of all non-dummy nodes
+ * @return {Array<Node>} an array of all non-dummy nodes
  */
 AbstractGraph.prototype.getNodes = function() {
     var nodes = [];
@@ -172,7 +172,7 @@ AbstractGraph.prototype.getNodes = function() {
  * the underlying private data structure, so this function takes linear rather
  * than constant time on the number of nodes.
  * 
- * @return {[Node]} an array of all dummy nodes
+ * @return {Array<Node>} an array of all dummy nodes
  */
 AbstractGraph.prototype.getDummyNodes = function() {
     var nodes = [];
@@ -194,7 +194,7 @@ AbstractGraph.prototype.getDummyNodes = function() {
  * the underlying private data structure, so this function takes linear rather
  * than constant time on the number of nodes.
  * 
- * @return {[Node]} an array of all nodes in the model
+ * @return {Array<Node>} an array of all nodes in the model
  */
 AbstractGraph.prototype.getAllNodes = function() {
     return this.getNodes().concat(this.getDummyNodes());
