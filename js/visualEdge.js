@@ -1,9 +1,10 @@
 /**
- * @class
+ * @classdesc
  * 
  * A VisualEdge is a visualization of a Graph edge; it describes how the edge is
  * to be drawn. Note that actual drawing logic is not part of this class
  * 
+ * @constructor
  * @param {VisualNode} sourceVisualNode One of the Nodes that is connected by
  *        this edge. sourceVisualNode.getNode() must either be the parent or the
  *        prev node of targetVisualNode.getNode()

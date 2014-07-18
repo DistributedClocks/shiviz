@@ -1,6 +1,12 @@
 /**
+ * @classdesc
+ * 
  * ModelNodes are part of ModelGraphs. Together, they model a set of LogEvents.
  * A ModelNode by itself can model one or more LogEvents
+ * 
+ * @constructor
+ * @param {Array<LogEvent>} logEvents The array of logEvents from which a ModelGraph
+ * should be constructed
  */
 function ModelNode(logEvents) {
     AbstractNode.call(this);

@@ -1,5 +1,5 @@
 /**
- * @class
+ * @classdesc
  * 
  * A VisualGraph represents the visualization of a graph; it describes how the
  * graph is to be drawn. Note that the actual drawing logic is not part of this

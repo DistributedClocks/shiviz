@@ -1,11 +1,12 @@
 /**
+ * @classdesc
+ * 
  * A BuilderGraph represents a user-defined motif. It is not the result of a
  * search for a motif, but rather it defines the motif structure that should be
  * searched for during a motif search. BuilderGraphs are so named because they
  * are the product of the user-facing graph builder.
  * 
  * @constructor
- * @class
  * @param {Array<String>} hosts The initial set of hosts
  */
 function BuilderGraph(hosts) {

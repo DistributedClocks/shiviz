@@ -1,8 +1,4 @@
 /**
- * A Vector Timestamp
- */
-
-/**
  * @constructor
  * @param {{String: Number}} clock The vector clock with host names
  *        corresponding to timestamps for host

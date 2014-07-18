@@ -348,11 +348,14 @@ AbstractGraph.prototype.notify = function(event) {
  */
 
 /**
- * {@link AddNodeEvent}s indicate that a new node has been added to the graph. This also
+ * @classdesc
+ * 
+ * AddNodeEvents indicate that a new node has been added to the graph. This also
  * implies that prev/next edges of the prev and next nodes of the new node have
  * been change accordingly to accomodate the new node.
  * 
  * @constructor
+ * @protected
  * @extends Event
  * @param {AbstractNode} newNode The new node that has been added
  * @param {AbstractNode} prev newNode's previous node
@@ -399,11 +402,14 @@ AddNodeEvent.prototype.getNext = function() {
 };
 
 /**
+ * @classdesc
+ * 
  * RemoveNodeEvent indicates that a node has been removed from the graph. This
  * also implies that prev/next edges of the prev and next nodes of the removed
  * node have been change accordingly
  * 
  * @constructor
+ * @protected
  * @extends Event
  * @param {AbstractNode} removedNode The new node that has been removed
  * @param {AbstractNode} prev newNode's previous node
@@ -449,10 +455,13 @@ RemoveNodeEvent.prototype.getNext = function() {
 };
 
 /**
+ * @classdesc
+ * 
  * AddFamilyEvent indicates that a new family relationship has been created
  * between two nodes
  * 
  * @constructor
+ * @protected
  * @extends Event
  * @param {AbstractNode} parent The parent node in the newly created family relationship
  *        (i.e the node that gained a new child)
@@ -489,10 +498,13 @@ AddFamilyEvent.prototype.getChild = function() {
 };
 
 /**
+ * @classdesc
+ * 
  * RemoveFamilyEvent indicates that a family relationship has been removed
  * between two nodes
  * 
  * @constructor
+ * @protected
  * @extends Event
  * @param {AbstractNode} parent The parent node in the removed family relationship (i.e
  *        the node that lost a new child)
@@ -529,12 +541,15 @@ RemoveFamilyEvent.prototype.getChild = function() {
 };
 
 /**
+ * @classdesc
+ * 
  * RemoveHostEvent indicates that a host has been removed from the graph.
  * Removing a host necessarily implies the removal of all of the host's nodes,
  * but the node removal is treated as separate events and will be dispatched
  * separately.
  * 
  * @constructor
+ * @protected
  * @extends Event
  * @param {String} host The host that was removed.
  * @param {AbstractNode} head The head node of the host that was removed
@@ -567,11 +582,14 @@ RemoveHostEvent.prototype.getHead = function() {
 };
 
 /**
+ * @classdesc
+ * 
  * ChangeEvent indicates that the graph has changed in any way. This event is
  * never dispatched directly rather, dispatching any event will automatically
  * dispach a ChangeEvent.
  * 
  * @constructor
+ * @protected
  */
 function ChangeEvent() {
 

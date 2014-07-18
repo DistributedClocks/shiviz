@@ -1,8 +1,9 @@
 /**
+ * @classdesc
+ * 
  * A CustomMotifFinder is responsible for finding user-defined motifs in a
  * larger graph.
  * 
- * @class
  * @constructor
  * @param {BuilderGraph} builderGraph The builderGraph that specifies the
  *        user-defined motif

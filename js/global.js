@@ -1,5 +1,5 @@
 /**
- * @class
+ * @classdesc
  * 
  * A Global is the visualization in its entirety. It is a composition of Views
  * and is responsible for information that's shared across Views such as the
