@@ -1,12 +1,14 @@
 /**
- * A Graph contains the hosts and Nodes that makes up the model.
+ * @classdesc
  * 
- * A Graph can be thought of as a set of augmented linked-lists. Each host is
+ * An AbstractGraph contains the hosts and {@link AbstractNode}s that makes up the model.
+ * 
+ * An AbstractGraph can be thought of as a set of augmented linked-lists. Each host is
  * associated with a linked-list that is "augmented" in the sense that nodes can
  * also be connected to nodes in other linked lists. The first and last nodes in
  * each linked list are dummy head and tail nodes respectively.
  * 
- * Traversing a Graph is much like traversing a linked list. For example, to
+ * Traversing an AbstractGraph is much like traversing a linked list. For example, to
  * visit all nodes whose host is equal to "loadBalancer":
  * 
  * <pre>
@@ -17,17 +19,16 @@
  * }
  * </pre>
  * 
- * The Graph class makes the following guarantees about nodes in the Graph:
+ * The AbstractGraph class makes the following guarantees about nodes in the graph:
  * <li>node.getNext() == null if and only if node.isTail() == true</li>
  * <li>node.getPrev() == null if and only if node.isHead() == true</li>
  * 
- * Graph implements the observer pattern. Graph will notify registered observers
+ * AbstractGraph implements the observer pattern. AbstractGraph will notify registered observers
  * when certain events happen such as the removal of a node, the addition of
  * edges between nodes, removal of a host, etc
- */
-
-/**
+ *
  * @constructor
+ * @abstract
  * @param {Array<LogEvent>} logEvents an array of log events extracted from the raw
  *        log input
  */
@@ -64,10 +65,10 @@ function AbstractGraph() {
 AbstractGraph.validEvents = [ AddNodeEvent, RemoveNodeEvent, AddFamilyEvent, RemoveFamilyEvent, RemoveHostEvent, ChangeEvent ];
 
 /**
- * Gets the head node for a host
+ * Gets the dummy head node for a host.
  * 
  * @param {String} host the name of the host
- * @return {Node} the head node, or null if none is found
+ * @return {AbstractNode} the head node, or null if none is found
  */
 AbstractGraph.prototype.getHead = function(host) {
     if (!this.hostToHead[host]) {
@@ -77,10 +78,10 @@ AbstractGraph.prototype.getHead = function(host) {
 };
 
 /**
- * Gets the tail node for a host
+ * Gets the dummy tail node for a host
  * 
  * @param {String} host the name of the host
- * @return {Node} the tail node, or null if none is found
+ * @return {AbstractNode} the tail node, or null if none is found
  */
 AbstractGraph.prototype.getTail = function(host) {
     if (!this.hostToTail[host]) {
@@ -92,7 +93,7 @@ AbstractGraph.prototype.getTail = function(host) {
 /**
  * Gets the hosts as an array
  * 
- * @return {Array<string>} a copy of the array of host names
+ * @return {Array<String>} a copy of the array of host names
  */
 AbstractGraph.prototype.getHosts = function() {
     return this.hosts.slice(0);
@@ -101,7 +102,7 @@ AbstractGraph.prototype.getHosts = function() {
 /**
  * Checks if this graph has the specified host
  * 
- * @param {string} host The host to check for
+ * @param {String} host The host to check for
  * @returns {Boolean} True if the host exists
  */
 AbstractGraph.prototype.hasHost = function(host) {
@@ -149,7 +150,7 @@ AbstractGraph.prototype.removeHost = function(host) {
  * the underlying private data structure, so this function takes linear rather
  * than constant time on the number of nodes.
  * 
- * @return {Array<Node>} an array of all non-dummy nodes
+ * @return {Array<AbstractNode>} an array of all non-dummy nodes
  */
 AbstractGraph.prototype.getNodes = function() {
     var nodes = [];
@@ -172,7 +173,7 @@ AbstractGraph.prototype.getNodes = function() {
  * the underlying private data structure, so this function takes linear rather
  * than constant time on the number of nodes.
  * 
- * @return {Array<Node>} an array of all dummy nodes
+ * @return {Array<AbstractNode>} an array of all dummy nodes
  */
 AbstractGraph.prototype.getDummyNodes = function() {
     var nodes = [];
@@ -194,7 +195,7 @@ AbstractGraph.prototype.getDummyNodes = function() {
  * the underlying private data structure, so this function takes linear rather
  * than constant time on the number of nodes.
  * 
- * @return {Array<Node>} an array of all nodes in the model
+ * @return {Array<AbstractNode>} an array of all nodes in the model
  */
 AbstractGraph.prototype.getAllNodes = function() {
     return this.getNodes().concat(this.getDummyNodes());
@@ -203,10 +204,15 @@ AbstractGraph.prototype.getAllNodes = function() {
 /**
  * Returns the non-dummy nodes of the graph in topologically sorted order. A
  * topologically sorted order is one where, for all i and j such that j > i,
- * there does not exist a directed edge from nodes[j] to nodes[i].
+ * there does not exist a directed edge from nodes[j] to nodes[i]. 
  * 
- * @returns {Array<Node>} the nodes in topologically sorted order.
- * @throws An exception if the graph contains a cycle.
+ * In the case that there are multiple permissible orderings, this method makes
+ * not guarentees about which one will be returned. This method may not even return
+ * the same order each time it's called.
+ * 
+ * @returns {Array<AbstractNode>} the nodes in topologically sorted order.
+ * @throws An exception if the graph contains a cycle. There cannot exist a topologically
+ * sorted order if there exists a cycle.
  */
 AbstractGraph.prototype.getNodesTopologicallySorted = function() {
     toposort = [];
@@ -265,7 +271,7 @@ AbstractGraph.prototype.getNodesTopologicallySorted = function() {
  * 
  * @param {Function} type The type of event you want to observe. Use the
  *        constructor function of the event class. For example, if you want to
- *        observe AddNodeEvents, type would just be "AddNodeEvent".
+ *        observe {@link AddNodeEvent}s, type would just be "AddNodeEvent".
  * @param {Object} context This object will be provided to the callback function
  *        when it is invoked.
  * @param {Function} callback The callback function. The parameters of the
@@ -288,7 +294,7 @@ AbstractGraph.prototype.addObserver = function(type, context, callback) {
  * 
  * @param {Function} type The type of event you want to observe. Use the
  *        constructor function of the event class. For example, if you want to
- *        remove an observer for AddNodeEvents, type would just be
+ *        remove an observer for {@link AbstractGraph}s, type would just be
  *        "AddNodeEvent".
  * @param {Function} callback The callback function.
  */
@@ -302,11 +308,11 @@ AbstractGraph.prototype.removeObserver = function(type, callback) {
 
 /**
  * Notifies all registered observers of an event. Dispatching any event will
- * also dispatch a ChangeEvent. Note that you cannot directly dispatch a
- * ChangeEvent.
+ * also dispatch a {@link ChangeEvent}. Note that you cannot directly dispatch a
+ * {@link ChangeEvent}.
  * 
  * You should only notify observers of events after the corresponding action has
- * been completed. For example, a RemoveNodeEvent should only be dispatched
+ * been completed. For example, a {@link RemoveNodeEvent} should only be dispatched
  * after the node has been removed from the graph and the prev and next nodes of
  * the removed node have been linked.
  * 
@@ -337,30 +343,37 @@ AbstractGraph.prototype.notify = function(event) {
 
 /**
  * Dispatchable events are specified below. Each class below is associated with
- * an event. For example, an AddNodeEvent indicates that a new node has been
+ * an event. For example, an {@link AddNodeEvent} indicates that a new node has been
  * added to the graph.
  */
 
 /**
- * AddNodeEvents indicate that a new node has been added to the graph. This also
+ * {@link AddNodeEvent}s indicate that a new node has been added to the graph. This also
  * implies that prev/next edges of the prev and next nodes of the new node have
  * been change accordingly to accomodate the new node.
  * 
  * @constructor
- * @param {Node} newNode The new node that has been added
- * @param {Node} prev newNode's previous node
- * @param {Node} next newNode's next node
+ * @extends Event
+ * @param {AbstractNode} newNode The new node that has been added
+ * @param {AbstractNode} prev newNode's previous node
+ * @param {AbstractNode} next newNode's next node
  */
 function AddNodeEvent(newNode, prev, next) {
+    
+    /** @private */
     this.newNode = newNode;
+    
+    /** @private */
     this.prev = prev;
+    
+    /** @private */
     this.next = next;
 };
 
 /**
  * Returns the newly added node that corresponds to the event.
  * 
- * @returns {Node} the newly added node.
+ * @returns {AbstractNode} the newly added node.
  */
 AddNodeEvent.prototype.getNewNode = function() {
     return this.newNode;
@@ -370,7 +383,7 @@ AddNodeEvent.prototype.getNewNode = function() {
  * Returns the previous node of the newly added node that corresponds to the
  * event.
  * 
- * @returns {Node} the prev node.
+ * @returns {AbstractNode} the prev node.
  */
 AddNodeEvent.prototype.getPrev = function() {
     return this.prev;
@@ -379,7 +392,7 @@ AddNodeEvent.prototype.getPrev = function() {
 /**
  * Returns the next node of the newly added node that corresponds to the event.
  * 
- * @returns {Node} the next node.
+ * @returns {AbstractNode} the next node.
  */
 AddNodeEvent.prototype.getNext = function() {
     return this.next;
@@ -391,20 +404,27 @@ AddNodeEvent.prototype.getNext = function() {
  * node have been change accordingly
  * 
  * @constructor
- * @param {Node} removedNode The new node that has been removed
- * @param {Node} prev newNode's previous node
- * @param {Node} next newNode's next node
+ * @extends Event
+ * @param {AbstractNode} removedNode The new node that has been removed
+ * @param {AbstractNode} prev newNode's previous node
+ * @param {AbstractNode} next newNode's next node
  */
 function RemoveNodeEvent(removedNode, prev, next) {
+    
+    /** @private */
     this.removedNode = removedNode;
+    
+    /** @private */
     this.prev = prev;
+    
+    /** @private */
     this.next = next;
 };
 
 /**
  * Returns the removed node that corresponds to the event.
  * 
- * @returns {Node} the removed node.
+ * @returns {AbstractNode} the removed node.
  */
 RemoveNodeEvent.prototype.getRemovedNode = function() {
     return this.removedNode;
@@ -413,7 +433,7 @@ RemoveNodeEvent.prototype.getRemovedNode = function() {
 /**
  * Returns the previous node of the removed node that corresponds to the event.
  * 
- * @returns {Node} the prev node.
+ * @returns {AbstractNode} the prev node.
  */
 RemoveNodeEvent.prototype.getPrev = function() {
     return this.prev;
@@ -422,7 +442,7 @@ RemoveNodeEvent.prototype.getPrev = function() {
 /**
  * Returns the next node of the removed node that corresponds to the event.
  * 
- * @returns {Node} the next node.
+ * @returns {AbstractNode} the next node.
  */
 RemoveNodeEvent.prototype.getNext = function() {
     return this.next;
@@ -433,13 +453,18 @@ RemoveNodeEvent.prototype.getNext = function() {
  * between two nodes
  * 
  * @constructor
- * @param {Node} parent The parent node in the newly created family relationship
+ * @extends Event
+ * @param {AbstractNode} parent The parent node in the newly created family relationship
  *        (i.e the node that gained a new child)
- * @param {Node} child The child node in the newly created family relationship
+ * @param {AbstractNode} child The child node in the newly created family relationship
  *        (i.e the node that gained a new parent)
  */
 function AddFamilyEvent(parent, child) {
+    
+    /** @private */
     this.parent = parent;
+    
+    /** @private */
     this.child = child;
 }
 
@@ -447,7 +472,7 @@ function AddFamilyEvent(parent, child) {
  * Returns the parent node in the newly created family relationship that
  * corresponds to the event.
  * 
- * @returns {Node} The parent node
+ * @returns {AbstractNode} The parent node
  */
 AddFamilyEvent.prototype.getParent = function() {
     return this.parent;
@@ -457,7 +482,7 @@ AddFamilyEvent.prototype.getParent = function() {
  * Returns the child node in the newly created family relationship that
  * corresponds to the event.
  * 
- * @returns {Node} The child node
+ * @returns {AbstractNode} The child node
  */
 AddFamilyEvent.prototype.getChild = function() {
     return this.child;
@@ -468,13 +493,18 @@ AddFamilyEvent.prototype.getChild = function() {
  * between two nodes
  * 
  * @constructor
- * @param {Node} parent The parent node in the removed family relationship (i.e
+ * @extends Event
+ * @param {AbstractNode} parent The parent node in the removed family relationship (i.e
  *        the node that lost a new child)
- * @param {Node} child The child node in the removed family relationship (i.e
+ * @param {AbstractNode} child The child node in the removed family relationship (i.e
  *        the node that lost a new parent)
  */
 function RemoveFamilyEvent(parent, child) {
+    
+    /** @private */
     this.parent = parent;
+    
+    /** @private */
     this.child = child;
 }
 
@@ -482,7 +512,7 @@ function RemoveFamilyEvent(parent, child) {
  * Returns the parent node in the removed family relationship that corresponds
  * to the event.
  * 
- * @returns {Node} The parent node
+ * @returns {AbstractNode} The parent node
  */
 RemoveFamilyEvent.prototype.getParent = function() {
     return this.parent;
@@ -492,7 +522,7 @@ RemoveFamilyEvent.prototype.getParent = function() {
  * Returns the child node in the removed family relationship that corresponds to
  * the event.
  * 
- * @returns {Node} The child node
+ * @returns {AbstractNode} The child node
  */
 RemoveFamilyEvent.prototype.getChild = function() {
     return this.child;
@@ -505,11 +535,16 @@ RemoveFamilyEvent.prototype.getChild = function() {
  * separately.
  * 
  * @constructor
+ * @extends Event
  * @param {String} host The host that was removed.
- * @param {Node} head The head node of the host that was removed
+ * @param {AbstractNode} head The head node of the host that was removed
  */
 function RemoveHostEvent(host, head) {
+    
+    /** @private */
     this.host = host;
+    
+    /** @private */
     this.head = head;
 }
 
@@ -525,7 +560,7 @@ RemoveHostEvent.prototype.getHost = function() {
 /**
  * Returns the head of the host that was hidden that corresponds to the event.
  * 
- * @returns {Node} The head of the host that was hidden
+ * @returns {AbstractNode} The head of the host that was hidden
  */
 RemoveHostEvent.prototype.getHead = function() {
     return this.head;

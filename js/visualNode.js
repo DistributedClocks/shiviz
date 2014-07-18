@@ -1,13 +1,13 @@
 /**
- * @class
+ * @classdesc
  * 
  * A VisualNode represents the visualization of a Node that is, this class
  * describes how the Node should be drawn (such as its size, color, etc). Note
  * that the actual drawing logic is not part of this class.
  * 
+ * @constructor
  * @param {Node} node The Node to associate with this VisualNode. This object
  *        will then be a visualization of the argument
- * @constructor
  */
 function VisualNode(node) {
     /** @private */
@@ -241,7 +241,7 @@ VisualNode.prototype.getLineNumber = function() {
  * Determines if this VisualNode is the special starting node of its host. The
  * start node will be drawn differently from non-start nodes.
  * 
- * @returns {boolean} True if this is a start VisualNode
+ * @returns {Boolean} True if this is a start VisualNode
  */
 VisualNode.prototype.isStart = function() {
     return this.node.isHead();
@@ -250,7 +250,7 @@ VisualNode.prototype.isStart = function() {
 /**
  * Determines if this should be drawn with an edge to a hidden parent.
  * 
- * @returns {boolean} True if edge should be drawn
+ * @returns {Boolean} True if edge should be drawn
  */
 VisualNode.prototype.hasHiddenParent = function() {
     return this.hasHiddenParentInner;
@@ -259,7 +259,7 @@ VisualNode.prototype.hasHiddenParent = function() {
 /**
  * Sets if this should be drawn with an edge to a hidden parent.
  * 
- * @param {boolean} val True if edge should be drawn
+ * @param {Boolean} val True if edge should be drawn
  */
 VisualNode.prototype.setHasHiddenParent = function(val) {
     this.hasHiddenParentInner = val;
@@ -268,7 +268,7 @@ VisualNode.prototype.setHasHiddenParent = function(val) {
 /**
  * Determines if this should be drawn with an edge to a hidden child.
  * 
- * @returns {boolean} True if edge should be drawn
+ * @returns {Boolean} True if edge should be drawn
  */
 VisualNode.prototype.hasHiddenChild = function() {
     return this.hasHiddenChildInner;
@@ -277,7 +277,7 @@ VisualNode.prototype.hasHiddenChild = function() {
 /**
  * Sets if this should be drawn with an edge to a hidden child.
  * 
- * @param {boolean} val True if edge should be drawn
+ * @param {Boolean} val True if edge should be drawn
  */
 VisualNode.prototype.setHasHiddenChild = function(val) {
     this.hasHiddenChildInner = val;
@@ -286,26 +286,26 @@ VisualNode.prototype.setHasHiddenChild = function(val) {
 /**
  * Determines if this VisualNode is a collapsed set of single nodes.
  * 
- * @returns {boolean} True if this is a collapsed node.
+ * @returns {Boolean} True if this is a collapsed node.
  */
 VisualNode.prototype.isCollapsed = function() {
     return this._isCollapsed;
-}
+};
 
 /**
  * Determines if this VisualNode is highlighted.
  * 
- * @returns {boolean} True if this node is highlighted
+ * @returns {Boolean} True if this node is highlighted
  */
 VisualNode.prototype.isHighlighted = function() {
     return this._isHighlighted
-}
+};
 
 /**
  * Sets if this VisualNode is highlighted.
  * 
- * @param {boolean} val True if this node is highlighted
+ * @param {Boolean} val True if this node is highlighted
  */
 VisualNode.prototype.setHighlight = function(val) {
     this._isHighlighted = val;
-}
+};
