@@ -1,8 +1,31 @@
 /**
- * MotifFinders define an algorithm for finding a specific motif. Every
- * MotifFinder must implement the find(graph) method, which is solely
+ * @classdesc
+ * 
+ * MotifFinders define an algorithm for finding a specific {@link Motif}. 
+ * In the context of MotifFinders, {@link Motif}s are sub-graphs of a larger
+ * {@link ModelGraph} that are of some importance. 
+ * 
+ * Every
+ * MotifFinder must implement the {@link find} method, which is solely
  * responsible for performing the actual search for motifs
+ * 
+ * @constructor
+ * @abstract
  */
+function MotifFinder() {
+    
+}
+
+/**
+ * The find method is solely responsible for performing the actual search for a motif.
+ * 
+ * @abstract
+ * @param {ModelGraph} graph The graph on which the search should be performed
+ * @returns {Motif} The motif found
+ */
+MotifFinder.prototype.find = function(graph) {
+    
+};
 
 /**
  * @classdesc
@@ -36,6 +59,7 @@
  * adjacent in the sequence S.
  * 
  * @constructor
+ * @extends MotifFinder
  * @param {int} maxLERequester See above for the purpose of this parameter
  * @param {int} maxLEResponder See above for the purpose of this parameter
  * @param {int} allowOtherConnections See above for the purpose of this
@@ -47,6 +71,15 @@ function RequestResponseFinder(maxLERequester, maxLEResponder, allowOtherConnect
     this.allowOtherConnections = allowOtherConnections;
 }
 
+// RequestResponseFinder extends MotifFinder
+RequestResponseFinder.prototype = Object.create(MotifFinder.prototype);
+RequestResponseFinder.prototype.constructor = RequestResponseFinder;
+
+/**
+ * 
+ * @param {ModelGraph} graph The graph on which the search should be performed
+ * @returns {Motif} The motif found
+ */
 RequestResponseFinder.prototype.find = function(graph) {
 
     var nodes = graph.getNodes();
@@ -131,7 +164,7 @@ RequestResponseFinder.prototype.find = function(graph) {
 };
 
 /**
- * @class
+ * @classdesc
  * 
  * This class is responsible for finding broadcast or gather motif.
  * 
@@ -167,6 +200,8 @@ RequestResponseFinder.prototype.find = function(graph) {
  * child(ren). One difference for gather is that no nodes in S INCLUDING n_1 may
  * have any parents.
  * 
+ * @constructor
+ * @extends MotifFinder
  * @param {int} minBroadcastGather Minimum amount of broadcasts or gathers
  *            needed to accept a motif
  * @param {int} maxInBetween Maximum number of non-broadcasting or gathering
@@ -175,7 +210,7 @@ RequestResponseFinder.prototype.find = function(graph) {
  *            For example, if you set this to 1, the finder will allow ZERO
  *            nodes between broadcast/gather nodes (in other words, ONE node
  *            since the previous broadcast/gather node including that one)
- * @param {boolean} broadcast Set to true to find broadcasts. Set to false to
+ * @param {Boolean} broadcast Set to true to find broadcasts. Set to false to
  *            find gathers
  */
 function BroadcastGatherFinder(minBroadcastGather, maxInBetween, broadcast) {
@@ -184,8 +219,22 @@ function BroadcastGatherFinder(minBroadcastGather, maxInBetween, broadcast) {
     this.broadcast = broadcast;
 };
 
+//BroadcastGatherFinder extends MotifFinder
+BroadcastGatherFinder.prototype = Object.create(MotifFinder.prototype);
+BroadcastGatherFinder.prototype.constructor = BroadcastGatherFinder;
+
+/**
+ * 
+ * @private
+ * @static
+ */
 BroadcastGatherFinder.GREEDY_THRESHOLD = 300;
 
+/**
+ * 
+ * @param {ModelGraph} graph The graph on which the search should be performed
+ * @returns {Motif} The motif found
+ */
 BroadcastGatherFinder.prototype.find = function(graph) {
 
     var context = this; // Used by inner functions

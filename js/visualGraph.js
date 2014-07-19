@@ -9,7 +9,7 @@
  * methods to get the corresponding VisualNode or VisualEdge from graph Nodes
  * 
  * @constructor
- * @param {Graph} graph The underlying Graph that this VisualGraph is a
+ * @param {ModelGraph} graph The underlying Graph that this VisualGraph is a
  *        visualization of
  * @param {Layout} layout A layout object that is responsible for setting the
  *        positions of VisualNodes and Edges
@@ -119,7 +119,7 @@ VisualGraph.prototype.update = function() {
 /**
  * Returns the underlying Graph that this VisualGraph is a visualization of
  * 
- * @returns {Graph} the underlying graph.
+ * @returns {ModelGraph} the underlying graph.
  */
 VisualGraph.prototype.getGraph = function() {
     return this.graph;

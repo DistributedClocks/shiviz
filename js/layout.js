@@ -1,10 +1,34 @@
 /**
  * @classdesc
  * 
+ * A Layout is responsible for positioning the {@link VisualNode}s of a
+ * {@link VisualGraph} (i.e by setting their x and y coordinates).
+ * 
+ * @constructor
+ * @abstract
+ */
+function Layout() {
+    
+}
+
+/**
+ * This method is solely responsible for actually performing the layout (i.e by
+ * manipulating the x and y coordinates of VisualNodes in the VisualGraph. 
+ * 
+ * @abstract
+ */
+Layout.prototype.start = function() {
+    
+};
+
+/**
+ * @classdesc
+ * 
  * SpaceTimeLayout arranges a VisualGraph as a space-time diagram with hosts
  * laid out horizontally and time increasing with y coordinate.
  * 
  * @constructor
+ * @extends Layout
  * @param {Number} width The maximum width of the resulting layout
  * @param {Number} delta The vertical distance between nodes
  */
@@ -19,6 +43,10 @@ function SpaceTimeLayout(width, delta) {
     /** @private */
     this.height = 0;
 }
+
+// SpaceTimeLayout extends Layout
+SpaceTimeLayout.prototype = Object.create(Layout.prototype);
+SpaceTimeLayout.prototype.constructor = SpaceTimeLayout;
 
 /**
  * This method is solely responsible for actually performing the layout (i.e by

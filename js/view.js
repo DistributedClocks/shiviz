@@ -6,7 +6,7 @@
  * the model.
  * 
  * @constructor
- * @param {Graph} model
+ * @param {ModelGraph} model
  * @param {Global} global
  * @param {HostPermutation} hostPermutation
  * @param {String} label
@@ -95,7 +95,7 @@ View.prototype.draw = function() {
 
     var transformations = this.global.getTransformations().concat(this.transformations);
     transformations.sort(function(a, b) {
-        return b.priority - a.priority;
+        return b.getPriority() - a.getPriority();
     });
 
     for (var i = 0; i < transformations.length; i++) {
