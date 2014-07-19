@@ -53,7 +53,7 @@ View.prototype.getGlobal = function() {
  * global.addTransformation is that the global version adds applies the
  * transformation to all views.
  * 
- * @param {Transform} transformation The new transformation
+ * @param {Transformation} transformation The new transformation
  */
 View.prototype.addTransformation = function(transformation) {
     this.transformations.push(transformation);
@@ -71,7 +71,7 @@ View.prototype.getHosts = function() {
 /**
  * Sets the width of this view
  * 
- * @param {newWidth} The new width
+ * @param {Number} newWidth The new width
  */
 View.prototype.setWidth = function(newWidth) {
     this.width = newWidth;

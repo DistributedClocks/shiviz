@@ -208,7 +208,7 @@ VisualGraph.prototype.getVisualEdges = function() {
  * Gets the VisualNode in this VisualGraph that is the visualization of the Node
  * provided as a parameter. Returns null if no VisualNode found
  * 
- * @param {Node} node The node whose visualization within this graph will be
+ * @param {AbstractNode} node The node whose visualization within this graph will be
  *        returned
  * @returns {VisualNode} The VisualNode that is the visualization of node or
  *          null if none exists
@@ -226,8 +226,8 @@ VisualGraph.prototype.getVisualNodeByNode = function(node) {
  * connecting node1 and node2. Note that getVisualEdgeByNodes(a, b) ==
  * getVisualEdgeByNodes(b, a)
  * 
- * @param {Node} node1 One of the end nodes of the edge
- * @param {Node} node2 One of the end nodes of the edge
+ * @param {AbstractNode} node1 One of the end nodes of the edge
+ * @param {AbstractNode} node2 One of the end nodes of the edge
  * @returns {VisualEdge} The VisualEdge that is the visualization of the edge
  *          between node1 and node2, or null if none exists
  */
@@ -264,8 +264,8 @@ VisualGraph.prototype.getHeight = function() {
  * Nodes to their VisualEdge
  * 
  * @private
- * @param {Node} node1
- * @param {Node} node2
+ * @param {AbstractNode} node1
+ * @param {AbstractNode} node2
  * @returns {String} The edge ID
  */
 VisualGraph.prototype.getEdgeId = function(node1, node2) {
@@ -277,7 +277,7 @@ VisualGraph.prototype.getEdgeId = function(node1, node2) {
  * node is returned.
  * 
  * @private
- * @param {Node} node The graph node from which the VisualNode is created
+ * @param {AbstractNode} node The graph node from which the VisualNode is created
  * @returns {VisualNode} the newly created VisualNode
  */
 VisualGraph.prototype.addVisualNodeByNode = function(node) {
@@ -294,7 +294,7 @@ VisualGraph.prototype.addVisualNodeByNode = function(node) {
  * VisualGraph
  * 
  * @private
- * @param {Node} node The node whose VisualNode should be removed.
+ * @param {AbstractNode} node The node whose VisualNode should be removed.
  */
 VisualGraph.prototype.removeVisualNodeByNode = function(node) {
     if (!this.nodeIdToVisualNode[node.getId()]) {
@@ -308,9 +308,9 @@ VisualGraph.prototype.removeVisualNodeByNode = function(node) {
  * parameter Nodes. The newly created VisualEdge is returned.
  * 
  * @private
- * @param {Node} node1 One of the end Nodes of the edge that a VisualEdge is
+ * @param {AbstractNode} node1 One of the end Nodes of the edge that a VisualEdge is
  *        being created for
- * @param {Node} node2 One of the end Nodes of the edge that a VisualEdge is
+ * @param {AbstractNode} node2 One of the end Nodes of the edge that a VisualEdge is
  *        being created for
  * @returns {VisualEdge} The newly created VisualEdge
  */
@@ -330,9 +330,9 @@ VisualGraph.prototype.addVisualEdgeByNodes = function(node1, node2) {
  * between the two parameter Nodes
  * 
  * @private
- * @param {Node} node1 One of the end Nodes of the edge whose VisualEdge should
+ * @param {AbstractNode} node1 One of the end Nodes of the edge whose VisualEdge should
  *        be removed.
- * @param {Node} node2 One of the end Nodes of the edge whose VisualEdge should
+ * @param {AbstractNode} node2 One of the end Nodes of the edge whose VisualEdge should
  *        be removed.
  */
 VisualGraph.prototype.removeVisualEdgeByNodes = function(node1, node2) {

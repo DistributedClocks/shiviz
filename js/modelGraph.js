@@ -7,6 +7,7 @@
  * belong is based on the natural ordering of the LogEvents.
  * 
  * @constructor
+ * @extends AbstractGraph
  * @param {Array<LogEvent>} logEvents The array of LogEvents from which to
  *        generate the model.
  */

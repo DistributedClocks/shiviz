@@ -28,6 +28,12 @@ function LogEvent(text, vectorTimestamp, lineNum) {
     this.lineNum = lineNum;
 }
 
+/**
+ * Used to assign LogEvents unique IDs
+ * 
+ * @private
+ * @static
+ */
 LogEvent.id = 0;
 
 /**
