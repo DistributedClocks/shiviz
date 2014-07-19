@@ -2,8 +2,10 @@
  * @classdesc
  * 
  * A LogEvent represents a single event from the raw log and contains the text
- * of the log, a reference to the vector timestamp, and other contextual
+ * of the log, a reference to the {@link VectorTimestamp}, and other contextual
  * information.
+ * 
+ * LogEvents are immutable.
  * 
  * @constructor
  * @param {String} text the text of the log (description)
