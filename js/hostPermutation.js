@@ -16,6 +16,7 @@
  * should be overriden.
  * 
  * @constructor
+ * @abstract
  * @param {Boolean} reverse If true, the ordering of hosts is reversed
  */
 function HostPermutation(reverse) {
@@ -125,21 +126,24 @@ HostPermutation.prototype.assignHostColors = function() {
     }
 };
 
-LengthPermutation.prototype = Object.create(HostPermutation.prototype);
-LengthPermutation.prototype.constructor = LengthPermutation;
 
 /**
  * @classdesc
  * 
- * LengthPermutation arranges hosts based on the number of LogEvents the host
- * contains
+ * LengthPermutation arranges hosts in ascending order based on the number of LogEvents the host
+ * contains.
  * 
  * @constructor
- * @param {Boolean} reverse
+ * @extends HostPermutation
+ * @param {Boolean} reverse If true, the ordering of hosts is reversed
  */
 function LengthPermutation(reverse) {
     HostPermutation.call(this, reverse);
 }
+
+// LengthPermutation extends HostPermutation
+LengthPermutation.prototype = Object.create(HostPermutation.prototype);
+LengthPermutation.prototype.constructor = LengthPermutation;
 
 LengthPermutation.prototype.update = function() {
 
@@ -186,16 +190,14 @@ LengthPermutation.prototype.update = function() {
 
 };
 
-LogOrderPermutation.prototype = Object.create(HostPermutation.prototype);
-LogOrderPermutation.prototype.constructor = LogOrderPermutation;
-
 /**
  * @classdesc
  * 
- * LogOrderPermutation orders hosts based on the order they appear in logs
+ * LogOrderPermutation orders hosts based on the order they appear in logs.
  * 
  * @constructor
- * @param {Boolean} reverse
+ * @extends HostPermutation
+ * @param {Boolean} reverse If true, the ordering of hosts is reversed
  */
 function LogOrderPermutation(reverse) {
     HostPermutation.call(this, reverse);
@@ -203,6 +205,10 @@ function LogOrderPermutation(reverse) {
     /** @private */
     this.logs = [];
 }
+
+// LogOrderPermutation extends HostPermutation
+LogOrderPermutation.prototype = Object.create(HostPermutation.prototype);
+LogOrderPermutation.prototype.constructor = LogOrderPermutation;
 
 LogOrderPermutation.prototype.addLogs = function(logs) {
     this.logs = this.logs.concat(logs);

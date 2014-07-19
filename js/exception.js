@@ -10,7 +10,7 @@
  * 
  * @constructor
  * @param {String} message The message
- * @param {boolean} isUserFriendly true if this message is user-friendly
+ * @param {Boolean} isUserFriendly true if this message is user-friendly
  */
 function Exception(message, isUserFriendly) {
 
@@ -31,7 +31,7 @@ function Exception(message, isUserFriendly) {
  * user-friendly message is one that would make sense to a reasonable end-user
  * who has knowledge of Shiviz's internal workings.
  * 
- * @param {boolean} val true if this should be set to user-friendly
+ * @param {Boolean} val true if this should be set to user-friendly
  */
 Exception.prototype.setUserFriendly = function(val) {
     this._isUserFriendly = val;

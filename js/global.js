@@ -2,11 +2,12 @@
  * @classdesc
  * 
  * A Global is the visualization in its entirety. It is a composition of Views
- * and is responsible for information that's shared across Views such as the
- * colors for hosts. It is also responsible for drawing things shared across all
+ * and is responsible for coordinating information that's shared across Views. 
+ * It is also responsible for drawing things shared across all
  * Views such as the list of hidden hosts
  * 
  * @constructor
+ * @param {HostPermutation} hostPermuation describes how the hosts should be ordered
  */
 function Global(hostPermutation) {
 
@@ -59,7 +60,7 @@ Global.MIN_HOST_WIDTH = 40;
  * view.draw() to redraw a single view or global.drawAll() to redraw all views
  * belonging to this global)
  * 
- * @param {Transform} transformation The transformation to add
+ * @param {Transformation} transformation The transformation to add
  */
 Global.prototype.addTransformation = function(transformation) {
     this.transformations.push(transformation);
