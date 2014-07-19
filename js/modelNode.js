@@ -21,12 +21,12 @@ ModelNode.prototype = Object.create(AbstractNode.prototype);
 ModelNode.prototype.constructor = ModelNode;
 
 /**
- * Gets the log events associated with the node
+ * <p>Gets the log events associated with the node</p>
  * 
- * This function makes no guarantees about the ordering of LogEvents in the
+ * <p>This function makes no guarantees about the ordering of LogEvents in the
  * array returned. Also note that a new array is created to prevent modification
  * of the underlying private data structure, so this function takes linear
- * rather than constant time on the number of LogEvents.
+ * rather than constant time on the number of LogEvents.</p>
  * 
  * @return {Array<LogEvent>} an array of associated log events
  */

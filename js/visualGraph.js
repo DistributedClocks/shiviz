@@ -1,12 +1,12 @@
 /**
  * @classdesc
  * 
- * A VisualGraph represents the visualization of a graph; it describes how the
+ * <p>A VisualGraph represents the visualization of a graph; it describes how the
  * graph is to be drawn. Note that the actual drawing logic is not part of this
- * class.
+ * class.</p>
  * 
- * A VisualGraph is a composition of VisualNodes and VisualEdges. It provides
- * methods to get the corresponding VisualNode or VisualEdge from graph Nodes
+ * <p>A VisualGraph is a composition of VisualNodes and VisualEdges. It provides
+ * methods to get the corresponding VisualNode or VisualEdge from graph Nodes</p>
  * 
  * @constructor
  * @param {ModelGraph} graph The underlying Graph that this VisualGraph is a

@@ -1,24 +1,24 @@
 /**
  * @clasdesc
  * 
- * A HostPermutation is responsible for determining the order in which hosts
+ * <p>A HostPermutation is responsible for determining the order in which hosts
  * should be displayed in the visualization of the graph. This class is also
  * responsible for determining the hosts' visualization's color. This is because
  * Shiviz always uses colors in a fixed order for consistency, so host color is
- * tied to host permutation.
+ * tied to host permutation.</p>
  * 
- * Typical usage involves adding hosts to order using {@link addGraph}, calling
+ * <p>Typical usage involves adding hosts to order using {@link addGraph}, calling
  * {@link update} to compute the ordering of hosts, and then using one of the getters
- * to retrieve the computed host color and order. 
+ * to retrieve the computed host color and order.</p>
  * 
- * HostPermutation and all it's subclasses must ensure that the computed host 
+ * <p>HostPermutation and all it's subclasses must ensure that the computed host 
  * order and colors do not change unless {@link update} is called. Before the very first
  * time {@link update} is called, do not try to retrieve the computed host color and order
- * (i.e by using {@link getHosts}, etc)
+ * (i.e by using {@link getHosts}, etc)</p>
  * 
- * HostPermutation is an abstract class. To implement a specific permutation, a
+ * <p>HostPermutation is an abstract class. To implement a specific permutation, a
  * class that extends HostPermutation should be written and the update method
- * should be overriden.
+ * should be overriden.</p>
  * 
  * @constructor
  * @abstract
@@ -139,12 +139,12 @@ HostPermutation.prototype.getHostColors = function() {
 
 
 /**
- * The update method alone is responsible for figuring out the ordering of hosts and for assigning 
- * host colors.
+ * <p>The update method alone is responsible for figuring out the ordering of hosts and for assigning 
+ * host colors.</p>
  * 
- * In its current form, because it is an abstract method, it only performs color assignment.
+ * <p>In its current form, because it is an abstract method, it only performs color assignment.
  * Classes that extend HostPermutation must be sure to override this method and extend it with
- * host permutation assignment functionality.
+ * host permutation assignment functionality.</p>
  * 
  * @abstract
  */

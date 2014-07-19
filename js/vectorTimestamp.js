@@ -54,16 +54,16 @@ VectorTimestamp.prototype.getOwnTime = function() {
 };
 
 /**
- * Returns a vector timestamp that is this updated with the argument. The
+ * <p>Returns a vector timestamp that is this updated with the argument. The
  * timestamp updating is done according to the
  * {@link http://en.wikipedia.org/wiki/Vector_clock Vector Clock algorithm}.
  * That is, for each key in the set of all keys, newVT.clock[key] =
  * max(this.clock[key], other.clock[key]). The host of the returned timestamp is
- * the same as the host of this.
+ * the same as the host of this.</p>
  * 
- * Note that the returned timestamp is the updated timestamp. Neither this nor
+ * <p>Note that the returned timestamp is the updated timestamp. Neither this nor
  * the argument timestamp is modified in any way, as VectorTimestamps are
- * immutable
+ * immutable</p>
  * 
  * @see {@link http://en.wikipedia.org/wiki/Vector_clock Wikipedian explanation of the Vector Clock algorithm}
  * @param {VectorTimestamp} other The other timestamp used to update the current
@@ -86,11 +86,11 @@ VectorTimestamp.prototype.update = function(other) {
 };
 
 /**
- * Gets the vector timestamp that is identical to this current one, except it's
- * own hosts clock has been incremented by one.
+ * <p>Gets the vector timestamp that is identical to this current one, except it's
+ * own hosts clock has been incremented by one.</p>
  * 
- * Note that this method does not modify this, as VectorTimestamps are
- * immutable.
+ * <p>Note that this method does not modify this, as VectorTimestamps are
+ * immutable.</p>
  * 
  * @returns {VectorTimestamp} A vector timestamp identical to this, except with
  *          its own host's clock incremented by one
@@ -105,9 +105,9 @@ VectorTimestamp.prototype.increment = function() {
 };
 
 /**
- * Checks if this VectorTimestamp is equal to another. Two vector timestamps are
+ * <p>Checks if this VectorTimestamp is equal to another. Two vector timestamps are
  * considered equal if they have they exact same host and the exact same
- * key-value pairs.
+ * key-value pairs.</p>
  * 
  * @param {VectorTimestamp} other The other VectorTimestamp to compare against
  * @returns {Boolean} True if this equals other
@@ -129,16 +129,16 @@ VectorTimestamp.prototype.equals = function(other) {
 };
 
 /**
- * Compares two vector timestamp.
+ * <p>Compares two vector timestamp.</p>
  * 
- * Returns a negative number if this timestamp happens before other. Returns a
+ * <p>Returns a negative number if this timestamp happens before other. Returns a
  * positive number if other timestamp happens before this. Returns zero if both
- * are concurrent or equal.
+ * are concurrent or equal.</p>
  * 
- * Let x[host] be the logical clock value for host in vector clock x. A vector
+ * <p>Let x[host] be the logical clock value for host in vector clock x. A vector
  * timestamp x is said to happen before y if for all hosts, x[host] <= y[host]
  * AND there exists at least one host h such that x[h] < y[h]. x and y are said
- * to be concurrent if x does not happen before y AND y does not happen before x
+ * to be concurrent if x does not happen before y AND y does not happen before x</p>
  * 
  * @param {VectorTimestamp} other the timestamp to compare to
  * @return {Number} the result of the comparison as defined above
@@ -170,16 +170,14 @@ VectorTimestamp.prototype.compareTo = function(other) {
 };
 
 /**
- * Compare two timestamps based on their local times only.
+ * <p>Compare two timestamps based on their local times only.</p>
  * 
- * If this timestamp happens before the other, return
- * 
- * Returns zero if this.host is not equal to other.host. Returns a negative
+ * <p>Returns zero if this.host is not equal to other.host. Returns a negative
  * number if this happens before other. Returns a positive number is other
- * happens before this.
+ * happens before this.</p>
  * 
- * A vector clock x is said to happen before y if they have the same host and
- * x[host] < y[host]
+ * <p>A vector clock x is said to happen before y if they have the same host and
+ * x[host] < y[host]</p>
  * 
  * @param {VectorTimestamp} other the timestamp to compare to
  * @return {Number} the result of the comparison as defined above

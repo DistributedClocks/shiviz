@@ -30,13 +30,13 @@ MotifFinder.prototype.find = function(graph) {
 /**
  * @classdesc
  * 
- * This class is responsible for finding Request-Response motifs.
+ * <p>This class is responsible for finding Request-Response motifs.</p>
  * 
- * Intuitively, a request response motif is a communication pattern between two
+ * <p>Intuitively, a request response motif is a communication pattern between two
  * hosts where one host sends a message to a second host, and the receiving host
- * then sends something back to the first host.
+ * then sends something back to the first host.</p>
  * 
- * More formally, a sequence S of k nodes n_1, n_2, n_3 ... n_k forms a
+ * <p>More formally, a sequence S of k nodes n_1, n_2, n_3 ... n_k forms a
  * Request-Response motif if and only if:
  * <ul>
  * <li>k >= 3</li>
@@ -53,10 +53,10 @@ MotifFinder.prototype.find = function(graph) {
  * parameter maxLEResponder</li>
  * <li>The number of nodes between n_1 and n_k (in the graph, not in S) is less
  * than or equal to the parameter maxLERequester</li>
- * </ul>
+ * </ul></p>
  * 
- * The motif itself comprises all nodes in S plus all edges that connect nodes
- * adjacent in the sequence S.
+ * <p>The motif itself comprises all nodes in S plus all edges that connect nodes
+ * adjacent in the sequence S.</p>
  * 
  * @constructor
  * @extends MotifFinder
@@ -166,13 +166,13 @@ RequestResponseFinder.prototype.find = function(graph) {
 /**
  * @classdesc
  * 
- * This class is responsible for finding broadcast or gather motif.
+ * <p>This class is responsible for finding broadcast or gather motif.</p>
  * 
- * Intuitively, a broadcast motif is a communication pattern where a host sends
+ * <p>Intuitively, a broadcast motif is a communication pattern where a host sends
  * messages to other hosts in quick succession. A gather motif then is where
- * multiple hosts send messages to a single one in quick succession.
+ * multiple hosts send messages to a single one in quick succession.</p>
  * 
- * More formally, a broadcast motif is sequence S of k nodes n_1, n_2, n_3 ...
+ * <p>More formally, a broadcast motif is sequence S of k nodes n_1, n_2, n_3 ...
  * n_k
  * <ul>
  * <li>S is a sequence of consecutive nodes</li>
@@ -189,16 +189,16 @@ RequestResponseFinder.prototype.find = function(graph) {
  * <li>Let Hosts be the set of hosts of all nodes in the set of nodes that are
  * a child of a node in S. The cardinality of Hosts must be greater than or
  * equal to the parameter minBroadcastGather.
- * </ul>
+ * </ul></p>
  * 
- * The actual motif itself comprises all nodes in S and all nodes that are
+ * <p>The actual motif itself comprises all nodes in S and all nodes that are
  * children of a node in S. It also contains all edges that connect any two
- * nodes in S and all edges that connect any node in S its children.
+ * nodes in S and all edges that connect any node in S its children.</p>
  * 
- * The formal definition of a gather motif is analogous to broadcast. In the
+ * <p>The formal definition of a gather motif is analogous to broadcast. In the
  * formal definition above, replace child(ren) with parent(s) and parent(s) with
  * child(ren). One difference for gather is that no nodes in S INCLUDING n_1 may
- * have any parents.
+ * have any parents.</p>
  * 
  * @constructor
  * @extends MotifFinder
