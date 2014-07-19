@@ -1,10 +1,18 @@
 /**
+ * @classdesc
+ * 
+ * A VectorTimestamp is a timestamp used according to the
+ * {@link http://en.wikipedia.org/wiki/Vector_clock Vector Clock Algorithm} It
+ * is so named because it contains a vector of numerical clock values for
+ * different hosts. VectorTimestamps are immutable.
+ * 
+ * @see {@link http://en.wikipedia.org/wiki/Vector_clock Wikipedian explanation of the Vector Clock algorithm}
  * @constructor
  * @param {Object<String, Number>} clock The vector clock with host names
- *        corresponding to timestamps for host
+ *            corresponding to timestamps for host
  * @param {String} host The host the timestamp belongs to
  * @throws {String} An error string if the vector clock does not contain an
- *         entry for the host
+ *             entry for the host
  */
 function VectorTimestamp(clock, host) {
     /** @private */
@@ -20,7 +28,7 @@ function VectorTimestamp(clock, host) {
         throw new Exception("Vector timestamp error: Vector clock must contain entry for host");
     }
 
-    for (var host in clock) {
+    for ( var host in clock) {
         if (clock[host] == 0) {
             delete clock[host];
         }
@@ -45,13 +53,30 @@ VectorTimestamp.prototype.getOwnTime = function() {
     return this.ownTime;
 };
 
+/**
+ * Returns a vector timestamp that is this updated with the argument. The
+ * timestamp updating is done according to the
+ * {@link http://en.wikipedia.org/wiki/Vector_clock Vector Clock algorithm}.
+ * That is, for each key in the set of all keys, newVT.clock[key] =
+ * max(this.clock[key], other.clock[key]). The host of the returned timestamp is
+ * the same as the host of this.
+ * 
+ * Note that the returned timestamp is the updated timestamp. Neither this nor
+ * the argument timestamp is modified in any way, as VectorTimestamps are
+ * immutable
+ * 
+ * @see {@link http://en.wikipedia.org/wiki/Vector_clock Wikipedian explanation of the Vector Clock algorithm}
+ * @param {VectorTimestamp} other The other timestamp used to update the current
+ *            one
+ * @returns {VectorTimestamp} The updated vector timestamp.
+ */
 VectorTimestamp.prototype.update = function(other) {
     var clock = {};
-    for (var key in this.clock) {
+    for ( var key in this.clock) {
         clock[key] = this.clock[key];
     }
 
-    for (var key in other.clock) {
+    for ( var key in other.clock) {
         if (!clock.hasOwnProperty(key)) {
             clock[key] = other.clock[key];
         }
@@ -60,29 +85,47 @@ VectorTimestamp.prototype.update = function(other) {
     return new VectorTimestamp(clock, this.host);
 };
 
+/**
+ * Gets the vector timestamp that is identical to this current one, except it's
+ * own hosts clock has been incremented by one.
+ * 
+ * Note that this method does not modify this, as VectorTimestamps are
+ * immutable.
+ * 
+ * @returns {VectorTimestamp} A vector timestamp identical to this, except with
+ *          its own host's clock incremented by one
+ */
 VectorTimestamp.prototype.increment = function() {
     var clock = {};
-    for (var key in this.clock) {
+    for ( var key in this.clock) {
         clock[key] = this.clock[key];
     }
     clock[this.host]++;
     return new VectorTimestamp(clock, this.host);
 };
 
+/**
+ * Checks if this VectorTimestamp is equal to another. Two vector timestamps are
+ * considered equal if they have they exact same host and the exact same
+ * key-value pairs.
+ * 
+ * @param {VectorTimestamp} other The other VectorTimestamp to compare against
+ * @returns {Boolean} True if this equals other
+ */
 VectorTimestamp.prototype.equals = function(other) {
-    for (var key in this.clock) {
+    for ( var key in this.clock) {
         if (this.clock[key] != other.clock[key]) {
             return false;
         }
     }
 
-    for (var key in other.clock) {
+    for ( var key in other.clock) {
         if (other.clock[key] != this.clock[key]) {
             return false;
         }
     }
 
-    return true;
+    return this.host == other.host;
 };
 
 /**
@@ -102,7 +145,7 @@ VectorTimestamp.prototype.equals = function(other) {
  */
 VectorTimestamp.prototype.compareTo = function(other) {
     var thisFirst = false;
-    for (var host in this.clock) {
+    for ( var host in this.clock) {
         if (other.clock[host] != undefined && this.clock[host] < other.clock[host]) {
             thisFirst = true;
             break;
@@ -110,7 +153,7 @@ VectorTimestamp.prototype.compareTo = function(other) {
     }
 
     var otherFirst = false;
-    for (var host in other.clock) {
+    for ( var host in other.clock) {
         if (this.clock[host] != undefined && other.clock[host] < this.clock[host]) {
             otherFirst = true;
             break;
