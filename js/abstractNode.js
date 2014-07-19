@@ -1,13 +1,11 @@
 /**
  * @classdesc
  * 
- * An AbstractNode represents an event in the model and contains references to the
- * corresponding log event, its parents and children, as well as the previous
- * and next adjacent nodes. An {@link AbstractGraph} is made up of AbstractNodes.
- * <br/><br/>
- * Definitions of specific terms:
- * <br/>
- * parent: x is a parent of y if and only if:
+ * An AbstractNode represents an node in the model and contains references to
+ * the its parents and children, as well as the previous and next adjacent
+ * nodes. An {@link AbstractGraph} is made up of AbstractNodes. <br/><br/>
+ * Definitions of specific terms: <br/> parent: x is a parent of y if and only
+ * if:
  * <ul>
  * <li>x happens before y and</li>
  * <li>their hosts are not the same and</li>
@@ -86,7 +84,6 @@
  * 
  * @abstract
  * @constructor
- * @param {Array<LogEvent>} logEvent The LogEvents that this node represents
  */
 function AbstractNode() {
 
@@ -97,10 +94,10 @@ function AbstractNode() {
     /** @private */
     this.id = AbstractNode.number++;
 
-    /** @protected */
+    /** @private */
     this.prev = null;
 
-    /** @protected */
+    /** @private */
     this.next = null;
 
     /** @private */
@@ -123,7 +120,12 @@ function AbstractNode() {
 
 }
 
-// Global counter used to assign each node a unique ID
+/**
+ * Global counter used to assign each node a unique ID
+ * 
+ * @static
+ * @private
+ */
 AbstractNode.number = 0;
 
 /**
@@ -190,9 +192,6 @@ AbstractNode.prototype.getPrev = function() {
  * the underlying private data structure, so this function takes linear rather
  * than constant time on the number of family nodes.
  * 
- * @see getParents
- * @see getChildren
- * 
  * @return {Array<AbstractNode>} an array of connected nodes
  */
 AbstractNode.prototype.getFamily = function() {
@@ -210,12 +209,6 @@ AbstractNode.prototype.getFamily = function() {
  * the underlying private data structure, so this function takes linear rather
  * than constant time on the number of connections.
  * 
- * @see getPrev
- * @see getNext
- * @see getParents
- * @see getChildren
- * @see getFamily
- * 
  * @return {Array<AbstractNode>} an array of connected nodes
  */
 AbstractNode.prototype.getConnections = function() {
@@ -224,8 +217,9 @@ AbstractNode.prototype.getConnections = function() {
 
 /**
  * Inserts a node after this one, preserving the invariants described at the top
- * of this document. The node is first removed from its previous location (i.e
- * by calling node.remove). You cannot insert a node after a tail node.
+ * of this document. The node to insert is first removed from its previous
+ * location (i.e by calling node.{@link remove}). You cannot insert a node
+ * after a tail node.
  * 
  * @param {AbstractNode} node The node to insert
  */
@@ -252,8 +246,9 @@ AbstractNode.prototype.insertNext = function(node) {
 
 /**
  * Inserts a node before this one, preserving the invariants described at the
- * top of this document. The node is first removed from its previous location
- * (i.e by calling node.remove). You cannot insert a node before a head node.
+ * top of this document. The node to insert is first removed from its previous
+ * location (i.e by calling node.{@link remove}). You cannot insert a node
+ * before a head node.
  * 
  * @param {AbstractNode} node The node to insert
  */
@@ -280,8 +275,9 @@ AbstractNode.prototype.insertPrev = function(node) {
 
 /**
  * Removes a node, preserving the invariants described at the top of this
- * document. Head and tail nodes cannot be removed. This function does nothing
- * if it is called on a node that had already been removed.
+ * document. This method will also remove all connections to the node. Head and
+ * tail nodes cannot be removed. This function does nothing if it is called on a
+ * node that had already been removed.
  * 
  * Because this method essentially removes all links to and from the node, be
  * careful when using this inside a loop. For example, consider the following
@@ -374,7 +370,7 @@ AbstractNode.prototype.hasFamily = function() {
  * This function makes no guarantees about the ordering of nodes in the array
  * returned. Also note that a new array is created to prevent modification of
  * the underlying private data structure, so this function takes linear rather
- * than constant time on the number of connections.
+ * than constant time on the number of parents.
  * 
  * @return {Array.<AbstractNode>} Array of parent nodes.
  */
@@ -392,7 +388,7 @@ AbstractNode.prototype.getParents = function() {
  * This function makes no guarantees about the ordering of nodes in the array
  * returned. Also note that a new array is created to prevent modification of
  * the underlying private data structure, so this function takes linear rather
- * than constant time on the number of connections.
+ * than constant time on the number of children.
  * 
  * @return {Array<AbstractNode>} Array of child nodes.
  */
@@ -402,6 +398,20 @@ AbstractNode.prototype.getChildren = function() {
         result.push(this.hostToChild[key]);
     }
     return result;
+};
+
+/**
+ * Returns family of this node as an array
+ * 
+ * This function makes no guarantees about the ordering of nodes in the array
+ * returned. Also note that a new array is created to prevent modification of
+ * the underlying private data structure, so this function takes linear rather
+ * than constant time on the number of family.
+ * 
+ * @return {Array<AbstractNode>} Array of family nodes.
+ */
+AbstractNode.prototype.getFamily = function() {
+    return this.getParents().concat(this.getChildren());
 };
 
 /**

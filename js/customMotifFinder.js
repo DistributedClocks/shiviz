@@ -5,6 +5,7 @@
  * larger graph.
  * 
  * @constructor
+ * @extends MotifFinder
  * @param {BuilderGraph} builderGraph The builderGraph that specifies the
  *        user-defined motif
  */
