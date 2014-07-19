@@ -15,6 +15,9 @@ function CustomMotifFinder(builderGraph) {
     this.builderGraph = builderGraph;
 }
 
+/**
+ * 
+ */
 CustomMotifFinder.prototype.find = function(graph) {
 
     var context = this;

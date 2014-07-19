@@ -26,15 +26,15 @@ function NamedRegExp(regexp, flags) {
 }
 
 /**
- * Extension of RegExp.exec() Returns an extended array - first array element is
+ * <p>Extension of RegExp.exec() Returns an extended array - first array element is
  * matching string, and elements thereafter are captured strings from regular
  * (non-named) groups. Named captures are extend upon arrays, e.g. for a name of
- * "date" the array will contain a property "date" with the captured string.
+ * "date" the array will contain a property "date" with the captured string.</p>
  * 
- * Multiple matches behave like RegExp.exec(), where each iteration of the call
- * produces the next match, or null if there are no more matches.
+ * <p>Multiple matches behave like RegExp.exec(), where each iteration of the call
+ * produces the next match, or null if there are no more matches.</p>
  * 
- * If there is no match for the regular expression, null is returned.
+ * <p>If there is no match for the regular expression, null is returned.</p>
  * 
  * @param {String} string test string
  * @return {Array} array of match & captured matches, extended with named

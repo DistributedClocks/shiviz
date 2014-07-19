@@ -1,18 +1,18 @@
 /**
  * @classdesc
  * 
- * LogParser can be used to transform raw log text to LogEvents The LogParser
+ * <p>LogParser can be used to transform raw log text to LogEvents The LogParser
  * class per se is only responsible for dividing the raw text into different
  * executions according to the supplied delimiter. It then creates one
  * ExecutionParser for each execution to which to task for parsing is then
- * delegated.
+ * delegated.</p>
  * 
- * The raw log potentially contains text for multiple executions. Delimiters
+ * <p>The raw log potentially contains text for multiple executions. Delimiters
  * demarcate where one execution's text ends and another begins. Labels can be
  * given to executions by specifying a "trace" capture group within the
  * delimiter regex. (So the label text must be part of the delimiter). This
  * label can later be used to identify an execution. If an execution's text is
- * not preceeded by a delimiter, it is given the empty string as its label.
+ * not preceeded by a delimiter, it is given the empty string as its label.</p>
  * 
  * @constructor
  * @param {String} rawString the raw log text
