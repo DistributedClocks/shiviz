@@ -6,7 +6,7 @@
  * that the actual drawing logic is not part of this class.
  * 
  * @constructor
- * @param {Node} node The Node to associate with this VisualNode. This object
+ * @param {AbstractNode} node The Node to associate with this VisualNode. This object
  *        will then be a visualization of the argument
  */
 function VisualNode(node) {
@@ -298,7 +298,7 @@ VisualNode.prototype.isCollapsed = function() {
  * @returns {Boolean} True if this node is highlighted
  */
 VisualNode.prototype.isHighlighted = function() {
-    return this._isHighlighted
+    return this._isHighlighted;
 };
 
 /**

@@ -20,7 +20,7 @@ function Motif() {
 /**
  * Adds a node to this motif
  * 
- * @param {Node} node the node to add
+ * @param {AbstractNode} node the node to add
  */
 Motif.prototype.addNode = function(node) {
     this.nodes[node.getId()] = node;
@@ -29,7 +29,7 @@ Motif.prototype.addNode = function(node) {
 /**
  * Adds multiple nodes to this motif
  * 
- * @param {Array<Node>} nodes An array containing the nodes to add
+ * @param {Array<AbstractNode>} nodes An array containing the nodes to add
  */
 Motif.prototype.addAllNodes = function(nodes) {
     for (var i = 0; i < nodes.length; i++) {
@@ -40,7 +40,7 @@ Motif.prototype.addAllNodes = function(nodes) {
 /**
  * Gets all nodes that are contained in this motif.
  * 
- * @returns {Array}
+ * @returns {Array<AbstractNode>}
  */
 Motif.prototype.getNodes = function() {
     var array = [];
@@ -56,9 +56,9 @@ Motif.prototype.getNodes = function() {
  * or is otherwise meaningful in any way. Such checks are the responsibility of
  * classes utilizing Motif
  * 
- * @param {Node} node1 One of the nodes the edge connects. Must not be identical
+ * @param {AbstractNode} node1 One of the nodes the edge connects. Must not be identical
  *            to node2
- * @param {Node} node2 One of the nodes the edge connects. Must not be identical
+ * @param {AbstractNode} node2 One of the nodes the edge connects. Must not be identical
  *            to node1
  */
 Motif.prototype.addEdge = function(node1, node2) {
@@ -68,7 +68,7 @@ Motif.prototype.addEdge = function(node1, node2) {
 /**
  * Adds multiple edges to this motif.
  * 
- * @param {Array<Array<Node>>} edges The edges to add. edges[i] is the i-th
+ * @param {Array<Array<AbstractNode>>} edges The edges to add. edges[i] is the i-th
  *            edge to be added. edge[i][0] and edge[i][1] are the two nodes the
  *            i-th edge connects. For example, if you want to add two edges: one
  *            from x to y and another from t to w, edges would be [ [x, y], [t,
@@ -83,7 +83,7 @@ Motif.prototype.addAllEdges = function(edges) {
 /**
  * Gets all the edges in this motif
  * 
- * @returns {Array<Array<Node>>} the edges in this motif. edges[i] is the i-th
+ * @returns {Array<Array<AbstractNode>>} the edges in this motif. edges[i] is the i-th
  *          edge in the motif. edge[i][0] and edge[i][1] are the two nodes the
  *          i-th edge connects. For example, if there are two edges: one from x
  *          to y and another from t to w, the returned array would be [ [x, y],

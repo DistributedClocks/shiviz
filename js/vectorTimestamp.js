@@ -1,6 +1,6 @@
 /**
  * @constructor
- * @param {{String: Number}} clock The vector clock with host names
+ * @param {Object<String, Number>} clock The vector clock with host names
  *        corresponding to timestamps for host
  * @param {String} host The host the timestamp belongs to
  * @throws {String} An error string if the vector clock does not contain an

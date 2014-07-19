@@ -193,7 +193,7 @@ CollapseSequentialNodesTransformation.prototype.setThreshold = function(threshol
  * removeExemption affects the LogEvents of the given node and all nodes in its
  * group.
  * 
- * @param {Node} node The node whose LogEvents will be added as exemptions
+ * @param {ModelNode} node The node whose LogEvents will be added as exemptions
  */
 CollapseSequentialNodesTransformation.prototype.addExemption = function(node) {
     var logEvents = node.getLogEvents();
@@ -211,7 +211,7 @@ CollapseSequentialNodesTransformation.prototype.addExemption = function(node) {
  * removeExemption affects the LogEvents of the given node and all nodes in its
  * group.
  * 
- * @param {Node} node The LogEvents of this node and the LogEvents of every node
+ * @param {ModelNode} node The LogEvents of this node and the LogEvents of every node
  *            in its group will be removed as exemptions
  */
 CollapseSequentialNodesTransformation.prototype.removeExemption = function(node) {
@@ -246,7 +246,7 @@ CollapseSequentialNodesTransformation.prototype.removeExemption = function(node)
 /**
  * Toggles an exemption.
  * 
- * @param {Node} node The node to toggle.
+ * @param {ModelNode} node The node to toggle.
  */
 CollapseSequentialNodesTransformation.prototype.toggleExemption = function(node) {
     if (this.isExempt(node)) {
@@ -261,7 +261,7 @@ CollapseSequentialNodesTransformation.prototype.toggleExemption = function(node)
  * Determines if any of the LogEvents contained inside the given node is an
  * exemption
  * 
- * @param {Node} node The node to check
+ * @param {ModelNode} node The node to check
  * @returns {Boolean} True if one of the LogEvents is an exemption
  */
 CollapseSequentialNodesTransformation.prototype.isExempt = function(node) {
@@ -500,7 +500,7 @@ HighlightHostTransformation.prototype.transform = function(visualGraph) {
  * @constructor
  * @param {MotifFinder} finder a MotifFinder that specifies which motif to
  *            highlight
- * @param {boolean} ignoreEdges If true, edges will not be visually highlighted
+ * @param {Boolean} ignoreEdges If true, edges will not be visually highlighted
  */
 function HighlightMotifTransformation(finder, ignoreEdges) {
 
@@ -514,7 +514,7 @@ function HighlightMotifTransformation(finder, ignoreEdges) {
 /**
  * Sets whether or not to highlight edges that are part of the motif.
  * 
- * @param {boolean} val If true, edges will not be visually highlighted
+ * @param {Boolean} val If true, edges will not be visually highlighted
  */
 HighlightMotifTransformation.prototype.setIgnoreEdges = function(val) {
     this.ignoreEdges = !!val;
