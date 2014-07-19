@@ -1,15 +1,42 @@
 /**
- * Graph transformations are defined in this file. A graph transformation takes
+ * @classdesc
+ * 
+ * A graph transformation takes
  * a graph as input and modifies it in place. Each type of transformation is
- * defined in its own class. The transform method is solely responsible for
- * performing the actual transformation.
+ * defined in its own class.
  * 
  * Graph transformations should strive to preserve the definitions of 'parent',
- * 'child', 'next' and 'previous' as defined in node.js
+ * 'child', 'next' and 'previous' as defined in {@link AbstractNode}
  * 
  * Each transformation should declare a priority field of type Number.
  * Transformations of highest priority will be applied first.
+ * 
+ * @constructor
+ * @abstract
  */
+function Transformation() {
+    this.priority = 0;
+};
+
+/**
+ * The transform method is solely responsible for
+ * performing the actual transformation.
+ * 
+ * @abstract
+ * @param {VisualGraph} visualGraph
+ */
+Transformation.prototype.transform = function(visualGraph) {
+    
+};
+
+/**
+ * Gets the priority of the transformation.
+ *
+ * @returns {Number} the priority of the transformation
+ */
+Transformation.prototype.getPriority = function() {
+    return this.priority;
+};
 
 /**
  * @classdesc
@@ -23,6 +50,7 @@
  * host, then this transformation does nothing
  * 
  * @constructor
+ * @extends Transformation
  * @param {String} hostToHide The host to hide from the model
  */
 function HideHostTransformation() {
@@ -32,6 +60,10 @@ function HideHostTransformation() {
     /** @private */
     this.hostsToHide = {};
 }
+
+// HideHostTransformation extends Transformation
+HideHostTransformation.prototype = Object.create(Transformation.prototype);
+HideHostTransformation.prototype.constructor = HideHostTransformation;
 
 /**
  * Adds a host. The added host will be hidden by the transformation
@@ -142,6 +174,7 @@ HideHostTransformation.prototype.transform = function(visualGraph) {
  * group if y == x or y has no family and y's prev or next node is in x's group.
  * 
  * @constructor
+ * @extends Transformation
  * @param {Number} threshold Nodes are collapsed if the number of nodes in the
  *            group is greater than or equal to the threshold. The threshold
  *            must be greater than or equal to 2.
@@ -157,6 +190,10 @@ function CollapseSequentialNodesTransformation(threshold) {
 
     this.priority = 20;
 }
+
+//CollapseSequentialNodesTransformation extends Transformation
+CollapseSequentialNodesTransformation.prototype = Object.create(Transformation.prototype);
+CollapseSequentialNodesTransformation.prototype.constructor = CollapseSequentialNodesTransformation;
 
 /**
  * Gets the threshold. Nodes are collapsed if the number of nodes in the group
@@ -344,6 +381,7 @@ CollapseSequentialNodesTransformation.prototype.transform = function(visualGraph
  * ignored.
  * 
  * @constructor
+ * @extends Transformation
  * @param {Array<String>} hostsToHighlight The array of hosts to highlight.
  */
 function HighlightHostTransformation(hostsToHighlight) {
@@ -360,6 +398,10 @@ function HighlightHostTransformation(hostsToHighlight) {
         this.addHostToHighlight(hostsToHighlight[i]);
     }
 }
+
+//HighlightHostTransformation extends Transformation
+HighlightHostTransformation.prototype = Object.create(Transformation.prototype);
+HighlightHostTransformation.prototype.constructor = HighlightHostTransformation;
 
 /**
  * Adds a host to the set of hosts to highlight.
@@ -498,6 +540,7 @@ HighlightHostTransformation.prototype.transform = function(visualGraph) {
  * This transformation visually highlights a motif.
  * 
  * @constructor
+ * @extends Transformation
  * @param {MotifFinder} finder a MotifFinder that specifies which motif to
  *            highlight
  * @param {Boolean} ignoreEdges If true, edges will not be visually highlighted
@@ -511,6 +554,10 @@ function HighlightMotifTransformation(finder, ignoreEdges) {
 
 }
 
+//HighlightMotifTransformation extends Transformation
+HighlightMotifTransformation.prototype = Object.create(Transformation.prototype);
+HighlightMotifTransformation.prototype.constructor = HighlightMotifTransformation;
+
 /**
  * Sets whether or not to highlight edges that are part of the motif.
  * 
@@ -520,6 +567,9 @@ HighlightMotifTransformation.prototype.setIgnoreEdges = function(val) {
     this.ignoreEdges = !!val;
 };
 
+/**
+ * @param visualGraph
+ */
 HighlightMotifTransformation.prototype.transform = function(visualGraph) {
 
     var motif = this.finder.find(visualGraph.getGraph());

@@ -7,11 +7,16 @@
  * Shiviz always uses colors in a fixed order for consistency, so host color is
  * tied to host permutation.
  * 
- * Typical usage involves adding hosts to order using addGraph(), calling
- * update() to compute the ordering of hosts, and then using one of the getters
- * to retrieve the computed host color and order
+ * Typical usage involves adding hosts to order using {@link addGraph}, calling
+ * {@link update} to compute the ordering of hosts, and then using one of the getters
+ * to retrieve the computed host color and order. 
  * 
- * HostPermutaion is an abstract class. To implement a specific permutation, a
+ * HostPermutation and all it's subclasses must ensure that the computed host 
+ * order and colors do not change unless {@link update} is called. Before the very first
+ * time {@link update} is called, do not try to retrieve the computed host color and order
+ * (i.e by using {@link getHosts}, etc)
+ * 
+ * HostPermutation is an abstract class. To implement a specific permutation, a
  * class that extends HostPermutation should be written and the update method
  * should be overriden.
  * 
@@ -20,6 +25,11 @@
  * @param {Boolean} reverse If true, the ordering of hosts is reversed
  */
 function HostPermutation(reverse) {
+    
+    if(this.constructor == HostPermutation) {
+        throw new Exception("Cannot instantiate HostPermutation; HostPermutation is an abstract class");
+    }
+    
     /** @private */
     this.graphs = [];
 
@@ -34,13 +44,16 @@ function HostPermutation(reverse) {
 
     /** @private */
     this.hostColors = {};
+    
+    /**@private */
+    this.hasUpdated = false;
 }
 
 /**
  * Adds a graph to the HostPermutation. HostPermutation determines an ordering
  * of hosts based on the hosts of graphs added using this method
  * 
- * @param {Graph} graph The graph to add
+ * @param {ModelGraph} graph The graph to add
  */
 HostPermutation.prototype.addGraph = function(graph) {
     this.graphs.push(graph);
@@ -54,6 +67,9 @@ HostPermutation.prototype.addGraph = function(graph) {
  * @returns {Array<String>} Array of hosts
  */
 HostPermutation.prototype.getHosts = function() {
+    if(!this.hasUpdated) {
+        throw new Exception("HostPermutation.prototype.getHosts: You must call update() first");
+    }
     return this.reverse ? this.hosts.slice().reverse() : this.hosts.slice();
 };
 
@@ -67,6 +83,10 @@ HostPermutation.prototype.getHosts = function() {
  * @returns {Array<String>} Array of hosts
  */
 HostPermutation.prototype.getHostsAndFilter = function(filter) {
+    if(!this.hasUpdated) {
+        throw new Exception("HostPermutation.prototype.getHosts: You must call update() first");
+    }
+    
     var filterSet = {};
     for (var i = 0; i < filter.length; i++) {
         filterSet[filter[i]] = true;
@@ -93,6 +113,10 @@ HostPermutation.prototype.getHostsAndFilter = function(filter) {
  * @returns {String} A valid color string.
  */
 HostPermutation.prototype.getHostColor = function(host) {
+    if(!this.hasUpdated) {
+        throw new Exception("HostPermutation.prototype.getHosts: You must call update() first");
+    }
+    
     return this.hostColors[host];
 };
 
@@ -102,6 +126,10 @@ HostPermutation.prototype.getHostColor = function(host) {
  * @returns {Object<String, String>} A mapping of host name to host color
  */
 HostPermutation.prototype.getHostColors = function() {
+    if(!this.hasUpdated) {
+        throw new Exception("HostPermutation.prototype.getHosts: You must call update() first");
+    }
+    
     var colors = {};
     for (var host in this.hostColors) {
         colors[host] = this.hostColors[host];
@@ -109,10 +137,21 @@ HostPermutation.prototype.getHostColors = function() {
     return colors;
 };
 
+
 /**
- * @private
+ * The update method alone is responsible for figuring out the ordering of hosts and for assigning 
+ * host colors.
+ * 
+ * In its current form, because it is an abstract method, it only performs color assignment.
+ * Classes that extend HostPermutation must be sure to override this method and extend it with
+ * host permutation assignment functionality.
+ * 
+ * @abstract
  */
-HostPermutation.prototype.assignHostColors = function() {
+HostPermutation.prototype.update = function() {
+    
+    this.hasUpdated = true;
+    
     for (var i = 0; i < this.graphs.length; i++) {
         var graph = this.graphs[i];
         var hosts = graph.getHosts();
@@ -124,6 +163,7 @@ HostPermutation.prototype.assignHostColors = function() {
             }
         }
     }
+    
 };
 
 
@@ -145,9 +185,12 @@ function LengthPermutation(reverse) {
 LengthPermutation.prototype = Object.create(HostPermutation.prototype);
 LengthPermutation.prototype.constructor = LengthPermutation;
 
+/**
+ * 
+ */
 LengthPermutation.prototype.update = function() {
 
-    this.assignHostColors();
+    HostPermutation.prototype.update.call(this);
 
     var currHosts = {};
 
@@ -210,12 +253,22 @@ function LogOrderPermutation(reverse) {
 LogOrderPermutation.prototype = Object.create(HostPermutation.prototype);
 LogOrderPermutation.prototype.constructor = LogOrderPermutation;
 
+/**
+ * Adds logs. This class will order hosts based on the order they
+ * appear in the logs provided.
+ * 
+ * @param {Array<LogEvent>} logs The logs to add
+ */
 LogOrderPermutation.prototype.addLogs = function(logs) {
     this.logs = this.logs.concat(logs);
 };
 
+/**
+ * 
+ */
 LogOrderPermutation.prototype.update = function() {
-    this.assignHostColors();
+    
+    HostPermutation.prototype.update.call(this);
 
     var hostSet = {};
 

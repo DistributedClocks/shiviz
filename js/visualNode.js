@@ -65,7 +65,7 @@ VisualNode.prototype.getId = function() {
 /**
  * Gets the underlying Node that this VisualNode is a visualization of
  * 
- * @returns {Node} The underlying node
+ * @returns {AbstractNode} The underlying node
  */
 VisualNode.prototype.getNode = function() {
     return this.node;
