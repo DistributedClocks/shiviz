@@ -136,7 +136,7 @@ function ExecutionParser(rawString, label, regexp) {
             fields[name] = match[name];
         });
 
-        var timestamp = parseTimestamp(clock, host);
+        var timestamp = parseTimestamp(clock, host, ln);
         this.timestamps.push(timestamp);
         this.logEvents.push(new LogEvent(event, timestamp, ln, fields));
     }
@@ -144,13 +144,13 @@ function ExecutionParser(rawString, label, regexp) {
     if (this.logEvents.length == 0)
         throw new Exception("The parser RegExp you entered does not capture any events for the execution " + label, true);
 
-    function parseTimestamp(clockString, hostString) {
+    function parseTimestamp(clockString, hostString, line) {
         try {
             clock = JSON.parse(clockString);
         } catch (err) {
             console.log(clockString);
             var exception = new Exception("An error occured while trying to parse the vector timestamp on line " + (line + 1) + ":");
-            exception.append(text, "code");
+            exception.append(clockString, "code");
             exception.append("The error message from the JSON parser reads:\n");
             exception.append(err.toString(), "italic");
             exception.setUserFriendly(true);
@@ -162,7 +162,7 @@ function ExecutionParser(rawString, label, regexp) {
             return ret;
         } catch (exception) {
             exception.prepend("An error occured while trying to parse the vector timestamp on line " + (line + 1) + ":\n\n");
-            exception.append(text, "code");
+            exception.append(clockString, "code");
             exception.setUserFriendly(true);
             throw exception;
         }
