@@ -11,19 +11,30 @@ function NamedRegExp(regexp, flags) {
     flags = flags || "";
 
     try {
-        this.no = new RegExp(regexp.replace(/\(\?<\w+?>(.+?)\)/g, "\(\?\:$1\)"), "g" + flags);
+        this.no = new RegExp(regexp.replace(/\(\?<\w+?>/g, "\(\?\:"), "g" + flags);
 
         regexp = regexp.replace(/\((?!\?(=|!|<|:))/g, "(?:");
         while (match = regexp.match(/\(\?<(\w+?)>.+\)/)) {
-            names.push(match[1]);
-            regexp = regexp.replace(/\(\?<\w+?>(.+)\)/, '\($1\)');
+            if (names.indexOf(match[1]) > -1) {
+                var exc = new Exception("The regular expression you entered was invalid.\n", true);
+                exc.append("There are multiple capture groups named " + match[1]);
+                throw exc;
+            } else {
+                names.push(match[1]);
+            }
+
+            regexp = regexp.replace(/\(\?<\w+?>/, '\(');
         }
 
         this.reg = new RegExp(regexp, "g" + flags);
     } catch (e) {
-        var exception = new Exception("The regular expression you entered was invalid.\n", true);
+        if (e.constructor == Exception)
+            throw e;
+
+        var exception = new Exception("The following regular expression entered was invalid.\n", true);
+        exception.append(regexp, "code");
         exception.append("The error given by the browser is: \n");
-        exception.append(e.message, "code");
+        exception.append(e.message.replace(/(?:.*\/\:\s+)?(.*)/, "$1"), "code");
         throw exception;
     }
 
