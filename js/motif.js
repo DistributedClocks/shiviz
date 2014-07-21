@@ -78,6 +78,16 @@ Motif.prototype.addAllEdges = function(edges) {
     }
 };
 
+Motif.prototype.addTrail = function(nodes) {
+    for(var i = 1; i < nodes.length; i++) {
+        this.addEdge(nodes[i], nodes[i-1]);
+        this.addNode(nodes[i]);
+    }
+    if(nodes.length > 0) {
+        this.addNode(nodes[0]);
+    }
+};
+
 /**
  * Gets all the edges in this motif
  * 
