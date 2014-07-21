@@ -14,12 +14,16 @@
  * 
  * @class
  * @constructor
- * @param {String} rawString the raw log text
- * @param {NamedRegExp} delimiter a regex that specifies the delimiter. Anything
+ * @param {String} rawString The raw log text
+ * @param {NamedRegExp} delimiter A regex that specifies the delimiter. Anything
  *        that matches the regex will be treated as a delimiter. A delimiter
  *        acts to separate different executions.
+ * @param {NamedRegExp} delimiter A regex that specifies the log parser. The parser
+ *        must contain the named capture groups "clock", "event", and "host"
+ *        representing the vector clock, the event string, and the host
+ *        respectively.
  */
-function LogParser(rawString, delimiter) {
+function LogParser(rawString, delimiter, regexp) {
 
     /** @private */
     this.rawString = rawString.trim();
@@ -28,17 +32,26 @@ function LogParser(rawString, delimiter) {
     this.delimiter = delimiter;
 
     /** @private */
+    this.regexp = regexp;
+
+    /** @private */
     this.labels = [];
 
     /** @private */
     this.executions = {};
 
-    if (this.delimiter != null) {
+    var names = this.regexp.getNames();
+    if (names.indexOf("clock") < 0 || names.indexOf("host") < 0 || names.indexOf("event") < 0) {
+        var e = new Exception("The parser RegExp you entered does not have the necessary named capture groups.\n", true)
+        e.append("Please see the documentation for details.");
+        throw e;
+    }
 
+    if (this.delimiter != null) {
         var currExecs = this.rawString.split(this.delimiter.no);
         var currLabels = [ "" ];
 
-        if (this.delimiter.names.indexOf("trace") >= 0) {
+        if (this.delimiter.getNames().indexOf("trace") >= 0) {
             var match;
             while (match = this.delimiter.exec(this.rawString)) {
                 currLabels.push(match.trace);
@@ -47,16 +60,14 @@ function LogParser(rawString, delimiter) {
 
         for (var i = 0; i < currExecs.length; i++) {
             if (currExecs[i].trim().length > 0) {
-                this.executions[currLabels[i]] = new ExecutionParser(currExecs[i], currLabels[i]);
+                this.executions[currLabels[i]] = new ExecutionParser(currExecs[i], currLabels[i], regexp);
                 this.labels.push(currLabels[i]);
             }
         }
-    }
-    else {
+    } else {
         this.labels.push("");
-        this.executions[""] = new ExecutionParser(this.rawString, "");
+        this.executions[""] = new ExecutionParser(this.rawString, "", regexp);
     }
-
 }
 
 /**
@@ -71,19 +82,16 @@ LogParser.prototype.getLabels = function() {
 };
 
 /**
- * Gets the ExecutionParser for the execution with the specified label. The
- * ExecutionParser object can then be used to retrieve data parsed from that
- * execution's text.
- * 
- * @param {String} label The label of the execution you want to retrieve.
- * @returns {ExecutionParser} The execution parser associated with the specified
- *          execution
+ * Returns the LogEvents parsed by this. The ordering of LogEvents in the
+ * returned array is guaranteed to be the same as the order in which they were
+ * encountered in the raw log text
+ *
+ * @param {String} label The label of the execution you want to get log events from.
+ * @returns {Array} An array of LogEvents
  */
-LogParser.prototype.getExecutionParser = function(label) {
-    if (!this.executions[label]) {
-        return null;
-    }
-    return this.executions[label];
+LogParser.prototype.getLogEvents = function(label) {
+    if (!this.executions[label]) return null;
+    return this.executions[label].logEvents;
 };
 
 /**
@@ -94,9 +102,10 @@ LogParser.prototype.getExecutionParser = function(label) {
  * @private
  * @param {String} rawString The raw string of the execution's log
  * @param {Label} label The label that should be associated with this execution
+ * @param {NamedRegExp} regexp The RegExp parser
  * @returns
  */
-function ExecutionParser(rawString, label) {
+function ExecutionParser(rawString, label, regexp) {
 
     /** @private */
     this.rawString = rawString;
@@ -105,63 +114,43 @@ function ExecutionParser(rawString, label) {
     this.label = label;
 
     /** @private */
-    this.rawLines = [];
-
-    /** @private */
-    this.textStrings = [];
-
-    /** @private */
-    this.timestampStrings = [];
-
-    /** @private */
     this.timestamps = [];
 
     /** @private */
     this.logEvents = [];
 
-    this.rawLines = this.rawString.split("\n");
+    var match;
+    while (match = regexp.exec(rawString)) {
+        var newlines = rawString.substr(0, match.index).match(/\n/g);
+        var ln = newlines ? newlines.length + 1 : 1;
 
-    var loc = 0;
-    while (loc < this.rawLines.length) {
-        while (loc < this.rawLines.length && this.rawLines[loc].trim() == "") {
-            loc++;
-        }
-        if (loc >= this.rawLines.length) {
-            break;
-        }
+        var clock = match.clock;
+        var host = match.host;
+        var event = match.event;
 
-        var lineNum = loc;
-        var text = this.rawLines[loc++].trim();
-        this.textStrings.push(text);
+        var fields = {};
+        regexp.getNames().forEach(function(name, i) {
+            if (name == "clock" || name == "host" || name == "event")
+                return;
 
-        while (loc < this.rawLines.length && this.rawLines[loc].trim() == "") {
-            loc++;
-        }
-        if (loc >= this.rawLines.length) {
-            throw new Exception("The last event in the log appears to be missing a vector timestamp", true);
-        }
+            fields[name] = match[name];
+        });
 
-        var timestampString = this.rawLines[loc].trim();
-        this.timestampStrings.push(timestampString);
-        var vt = parseTimestamp(timestampString, loc);
-        this.timestamps.push(vt);
-        this.logEvents.push(new LogEvent(text, vt, lineNum));
-        loc++;
+        var timestamp = parseTimestamp(clock, host, ln);
+        this.timestamps.push(timestamp);
+        this.logEvents.push(new LogEvent(event, timestamp, ln, fields));
     }
 
-    function parseTimestamp(text, line) {
-        var i = text.indexOf(" ");
-        var hostString = text.slice(0, i).trim();
-        var clockString = text.slice(i + 1).trim();
+    if (this.logEvents.length == 0)
+        throw new Exception("The parser RegExp you entered does not capture any events for the execution " + label, true);
 
-        var clock = null;
+    function parseTimestamp(clockString, hostString, line) {
         try {
             clock = JSON.parse(clockString);
-        }
-        catch (err) {
+        } catch (err) {
             console.log(clockString);
             var exception = new Exception("An error occured while trying to parse the vector timestamp on line " + (line + 1) + ":");
-            exception.append(text, "code");
+            exception.append(clockString, "code");
             exception.append("The error message from the JSON parser reads:\n");
             exception.append(err.toString(), "italic");
             exception.setUserFriendly(true);
@@ -171,24 +160,12 @@ function ExecutionParser(rawString, label) {
         try {
             var ret = new VectorTimestamp(clock, hostString);
             return ret;
-        }
-        catch (exception) {
+        } catch (exception) {
             exception.prepend("An error occured while trying to parse the vector timestamp on line " + (line + 1) + ":\n\n");
-            exception.append(text, "code");
+            exception.append(clockString, "code");
             exception.setUserFriendly(true);
             throw exception;
         }
     }
 
 }
-
-/**
- * Returns the LogEvents parsed by this. The ordering of LogEvents in the
- * returned array is guaranteed to be the same as the order in which they were
- * encountered in the raw log text
- * 
- * @returns {Array} An array of LogEvents
- */
-ExecutionParser.prototype.getLogEvents = function() {
-    return this.logEvents;
-};

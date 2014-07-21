@@ -38,7 +38,7 @@ var log = 'a1\na {"a":1}\na2\na {"a":2,"b":2}\nb1\nb {"b":1,"a":1}\nb2\nb {"b":2
 var lines = log.split('\n');
 var parser = new LogParser(log, null);
 var hostPermutation = new LengthPermutation(true);
-var graph = new ModelGraph(parser.getExecutionParser("").getLogEvents());
+var graph = new ModelGraph(parser.getLogEvents(""));
 
 hostPermutation.addGraph(graph);
 hostPermutation.update();
@@ -121,7 +121,7 @@ assert("removeHost", function () {
  */
 
 beginSection("Node.js");
-graph = new ModelGraph(parser.getExecutionParser("").getLogEvents());
+graph = new ModelGraph(parser.getLogEvents(""));
 
 assert("getId", function () {
     return graph.getNodes()[0].getId();

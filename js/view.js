@@ -187,7 +187,21 @@ View.prototype.draw = function() {
             "r": function(d) {return d.getRadius() + 2;}
         });
 
-        $("#curNode").text(e.getText());
+        $(".event").text(e.getText());
+
+        $(".fields").children().remove();
+        if (!e.isCollapsed()) {
+            var fields = e.getNode().getLogEvents()[0].getFields();
+            var fieldText = "";
+            for (var i in fields) {
+                var $f = $("<tr>", { "class": "field" });
+                var $t = $("<th>", { "class": "title" }).text(i + ":");
+                var $v = $("<td>", { "class": "value" }).text(fields[i]);
+
+                $f.append($t).append($v);
+                $(".fields").append($f);
+            }
+        }
 
         $(".focus").css({
             "color": $(".focus").data("fill"),
@@ -328,7 +342,8 @@ View.prototype.draw = function() {
         }
     });
     rect.on("mouseover", function(e) {
-        $("#curNode").text(e.getText());
+        $(".event").text(e.getText());
+        $(".fields").html("");
     });
     rect.on("dblclick", function(e) {
         if (d3.event.shiftKey) {
@@ -373,7 +388,7 @@ View.prototype.draw = function() {
 
         for (var i in vn) {
             var text = vn[i].getText();
-            var $div = $("<div></div>").attr({
+            var $div = $("<div>", {
                 "id": "line" + vn[i].getId()
             }).data({
                 "id": vn[i].getId()
@@ -390,7 +405,7 @@ View.prototype.draw = function() {
         }
 
         if (other != null) {
-            var $div = $("<div></div>").addClass("line more").css({
+            var $div = $("<div>").addClass("line more").css({
                 "top": y + "px",
                 "margin-top": (startMargin * 10) + "pt",
                 "color": "#ddd"
@@ -398,7 +413,7 @@ View.prototype.draw = function() {
 
             for (var o in other) {
                 var text = other[o].getText();
-                $div.append($("<div></div>").attr({
+                $div.append($("<div>", {
                     "id": "line" + other[o].getId()
                 }).data({
                     "id": other[o].getId()

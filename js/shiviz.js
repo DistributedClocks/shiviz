@@ -1,6 +1,4 @@
-// an alternative to the above commented out code. This resolves issue 18
-// and prevents the innocuos keys such as 'ctrl' from resetting the view
-$("#input").on('input propertychange', function(e) {
+$(".input input, .input textarea").on('input propertychange', function(e) {
     resetView();
 });
 
@@ -9,10 +7,13 @@ $("#examples a").on("click", function(e) {
 
     // logUrlPrefix is defined in dev.js & deployed.js
     var url = logUrlPrefix + $(this).data("log");
+    var defaultParser = "(?<event>.*)\\n(?<host>\\S*) (?<clock>{.*})";
+
     $.get(url, function(response) {
         $("#input").val(response);
         resetView();
         $("#delimiter").val($(e.target).data("delimiter"));
+        $("#parser").val($(e.target).data("parser") || defaultParser);
         $(e.target).css({
             color: "gray",
             pointerEvents: "none"
@@ -60,7 +61,8 @@ function resetView() {
         $(".icon .tabs li:last-child").removeClass("disabled");
     }
 
-    $("#curNode").html("(click to view)");
+    $(".event").text("(click to view)");
+    $(".fields").html("");
 
     d3.selectAll("#graph svg").remove();
 
@@ -82,18 +84,23 @@ function visualize() {
         var log = $("#input").val();
         var delimiterString = $("#delimiter").val().trim();
         var delimiter = delimiterString == "" ? null : new NamedRegExp(delimiterString, "m");
-        var parser = new LogParser(log, delimiter);
+        var regexpString = $("#parser").val().trim();
+
+        if (regexpString == "")
+            throw new Exception("The parser regexp field must not be empty.", true);
+
+        var regexp = new NamedRegExp(regexpString, "m");
+        var parser = new LogParser(log, delimiter, regexp);
         
-        var sortType = $("input[name=host_sort]:checked").attr("id").trim();
-        var descending = $("#ordering option:selected").text().trim() == "descending";
+        var sortType = $("input[name=host_sort]:checked").val().trim();
+        var descending = $("#ordering option:selected").val().trim() == "descending";
         var hostPermutation = null;
-        if(sortType == "1") { // TODO: shouldn't be hardcoded
+
+        if (sortType == "length") {
             hostPermutation = new LengthPermutation(descending);
-        }
-        else if(sortType == "2") {
+        } else if (sortType == "order") {
             hostPermutation = new LogOrderPermutation(descending);
-        }
-        else {
+        } else {
             throw new Exception("You must select a way to sort processes.", true);
         }
         
@@ -102,14 +109,14 @@ function visualize() {
         var labels = parser.getLabels();
         for(var i = 0; i < labels.length; i++) {
             var label = labels[i];
-            var executionParser = parser.getExecutionParser(label);
-            var graph = new ModelGraph(executionParser.getLogEvents());
+            var graph = new ModelGraph(parser.getLogEvents(label));
             var view = new View(graph, global, hostPermutation, label);
+
             global.addView(view);
             hostPermutation.addGraph(graph);
             
-            if(sortType == "2") {
-                hostPermutation.addLogs(executionParser.getLogEvents());
+            if (sortType == "order") {
+                hostPermutation.addLogs(parser.getLogEvents(label));
             }
         }
     
