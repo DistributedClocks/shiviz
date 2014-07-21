@@ -23,7 +23,7 @@ $("#examples a").on("click", function(e) {
 });
 
 $(".tabs li").on("click", function () {
-    go($(this).index(), true)
+    go($(this).index(), true);
 });
 
 $(".try").on("click", function () {
