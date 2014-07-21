@@ -1,4 +1,6 @@
 /**
+ * Constructs an empty motif.
+ * 
  * @classdesc
  * 
  * A Motif is a set of edges and nodes that are a subgraph of a Graph. Motif can

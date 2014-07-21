@@ -1,4 +1,7 @@
 /**
+ * Constructs a LogEvents given the log text, a {@link VectorTimestamp} and
+ * the line number associated with this log event
+ * 
  * @classdesc
  * 
  * A LogEvent represents a single event from the raw log and contains the text
@@ -7,7 +10,6 @@
  * 
  * @constructor
  * @param {String} text the text of the log (description)
- * @param {String} host the host the event belongs to
  * @param {VectorTimestamp} vectorTimestamp the vector timestamp of the log
  * @param {Number} lineNum the line number of the event in the log
  */

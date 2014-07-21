@@ -1,4 +1,6 @@
 /**
+ * Constructor for Transformation. This may be invoked by concrete sub-classes
+ * 
  * @classdesc
  * 
  * A graph transformation takes
@@ -15,6 +17,12 @@
  * @abstract
  */
 function Transformation() {
+    
+    if(this.constructor == Transformation) {
+        throw new Exception("Cannot instantiate Transformation; Transformation is an abstract class");
+    }
+    
+    /** @private */
     this.priority = 0;
 };
 
@@ -39,6 +47,8 @@ Transformation.prototype.getPriority = function() {
 };
 
 /**
+ * Constructs a HideHostTransformation where no host is specified to be hidden
+ * 
  * @classdesc
  * 
  * <p>This transformation generates a transformed model by removing this
@@ -160,6 +170,10 @@ HideHostTransformation.prototype.transform = function(visualGraph) {
 };
 
 /**
+ * Constructs a CollapseSequentialNodeTransformation that will collapse all
+ * local consecutive events that have no remote dependencies, subject to the threshold
+ * parameter.
+ * 
  * @classdesc
  * 
  * <p>CollapseSequentialNodeTransformation groups local consecutive events that
@@ -370,6 +384,8 @@ CollapseSequentialNodesTransformation.prototype.transform = function(visualGraph
 };
 
 /**
+ * Constructs a HighlightHostTransformation that highlights the specified hosts
+ * 
  * @classdesc
  * 
  * <p>HighlightHostTransformation "highlights" a set of hosts by removing all edges
@@ -535,6 +551,8 @@ HighlightHostTransformation.prototype.transform = function(visualGraph) {
 };
 
 /**
+ * Constructs a transformation to highlight motifs found by the specified {@link MotifFinder}
+ * 
  * @classdesc
  * 
  * This transformation visually highlights a motif.

@@ -1,4 +1,6 @@
 /**
+ * The constructor for this abstract class will typically be invoked by concrete sub-classes
+ * 
  * @clasdesc
  * 
  * <p>A HostPermutation is responsible for determining the order in which hosts
@@ -168,6 +170,8 @@ HostPermutation.prototype.update = function() {
 
 
 /**
+ * Constructs a LengthPermutation
+ * 
  * @classdesc
  * 
  * LengthPermutation arranges hosts in ascending order based on the number of LogEvents the host
@@ -234,6 +238,8 @@ LengthPermutation.prototype.update = function() {
 };
 
 /**
+ * Constructs a LogOrderPermutation
+ * 
  * @classdesc
  * 
  * LogOrderPermutation orders hosts based on the order they appear in logs.

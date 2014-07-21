@@ -1,4 +1,7 @@
 /**
+ * Constructs a VisualGraph. The resulting VisualGraph will represent the visualization of
+ * the provided {@link AbstractGraph}.
+ * 
  * @classdesc
  * 
  * <p>A VisualGraph represents the visualization of a graph; it describes how the
@@ -13,7 +16,7 @@
  *        visualization of
  * @param {Layout} layout A layout object that is responsible for setting the
  *        positions of VisualNodes and Edges
- * @param {HostPermutation} hostPermutation
+ * @param {HostPermutation} hostPermutation Determines the ordering of hosts
  */
 function VisualGraph(graph, layout, hostPermutation) {
 

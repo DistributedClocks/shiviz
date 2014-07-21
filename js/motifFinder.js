@@ -1,4 +1,6 @@
 /**
+ * The constructor for this abstract class may be invoked by sub-classes
+ * 
  * @classdesc
  * 
  * MotifFinders define an algorithm for finding a specific {@link Motif}. 
@@ -14,6 +16,9 @@
  */
 function MotifFinder() {
     
+    if(this.constructor == MotifFinder) {
+        throw new Exception("Cannot instantiate MotifFinder; MotifFinder is an abstract class");
+    }
 }
 
 /**

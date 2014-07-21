@@ -1,4 +1,6 @@
 /**
+ * Constructs a NamedRegExp object
+ * 
  * @clasdesc
  * 
  * A RegExp extension that allows named capture groups in the syntax /(?<name>regexp)/

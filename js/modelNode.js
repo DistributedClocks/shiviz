@@ -1,4 +1,7 @@
 /**
+ * Constructs a ModelNode given an array of {@link LogEvent}s that the
+ * ModelNode should represent
+ * 
  * @classdesc
  * 
  * ModelNodes are part of ModelGraphs. Together, they model a set of LogEvents.

@@ -1,4 +1,6 @@
 /**
+ * Constructs a view
+ * 
  * @classdesc
  * 
  * A View for a ShiViz graph. A View is responsible for drawing a single

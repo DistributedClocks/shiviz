@@ -1,4 +1,6 @@
 /**
+ * Constructs a Global
+ * 
  * @classdesc
  * 
  * A Global is the visualization in its entirety. It is a composition of Views
