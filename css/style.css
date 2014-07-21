@@ -68,6 +68,9 @@ input, textarea {
     border: 1px solid #aaa;
     padding: .4em;
 }
+input.mono {
+    font-family: monospace;
+}
 
 select {
     outline: none;
@@ -384,8 +387,27 @@ svg {
     z-index: 1;
 }
 
-#sidebar #curNode {
+#sidebar .event {
     word-break: break-all;
+    margin-bottom: 1em;
+}
+
+#sidebar .fields {
+    width: 100%;
+    font-size: 10pt;
+    border-spacing: 0;
+    border-collapse: collapse;
+    table-layout: fixed;
+}
+#sidebar .fields .title {
+    text-align: left;
+    vertical-align: top;
+    padding-right: 1em;
+}
+#sidebar .fields .value {
+    /*word-break: break-all;*/
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 svg#defs {
@@ -394,6 +416,7 @@ svg#defs {
     position: absolute;
 }
 
+/* Error box */
 #errorbox {
     display: none;
     width: 50%;

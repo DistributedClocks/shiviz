@@ -231,7 +231,7 @@ Global.prototype.drawSideBar = function() {
         global.unhideHost(e);
     });
     rect.on("mouseover", function(e) {
-        $("#curNode").innerHTML = e;
+        $(".event").innerHTML = e;
     });
     rect.append("title").text("Double click to view");
 

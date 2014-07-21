@@ -153,27 +153,40 @@
                             <li class="disabled">a</li>
                         </ul>
                         <ul class="links">
-                            <li><a title="Documentation" href="//bitbucket.org/bestchai/shiviz/wiki/Home">d</a></li>
-                            <li><a title="Source" href="//bitbucket.org/bestchai/shiviz/src">s</a></li>
+                            <li>
+                                <a title="Documentation" href="//bitbucket.org/bestchai/shiviz/wiki/Home">d</a>
+                            </li>
+                            <li>
+                                <a title="Source" href="//bitbucket.org/bestchai/shiviz/src">s</a>
+                            </li>
                         </ul>
                     </header>
                     <h3>Options</h3>
                     <div class="option">
-                        <label>Multiple execution delimiter: <input type="text" id="delimiter"></label>
+                        <label>Multiple execution delimiter: <input class="mono" type="text" id="delimiter"></label>
                     </div>
                     <div class="option">
-                        Sort processes in <select id="ordering"><option>ascending</option><option selected>descending</option></select> order by:<br>
-                        <label><input name="host_sort" type="radio" checked id="1"> # events</label> <label><input name="host_sort" type="radio" id="2"> appearance in log</label>
+                        <label>Log parser RegExp: <input class="mono" type="text" id="parser"></label>
+                    </div>
+                    <div class="option">
+                        Sort processes in
+                        <select id="ordering">
+                            <option value="ascending">ascending</option>
+                            <option value="descending" selected>descending</option>
+                        </select> order by:
+                        <br>
+                        <label><input name="host_sort" type="radio" checked value="length"> # events</label>
+                        <label><input name="host_sort" type="radio" value="order"> appearance in log</label>
                     </div>
                     <button id="visualize" disabled>Visualize</button>
                 </td>
                 <td class="right">
                     <div id="examples">
                         Examples:
-                        <a class="log-link" href="" data-log="log/facebook.log">Facebook data-center log</a>
-                        <a class="log-link" href="" data-log="log/voldemort.log">Voldemort log</a>
+                        <a class="log-link" href="" data-log="log/facebook.log" data-parser="(?<ip>(\d{1,3}\.){3}\d{1,3}) (?<date>(\d{1,2}/){2}\d{4} (\d{2}:){2}\d{2} (AM|PM)) (?<action>(INFO|GET|POST)) (?<event>.*)\n(?<host>\w*) (?<clock>.*)">Facebook data-center log</a>
+                        <a class="log-link" href="" data-log="log/voldemort.log" data-parser="\[(?<date>\d{4}-\d{2}-\d{2} (\d{2}:){2}\d{2},\d{3}) (?<path>\S*)\] (?<priority>(INFO|WARN)) (?<event>.*)\n(?<host>\S*) (?<clock>{.*})">Voldemort log</a>
                         <a class="log-link" href="" data-log="log/simpledb.log">SimpleDB log</a>
-                        <a class="log-link" href="" data-log="log/facebook-multiple.log" data-delimiter="^=== (?<trace>.*) ===$">Facebook log with multiple executions</a>
+                        <a class="log-link" href="" data-log="log/facebook-multiple.log" data-delimiter="^=== (?<trace>.*) ===$" data-parser="(?<ip>(\d{1,3}\.){3}\d{1,3}) (?<date>(\d{1,2}/){2}\d{4} (\d{2}:){2}\d{2} (AM|PM)) (?<action>(INFO|GET|POST)) (?<event>.*)\n(?<host>\w*) (?<clock>.*)">Facebook log with multiple executions</a>
                     </div>
                     <textarea id="input" spellcheck="false"></textarea>
                 </td>
@@ -205,7 +218,8 @@
             <div id="vizContainer"></div>
         </div>
         <div id="sidebar">
-            <div id="curNode"></div>
+            <div class="event"></div>
+            <table class="fields"></table>
             <div class="hidden"></div>
         </div>
     </section>
