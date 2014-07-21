@@ -1,4 +1,6 @@
 /**
+ * Constructs a LogParser to parse the provided raw log text.
+ * 
  * @classdesc
  * 
  * <p>LogParser can be used to transform raw log text to LogEvents The LogParser

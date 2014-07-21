@@ -1,4 +1,6 @@
 /**
+ * Constructs an Exception object that has the message specified.
+ * 
  * @classdesc
  * 
  * Exceptions represent unexpected errors or circumstances that may be caught.

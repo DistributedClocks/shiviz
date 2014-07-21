@@ -1,4 +1,6 @@
 /**
+ * The constructor for this abstract class may be invoked by sub-classes
+ * 
  * @classdesc
  * 
  * A Layout is responsible for positioning the {@link VisualNode}s of a
@@ -8,6 +10,10 @@
  * @abstract
  */
 function Layout() {
+    
+    if (this.constructor == Layout) {
+        throw new Exception("Cannot instantiate Layout; Layout is an abstract class");
+    }
     
 }
 

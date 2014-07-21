@@ -1,4 +1,6 @@
 /**
+ * Constructs a CustomMotifFinder that will find the motif specified
+ * 
  * @classdesc
  * 
  * A CustomMotifFinder is responsible for finding user-defined motifs in a

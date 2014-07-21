@@ -1,4 +1,6 @@
 /**
+ * Constructs a BuilderGraph with the specified set of hosts.
+ * 
  * @classdesc
  * 
  * A BuilderGraph represents a user-defined motif. It is not the result of a

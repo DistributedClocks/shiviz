@@ -1,4 +1,6 @@
 /**
+ * Constructs a BuilderNode
+ * 
  * @classdesc
  * 
  * BuilderNodes are nodes in a {@link BuilderGraph}. That is, they are nodes in a user

@@ -1,4 +1,6 @@
 /**
+ * Constructs a VectorTimestamp with the provided clock and host.
+ * 
  * @classdesc
  * 
  * A VectorTimestamp is a timestamp used according to the

@@ -1,7 +1,10 @@
 /**
+ * Constructs a VisualNode given an {@link AbstractNode}. The newly constructed
+ * VisualNode will represent the visualization of the {@link AbstractNode}.
+ * 
  * @classdesc
  * 
- * A VisualNode represents the visualization of a Node that is, this class
+ * A VisualNode represents the visualization of an {@link AbstractNode} that is, this class
  * describes how the Node should be drawn (such as its size, color, etc). Note
  * that the actual drawing logic is not part of this class.
  * 

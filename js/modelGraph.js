@@ -1,4 +1,6 @@
 /**
+ * Constructs a ModelGraph from an array of {@link LogEvent}s
+ * 
  * @classdesc
  * 
  * A ModelGraph models a set of LogEvents as a graph. The graph is generated

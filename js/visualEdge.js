@@ -1,4 +1,7 @@
 /**
+ * Constructs a VisualEdge. The resulting VisualEdge will represent the visualization
+ * of the edge between the two {@link VisualNode}s given as arguments
+ * 
  * @classdesc
  * 
  * A VisualEdge is a visualization of a Graph edge; it describes how the edge is
