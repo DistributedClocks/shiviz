@@ -50,7 +50,6 @@ function Global(hostPermutation) {
 Global.SIDE_BAR_WIDTH = 240;
 Global.HOST_SQUARE_SIZE = 25;
 Global.HIDDEN_EDGE_LENGTH = 40;
-Global.MIN_HOST_WIDTH = 40;
 
 
 /**
@@ -160,19 +159,33 @@ Global.prototype.resize = function() {
     var headerWidth = $(".visualization header").outerWidth();
     var sidebarWidth = $("#sidebar").outerWidth();
     var globalWidth = $(window).width() - headerWidth - sidebarWidth;
-    
-    var widthPerHost = globalWidth / visibleHosts;
+    var totalMargin = globalWidth - visibleHosts * Global.HOST_SQUARE_SIZE;
+    var hostMargin = totalMargin / (visibleHosts + this.views.length - 2);
+
+    if (hostMargin < Global.HOST_SQUARE_SIZE) {
+        hostMargin = Global.HOST_SQUARE_SIZE;
+        totalMargin = hostMargin * (visibleHosts + this.views.length - 2);
+        globalWidth = totalMargin + visibleHosts * Global.HOST_SQUARE_SIZE;
+    }
+
+    var widthPerHost = Global.HOST_SQUARE_SIZE + hostMargin;
+
+    if (visibleHosts == 1) {
+        widthPerHost = globalWidth;
+        hostMargin = 0;
+    }
 
     for (var i = 0; i < this.views.length; i++) {
         var view = this.views[i];
         var hosts = view.getHosts().filter(function (h) {
             return allHidden.indexOf(h) < 0;
         });
-        view.setWidth(hosts.length * widthPerHost);
+        view.setWidth(hosts.length * widthPerHost - hostMargin);
     }
 
     $("#graph").width(globalWidth);
 
+    return hostMargin;
 };
 
 /**
