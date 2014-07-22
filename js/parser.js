@@ -3,10 +3,10 @@
  * 
  * @classdesc
  * 
- * <p>LogParser can be used to transform raw log text to LogEvents The LogParser
+ * <p>LogParser can be used to transform raw log text to {@link LogEvent}s The LogParser
  * class per se is only responsible for dividing the raw text into different
  * executions according to the supplied delimiter. It then creates one
- * ExecutionParser for each execution to which to task for parsing is then
+ * {@link ExecutionParser} for each execution to which to task for parsing is then
  * delegated.</p>
  * 
  * <p>The raw log potentially contains text for multiple executions. Delimiters
@@ -74,7 +74,7 @@ LogParser.prototype.getLabels = function() {
 };
 
 /**
- * Gets the ExecutionParser for the execution with the specified label. The
+ * Gets the {@link ExecutionParser} for the execution with the specified label. The
  * ExecutionParser object can then be used to retrieve data parsed from that
  * execution's text.
  * 

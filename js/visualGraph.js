@@ -1,6 +1,6 @@
 /**
  * Constructs a VisualGraph. The resulting VisualGraph will represent the visualization of
- * the provided {@link AbstractGraph}.
+ * the provided {@link ModelGraph}.
  * 
  * @classdesc
  * 
@@ -8,8 +8,8 @@
  * graph is to be drawn. Note that the actual drawing logic is not part of this
  * class.</p>
  * 
- * <p>A VisualGraph is a composition of VisualNodes and VisualEdges. It provides
- * methods to get the corresponding VisualNode or VisualEdge from graph Nodes</p>
+ * <p>A VisualGraph is a composition of {@link VisualNode}s and {@link VisualEdge}s. It provides
+ * methods to get the corresponding {@link VisualNode} or {@link VisualEdge} from graph Nodes</p>
  * 
  * @constructor
  * @param {ModelGraph} graph The underlying Graph that this VisualGraph is a
@@ -120,7 +120,7 @@ VisualGraph.prototype.update = function() {
 };
 
 /**
- * Returns the underlying Graph that this VisualGraph is a visualization of
+ * Returns the underlying ModelGraph that this VisualGraph is a visualization of
  * 
  * @returns {ModelGraph} the underlying graph.
  */
@@ -129,7 +129,7 @@ VisualGraph.prototype.getGraph = function() {
 };
 
 /**
- * Returns the hosts associated with this visualGraph as an array
+ * Returns the hosts associated with this VisualGraph as an array
  * 
  * @returns {Array<String>} The array of hosts
  */
@@ -208,10 +208,10 @@ VisualGraph.prototype.getVisualEdges = function() {
 };
 
 /**
- * Gets the VisualNode in this VisualGraph that is the visualization of the Node
+ * Gets the VisualNode in this VisualGraph that is the visualization of the {@link ModelNode}
  * provided as a parameter. Returns null if no VisualNode found
  * 
- * @param {AbstractNode} node The node whose visualization within this graph will be
+ * @param {ModelNode} node The node whose visualization within this graph will be
  *        returned
  * @returns {VisualNode} The VisualNode that is the visualization of node or
  *          null if none exists
@@ -229,8 +229,8 @@ VisualGraph.prototype.getVisualNodeByNode = function(node) {
  * connecting node1 and node2. Note that getVisualEdgeByNodes(a, b) ==
  * getVisualEdgeByNodes(b, a)
  * 
- * @param {AbstractNode} node1 One of the end nodes of the edge
- * @param {AbstractNode} node2 One of the end nodes of the edge
+ * @param {ModelNode} node1 One of the end nodes of the edge
+ * @param {ModelNode} node2 One of the end nodes of the edge
  * @returns {VisualEdge} The VisualEdge that is the visualization of the edge
  *          between node1 and node2, or null if none exists
  */
@@ -264,11 +264,11 @@ VisualGraph.prototype.getHeight = function() {
 
 /**
  * Gets the edge ID of two Nodes. This is used to store a mapping of pairs of
- * Nodes to their VisualEdge
+ * {@link ModelNode}s to their {@link VisualEdge}
  * 
  * @private
- * @param {AbstractNode} node1
- * @param {AbstractNode} node2
+ * @param {ModelNode} node1
+ * @param {ModelNode} node2
  * @returns {String} The edge ID
  */
 VisualGraph.prototype.getEdgeId = function(node1, node2) {
@@ -276,11 +276,11 @@ VisualGraph.prototype.getEdgeId = function(node1, node2) {
 };
 
 /**
- * Creates a new VisualNode from a Node and adds it to this VisualGraph. The new
+ * Creates a new VisualNode from a ModelNode and adds it to this VisualGraph. The new
  * node is returned.
  * 
  * @private
- * @param {AbstractNode} node The graph node from which the VisualNode is created
+ * @param {ModelNode} node The graph node from which the VisualNode is created
  * @returns {VisualNode} the newly created VisualNode
  */
 VisualGraph.prototype.addVisualNodeByNode = function(node) {
@@ -293,11 +293,11 @@ VisualGraph.prototype.addVisualNodeByNode = function(node) {
 };
 
 /**
- * Removes a the VisualNode representation of the given Node from the
+ * Removes a the VisualNode representation of the given {@link ModelNode} from the
  * VisualGraph
  * 
  * @private
- * @param {AbstractNode} node The node whose VisualNode should be removed.
+ * @param {ModelNode} node The node whose VisualNode should be removed.
  */
 VisualGraph.prototype.removeVisualNodeByNode = function(node) {
     if (!this.nodeIdToVisualNode[node.getId()]) {
@@ -308,12 +308,12 @@ VisualGraph.prototype.removeVisualNodeByNode = function(node) {
 
 /**
  * Adds to the VisualGraph a VisualEdge that represents the edge between the two
- * parameter Nodes. The newly created VisualEdge is returned.
+ * parameter ModelNodes. The newly created VisualEdge is returned.
  * 
  * @private
- * @param {AbstractNode} node1 One of the end Nodes of the edge that a VisualEdge is
+ * @param {ModelNode} node1 One of the end Nodes of the edge that a VisualEdge is
  *        being created for
- * @param {AbstractNode} node2 One of the end Nodes of the edge that a VisualEdge is
+ * @param {ModelNode} node2 One of the end Nodes of the edge that a VisualEdge is
  *        being created for
  * @returns {VisualEdge} The newly created VisualEdge
  */
@@ -329,13 +329,13 @@ VisualGraph.prototype.addVisualEdgeByNodes = function(node1, node2) {
 };
 
 /**
- * Removes from the VisualGraph the VisualEdge representation of the edge
- * between the two parameter Nodes
+ * Removes from the VisualGraph the {@link VisualEdge} representation of the edge
+ * between the two parameter ModelNodes
  * 
  * @private
- * @param {AbstractNode} node1 One of the end Nodes of the edge whose VisualEdge should
+ * @param {ModelNode} node1 One of the end Nodes of the edge whose VisualEdge should
  *        be removed.
- * @param {AbstractNode} node2 One of the end Nodes of the edge whose VisualEdge should
+ * @param {ModelNode} node2 One of the end Nodes of the edge whose VisualEdge should
  *        be removed.
  */
 VisualGraph.prototype.removeVisualEdgeByNodes = function(node1, node2) {
@@ -343,6 +343,11 @@ VisualGraph.prototype.removeVisualEdgeByNodes = function(node1, node2) {
     delete this.links[edgeId];
 };
 
+/**
+ * Adds hidden family edges to the provided VisualNode
+ * 
+ * @param {VisualNode} node
+ */
 VisualGraph.prototype.addHiddenEdgeToFamily = function(node) {
     var children = node.getChildren();
     for (var i = 0; i < children.length; i++) {

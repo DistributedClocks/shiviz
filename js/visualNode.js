@@ -1,15 +1,15 @@
 /**
- * Constructs a VisualNode given an {@link AbstractNode}. The newly constructed
- * VisualNode will represent the visualization of the {@link AbstractNode}.
+ * Constructs a VisualNode given a {@link ModelNode}. The newly constructed
+ * VisualNode will represent the visualization of the {@link ModelNode}.
  * 
  * @classdesc
  * 
- * A VisualNode represents the visualization of an {@link AbstractNode} that is, this class
+ * A VisualNode represents the visualization of an {@link ModelNode} that is, this class
  * describes how the Node should be drawn (such as its size, color, etc). Note
  * that the actual drawing logic is not part of this class.
  * 
  * @constructor
- * @param {AbstractNode} node The Node to associate with this VisualNode. This object
+ * @param {ModelNode} node The node to associate with this VisualNode. This object
  *        will then be a visualization of the argument
  */
 function VisualNode(node) {
@@ -53,7 +53,12 @@ function VisualNode(node) {
     this._isHighlighted = false;
 }
 
-// Global variable used to assign each node an unique id
+/**
+ * Global variable used to assign each node an unique id
+ * 
+ * @private
+ * @static
+ */
 VisualNode.id = 0;
 
 /**
@@ -66,9 +71,9 @@ VisualNode.prototype.getId = function() {
 };
 
 /**
- * Gets the underlying Node that this VisualNode is a visualization of
+ * Gets the underlying {@link ModelNode} that this VisualNode is a visualization of
  * 
- * @returns {AbstractNode} The underlying node
+ * @returns {ModelNode} The underlying node
  */
 VisualNode.prototype.getNode = function() {
     return this.node;

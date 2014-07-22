@@ -3,7 +3,7 @@
  * 
  * @classdesc
  * 
- * A Global is the visualization in its entirety. It is a composition of Views
+ * A Global is the visualization in its entirety. It is a composition of {@link View}s
  * and is responsible for coordinating information that's shared across Views. 
  * It is also responsible for drawing things shared across all
  * Views such as the list of hidden hosts

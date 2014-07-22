@@ -1,4 +1,6 @@
 /**
+ * The constructor for this abstract class will typically be invoked by concrete sub-classes
+ * 
  * @classdesc
  * 
  * <p>An AbstractNode represents an node in the model and contains references to

@@ -19,7 +19,7 @@ function Layout() {
 
 /**
  * This method is solely responsible for actually performing the layout (i.e by
- * manipulating the x and y coordinates of VisualNodes in the VisualGraph. 
+ * manipulating the x and y coordinates of {@link VisualNode}s in the {@link VisualGraph}. 
  * 
  * @abstract
  */
@@ -30,7 +30,7 @@ Layout.prototype.start = function() {
 /**
  * @classdesc
  * 
- * SpaceTimeLayout arranges a VisualGraph as a space-time diagram with hosts
+ * SpaceTimeLayout arranges a {@link VisualGraph} as a space-time diagram with hosts
  * laid out horizontally and time increasing with y coordinate.
  * 
  * @constructor
@@ -56,9 +56,9 @@ SpaceTimeLayout.prototype.constructor = SpaceTimeLayout;
 
 /**
  * This method is solely responsible for actually performing the layout (i.e by
- * manipulating the x and y coordinates of VisualNodes in the VisualGraph. A
+ * manipulating the x and y coordinates of {@link VisualNode}s in the {@link VisualGraph}.  A
  * topological sort is performed to ensure that the y-coordinate of any
- * VisualNode's Node is greater than that of it's prev and parent Nodes
+ * VisualNode's Node is greater than that of it's prev and parent nodes
  * 
  * @param {VisualGraph} visualGraph The visualGraph to lay out
  * @param {HostPermutation} hostPermutation
