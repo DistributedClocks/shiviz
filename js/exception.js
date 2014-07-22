@@ -55,8 +55,8 @@ Exception.prototype.isUserFriendly = function() {
  * added after existing text
  * 
  * @param {String} string The message text to append
- * @param {String} style The text style. Should be one of 'bold', 'italic', or
- *        'code'. This parameter should be omitted if normal, unstyled text is
+ * @param {?String} [style] The text style. Should be one of 'bold', 'italic', or
+ *        'code'. This parameter should be omitted or set to null if normal, unstyled text is
  *        desired
  */
 Exception.prototype.append = function(string, style) {

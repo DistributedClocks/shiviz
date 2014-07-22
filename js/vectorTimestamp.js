@@ -143,7 +143,7 @@ VectorTimestamp.prototype.equals = function(other) {
  * to be concurrent if x does not happen before y AND y does not happen before x</p>
  * 
  * @param {VectorTimestamp} other the timestamp to compare to
- * @return {Number} the result of the comparison as defined above
+ * @returns {Number} the result of the comparison as defined above
  */
 VectorTimestamp.prototype.compareTo = function(other) {
     var thisFirst = false;
@@ -182,7 +182,7 @@ VectorTimestamp.prototype.compareTo = function(other) {
  * x[host] < y[host]</p>
  * 
  * @param {VectorTimestamp} other the timestamp to compare to
- * @return {Number} the result of the comparison as defined above
+ * @returns {Number} the result of the comparison as defined above
  */
 VectorTimestamp.prototype.compareToLocal = function(other) {
     if (this.host != other.host) {

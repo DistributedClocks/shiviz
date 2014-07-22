@@ -136,7 +136,7 @@ AbstractNode.number = 0;
 /**
  * Gets the globally unique ID of the node
  * 
- * @return {Number} the ID
+ * @returns {Number} the ID
  */
 AbstractNode.prototype.getId = function() {
     return this.id;
@@ -145,7 +145,7 @@ AbstractNode.prototype.getId = function() {
 /**
  * Gets the node's host
  * 
- * @return {String} the name of the host
+ * @returns {String} the name of the host
  */
 AbstractNode.prototype.getHost = function() {
     return this.host;
@@ -154,7 +154,7 @@ AbstractNode.prototype.getHost = function() {
 /**
  * Determines whether the node is a dummy head node
  * 
- * @return {Boolean} True if node is head
+ * @returns {Boolean} True if node is head
  */
 AbstractNode.prototype.isHead = function() {
     return this.isHeadInner;
@@ -163,7 +163,7 @@ AbstractNode.prototype.isHead = function() {
 /**
  * Determines whether the node is a dummy tail node
  * 
- * @return {Boolean} True if node is tail
+ * @returns {Boolean} True if node is tail
  */
 AbstractNode.prototype.isTail = function() {
     return this.isTailInner;
@@ -173,7 +173,7 @@ AbstractNode.prototype.isTail = function() {
  * Gets the next node. The next node is the node having the same host as the
  * current one that comes directly after the current node.
  * 
- * @return {AbstractNode} the next node or null if there is no next node.
+ * @returns {AbstractNode} the next node or null if there is no next node.
  */
 AbstractNode.prototype.getNext = function() {
     return this.next;
@@ -183,7 +183,7 @@ AbstractNode.prototype.getNext = function() {
  * Gets the previous node. The previous node is the node having the same host as
  * the current one that comes directly before the current node.
  * 
- * @return {AbstractNode} the previous node or null if there is no previous node
+ * @returns {AbstractNode} the previous node or null if there is no previous node
  */
 AbstractNode.prototype.getPrev = function() {
     return this.prev;
@@ -197,7 +197,7 @@ AbstractNode.prototype.getPrev = function() {
  * the underlying private data structure, so this function takes linear rather
  * than constant time on the number of family nodes.</p>
  * 
- * @return {Array<AbstractNode>} an array of connected nodes
+ * @returns {Array<AbstractNode>} an array of connected nodes
  */
 AbstractNode.prototype.getFamily = function() {
     return this.getParents().concat(this.getChildren());
@@ -214,7 +214,7 @@ AbstractNode.prototype.getFamily = function() {
  * the underlying private data structure, so this function takes linear rather
  * than constant time on the number of connections.</p>
  * 
- * @return {Array<AbstractNode>} an array of connected nodes
+ * @returns {Array<AbstractNode>} an array of connected nodes
  */
 AbstractNode.prototype.getConnections = function() {
     return [ this.prev, this.next ].concat(this.getFamily());
@@ -339,7 +339,7 @@ AbstractNode.prototype.remove = function() {
 /**
  * Determines whether the node has children.
  * 
- * @return {Boolean} True if the node has children
+ * @returns {Boolean} True if the node has children
  */
 AbstractNode.prototype.hasChildren = function() {
     for (key in this.hostToChild) {
@@ -351,7 +351,7 @@ AbstractNode.prototype.hasChildren = function() {
 /**
  * Determines whether the node has parents
  * 
- * @return {Boolean} True if the node has parents
+ * @returns {Boolean} True if the node has parents
  */
 AbstractNode.prototype.hasParents = function() {
     for (key in this.hostToParent) {
@@ -363,7 +363,7 @@ AbstractNode.prototype.hasParents = function() {
 /**
  * Determines whether the node has family
  * 
- * @return {Boolean} True if the node has family
+ * @returns {Boolean} True if the node has family
  */
 AbstractNode.prototype.hasFamily = function() {
     return this.hasChildren() || this.hasParents();
@@ -377,7 +377,7 @@ AbstractNode.prototype.hasFamily = function() {
  * the underlying private data structure, so this function takes linear rather
  * than constant time on the number of parents.</p>
  * 
- * @return {Array.<AbstractNode>} Array of parent nodes.
+ * @returns {Array.<AbstractNode>} Array of parent nodes.
  */
 AbstractNode.prototype.getParents = function() {
     var result = [];
@@ -395,7 +395,7 @@ AbstractNode.prototype.getParents = function() {
  * the underlying private data structure, so this function takes linear rather
  * than constant time on the number of children.</p>
  * 
- * @return {Array<AbstractNode>} Array of child nodes.
+ * @returns {Array<AbstractNode>} Array of child nodes.
  */
 AbstractNode.prototype.getChildren = function() {
     var result = [];
@@ -413,7 +413,7 @@ AbstractNode.prototype.getChildren = function() {
  * the underlying private data structure, so this function takes linear rather
  * than constant time on the number of family.</p>
  * 
- * @return {Array<AbstractNode>} Array of family nodes.
+ * @returns {Array<AbstractNode>} Array of family nodes.
  */
 AbstractNode.prototype.getFamily = function() {
     return this.getParents().concat(this.getChildren());
@@ -423,7 +423,7 @@ AbstractNode.prototype.getFamily = function() {
  * Returns the parent of this node that belongs to a specific host.
  * 
  * @param {String} host The target host
- * @return {AbstractNode} The parent node or null if no parent belongs to host.
+ * @returns {AbstractNode} The parent node or null if no parent belongs to host.
  */
 AbstractNode.prototype.getParentByHost = function(host) {
     var result = this.hostToParent[host];
@@ -434,7 +434,7 @@ AbstractNode.prototype.getParentByHost = function(host) {
  * Returns the child of this node that belongs to a specific host.
  * 
  * @param {String} host The target host
- * @return {AbstractNode} The child node or null if no child belongs to host.
+ * @returns {AbstractNode} The child node or null if no child belongs to host.
  */
 AbstractNode.prototype.getChildByHost = function(host) {
     var result = this.hostToChild[host];

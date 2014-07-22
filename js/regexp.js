@@ -8,7 +8,7 @@
  * @constructor
  * @param {String} regexp a string describing a regular expression. All
  *        backslashes must be escaped, e.g. \\d
- * @param {String} flags a string of regexp flags, e.g. "mi" for multiline
+ * @param {?String} [flags] a string of regexp flags, e.g. "mi" for multiline
  *        case-insensitive
  */
 function NamedRegExp(regexp, flags) {
@@ -59,7 +59,7 @@ function NamedRegExp(regexp, flags) {
  * <p>If there is no match for the regular expression, null is returned.</p>
  * 
  * @param {String} string test string
- * @return {Array<String>} array of match & captured matches, extended with named
+ * @returns {Array<String>} array of match & captured matches, extended with named
  *         capture groups as object properties. See documentation for js's {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/RegExp/exec
  *         built in regex} for more information
  */
@@ -79,7 +79,7 @@ NamedRegExp.prototype.exec = function(string) {
  * Tests for a match, just like RegExp.test()
  * 
  * @param {String} string test string
- * @return {Boolean} whether a match was found or not
+ * @returns {Boolean} whether a match was found or not
  */
 NamedRegExp.prototype.test = function(string) {
     return this.no.test(string);
@@ -88,7 +88,7 @@ NamedRegExp.prototype.test = function(string) {
 /**
  * Gets array of capture group labels
  * 
- * @return {Array<String>} Capture group labels
+ * @returns {Array<String>} Capture group labels
  */
 NamedRegExp.prototype.getNames = function() {
     return this.names;
