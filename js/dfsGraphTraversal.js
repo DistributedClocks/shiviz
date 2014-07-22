@@ -89,7 +89,7 @@ DFSGraphTraversal.prototype.step = function() {
  * nodes that were visited in order to get the the parameter.
  * 
  * @param {AbstractNode} node
- * @returns {Array}
+ * @returns {Array<AbstractNode>}
  */
 GraphTraversal.prototype.getTrail = function(node) {
     if (!node) {

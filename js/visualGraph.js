@@ -138,10 +138,12 @@ VisualGraph.prototype.getHosts = function() {
 };
 
 /**
- * Returns all VisualNodes in this VisualGraph as an array. There are no
+ * <p>Returns all VisualNodes in this VisualGraph as an array.</p>
+ * 
+ * <p>There are no
  * guarantees about the ordering of elements in the returned array. Note that a
  * new array is created to prevent access to the underlying one, so this method
- * takes linear time.
+ * takes linear time.</p>
  * 
  * @returns {Array<VisualNode>} The array of VisualNodes
  */
@@ -154,10 +156,14 @@ VisualGraph.prototype.getVisualNodes = function() {
 };
 
 /**
- * Returns only start VisualNodes in this VisualGraph as an array. There are no
+ * <p>Returns only start VisualNodes in this VisualGraph as an array. Start nodes
+ * correspond to dummy head {@link ModelNode}s and may be drawn as a header
+ * depending on the visualization</p>
+ * 
+ * <p>There are no
  * guarantees about the ordering of elements in the returned array. Note that a
  * new array is created to prevent access to the underlying one, so this method
- * takes linear time.
+ * takes linear time.</p>
  * 
  * @returns {Array<VisualNode>} The array of VisualNodes
  */
@@ -173,10 +179,14 @@ VisualGraph.prototype.getStartVisualNodes = function() {
 };
 
 /**
- * Returns non-start VisualNodes in this VisualGraph as an array. There are no
+ * <p>Returns non-start VisualNodes in this VisualGraph as an array. Start nodes
+ * correspond to dummy head {@link ModelNode}s and may be drawn as a header
+ * depending on the visualization</p>
+ * 
+ * <p>There are no
  * guarantees about the ordering of elements in the returned array. Note that a
  * new array is created to prevent access to the underlying one, so this method
- * takes linear time.
+ * takes linear time.</p>
  * 
  * @returns {Array<VisualNode>} The array of VisualNodes
  */
@@ -192,10 +202,12 @@ VisualGraph.prototype.getNonStartVisualNodes = function() {
 };
 
 /**
- * Returns all VisualEdges in this VisualGraph as an array. There are no
+ * <p>Returns all VisualEdges in this VisualGraph as an array.</p>
+ * 
+ * <p>There are no
  * guarantees about the ordering of elements in the returned array. Note that a
  * new array is created to prevent access to the underlying one, so this method
- * takes linear time.
+ * takes linear time.</p>
  * 
  * @returns {Array<VisualEdge>} The array of VisualEdges.
  */
