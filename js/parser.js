@@ -107,7 +107,6 @@ LogParser.prototype.getLogEvents = function(label) {
  * @param {String} rawString The raw string of the execution's log
  * @param {Label} label The label that should be associated with this execution
  * @param {NamedRegExp} regexp The RegExp parser
- * @returns
  */
 function ExecutionParser(rawString, label, regexp) {
 

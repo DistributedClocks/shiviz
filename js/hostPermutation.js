@@ -9,17 +9,17 @@
  * Shiviz always uses colors in a fixed order for consistency, so host color is
  * tied to host permutation.</p>
  * 
- * <p>Typical usage involves adding hosts to order using {@link addGraph}, calling
- * {@link update} to compute the ordering of hosts, and then using one of the getters
+ * <p>Typical usage involves adding hosts to order using {@link HostPermutation#addGraph}, calling
+ * {@link HostPermutation#update} to compute the ordering of hosts, and then using one of the getters
  * to retrieve the computed host color and order.</p>
  * 
  * <p>HostPermutation and all it's subclasses must ensure that the computed host 
- * order and colors do not change unless {@link update} is called. Before the very first
- * time {@link update} is called, do not try to retrieve the computed host color and order
- * (i.e by using {@link getHosts}, etc)</p>
+ * order and colors do not change unless {@link HostPermutation#update} is called. Before the very first
+ * time update is called, do not try to retrieve the computed host color and order
+ * (i.e by using {@link HostPermutation#getHosts}, etc)</p>
  * 
  * <p>HostPermutation is an abstract class. To implement a specific permutation, a
- * class that extends HostPermutation should be written and the {@link update} method
+ * class that extends HostPermutation should be written and the {@link HostPermutation#update} method
  * should be overriden.</p>
  * 
  * @constructor

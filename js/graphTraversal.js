@@ -1,20 +1,24 @@
 /**
- * A GraphTraversal defines a strategy for traversing an AbstractGraph.
+ * Constructs a GraphTraversal
  * 
- * The two key components of GraphTraversal are a set of states and a set of
- * VisitFunctions, both of which the user of this class must define. States are
+ * @classdesc
+ * 
+ * <p>A GraphTraversal defines a strategy for traversing an {@link AbstractGraph}.</p>
+ * 
+ * <p>The two key components of GraphTraversal are a set of states and a set of
+ * {@link GraphTraversal~VisitFunction VisitFunctions}, both of which the user of this class must define. States are
  * Strings that indicate the state of the current traversal. VisitFunctions
  * perform arbitrary operations given the current node the GraphTraversal is
- * visiting.
+ * visiting.</p>
  * 
- * You can associate visitFunctions with states so that different VisitFunctions
- * are invoked when the traversal is in different states.
+ * <p>You can associate visitFunctions with states so that different VisitFunctions
+ * are invoked when the traversal is in different states.</p>
  * 
- * Consider the following example: You want to traverse from head towards tail
+ * <p>Consider the following example: You want to traverse from head towards tail
  * the nodes of host "a" until you find a node n that communicates with host
  * "b". After that, you want to traverse from n to head the nodes of host "b".
  * There might be two states: "on a" and "on b". The VisitFunctions for the two
- * states might be as follows:
+ * states might be as follows:</p>
  * 
  * <pre>
  * 'on a':
@@ -36,11 +40,10 @@
  * }
  * </pre>
  * 
- * Alternately, you could chose to only define a defaultVisitFunction and decide what should
- * be done based on the state variable
+ * <p>Alternately, you could chose to only define a defaultVisitFunction and decide what should
+ * be done based on the state variable</p>
  * 
  * @constructor
- * @class
  */
 function GraphTraversal() {
 
@@ -81,12 +84,24 @@ GraphTraversal.prototype.reset = function() {
 };
 
 /**
+ * A VisitFunction is invoked each time the GraphTraversal encounters a new node.
+ * Which VisitFunction is invoked depends on what state the GraphTraversal is in.
+ * 
+ * @callback GraphTraversal~VisitFunction
+ * @param {GraphTraversal} gt The GraphTraversal object invoking the function
+ * @param {AbstractNode} node The current node being visited
+ * @param {String} state The current state
+ * @param {Object} data The current data object.
+ * @see {@link GraphTraversal#step}
+ */
+
+/**
  * Sets the visit function for a state. The visit function will be invoked when
  * the GraphTraversal is in the given state. If there was previously a visit
  * function already defined for the state, it will be replaced.
  * 
  * @param {String} state The state
- * @param {Function} fn The visit function
+ * @param {GraphTraversal~visitFunction} fn The visit function
  */
 GraphTraversal.prototype.setVisitFunction = function(state, fn) {
     this.visitFunctions[state] = fn;
@@ -97,7 +112,7 @@ GraphTraversal.prototype.setVisitFunction = function(state, fn) {
  * if there is no other visit function bound to the current state, OR if the
  * current state is null.
  * 
- * @param {Function} fn The visit function to set as default
+ * @param {GraphTraversal~visitFunction} fn The visit function to set as default
  */
 GraphTraversal.prototype.setDefaultVisitFunction = function(fn) {
     this.defaultVisitFunction = fn;
@@ -122,6 +137,17 @@ GraphTraversal.prototype.setCurrentNode = function(node) {
 };
 
 /**
+ * Sets the current data. The current data is an object that
+ * will be passed to the visit function the next time it's invoked. It can be used to
+ * pass arbitrary data
+ * 
+ * @param {*} data
+ */
+GraphTraversal.prototype.setCurrentData = function(data) {
+    this.currentData = data;
+};
+
+/**
  * Ends the traversal. After this method is invoked, no more nodes will be
  * visited.
  */
@@ -130,44 +156,46 @@ GraphTraversal.prototype.end = function() {
 };
 
 /**
- * Executes a single step of the traversal. The correct visit function is
- * fetched and is executed. The visit functions are invoked with four parameters:
- * function(gt, node, state, data)
- * gt is a reference the the invoking GraphTraversal. Node is the current node that
- * is being visited. State is the current state. Data is an object that can be
- * used to pass arbitrary data to the funciton.
+ * <p>Executes a single step of the traversal. The correct {@link GraphTraversal~VisitFunction VisitFunction} is
+ * fetched and is executed. If there is a VisitFunction associated with the current state (i.e
+ * via a previous call to {@link setVisitFunction}) and the current state is not null, then that VisitFunction is invoked. 
+ * Otherwise, the default visit function is invoked. Whatever is returned by the VisitFunction will be 
+ * returned by this method</p>
  * 
- * @returns {Boolean}
+ * <p>If this traversal has already {@link GraphTraversal#end end}ed, then this method does nothing and returns null</p>
+ * 
+ * @returns {*} The return value of the VisitFunction if one was executed, or null otherwise
+ * @see {@link GraphTraversal#setVisitFunction}
+ * @see {@link GraphTraversal#setDefaultVisitFunction}
  */
 GraphTraversal.prototype.step = function() {
     if (this.hasEnded) {
-        return false;
+        return null;
     }
 
     if (this.state == null || !this.visitFunctions[this.state]) {
         if (this.defaultVisitFunction == null) {
             throw new Exception("GraphTraversal.prototype.step: no valid visit function");
         }
-        this.defaultVisitFunction(this, this.currentNode, this.state, this.currentData);
+        return this.defaultVisitFunction(this, this.currentNode, this.state, this.currentData);
     }
     else {
-        this.visitFunctions[this.state](this, this.currentNode, this.state, this.currentData);
+        return this.visitFunctions[this.state](this, this.currentNode, this.state, this.currentData);
     }
-
-    return true;
 };
 
 /**
  * "Runs" the traversal. The traversal will be continuously stepped though (i.e
- * with step()) until the traversal has ended.
+ * with step()) until the traversal has ended. The value returned by the last call to {@link GraphTraversal#step step} will be returned by this method.
  * 
- * @returns {Boolean}
+ * @returns {*} The value returned by the last call to step, or null if step was never invoked.
  */
 GraphTraversal.prototype.run = function() {
 
-    var hasRun = false;
-    while (this.step()) {
-        hasRun = true;
+    var ret = null;
+    while(!this.hasEnded) {
+        ret = this.step();
     }
-    return hasRun;
+    return ret;
+
 };

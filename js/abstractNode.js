@@ -223,7 +223,7 @@ AbstractNode.prototype.getConnections = function() {
 /**
  * <p>Inserts a node after this one, preserving the invariants described at the top
  * of this document. The node to insert is first removed from its previous
- * location (i.e by calling node.{@link remove}). You cannot insert a node
+ * location (i.e by calling {@link AbstractNode#remove}). You cannot insert a node
  * after a tail node.</p>
  * 
  * @param {AbstractNode} node The node to insert
@@ -252,7 +252,7 @@ AbstractNode.prototype.insertNext = function(node) {
 /**
  * <p>Inserts a node before this one, preserving the invariants described at the
  * top of this document. The node to insert is first removed from its previous
- * location (i.e by calling node.{@link remove}). You cannot insert a node
+ * location (i.e by calling {@link AbstractNode#remove}). You cannot insert a node
  * before a head node.</p>
  * 
  * @param {AbstractNode} node The node to insert
