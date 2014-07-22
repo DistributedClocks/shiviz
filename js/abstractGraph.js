@@ -24,7 +24,7 @@
  * <li>node.getNext() == null if and only if node.isTail() == true</li>
  * <li>node.getPrev() == null if and only if node.isHead() == true</li></p>
  * 
- * <p>AbstractGraph implements the observer pattern. AbstractGraph will notify registered observers
+ * <p>AbstractGraph implements the {@link http://en.wikipedia.org/wiki/Observer_pattern observer pattern}. AbstractGraph will notify registered observers
  * when certain events happen such as the removal of a node, the addition of
  * edges between nodes, removal of a host, etc.</p>
  *
@@ -114,7 +114,8 @@ AbstractGraph.prototype.hasHost = function(host) {
 };
 
 /**
- * Removes a host from the model. All connections to and from this host will be
+ * Removes a host from the model. The host itself and all nodes on the host will be removed.
+ * In addition all connections to and from this host will be
  * removed. If the host doesn't exist, this method does nothing
  * 
  * @param {String} host the name of the host to hide
@@ -208,7 +209,7 @@ AbstractGraph.prototype.getAllNodes = function() {
  * there does not exist a directed edge from nodes[j] to nodes[i].</p>
  * 
  * <p>In the case that there are multiple permissible orderings, this method makes
- * not guarentees about which one will be returned. This method may not even return
+ * no guarantees about which one will be returned. This method may not even return
  * the same order each time it's called.</p>
  * 
  * @returns {Array<AbstractNode>} the nodes in topologically sorted order.

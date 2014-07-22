@@ -19,7 +19,7 @@
  * (i.e by using {@link getHosts}, etc)</p>
  * 
  * <p>HostPermutation is an abstract class. To implement a specific permutation, a
- * class that extends HostPermutation should be written and the update method
+ * class that extends HostPermutation should be written and the {@link update} method
  * should be overriden.</p>
  * 
  * @constructor
@@ -63,7 +63,7 @@ HostPermutation.prototype.addGraph = function(graph) {
 
 /**
  * Gets a list of hosts in the order determined by the HostPermutation. Note
- * that you must call update() to compute the ordering of hosts before
+ * that you must call {@link update} to compute the ordering of hosts before
  * retrieving it with this method
  * 
  * @returns {Array<String>} Array of hosts
@@ -78,7 +78,7 @@ HostPermutation.prototype.getHosts = function() {
 /**
  * Gets a list of hosts in the order determined by the HostPermutation. Only
  * hosts contained in both this HostPermutation and the filter array will be
- * returned. Note that you must call update() to compute the ordering of hosts
+ * returned. Note that you must call {@link update} to compute the ordering of hosts
  * before retrieving it with this method.
  * 
  * @param {Array<String>} filter The filter array.

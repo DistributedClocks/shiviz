@@ -4,7 +4,7 @@
  * 
  * @classdesc
  * 
- * A VisualEdge is a visualization of a Graph edge; it describes how the edge is
+ * A VisualEdge is a visualization of an edge between {@link ModelNode}s; it describes how the edge is
  * to be drawn. Note that actual drawing logic is not part of this class
  * 
  * @constructor
@@ -37,7 +37,7 @@ function VisualEdge(sourceVisualNode, targetVisualNode) {
 }
 
 /**
- * Gets the source VisualNode. The source VisualNode is the VisualNode connected
+ * Gets the source {@link VisualNode}. The source VisualNode is the VisualNode connected
  * by this VisualEdge such that getSourceVisualNode().getNode() is either the
  * parent or the prev node of getTargetVisualNode().getNode()
  * 
@@ -48,11 +48,11 @@ VisualEdge.prototype.getSourceVisualNode = function() {
 };
 
 /**
- * Gets the target VisualNode. The target VisualNode is the VisualNode connected
+ * Gets the target {@link VisualNode}. The target VisualNode is the VisualNode connected
  * by this VisualEdge such that getTargetVisualNode().getNode() is either the
  * child or the next node the getSourceVisualNode().getNode()
  * 
- * @returns {VisualNode}
+ * @returns {VisualNode} The target VisualNode
  */
 VisualEdge.prototype.getTargetVisualNode = function() {
     return this.targetVisualNode;
@@ -131,6 +131,7 @@ VisualEdge.prototype.getOpacity = function() {
 
 /**
  * Sets the opacity of the VisualEdge
+ * 
  * @param {Number} newOpacity The new opacity. Must be between 0 and 1 inclusive
  */
 VisualEdge.prototype.setOpacity = function(newOpacity) {

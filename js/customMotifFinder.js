@@ -17,6 +17,10 @@ function CustomMotifFinder(builderGraph) {
     this.builderGraph = builderGraph;
 }
 
+//CustomMotifFinder extends MotifFinder
+CustomMotifFinder.prototype = Object.create(MotifFinder.prototype);
+CustomMotifFinder.prototype.constructor = CustomMotifFinder;
+
 /**
  * 
  */

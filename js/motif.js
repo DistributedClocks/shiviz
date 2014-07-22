@@ -3,7 +3,7 @@
  * 
  * @classdesc
  * 
- * A Motif is a set of edges and nodes that are a subgraph of a Graph. Motif can
+ * A Motif is a set of edges and nodes that are a subgraph of a {@link AbstractGraph}. Motifs can
  * be used by other classes to identify or store interesting or useful parts of
  * a larger graph. The exact importance of the edges and nodes stored is left up
  * to the utilizing class.
