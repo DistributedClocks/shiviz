@@ -1,24 +1,27 @@
 /**
- * LogParser can be used to transform raw log text to LogEvents The LogParser
+ * Constructs a LogParser to parse the provided raw log text.
+ * 
+ * @classdesc
+ * 
+ * <p>LogParser can be used to transform raw log text to {@link LogEvent}s The LogParser
  * class per se is only responsible for dividing the raw text into different
  * executions according to the supplied delimiter. It then creates one
- * ExecutionParser for each execution to which to task for parsing is then
- * delegated.
+ * {@link ExecutionParser} for each execution to which to task for parsing is then
+ * delegated.</p>
  * 
- * The raw log potentially contains text for multiple executions. Delimiters
+ * <p>The raw log potentially contains text for multiple executions. Delimiters
  * demarcate where one execution's text ends and another begins. Labels can be
  * given to executions by specifying a "trace" capture group within the
  * delimiter regex. (So the label text must be part of the delimiter). This
  * label can later be used to identify an execution. If an execution's text is
- * not preceeded by a delimiter, it is given the empty string as its label.
+ * not preceeded by a delimiter, it is given the empty string as its label.</p>
  * 
- * @class
  * @constructor
- * @param {String} rawString The raw log text
- * @param {NamedRegExp} delimiter A regex that specifies the delimiter. Anything
+ * @param {String} rawString the raw log text
+ * @param {NamedRegExp} delimiter a regex that specifies the delimiter. Anything
  *        that matches the regex will be treated as a delimiter. A delimiter
  *        acts to separate different executions.
- * @param {NamedRegExp} delimiter A regex that specifies the log parser. The parser
+ * @param {NamedRegExp} regexp A regex that specifies the log parser. The parser
  *        must contain the named capture groups "clock", "event", and "host"
  *        representing the vector clock, the event string, and the host
  *        respectively.
@@ -82,12 +85,12 @@ LogParser.prototype.getLabels = function() {
 };
 
 /**
- * Returns the LogEvents parsed by this. The ordering of LogEvents in the
+ * Returns the {@link LogEvent}s parsed by this. The ordering of LogEvents in the
  * returned array is guaranteed to be the same as the order in which they were
  * encountered in the raw log text
  *
  * @param {String} label The label of the execution you want to get log events from.
- * @returns {Array} An array of LogEvents
+ * @returns {Array<LogEvent>} An array of LogEvents
  */
 LogParser.prototype.getLogEvents = function(label) {
     if (!this.executions[label]) return null;
@@ -95,9 +98,10 @@ LogParser.prototype.getLogEvents = function(label) {
 };
 
 /**
+ * @classdesc
+ * 
  * ExecutionParser parses the raw text for one execution.
  * 
- * @class
  * @constructor
  * @private
  * @param {String} rawString The raw string of the execution's log

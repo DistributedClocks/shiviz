@@ -1,26 +1,66 @@
 /**
- * Graph transformations are defined in this file. A graph transformation takes
+ * Constructor for Transformation. This may be invoked by concrete sub-classes
+ * 
+ * @classdesc
+ * 
+ * A graph transformation takes
  * a graph as input and modifies it in place. Each type of transformation is
- * defined in its own class. The transform method is solely responsible for
- * performing the actual transformation.
+ * defined in its own class.
  * 
  * Graph transformations should strive to preserve the definitions of 'parent',
- * 'child', 'next' and 'previous' as defined in node.js
+ * 'child', 'next' and 'previous' as defined in {@link AbstractNode}
  * 
  * Each transformation should declare a priority field of type Number.
  * Transformations of highest priority will be applied first.
- */
-
-/**
- * This transformation generates a transformed model by removing this
- * Transformation's hostToHide from the provided model. It removes all nodes for
- * the hostToHide and any edges touching a node for the hostToHide and adds
- * transitive edges. The added transitive edges will be drawn with dashed lines.
- * 
- * If this transformation is applied to a graph that doesn't have the specified
- * host, then this transformation does nothing
  * 
  * @constructor
+ * @abstract
+ */
+function Transformation() {
+    
+    if(this.constructor == Transformation) {
+        throw new Exception("Cannot instantiate Transformation; Transformation is an abstract class");
+    }
+    
+    /** @private */
+    this.priority = 0;
+};
+
+/**
+ * The transform method is solely responsible for
+ * performing the actual transformation.
+ * 
+ * @abstract
+ * @param {VisualGraph} visualGraph
+ */
+Transformation.prototype.transform = function(visualGraph) {
+    
+};
+
+/**
+ * Gets the priority of the transformation.
+ *
+ * @returns {Number} the priority of the transformation
+ */
+Transformation.prototype.getPriority = function() {
+    return this.priority;
+};
+
+/**
+ * Constructs a HideHostTransformation where no host is specified to be hidden
+ * 
+ * @classdesc
+ * 
+ * <p>This transformation generates a transformed model by removing this
+ * Transformation's hostToHide from the provided model. It removes all nodes for
+ * the hostToHide and any edges touching a node for the hostToHide and adds
+ * transitive edges. The added transitive edges will be drawn with dashed lines.</p>
+ * 
+ * <p>If this transformation is applied to a graph that doesn't have the specified
+ * host, then this transformation does nothing</p>
+ * 
+ * @constructor
+ * @extends Transformation
  * @param {String} hostToHide The host to hide from the model
  */
 function HideHostTransformation() {
@@ -30,6 +70,10 @@ function HideHostTransformation() {
     /** @private */
     this.hostsToHide = {};
 }
+
+// HideHostTransformation extends Transformation
+HideHostTransformation.prototype = Object.create(Transformation.prototype);
+HideHostTransformation.prototype.constructor = HideHostTransformation;
 
 /**
  * Adds a host. The added host will be hidden by the transformation
@@ -126,19 +170,25 @@ HideHostTransformation.prototype.transform = function(visualGraph) {
 };
 
 /**
- * @class
+ * Constructs a CollapseSequentialNodeTransformation that will collapse all
+ * local consecutive events that have no remote dependencies, subject to the threshold
+ * parameter.
  * 
- * CollapseSequentialNodeTransformation groups local consecutive events that
+ * @classdesc
+ * 
+ * <p>CollapseSequentialNodeTransformation groups local consecutive events that
  * have no remote dependencies. The collapsed nodes will have an increased
  * radius and will contain a label indicating the number of nodes collapsed into
  * it. This transformation provides methods for adding and removing nodes exempt
- * from this collapsing process.
+ * from this collapsing process.</p>
  * 
- * This transformation collapses nodes that belong to the same group.
+ * <p>This transformation collapses nodes that belong to the same group.
  * Intuitively, nodes belong to the same group if they are local consecutive
  * events that have no remote dependencies. More formally, a node y is in x's
- * group if y == x or y has no family and y's prev or next node is in x's group.
+ * group if y == x or y has no family and y's prev or next node is in x's group.</p>
  * 
+ * @constructor
+ * @extends Transformation
  * @param {Number} threshold Nodes are collapsed if the number of nodes in the
  *            group is greater than or equal to the threshold. The threshold
  *            must be greater than or equal to 2.
@@ -154,6 +204,10 @@ function CollapseSequentialNodesTransformation(threshold) {
 
     this.priority = 20;
 }
+
+//CollapseSequentialNodesTransformation extends Transformation
+CollapseSequentialNodesTransformation.prototype = Object.create(Transformation.prototype);
+CollapseSequentialNodesTransformation.prototype.constructor = CollapseSequentialNodesTransformation;
 
 /**
  * Gets the threshold. Nodes are collapsed if the number of nodes in the group
@@ -182,15 +236,15 @@ CollapseSequentialNodesTransformation.prototype.setThreshold = function(threshol
 };
 
 /**
- * Adds an exemption. An exemption is a LogEvent whose Node will never be
- * collapsed.
+ * <p>Adds an exemption. An exemption is a LogEvent whose Node will never be
+ * collapsed.</p>
  * 
- * Note that addExemption and removeExemption are not inverses of each other.
+ * <p>Note that addExemption and removeExemption are not inverses of each other.
  * addExemption affects only the LogEvents of the given node, while
  * removeExemption affects the LogEvents of the given node and all nodes in its
- * group.
+ * group.</p>
  * 
- * @param {Node} node The node whose LogEvents will be added as exemptions
+ * @param {ModelNode} node The node whose LogEvents will be added as exemptions
  */
 CollapseSequentialNodesTransformation.prototype.addExemption = function(node) {
     var logEvents = node.getLogEvents();
@@ -200,15 +254,15 @@ CollapseSequentialNodesTransformation.prototype.addExemption = function(node) {
 };
 
 /**
- * Removes an exemption. An exemption is a LogEvent whose Node will never be
- * collapsed
+ * <p>Removes an exemption. An exemption is a LogEvent whose Node will never be
+ * collapsed</p>
  * 
- * Note that addExemption and removeExemption are not inverses of each other.
+ * <p>Note that addExemption and removeExemption are not inverses of each other.
  * addExemption affects only the LogEvents of the given node, while
  * removeExemption affects the LogEvents of the given node and all nodes in its
- * group.
+ * group.</p>
  * 
- * @param {Node} node The LogEvents of this node and the LogEvents of every node
+ * @param {ModelNode} node The LogEvents of this node and the LogEvents of every node
  *            in its group will be removed as exemptions
  */
 CollapseSequentialNodesTransformation.prototype.removeExemption = function(node) {
@@ -243,7 +297,7 @@ CollapseSequentialNodesTransformation.prototype.removeExemption = function(node)
 /**
  * Toggles an exemption.
  * 
- * @param {Node} node The node to toggle.
+ * @param {ModelNode} node The node to toggle.
  */
 CollapseSequentialNodesTransformation.prototype.toggleExemption = function(node) {
     if (this.isExempt(node)) {
@@ -255,10 +309,10 @@ CollapseSequentialNodesTransformation.prototype.toggleExemption = function(node)
 };
 
 /**
- * Determines if any of the LogEvents contained inside the given node is an
- * exemption
+ * <p>Determines if any of the LogEvents contained inside the given node is an
+ * exemption</p>
  * 
- * @param {Node} node The node to check
+ * @param {ModelNode} node The node to check
  * @returns {Boolean} True if one of the LogEvents is an exemption
  */
 CollapseSequentialNodesTransformation.prototype.isExempt = function(node) {
@@ -272,8 +326,8 @@ CollapseSequentialNodesTransformation.prototype.isExempt = function(node) {
 };
 
 /**
- * Performs the transformation on the given visualGraph. The VisualGraph and its
- * underlying Graph are modified in place
+ * <p>Performs the transformation on the given visualGraph. The VisualGraph and its
+ * underlying Graph are modified in place</p>
  * 
  * @param {VisualGraph} visualGraph The VisualGraph to transform
  */
@@ -330,16 +384,20 @@ CollapseSequentialNodesTransformation.prototype.transform = function(visualGraph
 };
 
 /**
- * @class
+ * Constructs a HighlightHostTransformation that highlights the specified hosts
  * 
- * HighlightHostTransformation "highlights" a set of hosts by removing all edges
+ * @classdesc
+ * 
+ * <p>HighlightHostTransformation "highlights" a set of hosts by removing all edges
  * not incident on the set of highlighted nodes. The highlighted hosts are drawn
- * with a border to distinguish them from unhighlighted ones.
+ * with a border to distinguish them from unhighlighted ones.</p>
  * 
- * In the case that the set of hosts to highlight is empty, this transformation
+ * <p>In the case that the set of hosts to highlight is empty, this transformation
  * does nothing. In the case that a specified host does not exist, it is
- * ignored.
+ * ignored.</p>
  * 
+ * @constructor
+ * @extends Transformation
  * @param {Array<String>} hostsToHighlight The array of hosts to highlight.
  */
 function HighlightHostTransformation(hostsToHighlight) {
@@ -356,6 +414,10 @@ function HighlightHostTransformation(hostsToHighlight) {
         this.addHostToHighlight(hostsToHighlight[i]);
     }
 }
+
+//HighlightHostTransformation extends Transformation
+HighlightHostTransformation.prototype = Object.create(Transformation.prototype);
+HighlightHostTransformation.prototype.constructor = HighlightHostTransformation;
 
 /**
  * Adds a host to the set of hosts to highlight.
@@ -402,14 +464,14 @@ HighlightHostTransformation.prototype.clearHostsToHighlight = function() {
 };
 
 /**
- * Gets the hosts that are hidden by the transformation.
+ * <p>Gets the hosts that are hidden by the transformation.</p>
  * 
- * When hosts are highlighted, irrelevant hosts will be hidden. This method
+ * <p>When hosts are highlighted, irrelevant hosts will be hidden. This method
  * returns those implicitly hidden hosts (not the hosts that are specified to be
  * hidden). Since the hosts to be hidden are only calculated when the transform
  * method is invoked, this method will return the implicity hidden hosts from
  * the last call to transform. If transform has yet to be called, this method
- * returns an empty array.
+ * returns an empty array.</p>
  * 
  * @returns {Array<String>} The array of hosts.
  */
@@ -489,13 +551,17 @@ HighlightHostTransformation.prototype.transform = function(visualGraph) {
 };
 
 /**
- * @class
+ * Constructs a transformation to highlight motifs found by the specified {@link MotifFinder}
+ * 
+ * @classdesc
  * 
  * This transformation visually highlights a motif.
  * 
+ * @constructor
+ * @extends Transformation
  * @param {MotifFinder} finder a MotifFinder that specifies which motif to
  *            highlight
- * @param {boolean} ignoreEdges If true, edges will not be visually highlighted
+ * @param {Boolean} ignoreEdges If true, edges will not be visually highlighted
  */
 function HighlightMotifTransformation(finder, ignoreEdges) {
 
@@ -506,15 +572,22 @@ function HighlightMotifTransformation(finder, ignoreEdges) {
 
 }
 
+//HighlightMotifTransformation extends Transformation
+HighlightMotifTransformation.prototype = Object.create(Transformation.prototype);
+HighlightMotifTransformation.prototype.constructor = HighlightMotifTransformation;
+
 /**
  * Sets whether or not to highlight edges that are part of the motif.
  * 
- * @param {boolean} val If true, edges will not be visually highlighted
+ * @param {Boolean} val If true, edges will not be visually highlighted
  */
 HighlightMotifTransformation.prototype.setIgnoreEdges = function(val) {
     this.ignoreEdges = !!val;
 };
 
+/**
+ * @param visualGraph
+ */
 HighlightMotifTransformation.prototype.transform = function(visualGraph) {
 
     var motif = this.finder.find(visualGraph.getGraph());
