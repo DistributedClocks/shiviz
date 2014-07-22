@@ -203,7 +203,7 @@ function ModelGraph(logEvents) {
         for (var i = 0; i < sortedNodes.length; i++) {
             var curr = sortedNodes[i];
             var host = curr.getHost();
-            var time = curr.getLogEvents()[0].getVectorTimestamp().getOwnTime();
+            var time = curr.getFirstLogEvent().getVectorTimestamp().getOwnTime();
 
             var children = curr.getChildren();
             if (!curr.getNext().isTail()) {
@@ -212,13 +212,13 @@ function ModelGraph(logEvents) {
 
             for (var j = 0; j < children.length; j++) {
                 var childHost = children[j].getHost();
-                var childTime = children[j].getLogEvents()[0].getVectorTimestamp().getOwnTime();
+                var childTime = children[j].getFirstLogEvent().getVectorTimestamp().getOwnTime();
                 clocks[childHost][childTime] = clocks[childHost][childTime].update(clocks[host][time]);
             }
 
             if (!clocks[host][time].equals(getVT(curr))) {
                 var exception = new Exception("The following event has an impermissible vector clock.\n");
-                attachEvent(curr.getLogEvents()[0], exception);
+                attachEvent(curr.getFirstLogEvent(), exception);
                 exception.append("We think it should be:");
                 exception.append(JSON.stringify(clocks[host][time].clock), "code");
                 exception.setUserFriendly(true);

@@ -16,16 +16,17 @@ Usage:
 - This script must be run from OSX :)
 
 - This script:
+  1. Generates the documentation for shiviz using jsdoc3
 
-  1. Removes the proxy hack that allows shiviz to access log files
+  2. Removes the proxy hack that allows shiviz to access log files
      when shiviz is run locally.
 
-  2. Adds google analytics tracking.
+  3. Adds google analytics tracking.
 
-  3. Copies over the entire d3/ source tree over to a destination that
+  4. Copies over the entire d3/ source tree over to a destination that
      is assumed to be the http://bestchai.bitbucket.org/shiviz/ repo.
   
-  4. Commits and pushes the http://bestchai.bitbucket.org/shiviz/ repo.
+  5. Commits and pushes the http://bestchai.bitbucket.org/shiviz/ repo.
 '''
 
 
@@ -54,7 +55,7 @@ def runcmd(s):
     Logs and runs a shell command.
     '''
     print "os.system: " + s
-    os.system(s)
+    return os.system(s)
     
 
 def main():
@@ -64,6 +65,10 @@ def main():
     
     src_dir = "./"
     dist_dir = "../bestchai.bitbucket.org/shiviz/"
+    doc_dir = "../bestchai.bitbucket.org/shiviz/docs/"
+
+    if (runcmd("perl docgen.pl " + doc_dir) != 0):
+        sys.exit(-1)
 
     print "Deploying to: " + dist_dir
     print "from: " + src_dir
