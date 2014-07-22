@@ -190,7 +190,7 @@ LengthPermutation.prototype = Object.create(HostPermutation.prototype);
 LengthPermutation.prototype.constructor = LengthPermutation;
 
 /**
- * 
+ * Overrides {@link HostPermutation#update}
  */
 LengthPermutation.prototype.update = function() {
 
@@ -270,7 +270,7 @@ LogOrderPermutation.prototype.addLogs = function(logs) {
 };
 
 /**
- * 
+ * Overrides {@link HostPermutation#update}
  */
 LogOrderPermutation.prototype.update = function() {
     
