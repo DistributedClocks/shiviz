@@ -1,15 +1,18 @@
 /**
+ * Constructs an Exception object that has the message specified.
+ * 
+ * @classdesc
+ * 
  * Exceptions represent unexpected errors or circumstances that may be caught.
  * In Shiviz, you should ONLY ever throw Exception objects (as opposed to say,
  * raw strings). Exceptions contain a message that can be retrieved in HTML form
  * or as a raw string. The message can be either user-friendly or
  * non-user-friendly. A user-friendly message is one that would make sense to a
- * reasonable end-user who has knowledge of Shiviz's internal workings.
+ * reasonable end-user who has no knowledge of Shiviz's internal workings.
  * 
- * @class
  * @constructor
  * @param {String} message The message
- * @param {boolean} isUserFriendly true if this message is user-friendly
+ * @param {Boolean} isUserFriendly if true, this message is user-friendly
  */
 function Exception(message, isUserFriendly) {
 
@@ -28,9 +31,9 @@ function Exception(message, isUserFriendly) {
 /**
  * Sets whether or not the message contained in this object is user-friendly. A
  * user-friendly message is one that would make sense to a reasonable end-user
- * who has knowledge of Shiviz's internal workings.
+ * who has no knowledge of Shiviz's internal workings.
  * 
- * @param {boolean} val true if this should be set to user-friendly
+ * @param {Boolean} val true if this should be set to user-friendly
  */
 Exception.prototype.setUserFriendly = function(val) {
     this._isUserFriendly = val;

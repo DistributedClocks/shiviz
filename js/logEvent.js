@@ -1,10 +1,13 @@
 /**
+ * Constructs a LogEvents given the log text, a {@link VectorTimestamp} and
+ * the line number associated with this log event
+ * 
+ * @classdesc
+ * 
  * A LogEvent represents a single event from the raw log and contains the text
- * of the log, a reference to the vector timestamp, and other contextual
- * information.
- */
-
-/**
+ * of the log, a reference to the {@link VectorTimestamp}, and other contextual
+ * information. LogEvents are immutable.
+ * 
  * @constructor
  * @param {String} text the text of the log (description)
  * @param {VectorTimestamp} vectorTimestamp the vector timestamp of the log
@@ -30,6 +33,12 @@ function LogEvent(text, vectorTimestamp, lineNum, fields) {
     this.fields = fields || {};
 }
 
+/**
+ * Used to assign LogEvents unique IDs
+ * 
+ * @private
+ * @static
+ */
 LogEvent.id = 0;
 
 /**

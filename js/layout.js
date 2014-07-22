@@ -1,9 +1,40 @@
 /**
- * @class
+ * The constructor for this abstract class may be invoked by sub-classes
  * 
- * SpaceTimeLayout arranges a VisualGraph as a space-time diagram with hosts
+ * @classdesc
+ * 
+ * A Layout is responsible for positioning the {@link VisualNode}s of a
+ * {@link VisualGraph} (i.e by setting their x and y coordinates).
+ * 
+ * @constructor
+ * @abstract
+ */
+function Layout() {
+    
+    if (this.constructor == Layout) {
+        throw new Exception("Cannot instantiate Layout; Layout is an abstract class");
+    }
+    
+}
+
+/**
+ * This method is solely responsible for actually performing the layout (i.e by
+ * manipulating the x and y coordinates of {@link VisualNode}s in the {@link VisualGraph}. 
+ * 
+ * @abstract
+ */
+Layout.prototype.start = function() {
+    
+};
+
+/**
+ * @classdesc
+ * 
+ * SpaceTimeLayout arranges a {@link VisualGraph} as a space-time diagram with hosts
  * laid out horizontally and time increasing with y coordinate.
  * 
+ * @constructor
+ * @extends Layout
  * @param {Number} width The maximum width of the resulting layout
  * @param {Number} delta The vertical distance between nodes
  */
@@ -19,11 +50,15 @@ function SpaceTimeLayout(width, delta) {
     this.height = 0;
 }
 
+// SpaceTimeLayout extends Layout
+SpaceTimeLayout.prototype = Object.create(Layout.prototype);
+SpaceTimeLayout.prototype.constructor = SpaceTimeLayout;
+
 /**
  * This method is solely responsible for actually performing the layout (i.e by
- * manipulating the x and y coordinates of VisualNodes in the VisualGraph. A
+ * manipulating the x and y coordinates of {@link VisualNode}s in the {@link VisualGraph}.  A
  * topological sort is performed to ensure that the y-coordinate of any
- * VisualNode's Node is greater than that of it's prev and parent Nodes
+ * VisualNode's Node is greater than that of it's prev and parent nodes
  * 
  * @param {VisualGraph} visualGraph The visualGraph to lay out
  * @param {HostPermutation} hostPermutation

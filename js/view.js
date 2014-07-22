@@ -1,12 +1,14 @@
 /**
- * @class
+ * Constructs a view
+ * 
+ * @classdesc
  * 
  * A View for a ShiViz graph. A View is responsible for drawing a single
  * VisualGraph. It also collects transformations that generate new iterations of
  * the model.
  * 
  * @constructor
- * @param {Graph} model
+ * @param {ModelGraph} model
  * @param {Global} global
  * @param {HostPermutation} hostPermutation
  * @param {String} label
@@ -53,7 +55,7 @@ View.prototype.getGlobal = function() {
  * global.addTransformation is that the global version adds applies the
  * transformation to all views.
  * 
- * @param {Transform} transformation The new transformation
+ * @param {Transformation} transformation The new transformation
  */
 View.prototype.addTransformation = function(transformation) {
     this.transformations.push(transformation);
@@ -71,7 +73,7 @@ View.prototype.getHosts = function() {
 /**
  * Sets the width of this view
  * 
- * @param {newWidth} The new width
+ * @param {Number} newWidth The new width
  */
 View.prototype.setWidth = function(newWidth) {
     this.width = newWidth;
@@ -95,7 +97,7 @@ View.prototype.draw = function() {
 
     var transformations = this.global.getTransformations().concat(this.transformations);
     transformations.sort(function(a, b) {
-        return b.priority - a.priority;
+        return b.getPriority() - a.getPriority();
     });
 
     for (var i = 0; i < transformations.length; i++) {

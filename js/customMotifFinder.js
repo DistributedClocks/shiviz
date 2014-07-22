@@ -1,9 +1,13 @@
 /**
+ * Constructs a CustomMotifFinder that will find the motif specified
+ * 
+ * @classdesc
+ * 
  * A CustomMotifFinder is responsible for finding user-defined motifs in a
  * larger graph.
  * 
- * @class
  * @constructor
+ * @extends MotifFinder
  * @param {BuilderGraph} builderGraph The builderGraph that specifies the
  *        user-defined motif
  */
@@ -13,6 +17,13 @@ function CustomMotifFinder(builderGraph) {
     this.builderGraph = builderGraph;
 }
 
+//CustomMotifFinder extends MotifFinder
+CustomMotifFinder.prototype = Object.create(MotifFinder.prototype);
+CustomMotifFinder.prototype.constructor = CustomMotifFinder;
+
+/**
+ * 
+ */
 CustomMotifFinder.prototype.find = function(graph) {
 
     var context = this;

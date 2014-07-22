@@ -1,9 +1,15 @@
 /**
+ * Constructs a ModelGraph from an array of {@link LogEvent}s
+ * 
+ * @classdesc
+ * 
  * A ModelGraph models a set of LogEvents as a graph. The graph is generated
  * based on the LogEvents passed to the constructor. One ModelNode is created
  * for each LogEvent The "ordering" of ModelNodes and the hosts to which they
  * belong is based on the natural ordering of the LogEvents.
  * 
+ * @constructor
+ * @extends AbstractGraph
  * @param {Array<LogEvent>} logEvents The array of LogEvents from which to
  *        generate the model.
  */
