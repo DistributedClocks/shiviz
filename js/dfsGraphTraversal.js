@@ -26,7 +26,7 @@ DFSGraphTraversal.prototype = Object.create(GraphTraversal.prototype);
 DFSGraphTraversal.prototype.constructor = DFSGraphTraversal;
 
 /**
- * 
+ * Overrides {@link GraphTraversal#reset}
  */
 DFSGraphTraversal.prototype.reset = function() {
     GraphTraversal.prototype.reset.call(this);

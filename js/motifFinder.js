@@ -78,8 +78,7 @@ RequestResponseFinder.prototype = Object.create(MotifFinder.prototype);
 RequestResponseFinder.prototype.constructor = RequestResponseFinder;
 
 /**
- * @param {ModelGraph} graph The graph on which the search should be performed
- * @returns {Motif} The motif found
+ * Overrides {@link MotifFinder#find}
  */
 RequestResponseFinder.prototype.find = function(graph) {
     var nodes = graph.getNodes();
@@ -232,9 +231,7 @@ BroadcastGatherFinder.prototype.constructor = BroadcastGatherFinder;
 BroadcastGatherFinder.GREEDY_THRESHOLD = 300;
 
 /**
- * 
- * @param {ModelGraph} graph The graph on which the search should be performed
- * @returns {Motif} The motif found
+ * Overrides {@link MotifFinder#find}
  */
 BroadcastGatherFinder.prototype.find = function(graph) {
 

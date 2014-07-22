@@ -22,7 +22,7 @@ CustomMotifFinder.prototype = Object.create(MotifFinder.prototype);
 CustomMotifFinder.prototype.constructor = CustomMotifFinder;
 
 /**
- * 
+ * Overrides {@link MotifFinder#find}
  */
 CustomMotifFinder.prototype.find = function(graph) {
 

@@ -28,7 +28,8 @@ function Transformation() {
 
 /**
  * The transform method is solely responsible for
- * performing the actual transformation.
+ * performing the actual transformation. The provided VisualGraph and it's underlying
+ * {@link ModelGraph} is modified in place
  * 
  * @abstract
  * @param {VisualGraph} visualGraph
@@ -118,10 +119,7 @@ HideHostTransformation.prototype.getHostsToHide = function() {
 };
 
 /**
- * Performs the transformation on the given visualGraph. The VisualGraph and its
- * underlying Graph are modified in place
- * 
- * @param {VisualGraph} visualGraph The VisualGraph to transform
+ * Overrides {@link Transformation#transform}
  */
 HideHostTransformation.prototype.transform = function(visualGraph) {
 
@@ -326,10 +324,7 @@ CollapseSequentialNodesTransformation.prototype.isExempt = function(node) {
 };
 
 /**
- * <p>Performs the transformation on the given visualGraph. The VisualGraph and its
- * underlying Graph are modified in place</p>
- * 
- * @param {VisualGraph} visualGraph The VisualGraph to transform
+ * Overrides {@link Transformation#transform}
  */
 CollapseSequentialNodesTransformation.prototype.transform = function(visualGraph) {
 
@@ -480,9 +475,7 @@ HighlightHostTransformation.prototype.getHiddenHosts = function() {
 };
 
 /**
- * Performs the transformation
- * 
- * @param {VisualGraph} visualGraph
+ * Overrides {@link Transformation#transform}
  */
 HighlightHostTransformation.prototype.transform = function(visualGraph) {
 
@@ -586,7 +579,7 @@ HighlightMotifTransformation.prototype.setIgnoreEdges = function(val) {
 };
 
 /**
- * @param visualGraph
+ * Overrides {@link Transformation#transform}
  */
 HighlightMotifTransformation.prototype.transform = function(visualGraph) {
 
