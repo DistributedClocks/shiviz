@@ -31,7 +31,7 @@ ModelNode.prototype.constructor = ModelNode;
  * of the underlying private data structure, so this function takes linear
  * rather than constant time on the number of LogEvents.</p>
  * 
- * @return {Array<LogEvent>} an array of associated log events
+ * @returns {Array<LogEvent>} an array of associated log events
  */
 ModelNode.prototype.getLogEvents = function() {
     return this.logEvents.slice();

@@ -30,8 +30,6 @@
  *
  * @constructor
  * @abstract
- * @param {Array<LogEvent>} logEvents an array of log events extracted from the raw
- *        log input
  */
 function AbstractGraph() {
     
@@ -69,7 +67,7 @@ AbstractGraph.validEvents = [ AddNodeEvent, RemoveNodeEvent, AddFamilyEvent, Rem
  * Gets the dummy head node for a host.
  * 
  * @param {String} host the name of the host
- * @return {AbstractNode} the head node, or null if none is found
+ * @returns {AbstractNode} the head node, or null if none is found
  */
 AbstractGraph.prototype.getHead = function(host) {
     if (!this.hostToHead[host]) {
@@ -82,7 +80,7 @@ AbstractGraph.prototype.getHead = function(host) {
  * Gets the dummy tail node for a host
  * 
  * @param {String} host the name of the host
- * @return {AbstractNode} the tail node, or null if none is found
+ * @returns {AbstractNode} the tail node, or null if none is found
  */
 AbstractGraph.prototype.getTail = function(host) {
     if (!this.hostToTail[host]) {
@@ -94,7 +92,7 @@ AbstractGraph.prototype.getTail = function(host) {
 /**
  * Gets the hosts as an array
  * 
- * @return {Array<String>} a copy of the array of host names
+ * @returns {Array<String>} a copy of the array of host names
  */
 AbstractGraph.prototype.getHosts = function() {
     return this.hosts.slice(0);
@@ -152,7 +150,7 @@ AbstractGraph.prototype.removeHost = function(host) {
  * the underlying private data structure, so this function takes linear rather
  * than constant time on the number of nodes.</p>
  * 
- * @return {Array<AbstractNode>} an array of all non-dummy nodes
+ * @returns {Array<AbstractNode>} an array of all non-dummy nodes
  */
 AbstractGraph.prototype.getNodes = function() {
     var nodes = [];
@@ -175,7 +173,7 @@ AbstractGraph.prototype.getNodes = function() {
  * the underlying private data structure, so this function takes linear rather
  * than constant time on the number of nodes.</p>
  * 
- * @return {Array<AbstractNode>} an array of all dummy nodes
+ * @returns {Array<AbstractNode>} an array of all dummy nodes
  */
 AbstractGraph.prototype.getDummyNodes = function() {
     var nodes = [];
@@ -197,7 +195,7 @@ AbstractGraph.prototype.getDummyNodes = function() {
  * the underlying private data structure, so this function takes linear rather
  * than constant time on the number of nodes.</p>
  * 
- * @return {Array<AbstractNode>} an array of all nodes in the model
+ * @returns {Array<AbstractNode>} an array of all nodes in the model
  */
 AbstractGraph.prototype.getAllNodes = function() {
     return this.getNodes().concat(this.getDummyNodes());
@@ -264,6 +262,15 @@ AbstractGraph.prototype.getNodesTopologicallySorted = function() {
 };
 
 /**
+ * The callback function invoked when an event occurs
+ * 
+ * @callback AbstractGraph~ObserverCallback
+ * @param {Event} event The event object.
+ * @param {*} context Arbitrary data provided to the callback function
+ * specified when adding observers
+ */
+
+/**
  * <p>Adds an observer to this graph. The observer will be notified (by invoking
  * the provided callback function) of events when events of the specified type
  * occur. There cannot exist two observers that are identical. The newly added
@@ -274,9 +281,9 @@ AbstractGraph.prototype.getNodesTopologicallySorted = function() {
  * @param {Function} type The type of event you want to observe. Use the
  *        constructor function of the event class. For example, if you want to
  *        observe {@link AddNodeEvent}s, type would just be "AddNodeEvent".
- * @param {Object} context This object will be provided to the callback function
+ * @param {*} context This object will be provided to the callback function
  *        when it is invoked.
- * @param {Function} callback The callback function. The parameters of the
+ * @param {AbstractGraph~ObserverCallback} callback The callback function. The parameters of the
  *        callback should be event, context
  */
 AbstractGraph.prototype.addObserver = function(type, context, callback) {
@@ -298,7 +305,7 @@ AbstractGraph.prototype.addObserver = function(type, context, callback) {
  *        constructor function of the event class. For example, if you want to
  *        remove an observer for {@link AbstractGraph}s, type would just be
  *        "AddNodeEvent".
- * @param {Function} callback The callback function.
+ * @param {AbstractGraph~ObserverCallback} callback The callback function.
  */
 AbstractGraph.prototype.removeObserver = function(type, callback) {
     if (AbstractGraph.validEvents.indexOf(type) < 0) {

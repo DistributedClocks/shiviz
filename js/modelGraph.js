@@ -280,7 +280,7 @@ ModelGraph.prototype.constructor = ModelGraph;
  * same way as the original. The new graph has exactly the same set of hosts.
  * The node themselves are shallow copies provided by node.clone()
  * 
- * @return {ModelGraph} The copy of the graph
+ * @returns {ModelGraph} The copy of the graph
  */
 ModelGraph.prototype.clone = function() {
     var newGraph = new ModelGraph([]);
