@@ -1,9 +1,13 @@
 /**
- * A DFSGraphTraversal specifies a strategy for traversing an AbstractGraph in
- * depth-first-search order.
+ * Constructs a DFSGraphTraversal
+ * 
+ * @classdesc
+ * 
+ * A DFSGraphTraversal specifies a strategy for traversing an {@link AbstractGraph} in
+ * depth-first-search order. As is typical with depth-first-search, nodes to be visited (along with 
+ * their state and data) are stored on a stack.
  * 
  * @constructor
- * @class
  */
 function DFSGraphTraversal() {
     GraphTraversal.call(this);
@@ -21,6 +25,9 @@ function DFSGraphTraversal() {
 DFSGraphTraversal.prototype = Object.create(GraphTraversal.prototype);
 DFSGraphTraversal.prototype.constructor = DFSGraphTraversal;
 
+/**
+ * 
+ */
 DFSGraphTraversal.prototype.reset = function() {
     GraphTraversal.prototype.reset.call(this);
 
@@ -31,9 +38,9 @@ DFSGraphTraversal.prototype.reset = function() {
  * Adds a node to the stack. When the node is visited, the current state and
  * data object will be set to the ones provided
  * 
- * @param {AbstractNode} node
- * @param {String} state
- * @param {Object} data
+ * @param {AbstractNode} node The node to add to the stack
+ * @param {String} state The state to add to the stack
+ * @param {*} data The data to add to the stack
  */
 DFSGraphTraversal.prototype.addNode = function(node, state, data) {
     this.stack.push({
@@ -46,7 +53,8 @@ DFSGraphTraversal.prototype.addNode = function(node, state, data) {
 };
 
 /**
- * Adds all nodes to the stack.
+ * Adds all nodes to the stack. All nodes added will share the same
+ * state and data provided
  * 
  * @param {Array<AbstractNode>} nodes
  * @param {String} state
@@ -58,10 +66,13 @@ DFSGraphTraversal.prototype.addAllNodes = function(nodes, state, data) {
     }
 };
 
+/**
+ * 
+ */
 DFSGraphTraversal.prototype.step = function() {
 
     if (this.stack.length == 0 || this.hasEnded) {
-        return false;
+        return null;
     }
 
     var curr = this.stack.pop();

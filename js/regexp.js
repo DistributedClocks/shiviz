@@ -59,8 +59,9 @@ function NamedRegExp(regexp, flags) {
  * <p>If there is no match for the regular expression, null is returned.</p>
  * 
  * @param {String} string test string
- * @return {Array} array of match & captured matches, extended with named
- *         capture groups as object properties
+ * @return {Array<String>} array of match & captured matches, extended with named
+ *         capture groups as object properties. See documentation for js's {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/RegExp/exec
+ *         built in regex} for more information
  */
 NamedRegExp.prototype.exec = function(string) {
     var num = this.no.exec(string);
@@ -87,8 +88,8 @@ NamedRegExp.prototype.test = function(string) {
 /**
  * Gets array of capture group labels
  * 
- * @return {[String]} Capture group labels
+ * @return {Array<String>} Capture group labels
  */
 NamedRegExp.prototype.getNames = function() {
     return this.names;
-}
+};

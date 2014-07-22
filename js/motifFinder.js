@@ -8,7 +8,7 @@
  * {@link ModelGraph} that are of some importance. 
  * 
  * Every
- * MotifFinder must implement the {@link find} method, which is solely
+ * MotifFinder must implement the {@link MotifFinder#find} method, which is solely
  * responsible for performing the actual search for motifs
  * 
  * @constructor
