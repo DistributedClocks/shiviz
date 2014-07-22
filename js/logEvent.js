@@ -1,6 +1,6 @@
 /**
  * Constructs a LogEvents given the log text, a {@link VectorTimestamp} and
- * the line number associated with this log event
+ * the line number associated with this log event <>
  * 
  * @classdesc
  * 
@@ -12,6 +12,8 @@
  * @param {String} text the text of the log (description)
  * @param {VectorTimestamp} vectorTimestamp the vector timestamp of the log
  * @param {Number} lineNum the line number of the event in the log
+ * @param {?Object<String, String>} [fields={}] a mapping of field names to field values
+ * extracted using regex.
  */
 function LogEvent(text, vectorTimestamp, lineNum, fields) {
     /** @private */
@@ -90,8 +92,12 @@ LogEvent.prototype.getLineNumber = function() {
 /**
  * Returns the custom captured fields for the log event.
  * 
- * @returns {Object} The fields
+ * @returns {Object<String, String>} The fields
  */
 LogEvent.prototype.getFields = function() {
-    return this.fields;
-}
+    var ret = {};
+    for(var key in this.fields) {
+        ret[key] = this.fields[key];
+    }
+    return ret;
+};

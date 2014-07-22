@@ -198,7 +198,7 @@ VisualNode.prototype.getText = function() {
     if (this.isStart())
         return this.getHost();
     else if (!this.isCollapsed())
-        return this.node.getLogEvents()[0].getText();
+        return this.node.getFirstLogEvent().getText();
     else
         return this.node.getLogEvents().length + " collapsed nodes";
 };
@@ -239,7 +239,7 @@ VisualNode.prototype.getHost = function() {
  * @returns {Number} The line number
  */
 VisualNode.prototype.getLineNumber = function() {
-    return this.node.getLogEvents()[0].getLineNumber(); // Todo: temporary
+    return this.node.getFirstLogEvent().getLineNumber();
 };
 
 /**

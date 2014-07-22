@@ -193,7 +193,7 @@ View.prototype.draw = function() {
 
         $(".fields").children().remove();
         if (!e.isCollapsed()) {
-            var fields = e.getNode().getLogEvents()[0].getFields();
+            var fields = e.getNode().getFirstLogEvent().getFields();
             var fieldText = "";
             for (var i in fields) {
                 var $f = $("<tr>", { "class": "field" });

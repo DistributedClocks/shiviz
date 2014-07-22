@@ -37,7 +37,17 @@ ModelNode.prototype.getLogEvents = function() {
     return this.logEvents.slice();
 };
 
+/**
+ * Gets the first LogEvent associated with this node. The first log event is simply the first
+ * element passed in the array of log events passed to the constructor. This is equivalent to calling
+ * {@link ModelNode#GetLogEvents}()[0]. If there is no first LogEvent, this method returns null.
+ * 
+ * @returns {LogEvent} the first log event.
+ */
 ModelNode.prototype.getFirstLogEvent = function() {
+    if(this.logEvents.length == 0) {
+        return null;
+    }
     return this.logEvents[0];
 };
 

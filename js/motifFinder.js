@@ -78,7 +78,6 @@ RequestResponseFinder.prototype = Object.create(MotifFinder.prototype);
 RequestResponseFinder.prototype.constructor = RequestResponseFinder;
 
 /**
- * 
  * @param {ModelGraph} graph The graph on which the search should be performed
  * @returns {Motif} The motif found
  */
