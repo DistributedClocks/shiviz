@@ -61,9 +61,18 @@ Controller.prototype.addView = function(view) {
  * provided in the list
  */
 Controller.prototype.transform = function() {
-    this.global.revertAll();
-
     var tfs = this.transformations.concat(this.defaultTransformations);
+
+    this.global.getViews().forEach(function(v) {
+        var ovg = v.getVisualModel();
+        v.revert();
+        var nvg = v.getVisualModel();
+
+        tfs.forEach(function(tf) {
+            if (tf.getModel() === ovg)
+                tf.setModel(nvg);
+        });
+    });
 
     tfs.forEach(function(t) {
         t.transform();

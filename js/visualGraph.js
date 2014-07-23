@@ -18,10 +18,7 @@
 function VisualGraph(graph, layout, hostPermutation) {
 
     /** @private */
-    this.initialGraph = graph;
-
-    /** @private */
-    this.graph = undefined;
+    this.graph = graph;
 
     /** @private */
     this.layout = layout;
@@ -32,23 +29,8 @@ function VisualGraph(graph, layout, hostPermutation) {
     /** @private */
     this.nodeIdToVisualNode = {};
 
-    /** @private A mapping of edge IDs to VisualEdges */
+    /** @private */
     this.links = {};
-
-    this.revert();
-}
-
-/**
- * Reverts the VisualGraph to its original state
- */
-VisualGraph.prototype.revert = function() {
-    if (this.graph)
-        this.graph.removeAllObservers();
-    
-    this.graph = this.initialGraph.clone();
-    this.nodeIdToVisualNode = {};
-    this.links = {};
-    this.lines = {};
 
     this.graph.addObserver(AddNodeEvent, this, function(event, g) {
         g.addVisualNodeByNode(event.getNewNode());

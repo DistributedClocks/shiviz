@@ -94,15 +94,6 @@ Global.prototype.drawAll = function() {
 };
 
 /**
- * Reverts all visual graphs to original state
- */
-Global.prototype.revertAll = function() {
-    this.views.forEach(function (v) {
-        v.visualGraph.revert();
-    });
-}
-
-/**
  * Adds a View to this global.
  * 
  * @param {View} view The view to add

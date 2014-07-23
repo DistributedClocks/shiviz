@@ -32,6 +32,14 @@ function HideHostTransformation(model, host) {
     this.model = model;
 }
 
+HideHostTransformation.prototype.getModel = function() {
+    return this.model;
+}
+
+HideHostTransformation.prototype.setModel = function(m) {
+    this.model = m;
+}
+
 /**
  * Performs the transformation on the model. The VisualGraph and its
  * underlying Graph are modified in place
@@ -104,6 +112,14 @@ function CollapseSequentialNodesTransformation(model, threshold) {
 
     /** @private */
     this.exemptLogEvents = {};
+}
+
+CollapseSequentialNodesTransformation.prototype.getModel = function() {
+    return this.model;
+}
+
+CollapseSequentialNodesTransformation.prototype.setModel = function(m) {
+    this.model = m;
 }
 
 /**
@@ -303,6 +319,14 @@ function HighlightHostTransformation(model, host) {
     /** @private */
     this.hiddenHosts = [];
 };
+
+HighlightHostTransformation.prototype.getModel = function() {
+    return this.model;
+}
+
+HighlightHostTransformation.prototype.setModel = function(m) {
+    this.model = m;
+}
 
 /**
  * Gets the model of the transformation
