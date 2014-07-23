@@ -20,6 +20,9 @@ function View(model, global, hostPermutation, label) {
     this.label = label;
 
     /** @private */
+    this.initialModel = model;
+
+    /** @private */
     this.model = model;
 
     /** @private */
@@ -76,6 +79,17 @@ View.prototype.getVisualModel = function() {
 View.prototype.setWidth = function(newWidth) {
     this.width = newWidth;
 };
+
+/**
+ * Reverts the View to initial graph & creates a new VisualGraph
+ * for the initial model
+ */
+View.prototype.revert = function() {
+    var layout = new SpaceTimeLayout(0, 56);
+    var hp = this.hostPermutation;
+    this.model = this.initialModel.clone();
+    this.visualGraph = new VisualGraph(this.model, layout, hp);
+}
 
 /**
  * Clears the current visualization and re-draws the current model.
