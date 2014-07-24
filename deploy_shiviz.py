@@ -67,9 +67,6 @@ def main():
     dist_dir = "../bestchai.bitbucket.org/shiviz/"
     doc_dir = "../bestchai.bitbucket.org/shiviz/docs/"
 
-    if (runcmd("perl docgen.pl " + doc_dir) != 0):
-        sys.exit(-1)
-
     print "Deploying to: " + dist_dir
     print "from: " + src_dir
 
@@ -87,6 +84,10 @@ def main():
         runcmd("cp -R " + src_dir + "* " + dist_dir)
     else:
         print "Error: source dir is not where it is expected."
+        sys.exit(-1)
+
+    # Compile docs
+    if (runcmd("perl docgen.pl " + doc_dir) != 0):
         sys.exit(-1)
 
     # Find out the current revision id:
