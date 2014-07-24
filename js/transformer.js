@@ -1,3 +1,12 @@
+/**
+ * @class
+ *
+ * Transformer keeps track of transformations to be applied to a specific
+ * VisualGraph and takes care of transforming the model.
+ * 
+ * @param {VisualGraph} model The VisualGraph this transformer is responsible
+ *                            for.
+ */
 function Transformer(model) {
 	this.model = model;
 	this.transformations = [];
@@ -51,14 +60,33 @@ Transformer.prototype.removeTransformation = function(tf) {
     });
 }
 
+/**
+ * Gets the model of the transformer
+ * 
+ * @returns {VisualGraph} The model the transformer acts on
+ */
 Transformer.prototype.getModel = function() {
 	return this.model;
 }
 
+/**
+ * Sets the model of the transformer
+ * 
+ * @param {VisualGraph} model The model the transformer should act on
+ */
 Transformer.prototype.setModel = function(model) {
 	this.model = model;
 }
 
+/**
+ * Transforms the model.
+ * The transformations are applied in the order in which they were added,
+ * with exceptions.
+ *
+ * Exceptions:
+ *  - HighlightHostTransformations are gathered into the last instance,
+ *    at which they are then applied all at once.
+ */
 Transformer.prototype.transform = function() {
 	var self = this;
 

@@ -110,23 +110,18 @@ function visualize() {
         for (var i = 0; i < labels.length; i++) {
             var label = labels[i];
             var graph = new ModelGraph(parser.getLogEvents(label));
+            var view = new View(graph, global, hostPermutation, label);
 
             hostPermutation.addGraph(graph);
-            hostPermutation.update();
-            
-            var view = new View(graph, global, hostPermutation, label);
             global.addView(view);
-            
+
             if (sortType == "order") {
                 hostPermutation.addLogs(parser.getLogEvents(label));
             }
         }
     
+        hostPermutation.update();
         global.drawAll();
-    
-        // Check for vertical overflow
-        if ($(document).height() > $(window).height())
-            global.drawAll();
     }
     catch(err) {
         handleError(err);
