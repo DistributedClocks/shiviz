@@ -107,8 +107,13 @@ SpaceTimeLayout.prototype.start = function(visualGraph, hostPermutation) {
     var widthPerHost = (this.width + hostMargin) / hosts.length;
 
     if (hosts.length == 1) {
-        widthPerHost = 0;
-        leftMargin = (this.width - Global.HOST_SQUARE_SIZE) / 2;
+        if (this.width > Global.HOST_SQUARE_SIZE * 2) {
+            widthPerHost = 0;
+            leftMargin = (this.width - Global.HOST_SQUARE_SIZE) / 2;
+        } else {
+            widthPerHost = 25;
+            leftMargin = Global.HOST_SQUARE_SIZE / 2;
+        }
     }
 
     while (noParents.length > 0) {

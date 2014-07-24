@@ -95,9 +95,5 @@ LogEvent.prototype.getLineNumber = function() {
  * @returns {Object<String, String>} The fields
  */
 LogEvent.prototype.getFields = function() {
-    var ret = {};
-    for(var key in this.fields) {
-        ret[key] = this.fields[key];
-    }
-    return ret;
+    return $.extend({}, this.fields);
 };
