@@ -63,7 +63,7 @@ Global.prototype.addHiddenHost = function(host) {
  */
 Global.prototype.removeHiddenHost = function(host) {
     var i = this.hiddenHosts.indexOf(host);
-    this.hiddenHosts = this.hiddenHosts.splice(i, 1);
+    this.hiddenHosts.splice(i, 1);
 }
 
 /**
@@ -191,7 +191,7 @@ Global.prototype.drawSideBar = function() {
     var hidden = d3.select(".hidden");
 
     // Draw hidden hosts
-    var hh = Object.keys(this.hiddenHosts);
+    var hh = this.hiddenHosts;
     if (hh.length <= 0) {
         $(".hidden").hide();
         return;
