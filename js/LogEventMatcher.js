@@ -53,18 +53,7 @@ function LogEventMatcher(query) {
                 }
             }
             else if(!!LogEventMatcher.operatorSet[token]) {
-                
-                
 
-
-//                while there is an operator token, o2, at the top of the stack, and
-//
-//                        either o1 is left-associative and its precedence is less than or equal to that of o2,
-//                        or o1 has precedence less than that of o2,
-//
-//                    pop o2 off the stack, onto the output queue;
-//
-//                push o1 onto the stack.
 
 
             }
@@ -108,13 +97,27 @@ LogEventMatcher.tokens = ["(", ")", "+", "-", "|", "&", "*", "/", "^", ","];
 LogEventMatcher.tokenSet = {};
 
 LogEventMatcher.operatorSet = {
-        "|": 1,
-        "&": 2,
-        "+": 3,
-        "-": 3,
-        "/": 4,
-        "*": 4,
-        "^": -5
+        "|": new LEMOp(1, false, function(arr) {
+            return arr[0] || arr[1];
+        }),
+        "&": new LEMOp(2, false, function(arr) {
+            
+        }),
+        "+": new LEMOp(3, false, function(arr) {
+            
+        }),
+        "-": new LEMOp(3, false, function(arr) {
+            
+        }),
+        "/": new LEMOp(4, false, function(arr) {
+            
+        }),
+        "*": new LEMOp(4, false, function(arr) {
+            
+        }),
+        "^": new LEMOp(5, true, function(arr) {
+            
+        }),
 };
 
 LogEventMatcher.functions = {
@@ -136,4 +139,13 @@ LogEventMatcher.staticInit = function() {
 LogEventMatcher.prototype.match = function(logEvent) {
     
 };
+
+function LEMOp(precedence, rightAssoc, func) {
+    
+    this.precedence = precedence;
+    
+    this.rightAssoc = rightAssoc;
+    
+    this.func = func;
+}
 
