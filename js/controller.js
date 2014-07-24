@@ -12,47 +12,15 @@ function Controller(global) {
     this.global = global;
 
     /** @private */
-    this.transformations = [];
-
-    /** @private */
-    this.defaultTransformations = [];
-}
-
-/**
- * Adds a transformation
- * @param {Transformation} tf The transformation to add
- * @param {Boolean} isDefault Whether the transformation is a
- *                            default transformation
- */
-Controller.prototype.addTransformation = function(tf, isDefault) {
-    if (isDefault)
-        this.defaultTransformations.push(tf);
-    else
-        this.transformations.push(tf);
-}
-
-/**
- * Removes a transformation
- * 
- * @param  {Function|Transformation} tf A predicate function that returns
- *                                      true if given transformation is to be
- *                                      removed, OR the transformation that is
- *                                      to be removed
- */
-Controller.prototype.removeTransformation = function(tf) {
-    this.transformations = this.transformations.filter(function(t) {
-        if (tf.constructor == Function)
-            return !tf(t);
-        else
-            return !(tf == t);
-    });
-
-    this._dirty = true;
+    this.transformers = [];
 }
 
 Controller.prototype.addView = function(view) {
-    var cstf = new CollapseSequentialNodesTransformation(view.getVisualModel(), 2);
-    this.addTransformation(cstf, true);
+    var cstf = new CollapseSequentialNodesTransformation(2);
+    var tfr = new Transformer(view.getVisualModel());
+
+    tfr.addTransformation(cstf, true);
+    this.transformers.push(tfr);
     this.transform();
 }
 
@@ -61,21 +29,22 @@ Controller.prototype.addView = function(view) {
  * provided in the list
  */
 Controller.prototype.transform = function() {
-    var tfs = this.transformations.concat(this.defaultTransformations);
+    var transformers = this.transformers;
 
+    // Revert each view to original (untransformed) state
     this.global.getViews().forEach(function(v) {
         var ovg = v.getVisualModel();
         v.revert();
         var nvg = v.getVisualModel();
 
-        tfs.forEach(function(tf) {
-            if (tf.getModel() === ovg)
-                tf.setModel(nvg);
+        transformers.forEach(function(tfr) {
+            if (tfr.getModel() === ovg)
+                tfr.setModel(nvg);
         });
     });
 
-    tfs.forEach(function(t) {
-        t.transform();
+    transformers.forEach(function(tfr) {
+        tfr.transform();
     });
 }
 
@@ -93,11 +62,12 @@ Controller.prototype.bind = function(nodes, hosts, lines, hh) {
     if (nodes) {
         nodes.on("click", function(e) {
             if (d3.event.shiftKey) {
-                var dtfs = controller.defaultTransformations;
-                dtfs.filter(function(t) {
-                    return t.constructor == CollapseSequentialNodesTransformation;
-                }).forEach(function(t) {
-                    t.toggleExemption(e.getNode());
+                controller.transformers.forEach(function(tfr) {
+                    var ct = tfr.getTransformations(function(t) {
+                        return t.constructor == CollapseSequentialNodesTransformation;
+                    }, true).forEach(function(t) {
+                        t.toggleExemption(e.getNode());
+                    });
                 });
 
                 controller.transform();
@@ -161,60 +131,59 @@ Controller.prototype.bind = function(nodes, hosts, lines, hh) {
             $("#curNode").text(e.getText());
         }).on("dblclick", function(e) {
             if (d3.event.shiftKey) {
-                var existing = controller.transformations.filter(function(t) {
-                    return t.constructor == HighlightHostTransformation && t.host == e.getHost();
-                })[0];
-
-                if (existing) {
-                    var hightfs = controller.transformations.filter(function(t) {
-                        return t.constructor == HighlightHostTransformation;
-                    });
-
-                    hightfs.forEach(function(t) {
-                        t.getHiddenHosts().forEach(function(h) {
-                            controller.global.removeHiddenHost(h);
-                        });
-                    });
-
-                    controller.removeTransformation(existing);
-                    controller.transform();
-
-                    controller.transformations.filter(function(t) {
-                        return t.constructor == HighlightHostTransformation;
-                    }).forEach(function(t) {
-                        t.getHiddenHosts().forEach(function(h) {
-                            controller.global.addHiddenHost(h);
-                        });
-                    });
-
-                    controller.global.drawAll();
-                    controller.global.drawAll();
+                if (controller.transformers.length != 1)
                     return;
+
+                var tfr = controller.transformers[0];
+
+                // Remove hidden hosts
+                var hh = tfr.getTransformations(function(t) {
+                    return t.constructor == HighlightHostTransformation;
+                });
+                if (hh.length) {
+                    var hiddenHosts = hh[hh.length - 1].getHiddenHosts();
+                    hiddenHosts.forEach(function(h) {
+                        controller.global.removeHiddenHost(h);
+                    });
                 }
 
-                var vms = controller.global.getVisualModels();
-                if (vms.length > 1)
-                    return;
+                var existing = tfr.getTransformations(function(t) {
+                    if (t.constructor == HighlightHostTransformation)
+                        return t.getHosts()[0] == e.getHost();
+                });
 
-                var hightf = new HighlightHostTransformation(vms[0], e.getHost());
-                controller.addTransformation(hightf);
+                if (existing.length) {
+                    existing.forEach(function(t) {
+                        tfr.removeTransformation(t);
+                    });
+                } else {
+                    var hightf = new HighlightHostTransformation(e.getHost());
+                    tfr.addTransformation(hightf);
+                }
+
                 controller.transform();
-                hightf.getHiddenHosts().forEach(function(h) {
-                    controller.global.addHiddenHost(h);
-                })
-                controller.global.drawAll();
+
+                // Add hidden hosts back
+                hh = tfr.getTransformations(function(t) {
+                    return t.constructor == HighlightHostTransformation;
+                });
+                if (hh.length) {
+                    var hiddenHosts = hh[hh.length - 1].getHiddenHosts();
+                    hiddenHosts.forEach(function(h) {
+                        controller.global.addHiddenHost(h);
+                    });
+                }
             } else {
-                var models = controller.global.getVisualModels();
-                for (var i in models) {
-                    var hhtf = new HideHostTransformation(models[i], e.getHost());
+                controller.transformers.forEach(function(tfr) {
+                    var hhtf = new HideHostTransformation(e.getHost());
                     controller.global.addHiddenHost(e.getHost());
-                    controller.addTransformation(hhtf);
-                }
+                    tfr.addTransformation(hhtf);
+                });
 
                 controller.transform();
-                controller.global.drawAll();
-                controller.global.drawAll();
             }
+            
+            controller.global.drawAll();
         });
     }
 
@@ -227,42 +196,34 @@ Controller.prototype.bind = function(nodes, hosts, lines, hh) {
 
     if (hh) {
         hh.on("dblclick", function(e) {
-            var high = controller.transformations.filter(function(t) {
-                return t.constructor == HighlightHostTransformation && t.getHiddenHosts().indexOf(e) > -1;
-            });
+            controller.transformers.forEach(function(tfr) {
+                var high = tfr.getTransformations(function(t) {
+                    if (t.constructor == HighlightHostTransformation)
+                        return t.getHiddenHosts().indexOf(e) > -1;
+                });
 
-            if (high.length > 0) {
-                controller.transformations.filter(function(t) {
-                    return t.constructor == HighlightHostTransformation;
-                }).forEach(function(t) {
-                    t.getHiddenHosts().forEach(function(h) {
+                if (high.length) {
+                    var hh = tfr.getTransformations(function(t) {
+                        return t.constructor == HighlightHostTransformation;
+                    });
+                    var hiddenHosts = hh[hh.length - 1].getHiddenHosts();
+                    hiddenHosts.forEach(function(h) {
                         controller.global.removeHiddenHost(h);
                     });
-                });
 
-                high.forEach(function(h) {
-                    controller.removeTransformation(h);
-                });
-
-                controller.transform();
-                controller.transformations.filter(function(t) {
-                    return t.constructor == HighlightHostTransformation;
-                }).forEach(function(t) {
-                    t.getHiddenHosts().forEach(function(h) {
-                        controller.global.addHiddenHost(h);
+                    hh.forEach(function(t) {
+                        tfr.removeTransformation(t);
                     });
+                }
+
+                tfr.removeTransformation(function(t) {
+                    if (t.constructor == HideHostTransformation)
+                        return t.getHost() == e;
                 });
-
-                controller.global.drawAll();
-                controller.global.drawAll();
-            }
-
-            controller.removeTransformation(function (t) {
-                return t.constructor == HideHostTransformation && t.host == e;
             });
+
             controller.transform();
             controller.global.removeHiddenHost(e);
-            controller.global.drawAll();
             controller.global.drawAll();
         }).on("mouseover", function(e) {
             $("#curNode").text(e);

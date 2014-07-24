@@ -74,11 +74,20 @@ Global.prototype.removeHiddenHost = function(host) {
 /**
  * Redraws the global.
  */
-Global.prototype.drawAll = function() {
-    var hostMargin = this.resize();
-
-    $("table.log").children().remove();
+Global.prototype.drawAll = function(_repeat) {
     var width = (240 - 12 * (this.views.length - 1)) / this.views.length;
+    var hostMargin = this.resize();
+    $("table.log").children().remove();
+
+    for (var i = 0; i < this.views.length; i++) {
+        $("table.log").append($("<td></td>").width(width + "pt"));
+        this.views[i].draw();
+        $("table.log").append($("<td></td>").addClass("spacer"));
+    }
+
+    hostMargin = this.resize();
+    $("table.log").children().remove();
+
     for (var i = 0; i < this.views.length; i++) {
         $("table.log").append($("<td></td>").width(width + "pt"));
         this.views[i].draw();
@@ -89,6 +98,7 @@ Global.prototype.drawAll = function() {
         "margin-right": hostMargin * 2 + "px"
     });
     $("table.log .spacer:last-child").remove();
+
 
     this.drawSideBar();
 };

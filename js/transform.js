@@ -24,34 +24,32 @@
  * @param {VisualGraph} model The VisualGraph to transform
  * @param {String}      host  The host to hide
  */
-function HideHostTransformation(model, host) {
+function HideHostTransformation(host) {
     /** @private */
     this.host = host;
-
-    /** @private */
-    this.model = model;
 }
 
-HideHostTransformation.prototype.getModel = function() {
-    return this.model;
-}
-
-HideHostTransformation.prototype.setModel = function(m) {
-    this.model = m;
+/**
+ * Returns the host that is hidden
+ * 
+ * @returns {String} The host
+ */
+HideHostTransformation.prototype.getHost = function() {
+    return this.host;
 }
 
 /**
  * Performs the transformation on the model. The VisualGraph and its
  * underlying Graph are modified in place
  */
-HideHostTransformation.prototype.transform = function() {
-    var graph = this.model.getGraph();
+HideHostTransformation.prototype.transform = function(model) {
+    var graph = model.getGraph();
     var curr = graph.getHead(this.host).getNext();
     var parents = [];
     var children = [];
 
     while (!curr.isTail()) {
-        this.model.addHiddenEdgeToFamily(curr);
+        model.addHiddenEdgeToFamily(curr);
 
         if (curr.hasParents() || curr.getNext().isTail()) {
             for (var i = 0; i < parents.length; i++) {
@@ -59,7 +57,7 @@ HideHostTransformation.prototype.transform = function() {
                     if (parents[i].getHost() != children[j].getHost()) {
                         parents[i].addChild(children[j]);
 
-                        this.model.getVisualEdgeByNodes(parents[i], children[j]).setDashLength(5);
+                        model.getVisualEdgeByNodes(parents[i], children[j]).setDashLength(5);
                     }
                 }
             }
@@ -80,7 +78,7 @@ HideHostTransformation.prototype.transform = function() {
     }
 
     graph.removeHost(this.host);
-    this.model.update();
+    model.update();
 };
 
 /**
@@ -102,24 +100,13 @@ HideHostTransformation.prototype.transform = function() {
  *                           group is greater than or equal to the threshold. The
  *                           threshold must be greater than or equal to 2.
  */
-function CollapseSequentialNodesTransformation(model, threshold) {
-    /** @private */
-    this.model = model;
-
+function CollapseSequentialNodesTransformation(threshold) {
     /** @private */
     this.threshold = 2;
     this.setThreshold(threshold);
 
     /** @private */
     this.exemptLogEvents = {};
-}
-
-CollapseSequentialNodesTransformation.prototype.getModel = function() {
-    return this.model;
-}
-
-CollapseSequentialNodesTransformation.prototype.setModel = function(m) {
-    this.model = m;
 }
 
 /**
@@ -242,9 +229,8 @@ CollapseSequentialNodesTransformation.prototype.isExempt = function(node) {
  * Performs the transformation on the given visualGraph. The VisualGraph and its
  * underlying Graph are modified in place
  */
-CollapseSequentialNodesTransformation.prototype.transform = function() {
-    var cstf = this;
-    var graph = this.model.getGraph();
+CollapseSequentialNodesTransformation.prototype.transform = function(model) {
+    var graph = model.getGraph();
 
     function collapse(curr, removalCount) {
         var logEvents = [];
@@ -254,7 +240,7 @@ CollapseSequentialNodesTransformation.prototype.transform = function() {
         while (removalCount-- > 0) {
             var prev = curr.getPrev();
             logEvents = logEvents.concat(prev.getLogEvents().reverse());
-            var removedVN = cstf.model.getVisualNodeByNode(prev);
+            var removedVN = model.getVisualNodeByNode(prev);
             hasHiddenParent |= removedVN.hasHiddenParent();
             hasHiddenChild |= removedVN.hasHiddenChild();
             prev.remove();
@@ -262,7 +248,7 @@ CollapseSequentialNodesTransformation.prototype.transform = function() {
         var newNode = new Node(logEvents.reverse());
         curr.insertPrev(newNode);
 
-        var visualNode = cstf.model.getVisualNodeByNode(newNode);
+        var visualNode = model.getVisualNodeByNode(newNode);
         visualNode.setRadius(15);
         visualNode.setLabel(logEvents.length);
         visualNode.setHasHiddenParent(hasHiddenParent);
@@ -289,7 +275,7 @@ CollapseSequentialNodesTransformation.prototype.transform = function() {
 
     }
 
-    this.model.update();
+    model.update();
 };
 
 /**
@@ -303,45 +289,75 @@ CollapseSequentialNodesTransformation.prototype.transform = function() {
  * does nothing. In the case that a specified host does not exist, it is
  * ignored.
  * 
- * @param {VisualGraph} model The VisualGraph to transform
- * @param {Array<String>} hostsToHighlight The array of hosts to highlight.
+ * @param {String} host The host to highlight
  */
-function HighlightHostTransformation(model, host) {
-    /** @private */
-    this.model = model;
+function HighlightHostTransformation(host) {
+
+    this.priority = 30;
 
     /** @private */
-    this.host = host;
-
-    /** @private */
-    this.hhtfs = [];
+    this.hosts = {};
 
     /** @private */
     this.hiddenHosts = [];
-};
 
-HighlightHostTransformation.prototype.getModel = function() {
-    return this.model;
-}
+    /** @private */
+    this.hideHostTransformations = [];
 
-HighlightHostTransformation.prototype.setModel = function(m) {
-    this.model = m;
+    this.addHost(host);
 }
 
 /**
- * Gets the model of the transformation
- * @return {VisualGraph} The model
+ * Gets the highlighted host(s)
+ * 
+ * @returns {Array<String>} A list of highlighted hosts
  */
-HighlightHostTransformation.prototype.getModel = function() {
-    return this.model;
+HighlightHostTransformation.prototype.getHosts = function() {
+    return Object.keys(this.hosts);
+}
+
+/**
+ * Adds a host to the set of hosts to highlight.
+ * 
+ * @param {String} host
+ */
+HighlightHostTransformation.prototype.addHost = function(host) {
+    this.hosts[host] = true;
 };
 
 /**
- * Gets the host that is highlighted by this transformation
- * @return {String} The host
+ * Removes a host from the set of hosts to highlight. In the case that the
+ * provided host isn't in the set of hosts to highlight, this method does
+ * nothing.
+ * 
+ * @param {String} host
  */
-HighlightHostTransformation.prototype.getHost = function() {
-    return this.host;
+HighlightHostTransformation.prototype.removeHost = function(host) {
+    delete this.hosts[host];
+};
+
+/**
+ * Toggles a host to and from the set of hosts to highlight. In other words, if
+ * a host is currently in the set of hosts to highlight, it is removed and if it
+ * isn't in that set, it is added to that set.
+ * 
+ * @param {String} host
+ */
+HighlightHostTransformation.prototype.toggleHost = function(host) {
+    if (!this.hosts[host]) {
+        this.hosts[host] = true;
+    }
+    else {
+        delete this.hosts[host];
+    }
+};
+
+/**
+ * Removes all hosts that are to be highlighted. No hosts will be highlighted by
+ * this transformation after running this method.
+ */
+HighlightHostTransformation.prototype.clearHosts = function() {
+    this.hosts = {};
 };
 
 /**
@@ -363,22 +379,33 @@ HighlightHostTransformation.prototype.getHiddenHosts = function() {
 /**
  * Performs the transformation
  * 
- * @param {VisualGraph} visualGraph
+ * @param {VisualGraph} model
  */
-HighlightHostTransformation.prototype.transform = function() {
+HighlightHostTransformation.prototype.transform = function(model) {
+    var self = this;
+    var graph = model.getGraph();
 
-    var graph = this.model.getGraph();
-
-    var head = graph.getHead(this.host);
-    if (head != null) {
-        var vn = this.model.getVisualNodeByNode(head);
-        vn.setHighlight(true);
+    var numHosts = 0;
+    for (var key in this.hosts) {
+        numHosts++;
+        var head = graph.getHead(key);
+        if (head != null) {
+            var vn = model.getVisualNodeByNode(head);
+            vn.setHighlight(true);
+        }
     }
+
+    if (numHosts == 0) {
+        this.hiddenHosts = [];
+        return;
+    }
+
+    var hideHostTransformation = new HideHostTransformation();
 
     var hosts = graph.getHosts();
     for (var i = 0; i < hosts.length; i++) {
         var host = hosts[i];
-        if (this.host == host) {
+        if (this.hosts[host]) {
             continue;
         }
 
@@ -392,32 +419,36 @@ HighlightHostTransformation.prototype.transform = function() {
 
             for (var j = 0; j < families.length; j++) {
                 var family = families[j];
-                keep |= this.host == family.getHost();
+                keep |= this.hosts[family.getHost()];
 
-                if (this.host == family.getHost() && !communicated[family.getHost()]) {
+                if (this.hosts[family.getHost()] && !communicated[family.getHost()]) {
                     communicated[family.getHost()] = true;
                     numCommunicated++;
                 }
             }
 
             if (!keep) {
-                this.model.addHiddenEdgeToFamily(curr);
+                model.addHiddenEdgeToFamily(curr);
                 curr = curr.getPrev();
                 curr.getNext().remove();
             }
             curr = curr.getNext();
         }
 
-        if (numCommunicated != 1) {
-            var hhtf = new HideHostTransformation(this.model, host);
-            hhtf.transform();
-            this.hiddenHosts.push(host);
-            this.hhtfs.push(hhtf);
+        if (numCommunicated != numHosts) {
+            if (this.hiddenHosts.indexOf(host) < 0) {
+                this.hideHostTransformations.push(new HideHostTransformation(host));
+                this.hiddenHosts.push(host);
+            }
         }
 
     }
 
-    this.model.update();
+    this.hideHostTransformations.forEach(function(t) {
+        t.transform(model);
+    });
+
+    model.update();
 };
 
 /**
@@ -429,9 +460,7 @@ HighlightHostTransformation.prototype.transform = function() {
  *                             highlight
  * @param {boolean} ignoreEdges If true, edges will not be visually highlighted
  */
-function HighlightMotifTransformation(model, finder, ignoreEdges) {
-    /** @private */
-    this.model = model;
+function HighlightMotifTransformation(finder, ignoreEdges) {
     /** @private */
     this.finder = finder;
     /** @private */
@@ -447,20 +476,20 @@ HighlightMotifTransformation.prototype.setIgnoreEdges = function(val) {
     this.ignoreEdges = !!val;
 };
 
-HighlightMotifTransformation.prototype.transform = function() {
-    var motif = this.finder.find(this.model.getGraph());
+HighlightMotifTransformation.prototype.transform = function(model) {
+    var motif = this.finder.find(model.getGraph());
 
     var nodes = motif.getNodes();
     for (var i = 0; i < nodes.length; i++) {
         var node = nodes[i];
-        var visualNode = this.model.getVisualNodeByNode(node);
+        var visualNode = model.getVisualNodeByNode(node);
         visualNode.setRadius(visualNode.getRadius() * 1.5);
     }
 
     var edges = motif.getEdges();
     for (var i = 0; i < edges.length; i++) {
         var edge = edges[i];
-        var visualEdge = this.model.getVisualEdgeByNodes(edge[0], edge[1]);
+        var visualEdge = model.getVisualEdgeByNodes(edge[0], edge[1]);
         visualEdge.setColor("#333");
         // visualEdge.setWidth(visualEdge.getWidth() * 1.5);
     }
