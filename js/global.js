@@ -17,7 +17,7 @@ function Global(hostPermutation) {
     this.hostPermutation = hostPermutation;
 
     /** @private */
-    this.hiddenHosts = {};
+    this.hiddenHosts = [];
 
     /** @private */
     this.controller = new Controller(this);
@@ -52,10 +52,8 @@ Global.HIDDEN_EDGE_LENGTH = 40;
  * @param {String} host The host to add
  */
 Global.prototype.addHiddenHost = function(host) {
-    if (this.hiddenHosts[host])
-        this.hiddenHosts[host] = this.hiddenHosts[host] + 1;
-    else
-        this.hiddenHosts[host] = 1;
+    if (this.hiddenHosts.indexOf(host) < 0)
+        this.hiddenHosts.push(host);
 }
 
 /**
@@ -64,11 +62,8 @@ Global.prototype.addHiddenHost = function(host) {
  * @param {String} host The host to remove
  */
 Global.prototype.removeHiddenHost = function(host) {
-    if (this.hiddenHosts[host]) {
-        this.hiddenHosts[host] = this.hiddenHosts[host] - 1;
-        if (this.hiddenHosts[host] == 0)
-            delete this.hiddenHosts[host];
-    }
+    var i = this.hiddenHosts.indexOf(host);
+    this.hiddenHosts = this.hiddenHosts.splice(i, 1);
 }
 
 /**
