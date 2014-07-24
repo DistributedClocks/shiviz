@@ -71,12 +71,6 @@ function Shiviz() {
 }
 
 /**
- * @private
- * @static
- */
-Shiviz.instance = new Shiviz();
-
-/**
  * Gets the instance of the Shiviz singleton
  * 
  * @returns {Shiviz} The singleton instance
@@ -258,3 +252,11 @@ Shiviz.prototype.handleException = function(err) {
 
     this.go(1);
 };
+
+$(document).ready(function() {
+    /**
+     * @private
+     * @static
+     */
+    Shiviz.instance = new Shiviz();
+});
