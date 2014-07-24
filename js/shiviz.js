@@ -1,55 +1,94 @@
-$(".input input, .input textarea").on('input propertychange', function(e) {
-    resetView();
-});
+/**
+ * Constructs a new Shiviz object. As Shiviz is a singleton, do not call this
+ * constructor directly. This constructor is the "entry-point" for the
+ * application. That is, this is the first function to run on Shiviz's startup.
+ * 
+ * @classdesc
+ * 
+ * Shiviz is the class responsible for "global" application level aspects of the
+ * software. For example, this class is responsible for binding handlers to
+ * shiviz's various global UI elements. Shiviz is a singleton
+ * 
+ * @private
+ * @constructor
+ */
+function Shiviz() {
 
-$("#examples a").on("click", function(e) {
-    e.preventDefault();
+    if (!!Shiviz.instance) {
+        throw new Exception("Cannot instantiate Shiviz. Shiviz is a singleton; use Shiviz.getInstance()");
+    }
 
-    // logUrlPrefix is defined in dev.js & deployed.js
-    var url = logUrlPrefix + $(this).data("log");
-    var defaultParser = "(?<event>.*)\\n(?<host>\\S*) (?<clock>{.*})";
+    var context = this;
 
-    $.get(url, function(response) {
-        $("#input").val(response);
-        resetView();
-        $("#delimiter").val($(e.target).data("delimiter"));
-        $("#parser").val($(e.target).data("parser") || defaultParser);
-        $(e.target).css({
-            color: "gray",
-            pointerEvents: "none"
-        });
-    }).fail(function() {
-        throw new Exception("Unable to retrieve example log from: " + url, true);
+    $(".input input, .input textarea").on('input propertychange', function(e) {
+        context.resetView();
     });
-});
 
-$(".tabs li").on("click", function () {
-    go($(this).index(), true);
-});
+    $("#examples a").on("click", function(e) {
+        e.preventDefault();
 
-$(".try").on("click", function () {
-    go(1, true);
-});
+        // logUrlPrefix is defined in dev.js & deployed.js
+        var url = logUrlPrefix + $(this).data("log");
+        var defaultParser = "(?<event>.*)\\n(?<host>\\S*) (?<clock>{.*})";
 
-$("#errorcover").on("click", function () {
-    $(".error").hide();
-});
+        $.get(url, function(response) {
+            $("#input").val(response);
+            context.resetView();
+            $("#delimiter").val($(e.target).data("delimiter"));
+            $("#parser").val($(e.target).data("parser") || defaultParser);
+            $(e.target).css({
+                color: "gray",
+                pointerEvents: "none"
+            });
 
-// Listener for history popstate
-$(window).on("popstate", function (e) {
-    go(e.originalEvent.state == null ? 0 : e.originalEvent.state.index, false);
-});
+        }).fail(function() {
+            Shiviz.getInstance().handleException(new Exception("Unable to retrieve example log from: " + url, true));
+        });
+    });
 
-$("#versionContainer").html(versionText);
+    $(".tabs li").on("click", function() {
+        context.go($(this).index(), true);
+    });
 
-// variables to store last node in a process
-var lastNodesElements = {};
-// variable to store original colours
-var hostColors = {};
-// variables to store the id attached to each process box
-var hosts = {};
+    $(".try").on("click", function() {
+        context.go(1, true);
+    });
 
-function resetView() {
+    $("#errorcover").on("click", function() {
+        $(".error").hide();
+    });
+
+    // Listener for history popstate
+    $(window).on("popstate", function(e) {
+        context.go(e.originalEvent.state == null ? 0 : e.originalEvent.state.index, false);
+    });
+
+    $("#versionContainer").html(versionText);
+
+    $("#visualize").on("click", function() {
+        context.go(2, true, true);
+    });
+}
+
+/**
+ * @private
+ * @static
+ */
+Shiviz.instance = null;
+
+/**
+ * Gets the instance of the Shiviz singleton
+ * 
+ * @returns {Shiviz} The singleton instance
+ */
+Shiviz.prototype.getInstance = function() {
+    return Shiviz.instance;
+};
+
+/**
+ * Resets the visualization.
+ */
+Shiviz.prototype.resetView = function() {
     // Enable/disable the visualize button depending on whether or not
     // the text area is empty.
     if ($("#input").val() == "") {
@@ -73,11 +112,11 @@ function resetView() {
     });
 };
 
-$("#visualize").on("click", function () {
-    go(2, true, true);
-});
-
-function visualize() {
+/**
+ * This method creates the visualization. The user's input to UI elements are retrieved and used
+ * to construct the visualization accordingly.
+ */
+Shiviz.prototype.visualize = function() {
     try {
         d3.selectAll("#graph svg").remove();
 
@@ -91,128 +130,121 @@ function visualize() {
 
         var regexp = new NamedRegExp(regexpString, "m");
         var parser = new LogParser(log, delimiter, regexp);
-        
+
         var sortType = $("input[name=host_sort]:checked").val().trim();
         var descending = $("#ordering option:selected").val().trim() == "descending";
         var hostPermutation = null;
 
         if (sortType == "length") {
             hostPermutation = new LengthPermutation(descending);
-        } else if (sortType == "order") {
+        }
+        else if (sortType == "order") {
             hostPermutation = new LogOrderPermutation(descending);
-        } else {
+        }
+        else {
             throw new Exception("You must select a way to sort processes.", true);
         }
-        
+
         var global = new Global(hostPermutation);
-        
+
         var labels = parser.getLabels();
-        for(var i = 0; i < labels.length; i++) {
+        for (var i = 0; i < labels.length; i++) {
             var label = labels[i];
             var graph = new ModelGraph(parser.getLogEvents(label));
             var view = new View(graph, global, hostPermutation, label);
 
             global.addView(view);
             hostPermutation.addGraph(graph);
-            
+
             if (sortType == "order") {
                 hostPermutation.addLogs(parser.getLogEvents(label));
             }
         }
-    
+
         hostPermutation.update();
         global.drawAll();
-    
+
         // Check for vertical overflow
         if ($(document).height() > $(window).height())
             global.drawAll();
     }
-    catch(err) {
-        handleError(err);
+    catch (err) {
+        handleException(err);
     }
 };
 
 /**
- * returns the last node associated with a certain process id
+ * Navigates to tab index and pushes history state to browser so user can use
+ * back button to navigate between tabs.
  * 
- * @param String hostid
+ * @param {Integer} index The index of the tab: 0 of home, 1 for input, 2 for
+ *        visualization
+ * @param {Boolean} store Whether or not to store the history state
+ * @param {Boolean} force Whether or not to force redrawing of graph
  */
-function getLastNodeElementOfHost(hostid) {
-    var htmlElem;
-    htmlElem = $("g").filter(function() {
-        if ($(this).find("title").text() == lastNodesId[hostid]["logEvent"]) {
-            return this;
-        }
-    });
-    return htmlElem;
-};
-
-/**
- * creates an object with the process (host) id as the key and the last node
- * associated with the process as the value
- */
-function createLastNodeElements() {
-    lastNodesElements = {};
-    for (var i = 0; i < hosts.length; i++) {
-        lastNodesElements[hosts[i]] = getLastNodeElementOfHost(hosts[i]);
-    }
-}
-
-/**
- * Navigates to tab index and pushes history state to browser
- * so user can use back button to navigate between tabs.
- * 
- * @param  {Number} index The index of the tab: 0 of home, 1 for
- *                        input, 2 for visualization
- * @param  {Boolean} store Whether or not to store the history state
- * @param  {Boolean} force Whether or not to force redrawing of graph
- */
-function go(index, store, force) {
+Shiviz.prototype.go = function(index, store, force) {
     $("section").hide();
     $(window).scrollTop();
     switch (index) {
-        case 0:
+    case 0:
         $(".home").show();
         break;
-        case 1:
+    case 1:
         $(".input").show();
         inputHeight();
         $(window).on("load resize", inputHeight);
         break;
-        case 2:
+    case 2:
         $(".visualization").show();
         if (!$("#graph svg").length || force)
-            visualize();
+            this.visualize();
         break;
     }
 
     if (store)
-        history.pushState({index: index}, null, null);
-}
+        history.pushState({
+            index: index
+        }, null, null);
 
-function inputHeight() {
-    $(".input #input").outerHeight(0);
+    function inputHeight() {
+        $(".input #input").outerHeight(0);
 
-    var bodyPadding = parseFloat($("body").css("padding-top")) * 2;
-    var exampleHeight = $("#examples").outerHeight();
-    var fillHeight = $(window).height() - bodyPadding - exampleHeight;
-    var properHeight = Math.max($(".input .left").height(), fillHeight);
+        var bodyPadding = parseFloat($("body").css("padding-top")) * 2;
+        var exampleHeight = $("#examples").outerHeight();
+        var fillHeight = $(window).height() - bodyPadding - exampleHeight;
+        var properHeight = Math.max($(".input .left").height(), fillHeight);
 
-    $(".input #input").outerHeight(properHeight);
-}
+        $(".input #input").outerHeight(properHeight);
+    }
+};
 
-function handleError(err) {
+/**
+ * <p>
+ * Handles an {@link Exception} appropriately.
+ * </p>
+ * 
+ * <p>
+ * If the exception is {@link Exception#isUserFriendly user friendly}, its
+ * message is displayed to the user in an error box. Otherwise, a generic error
+ * message is presented to the user and the exception's message is logged to
+ * console. If the argument is not an {@link Exception}, it is thrown.
+ * </p>
+ * 
+ * @private
+ * @param {Exception} err the Exception to handle
+ */
+Shiviz.prototype.handleException = function(err) {
     if (err.constructor != Exception) {
         throw err;
     }
-    
+
     var errhtml = err.getHTMLMessage();
-    
+
     if (!err.isUserFriendly()) {
         console.log(err.getMessage());
         errhtml = "An unexpected error was encountered. Sorry!";
     }
-    
+
     $("#errorbox").html(errhtml);
     $(".error").show();
 
@@ -224,5 +256,9 @@ function handleError(err) {
         }
     });
 
-    go(1);
-}
+    this.go(1);
+};
+
+$(document).ready(function() {
+    Shiviz.instance = new Shiviz();
+});
