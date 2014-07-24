@@ -410,6 +410,14 @@ svg {
     text-overflow: ellipsis;
 }
 
+#sidebar .hidden {
+    margin-top: 2em;
+}
+#sidebar .hidden svg {
+    float: left;
+    margin-top: 1em;
+}
+
 svg#defs {
     height: 0;
     width: 0;
