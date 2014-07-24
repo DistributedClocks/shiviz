@@ -119,3 +119,12 @@ SpaceTimeLayout.prototype.getHeight = function() {
 SpaceTimeLayout.prototype.getWidth = function() {
     return this.width;
 };
+
+/**
+ * Sets the width of the resulting layout
+ * 
+ * @params {Number} width The width
+ */
+SpaceTimeLayout.prototype.setWidth = function(width) {
+    this.width = width;
+};

@@ -107,20 +107,21 @@ function visualize() {
         var global = new Global(hostPermutation);
         
         var labels = parser.getLabels();
-        for(var i = 0; i < labels.length; i++) {
+        for (var i = 0; i < labels.length; i++) {
             var label = labels[i];
             var graph = new ModelGraph(parser.getLogEvents(label));
-            var view = new View(graph, global, hostPermutation, label);
 
-            global.addView(view);
             hostPermutation.addGraph(graph);
+            hostPermutation.update();
+            
+            var view = new View(graph, global, hostPermutation, label);
+            global.addView(view);
             
             if (sortType == "order") {
                 hostPermutation.addLogs(parser.getLogEvents(label));
             }
         }
     
-        hostPermutation.update();
         global.drawAll();
     
         // Check for vertical overflow
