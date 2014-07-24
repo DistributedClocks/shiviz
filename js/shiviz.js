@@ -116,10 +116,6 @@ function visualize() {
         }
     
         global.drawAll();
-    
-        // Check for vertical overflow
-        if ($(document).height() > $(window).height())
-            global.drawAll();
     }
     catch(err) {
         handleError(err);
