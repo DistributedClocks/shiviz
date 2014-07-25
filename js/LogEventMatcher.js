@@ -163,21 +163,45 @@ function AST() {
 }
 
 
-function BinaryOp(op, l, r) {
+function BinaryOp(op, lhs, rhs) {
     
+    this.op = op;
+    
+    this.lhs = lhs;
+    
+    this.rhs = rhs;
 }
+
+BinaryOp.prototype.accept = function(visitor, pass) {
+    return visitor.visitBinaryOp(this, pass);
+};
 
 function Identifier(name) {
     
+    this.name = name;
 }
+
+Identifier.prototype.accept = function(visitor, pass) {
+    return visitor.visitIdentifier(this, pass);
+};
 
 function StringLiteral(text) {
     
+    this.text = text;
 }
+
+StringLiteral.prototype.accept = function(visitor, pass) {
+    return visitor.visitStringLiteral(this, pass);
+};
 
 function RegexLiteral(text) {
     
+    this.text = text;
 }
+
+RegexLiteral.prototype.accept = function(visitor, pass) {
+    return visitor.visitRegexLiteral(this, pass);
+};
 
 
 
@@ -334,4 +358,78 @@ Parser.prototype.parse = function() {
 };
 
 
+function LEMInterpreter(ast) {
+    
+    this.ast = ast;
+    
+}
 
+LEMInterpreter.prototype.interpret = function(logEvent) {
+    var env = logEvent.getFields();
+    var ret = this.ast.visit(this, env);
+    return ret.asBoolean();
+};
+
+LEMInterpreter.prototype.visitBinaryOp = function(ast, env) {
+    var lhs = ast.lhs.accept(this, env);
+    var rhs = ast.rhs.accept(this, env);
+    
+    if(ast.op == "EQUALS" || ast.op == "NOT_EQUALS") {
+        var val = false;
+        if(rhs.type == "REGEX") {
+            var regex = new Regex(rhs.text);
+            val = regex.match(lhs.asString());
+        }
+        else if(rhs.type == "STRING") {
+            val = lhs.asString() == rhs.asString();
+        }
+        else {
+            throw new Exception(); //TODO
+        }
+        return new LEMInterpreterValue("BOOLEAN", val);
+    }
+    else if(ast.op == "OR") {
+        return new LEMInterpreterValue("BOOLEAN", lhs.asBoolean() || rhs.asBoolean());
+    }
+    else if(ast.op == "XOR") {
+        return new LEMInterpreterValue("BOOLEAN", lhs.asBoolean() ^ rhs.asBoolean());
+    }
+    else if(ast.op == "AND") {
+        return new LEMInterpreterValue("BOOLEAN", lhs.asBoolean() && rhs.asBoolean());
+    }
+    else {
+        throw new Exception();
+    }
+};
+
+LEMInterpreter.prototype.visitIdentifier = function(ast, env) {
+    var val = env[ast.name];
+    if(!val) {
+        throw new Exception(); //TODO
+    }
+    return new LEMInterpreterValue("STRING", val);
+};
+
+LEMInterpreter.prototype.visitStringLiteral = function(ast, env) {
+    return new LEMInterpreterValue("STRING", ast.text);
+};
+
+LEMInterpreter.prototype.visitRegexLiteral = function(ast, env) {
+    return new LEMInterpreterValue("REGEX", ast.text);
+};
+
+function LEMInterpreterValue(type, val) {
+    
+    this.type = type;
+    
+    this.val = val;
+}
+
+LEMInterpreterValue.prototype.asString = function() {
+    
+};
+
+LEMInterpreterValue.prototype.asBoolean = function() {
+    // note: return raw bool
+    // also need to convert string to bool by searching env
+};
