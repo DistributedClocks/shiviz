@@ -68,6 +68,7 @@ function Shiviz() {
     $("#visualize").on("click", function() {
         context.go(2, true, true);
     });
+
 }
 
 /**
@@ -81,7 +82,7 @@ Shiviz.instance = null;
  * 
  * @returns {Shiviz} The singleton instance
  */
-Shiviz.prototype.getInstance = function() {
+Shiviz.getInstance = function() {
     return Shiviz.instance;
 };
 

@@ -502,3 +502,30 @@ BroadcastGatherFinder.prototype.find = function(graph) {
     }
 
 };
+
+
+function TextQueryFinder(query) {
+    
+    this.lem = new LogEventMatcher(query);
+}
+
+//TextQueryFinder extends MotifFinder
+TextQueryFinder.prototype = Object.create(MotifFinder.prototype);
+TextQueryFinder.prototype.constructor = TextQueryFinder;
+
+TextQueryFinder.prototype.find = function(graph) {
+    
+    var motif = new Motif();
+    
+    var nodes = graph.getNodes();
+    
+    for(var i = 0; i < nodes.length; i++) {
+        var node = nodes[i];
+        
+        if(this.lem.matchAny(node.getLogEvents())) {
+            motif.addNode(node);
+        }
+    }
+    
+    return motif;
+};
