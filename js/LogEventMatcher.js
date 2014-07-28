@@ -81,8 +81,8 @@ LEMTokenizer.tokens = {
         "QUOTE" : "\"",
         "EXCLAMATION_EQUAL" : "!=",
         "EQUAL" : "=",
-        "R_PAREN" : "(",
-        "L_PAREN" : ")",
+        "L_PAREN" : "(",
+        "R_PAREN" : ")",
         "PIPE" : "|",
         "AMP" : "&",
         "CARET" : "^",
@@ -322,7 +322,7 @@ LEMParser.prototype.parse = function() {
         else if(checkAdvance("AMP")) {
             return new BinaryOp("AND", ret, parseExpression());
         }
-        else if(context.tokenizer.hasNext()) {
+        else if(check("L_PAREN", "CHAR_SEQ", "STRING_LITERAL")) {
             return new BinaryOp("AND", ret, parseExpression());
         }
         else {
