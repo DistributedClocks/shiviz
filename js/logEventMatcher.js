@@ -539,7 +539,7 @@ LEMInterpreter.prototype.visitRegexLiteral = function(ast, env) {
 
 LEMInterpreter.prototype.visitImplicitSearch = function(ast, env) {
     for(var key in env) {
-        if(env[key].toLowerCase().contains(ast.text.toLowerCase())) {
+        if(env[key].toLowerCase().indexOf(ast.text.toLowerCase()) >= 0) {
             return new LEMInterpreterValue("BOOLEAN", true);
         }
     }
