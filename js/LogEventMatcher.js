@@ -1,9 +1,58 @@
 
 function LogEventMatcher(query) {
     
- 
+    this.query = query;
+    
+    try {
+        
+        this.tokenizer = new LEMTokenizer(query);
+        
+        var parser = new LEMParser(this.tokenizer);
+        
+        this.ast = parser.parse();
+        
+        this.interpreter = new LEMInterpreter(this.ast);
+    }
+    catch(e) {
+        if(e.constructor == Exception) {
+            e.setUserFriendly(true);
+            e.append("\n");
+            var querytext = query + "\n";
+            
+            var count = this.tokenizer.getNumCharsConsumed() - 1;
+            while(count-- > 0) {
+                querytext += " ";
+            }
+            querytext += "^";
+            e.append(querytext, "code");
+        }
+        throw e;
+    }
+    
 }
 
+LogEventMatcher.prototype.match = function(logEvent) {
+    try{
+        return this.interpreter.interpret(logEvent);
+    }
+    catch(e) {
+        if(e.constructor == Exception) {
+            e.setUserFriendly(true);
+            e.append("\n");
+            e.append(this.query, "code");
+        }
+        throw e;
+    }
+};
+
+LogEventMatcher.prototype.matchAny = function(logEvents) {
+    for(var i = 0; i < logEvents.length; i++) {
+        if(this.match(logEvents[i])) {
+            return true;
+        }
+    }
+    return false;
+};
 
 function LEMTokenizer(query) {
     
@@ -12,7 +61,7 @@ function LEMTokenizer(query) {
         
         for(var key in LEMTokenizer.tokens) {
             if(LEMTokenizer.tokens[key] != null) {
-                LEMTokeznier.tokenSet[LEMTokenizer.tokens[key]] = key;
+                LEMTokenizer.tokenSet[LEMTokenizer.tokens[key]] = key;
             }
         }
     }
@@ -21,7 +70,9 @@ function LEMTokenizer(query) {
     
     this.current = null;
     
-    this.scan();
+    this.startCharCount = this.stack.length;
+    
+    this.hasScan = false;
     
 }
 
@@ -45,17 +96,42 @@ LEMTokenizer.tokenSet = {};
 
 LEMTokenizer.hasStaticInit = false;
 
+LEMTokenizer.prototype.getNumCharsConsumed = function() {
+    return this.startCharCount - this.stack.length;
+};
+
 LEMTokenizer.prototype.hasNext = function() {
+    if(!this.hasScan) {
+        this.hasScan = true;
+        this.scan();
+    }
+    
     return this.current != null;
 };
 
 LEMTokenizer.prototype.next = function() {
+    if(!this.hasScan) {
+        this.hasScan = true;
+        this.scan();
+    }
+    
     var ret = this.current;
     this.scan();
     return ret;
 };
 
+LEMTokenizer.prototype.peek = function() {
+    if(!this.hasScan) {
+        this.hasScan = true;
+        this.scan();
+    }
+    
+    return this.current;
+};
+
 LEMTokenizer.prototype.scan = function() {
+    
+    this.hasScan = true;
     
     var context = this;
     
@@ -77,7 +153,7 @@ LEMTokenizer.prototype.scan = function() {
             }
             
             if(!hasNextChar()) {
-                throw new Exception(); //TODO
+                throw new Exception("Expected: /");
             }
             
             this.stack.pop();
@@ -92,7 +168,7 @@ LEMTokenizer.prototype.scan = function() {
             }
             
             if(!hasNextChar()) {
-                throw new Exception(); //TODO
+                throw new Exception("Expected: \"");
             }
             
             this.stack.pop();
@@ -102,21 +178,24 @@ LEMTokenizer.prototype.scan = function() {
         else if(isToken(doublePeek())) {
             var type = LEMTokenizer.tokenSet[doublePeek()];
             this.current = new Token(type, doublePeek());
+            this.stack.pop();
+            this.stack.pop();
         }
         else if(isToken(peek())) {
             var type = LEMTokenizer.tokenSet[peek()];
             this.current = new Token(type, peek());
+            this.stack.pop();
         }
     }
     else if (isAlphaNumeric(peek())) {
         var tokenText = "";
-        while(isAlphaNumeric(peek())) {
+        while(hasNextChar() && isAlphaNumeric(peek())) {
             tokenText += this.stack.pop();
         }
         this.current = new Token("CHAR_SEQ", tokenText);
     }
     else {
-        throw new Exception(); //TODO
+        throw new Exception("Invalid character: " + this.stack.pop());
     }
     
         
@@ -203,17 +282,26 @@ RegexLiteral.prototype.accept = function(visitor, pass) {
     return visitor.visitRegexLiteral(this, pass);
 };
 
-
-
-function Parser(tokenizer) {
+function ImplicitSearch(text) {
     
-    this.tokenizer = tokenizer();
+    this.text = text;
+}
+
+ImplicitSearch.prototype.accept = function(visitor, pass) {
+    return visitor.visitImplicitSearch(this, pass);
+};
+
+
+
+function LEMParser(tokenizer) {
+    
+    this.tokenizer = tokenizer;
     
     this.result = null;
     
 }
 
-Parser.prototype.parse = function() {
+LEMParser.prototype.parse = function() {
     
     var context = this;
 
@@ -241,9 +329,9 @@ Parser.prototype.parse = function() {
             return ret;
         }
     }
-    
+
     function parseExpressionContents() {
-        require("L_PAREN", "CHAR_SEQ");
+        require("L_PAREN", "CHAR_SEQ", "STRING_LITERAL");
         
         if(checkAdvance("L_PAREN")) {
             var ret = parseExpression();
@@ -251,20 +339,20 @@ Parser.prototype.parse = function() {
             return ret;
         }
         else {
-            if(checkAdvance("STRING_LITERAL")) {
-                return parseStringLiteral();
+            if(check("STRING_LITERAL")) {
+                return new ImplicitSearch(advance().text);
             }
             
             var charSeq = requireAdvance("CHAR_SEQ");
             
-            if(checkAdvance("EQ")) {
-                return BinaryOp("EQUALS", new Identifier(charSeq.text), parseLiteralOrRef());
+            if(checkAdvance("EQUAL")) {
+                return new BinaryOp("EQUALS", new Identifier(charSeq.text), parseLiteralOrRef());
             }
-            else if(checkAdvance("NE")) {
-                return BinaryOp("NOT_EQUALS", new Identifier(charSeq.text), parseLiteralOrRef());
+            else if(checkAdvance("EXCLAMATION_EQUAL")) {
+                return new BinaryOp("NOT_EQUALS", new Identifier(charSeq.text), parseLiteralOrRef());
             }
             else {
-                return new StringLiteral(charSeq.text);
+                return new ImplicitSearch(charSeq.text);
             }
         }
     }
@@ -279,11 +367,11 @@ Parser.prototype.parse = function() {
     }
     
     function parseIdentifier() {
-        return new Identifier(requireAdvance("CHAR_SEQ"));
+        return new Identifier(requireAdvance("CHAR_SEQ").text);
     }
     
     function parseLiteral() {
-        if(checkAdvance("REGEX_LITERAL")) {
+        if(check("REGEX_LITERAL")) {
             return new RegexLiteral(advance().text);
         }
         else {
@@ -298,8 +386,10 @@ Parser.prototype.parse = function() {
     }
     
     
+    
+    
     function checkAdvance(type) {
-        if(require(type)) {
+        if(check(type)) {
             advance();
             return true;
         }
@@ -309,17 +399,19 @@ Parser.prototype.parse = function() {
     }
     
     function requireAdvance(type) {
-        if(!require(type)) {
-            throw new Exception(); //TODO
-        }
+        require(type);
         return advance();
     }
     
     function advance() {
-        return this.tokenizer.next();
+        return context.tokenizer.next();
     }
     
-    function require() {
+    function check() {
+        if(!context.tokenizer.hasNext()) {
+            return false;
+        }
+        
         var currType = peekType();
         for(var i = 0; i < arguments.length; i++) {
             if(currType == arguments[i]) {
@@ -329,8 +421,25 @@ Parser.prototype.parse = function() {
         return false;
     }
     
+    function require() {
+        if(context.tokenizer.hasNext()) {
+            var currType = peekType();
+            for(var i = 0; i < arguments.length; i++) {
+                if(currType == arguments[i]) {
+                    return;
+                }
+            }
+        }
+       
+        var errString = "Expected: ";
+        for(var i = 0; i < arguments.length; i++) {
+            errString += arguments[i] + " or ";
+        }
+        throw new Exception(errString.replace(/or $/, ""));
+    }
+    
     function peekType() {
-        return this.tokenizer.peek().type;
+        return context.tokenizer.peek().type;
     }
     
 //    expression = 
@@ -338,7 +447,7 @@ Parser.prototype.parse = function() {
 //
 //    expressionContents = 
 //        L_PAREN, expression, R_PAREN
-//        | stringLiteral
+//        | implicitSearch
 //        | identifier, (EQ | NE), literalOrRef
 //
 //    literalOrRef =
@@ -353,6 +462,9 @@ Parser.prototype.parse = function() {
 //
 //    stringLiteral = 
 //        CHAR_SEQ | STRING_LITERAL
+//
+//    implicitSearch = 
+//        stringLiteral
 
 
 };
@@ -366,7 +478,8 @@ function LEMInterpreter(ast) {
 
 LEMInterpreter.prototype.interpret = function(logEvent) {
     var env = logEvent.getFields();
-    var ret = this.ast.visit(this, env);
+    env["event"] = logEvent.getText(); //TODO
+    var ret = this.ast.accept(this, env);
     return ret.asBoolean();
 };
 
@@ -377,15 +490,20 @@ LEMInterpreter.prototype.visitBinaryOp = function(ast, env) {
     if(ast.op == "EQUALS" || ast.op == "NOT_EQUALS") {
         var val = false;
         if(rhs.type == "REGEX") {
-            var regex = new Regex(rhs.text);
-            val = regex.match(lhs.asString());
+            var regex = new RegExp(rhs.val); //TODO
+            val = regex.test(lhs.asString());
         }
         else if(rhs.type == "STRING") {
             val = lhs.asString() == rhs.asString();
         }
         else {
-            throw new Exception(); //TODO
+            throw new Exception("a"); //TODO
         }
+        
+        if(ast.op == "NOT_EQUALS") {
+            val = !val;
+        }
+        
         return new LEMInterpreterValue("BOOLEAN", val);
     }
     else if(ast.op == "OR") {
@@ -398,15 +516,16 @@ LEMInterpreter.prototype.visitBinaryOp = function(ast, env) {
         return new LEMInterpreterValue("BOOLEAN", lhs.asBoolean() && rhs.asBoolean());
     }
     else {
-        throw new Exception();
+        throw new Exception("b"); //TODO
     }
+    
 };
 
 LEMInterpreter.prototype.visitIdentifier = function(ast, env) {
-    var val = env[ast.name];
-    if(!val) {
-        throw new Exception(); //TODO
+    if(!env.hasOwnProperty(ast.name)) {
+        throw new Exception("Unbound identifier: " + ast.name);
     }
+    var val = env[ast.name];
     return new LEMInterpreterValue("STRING", val);
 };
 
@@ -418,6 +537,15 @@ LEMInterpreter.prototype.visitRegexLiteral = function(ast, env) {
     return new LEMInterpreterValue("REGEX", ast.text);
 };
 
+LEMInterpreter.prototype.visitImplicitSearch = function(ast, env) {
+    for(var key in env) {
+        if(env[key].toLowerCase().contains(ast.text.toLowerCase())) {
+            return new LEMInterpreterValue("BOOLEAN", true);
+        }
+    }
+    return new LEMInterpreterValue("BOOLEAN", false);
+};
+
 function LEMInterpreterValue(type, val) {
     
     this.type = type;
@@ -426,10 +554,15 @@ function LEMInterpreterValue(type, val) {
 }
 
 LEMInterpreterValue.prototype.asString = function() {
-    
+    if(this.type != "STRING") {
+        throw new Exception("S"); //TODO
+    }
+    return this.val;
 };
 
 LEMInterpreterValue.prototype.asBoolean = function() {
-    // note: return raw bool
-    // also need to convert string to bool by searching env
+    if(this.type != "BOOLEAN") {
+        throw new Exception("B"); //TODO
+    }
+    return this.val;
 };

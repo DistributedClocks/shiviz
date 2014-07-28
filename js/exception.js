@@ -25,7 +25,9 @@ function Exception(message, isUserFriendly) {
     /** @private */
     this._isUserFriendly = !!isUserFriendly;
 
-    this.append(message);
+    if(message) {
+        this.append(message);
+    }
 }
 
 /**

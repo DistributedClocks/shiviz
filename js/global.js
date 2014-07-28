@@ -48,6 +48,21 @@ function Global(hostPermutation) {
     $(window).on("resize", function() {
         g.drawAll.call(g);
     });
+    
+    
+    // ----- TEMPORARY -------
+    
+    $("#textsearchsub").on("click", function() {
+        try{
+            var text = $("#textsearch").val();
+            g.transformations.pop();
+            g.addTransformation(new HighlightMotifTransformation(new TextQueryFinder(text)));
+            g.drawAll.call(g);
+        }
+        catch(e) {
+            Shiviz.getInstance().handleException(e);
+        }
+    });
 }
 
 Global.SIDE_BAR_WIDTH = 240;
