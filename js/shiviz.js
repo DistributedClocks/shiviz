@@ -168,9 +168,8 @@ Shiviz.prototype.visualize = function() {
         // Check for vertical overflow
         if ($(document).height() > $(window).height())
             global.drawAll();
-    }
-    catch (err) {
-        handleException(err);
+    } catch (err) {
+        this.handleException(err);
     }
 };
 
