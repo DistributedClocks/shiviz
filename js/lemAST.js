@@ -2,6 +2,10 @@ function AST() {
     
 }
 
+AST.prototype.accept = function(visitor, pass) {
+    
+};
+
 
 function BinaryOp(op, lhs, rhs) {
     
