@@ -47,8 +47,6 @@ LEMTokenizer.prototype.peek = function() {
 
 LEMTokenizer.prototype.scan = function() {
     
-    this.hasScan = true;
-    
     var context = this;
     
     while(hasNextChar() && isWhiteSpace(peek())) {
@@ -66,16 +64,16 @@ LEMTokenizer.prototype.scan = function() {
         else if(peek() == "\"" || peek() == "'") {
             return scanGroup(peek(), TokenType.STRING_LITERAL);
         }
-        else if(isToken(doublePeek())) {
+        else if(isSymbolicToken(doublePeek())) {
             var type = context.symbolicTokens[doublePeek()];
-            return new Token(type, doublePeek());
+            var ret =  new Token(type, doublePeek());
             this.stack.pop();
             this.stack.pop();
+            return ret;
         }
-        else if(isToken(peek())) {
+        else if(isSymbolicToken(peek())) {
             var type = context.symbolicTokens[peek()];
-            return new Token(type, peek());
-            this.stack.pop();
+            return new Token(type, this.stack.pop());
         }
     }
     else if (isAlphaNumeric(peek())) {
@@ -98,16 +96,16 @@ LEMTokenizer.prototype.scan = function() {
     
     function scanGroup(delim, type) {
         var tokenText = "";
-        this.stack.pop();
+        context.stack.pop();
         while(hasNextChar() && peek() != delim) {
-            tokenText += this.stack.pop();
+            tokenText += context.stack.pop();
         }
         
         if(!hasNextChar()) {
             throw new Exception("Expected: " + delim);
         }
         
-        this.stack.pop();
+        context.stack.pop();
         
         return new Token(type, tokenText);
     }
