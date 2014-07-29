@@ -4,7 +4,7 @@ function TokenType(text, isText, prettyName) {
     
     this.isText = !!isText;
     
-    this.prettyName = prettyName || name;
+    this.prettyName = prettyName || text;
 }
 
 TokenType.DOLLAR = new TokenType("$");
@@ -54,7 +54,7 @@ TokenType.ensureStaticInit = function() {
     TokenType.hasStaticInit = true;
     
     var tokenTypes = TokenType.getTokenTypes();
-    for(var i = 0; i < tokens.length; i++) {
+    for(var i = 0; i < tokenTypes.length; i++) {
         var tokenType = tokenTypes[i];
         
         if(tokenType.getText == null) {

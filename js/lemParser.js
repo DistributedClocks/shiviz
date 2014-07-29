@@ -145,7 +145,7 @@ LEMParser.prototype.parse = function() {
        
         var errString = "Expected: ";
         for(var i = 0; i < arguments.length; i++) {
-            errString += arguments[i] + " or ";
+            errString += arguments[i].prettyName + " or ";
         }
         throw new Exception(errString.replace(/or $/, ""));
     }
