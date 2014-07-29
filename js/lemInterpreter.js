@@ -13,8 +13,8 @@ LEMInterpreter.prototype.interpret = function(logEvent) {
 };
 
 LEMInterpreter.prototype.visitBinaryOp = function(ast, env) {
-    var lhs = ast.getLHS.accept(this, env);
-    var rhs = ast.getRHS.accept(this, env);
+    var lhs = ast.getLHS().accept(this, env);
+    var rhs = ast.getRHS().accept(this, env);
     
     if(ast.getOp() == BinaryOp.EQUALS || ast.getOp() == BinaryOp.NOT_EQUALS) {
         var val = false;
@@ -86,10 +86,10 @@ LEMInterpreterValue.REGEX = "REGEX";
 LEMInterpreterValue.BOOLEAN = "BOOLEAN";
 LEMInterpreterValue.STRING = "STRING";
 
-LEMInterpreter.prototype.getType = function() {
+LEMInterpreterValue.prototype.getType = function() {
     return this.type;
 };
 
-LEMInterpreter.prototype.getVal = function() {
+LEMInterpreterValue.prototype.getVal = function() {
     return this.val;
 };
