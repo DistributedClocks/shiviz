@@ -19,8 +19,7 @@ LEMInterpreter.prototype.visitBinaryOp = function(ast, env) {
     if(ast.getOp() == BinaryOp.EQUALS || ast.getOp() == BinaryOp.NOT_EQUALS) {
         var val = false;
         if(rhs.getType() == LEMInterpreterValue.REGEX) {
-            var regex = new RegExp(rhs.getVal());
-            val = regex.test(lhs.getVal());
+            val = rhs.getRegex().test(lhs.getVal());
         }
         else if(rhs.getType() == LEMInterpreterValue.STRING) {
             val = lhs.getVal() == rhs.getVal();
