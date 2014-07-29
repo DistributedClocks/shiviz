@@ -79,13 +79,15 @@ Transformer.prototype.setModel = function(model) {
 }
 
 /**
- * Transforms the model.
- * The transformations are applied in the order in which they were added,
- * with exceptions.
+ * <p>Transforms the model.</p>
+ * <p>The transformations are applied in the order in which they were added, 
+ * with exceptions.</p>
  *
- * Exceptions:
- *  - HighlightHostTransformations are gathered into the last instance,
- *    at which they are then applied all at once.
+ * <p>Exceptions:</p>
+ * <ul>
+ * <li>HighlightHostTransformations are gathered into the last instance, 
+ * at which they are then applied all at once.</li>
+ * </ul>
  */
 Transformer.prototype.transform = function() {
 	var self = this;

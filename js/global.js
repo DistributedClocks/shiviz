@@ -242,7 +242,7 @@ Global.prototype.drawSideBar = function() {
         return x;
     });
 
-    this.controller.bind(null, null, null, rect);
+    this.controller.bindHiddenHosts(rect);
 };
 
 /**

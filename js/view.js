@@ -242,7 +242,7 @@ View.prototype.draw = function() {
         });
 
         // Bind the nodes
-        view.global.controller.bind(nodes);
+        view.global.controller.bindNodes(nodes);
     }
 
     function drawHosts() {
@@ -308,7 +308,7 @@ View.prototype.draw = function() {
         });
 
         // Bind the hosts
-        view.global.controller.bind(null, hosts);
+        view.global.controller.bindHosts(hosts);
     }
 
     function drawLogLines() {
@@ -363,6 +363,6 @@ View.prototype.draw = function() {
         }
 
         // Bind the log lines
-        view.global.controller.bind(null, null, $(".log .line:not(.more)"));
+        view.global.controller.bindLines($(".log .line:not(.more)"));
     }
 };

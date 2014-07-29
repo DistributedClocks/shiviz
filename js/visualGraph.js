@@ -244,6 +244,12 @@ VisualGraph.prototype.getVisualEdgeByNodes = function(node1, node2) {
     return this.links[linkId];
 };
 
+/**
+ * Gets a y-coordinate to {@link VisualNode} mapping for displaying
+ * log lines
+ * 
+ * @returns {Object<String,VisualNode>} The mapping
+ */
 VisualGraph.prototype.getLines = function() {
     var lines = {};
     var visualNodes = this.getVisualNodes();
@@ -371,7 +377,8 @@ VisualGraph.prototype.removeVisualEdgeByNodes = function(node1, node2) {
 
 /**
  * Adds hidden family edges to the provided VisualNode
- * 
+ *
+ * @private
  * @param {VisualNode} node
  */
 VisualGraph.prototype.addHiddenEdgeToFamily = function(node) {
