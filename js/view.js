@@ -312,7 +312,17 @@ View.prototype.draw = function() {
     }
 
     function drawLogLines() {
-        var lines = view.getVisualModel().getLines();
+        var lines = {};
+        var visualNodes = view.getVisualModel().getVisualNodes();
+        for (var i in visualNodes) {
+            var node = visualNodes[i];
+            var y = node.getY();
+            if (lines[y] === undefined)
+                lines[y] = [node];
+            else
+                lines[y].push(node);
+        }
+        
         delete lines[0];
 
         for (var y in lines) {
