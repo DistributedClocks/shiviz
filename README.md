@@ -1,8 +1,9 @@
-**ShiViz** is a tool for visualizing executions of distributed systems.
+ShiViz is a tool for studying executions of distributed systems.
 
-* [Try out the web deployment!](http://bestchai.bitbucket.org/shiviz/)
+* [**Try the tool!**](http://bestchai.bitbucket.org/shiviz/)
 
-* [Read more](https://bitbucket.org/bestchai/shiviz/wiki/) about how ShiViz works.
+* [Wiki](https://bitbucket.org/bestchai/shiviz/wiki/): explains ShiViz in more detail
 
-* Check out [ShiVector](https://bitbucket.org/bestchai/shivector/wiki/), a tool
-  to convert existing logs into a ShiViz-supported format.
+* [JS docs](http://bestchai.bitbucket.org/shiviz/docs/): documentation extracted from code
+
+* [ShiVector](https://bitbucket.org/bestchai/shivector/wiki/): instruments distributed systems to output logs in ShiViz format
