@@ -52,19 +52,19 @@ LEMParser.prototype.parse = function() {
         }
         else {
             if(check(TokenType.STRING_LITERAL)) {
-                return new ImplicitSearch(advance().text);
+                return new ImplicitSearch(advance().getText());
             }
             
             var charSeq = requireAdvance(TokenType.CHAR_SEQ);
             
             if(checkAdvance(TokenType.EQUAL)) {
-                return new BinaryOp(BinaryOp.EQUALS, new Identifier(charSeq.text), parseLiteralOrRef());
+                return new BinaryOp(BinaryOp.EQUALS, new Identifier(charSeq.getText()), parseLiteralOrRef());
             }
             else if(checkAdvance(TokenType.EXCLAMATION_EQUAL)) {
-                return new BinaryOp(BinaryOp.NOT_EQUALS, new Identifier(charSeq.text), parseLiteralOrRef());
+                return new BinaryOp(BinaryOp.NOT_EQUALS, new Identifier(charSeq.getText()), parseLiteralOrRef());
             }
             else {
-                return new ImplicitSearch(charSeq.text);
+                return new ImplicitSearch(charSeq.getText());
             }
         }
     }
@@ -79,12 +79,12 @@ LEMParser.prototype.parse = function() {
     }
     
     function parseIdentifier() {
-        return new Identifier(requireAdvance(TokenType.CHAR_SEQ).text);
+        return new Identifier(requireAdvance(TokenType.CHAR_SEQ).getText());
     }
     
     function parseLiteral() {
         if(check(TokenType.REGEX_LITERAL)) {
-            return new RegexLiteral(advance().text);
+            return new RegexLiteral(advance().getText());
         }
         else {
             return parseStringLiteral();
@@ -94,7 +94,7 @@ LEMParser.prototype.parse = function() {
     function parseStringLiteral() {
         require(TokenType.CHAR_SEQ, TokenType.STRING_LITERAL);
         
-        return new StringLiteral(advance().text);
+        return new StringLiteral(advance().getText());
     }
     
     
@@ -145,13 +145,13 @@ LEMParser.prototype.parse = function() {
        
         var errString = "Expected: ";
         for(var i = 0; i < arguments.length; i++) {
-            errString += arguments[i].prettyName + " or ";
+            errString += arguments[i].getPrettyName() + " or ";
         }
         throw new Exception(errString.replace(/or $/, ""));
     }
     
     function peekType() {
-        return context.tokenizer.peek().type;
+        return context.tokenizer.peek().getType();
     }
     
 //    expression = 
