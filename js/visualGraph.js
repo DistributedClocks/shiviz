@@ -245,27 +245,6 @@ VisualGraph.prototype.getVisualEdgeByNodes = function(node1, node2) {
 };
 
 /**
- * Gets a y-coordinate to {@link VisualNode} mapping for displaying
- * log lines
- * 
- * @returns {Object<String,VisualNode>} The mapping
- */
-VisualGraph.prototype.getLines = function() {
-    var lines = {};
-    var visualNodes = this.getVisualNodes();
-    for (var i in visualNodes) {
-        var node = visualNodes[i];
-        var y = node.getY();
-        if (lines[y] === undefined)
-            lines[y] = [node];
-        else
-            lines[y].push(node);
-    }
-
-    return lines;
-}
-
-/**
  * Gets the width of the VisualGraph
  * 
  * @returns {Number} The width
