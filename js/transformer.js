@@ -1,9 +1,12 @@
 /**
- * @class
+ * Constructs a Transformer for a particular {@link View} 
+ *  
+ * @classdesc
  *
  * Transformer keeps track of transformations to be applied to a specific
  * VisualGraph and takes care of transforming the model.
- * 
+ *
+ * @constructor
  * @param {VisualGraph} model The VisualGraph this transformer is responsible
  *                            for.
  */
@@ -32,6 +35,7 @@ Transformer.prototype.getTransformations = function(filter, isDefault) {
 
 /**
  * Adds a transformation
+ *  
  * @param {Transformation} tf The transformation to add
  * @param {Boolean} isDefault Whether the transformation is a
  *                            default transformation
