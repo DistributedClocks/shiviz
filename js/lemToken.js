@@ -73,7 +73,7 @@ TokenType.ensureStaticInit = function() {
     for(var i = 0; i < tokenTypes.length; i++) {
         var tokenType = tokenTypes[i];
         
-        if(tokenType.getText == null) {
+        if(tokenType.getText() == null) {
             return;
         }
         
@@ -107,14 +107,14 @@ TokenType.getTextTokenStringSet = function() {
 };
 
 TokenType.prototype.getText = function() {
-    return this._text;
+    return this.text;
 };
 
 TokenType.prototype.getIsText = function() {
-    return this._isText;
+    return this.isText;
 };
 
 TokenType.prototype.getPrettyName = function() {
-    return this._prettyName;
+    return this.prettyName;
 };
 
