@@ -13,36 +13,36 @@ LEMInterpreter.prototype.interpret = function(logEvent) {
 };
 
 LEMInterpreter.prototype.visitBinaryOp = function(ast, env) {
-    var lhs = ast.lhs.accept(this, env);
-    var rhs = ast.rhs.accept(this, env);
+    var lhs = ast.getLHS.accept(this, env);
+    var rhs = ast.getRHS.accept(this, env);
     
-    if(ast.op == BinaryOp.EQUALS || ast.op == BinaryOp.NOT_EQUALS) {
+    if(ast.getOp() == BinaryOp.EQUALS || ast.getOp() == BinaryOp.NOT_EQUALS) {
         var val = false;
-        if(rhs.type == LEMInterpreterValue.REGEX) {
-            var regex = new RegExp(rhs.val);
-            val = regex.test(lhs.val);
+        if(rhs.getType() == LEMInterpreterValue.REGEX) {
+            var regex = new RegExp(rhs.getVal());
+            val = regex.test(lhs.getVal());
         }
-        else if(rhs.type == LEMInterpreterValue.STRING) {
-            val = lhs.val == rhs.val;
+        else if(rhs.getType() == LEMInterpreterValue.STRING) {
+            val = lhs.getVal() == rhs.getVal();
         }
         else {
             throw new Exception("a"); //TODO
         }
         
-        if(ast.op == LEMInterpreterValue.NOT_EQUALS) {
+        if(ast.getOp() == LEMInterpreterValue.NOT_EQUALS) {
             val = !val;
         }
         
         return new LEMInterpreterValue(LEMInterpreterValue.BOOLEAN, val);
     }
-    else if(ast.op == BinaryOp.OR) {
-        return new LEMInterpreterValue(LEMInterpreterValue.BOOLEAN, lhs.val || rhs.val);
+    else if(ast.getOp() == BinaryOp.OR) {
+        return new LEMInterpreterValue(LEMInterpreterValue.BOOLEAN, lhs.getVal() || rhs.getVal());
     }
-    else if(ast.op == BinaryOp.XOR) {
-        return new LEMInterpreterValue(LEMInterpreterValue.BOOLEAN, lhs.val ^ rhs.val);
+    else if(ast.getOp() == BinaryOp.XOR) {
+        return new LEMInterpreterValue(LEMInterpreterValue.BOOLEAN, lhs.getVal() ^ rhs.getVal());
     }
-    else if(ast.op == BinaryOp.AND) {
-        return new LEMInterpreterValue(LEMInterpreterValue.BOOLEAN, lhs.val && rhs.val);
+    else if(ast.getOp() == BinaryOp.AND) {
+        return new LEMInterpreterValue(LEMInterpreterValue.BOOLEAN, lhs.getVal() && rhs.getVal());
     }
     else {
         throw new Exception("b"); //TODO
@@ -51,24 +51,24 @@ LEMInterpreter.prototype.visitBinaryOp = function(ast, env) {
 };
 
 LEMInterpreter.prototype.visitIdentifier = function(ast, env) {
-    if(!env.hasOwnProperty(ast.name)) {
-        throw new Exception("Unbound identifier: " + ast.name);
+    var name = ast.getName();
+    if(!env.hasOwnProperty(name)) {
+        throw new Exception("Unbound identifier: " + name);
     }
-    var val = env[ast.name];
-    return new LEMInterpreterValue(LEMInterpreterValue.STRING, val);
+    return new LEMInterpreterValue(LEMInterpreterValue.STRING, env[name]);
 };
 
 LEMInterpreter.prototype.visitStringLiteral = function(ast, env) {
-    return new LEMInterpreterValue(LEMInterpreterValue.STRING, ast.text);
+    return new LEMInterpreterValue(LEMInterpreterValue.STRING, ast.getText());
 };
 
 LEMInterpreter.prototype.visitRegexLiteral = function(ast, env) {
-    return new LEMInterpreterValue(LEMInterpreterValue.REGEX, ast.text);
+    return new LEMInterpreterValue(LEMInterpreterValue.REGEX, ast.getText());
 };
 
 LEMInterpreter.prototype.visitImplicitSearch = function(ast, env) {
     for(var key in env) {
-        if(env[key].toLowerCase().indexOf(ast.text.toLowerCase()) >= 0) {
+        if(env[key].toLowerCase().indexOf(ast.getText.toLowerCase()) >= 0) {
             return new LEMInterpreterValue(LEMInterpreterValue.BOOLEAN, true);
         }
     }
@@ -85,3 +85,11 @@ function LEMInterpreterValue(type, val) {
 LEMInterpreterValue.REGEX = "REGEX";
 LEMInterpreterValue.BOOLEAN = "BOOLEAN";
 LEMInterpreterValue.STRING = "STRING";
+
+LEMInterpreter.prototype.getType = function() {
+    return this.type;
+};
+
+LEMInterpreter.prototype.getVal = function() {
+    return this.val;
+};

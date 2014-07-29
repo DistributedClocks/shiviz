@@ -1,3 +1,19 @@
+function Token(type, text) {
+    
+    this.type = type;
+    
+    this.text = text;
+}
+
+Token.prototype.getType = function() {
+    return this.type;
+};
+
+Token.prototype.getText = function() {
+    return this.text;
+};
+
+
 function TokenType(text, isText, prettyName) {
     
     this.text = text;
@@ -90,25 +106,15 @@ TokenType.getTextTokenStringSet = function() {
     return ret;
 };
 
-TokenType.prototype.getName = function() {
-    return this.name;
-};
-
 TokenType.prototype.getText = function() {
-    return this.text;
+    return this._text;
 };
 
 TokenType.prototype.getIsText = function() {
-    return this.isText;
+    return this._isText;
 };
 
 TokenType.prototype.getPrettyName = function() {
-    return this.prettyName;
+    return this._prettyName;
 };
 
-function Token(type, text) {
-    
-    this.type = type;
-    
-    this.text = text;
-}
