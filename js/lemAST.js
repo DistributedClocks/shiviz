@@ -12,6 +12,12 @@ function BinaryOp(op, lhs, rhs) {
     this.rhs = rhs;
 }
 
+BinaryOp.AND = "AND";
+BinaryOp.XOR = "XOR";
+BinaryOp.OR = "OR";
+BinaryOp.EQUALS = "EQUALS";
+BinaryOp.NOT_EQUAL = "NOT_EQUALS";
+
 BinaryOp.prototype.accept = function(visitor, pass) {
     return visitor.visitBinaryOp(this, pass);
 };

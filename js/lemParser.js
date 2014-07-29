@@ -25,17 +25,17 @@ LEMParser.prototype.parse = function() {
     
     function parseExpression() {
         var ret = parseExpressionContents();
-        if(checkAdvance("PIPE")) {
-            return new BinaryOp("OR", ret, parseExpression());
+        if(checkAdvance(TokenType.PIPE)) {
+            return new BinaryOp(BinaryOp.OR, ret, parseExpression());
         }
-        else if(checkAdvance("CARET")) {
-            return new BinaryOp("XOR", ret, parseExpression());
+        else if(checkAdvance(TokenType.CARET)) {
+            return new BinaryOp(BinaryOp.XOR, ret, parseExpression());
         }
-        else if(checkAdvance("AMP")) {
-            return new BinaryOp("AND", ret, parseExpression());
+        else if(checkAdvance(TokenType.AMP)) {
+            return new BinaryOp(BinaryOp.AND, ret, parseExpression());
         }
-        else if(check("L_PAREN", "CHAR_SEQ", "STRING_LITERAL")) {
-            return new BinaryOp("AND", ret, parseExpression());
+        else if(check(TokenType.L_PAREN, TokenType.CHAR_SEQ, TokenType.STRING_LITERAL)) {
+            return new BinaryOp(BinaryOp.AND, ret, parseExpression());
         }
         else {
             return ret;
@@ -43,25 +43,25 @@ LEMParser.prototype.parse = function() {
     }
 
     function parseExpressionContents() {
-        require("L_PAREN", "CHAR_SEQ", "STRING_LITERAL");
+        require(TokenType.L_PAREN, TokenType.CHAR_SEQ, TokenType.STRING_LITERAL);
         
-        if(checkAdvance("L_PAREN")) {
+        if(checkAdvance(TokenType.L_PAREN)) {
             var ret = parseExpression();
-            requireAdvance("R_PAREN");
+            requireAdvance(TokenType.R_PAREN);
             return ret;
         }
         else {
-            if(check("STRING_LITERAL")) {
+            if(check(TokenType.STRING_LITERAL)) {
                 return new ImplicitSearch(advance().text);
             }
             
-            var charSeq = requireAdvance("CHAR_SEQ");
+            var charSeq = requireAdvance(TokenType.CHAR_SEQ);
             
-            if(checkAdvance("EQUAL")) {
-                return new BinaryOp("EQUALS", new Identifier(charSeq.text), parseLiteralOrRef());
+            if(checkAdvance(TokenType.EQUAL)) {
+                return new BinaryOp(BinaryOp.EQUALS, new Identifier(charSeq.text), parseLiteralOrRef());
             }
-            else if(checkAdvance("EXCLAMATION_EQUAL")) {
-                return new BinaryOp("NOT_EQUALS", new Identifier(charSeq.text), parseLiteralOrRef());
+            else if(checkAdvance(TokenType.EXCLAMATION_EQUAL)) {
+                return new BinaryOp(BinaryOp.NOT_EQUALS, new Identifier(charSeq.text), parseLiteralOrRef());
             }
             else {
                 return new ImplicitSearch(charSeq.text);
@@ -70,7 +70,7 @@ LEMParser.prototype.parse = function() {
     }
     
     function parseLiteralOrRef() {
-        if(checkAdvance("DOLLAR")) {
+        if(checkAdvance(TokenType.DOLLAR)) {
             return parseIdentifier();
         }
         else {
@@ -79,11 +79,11 @@ LEMParser.prototype.parse = function() {
     }
     
     function parseIdentifier() {
-        return new Identifier(requireAdvance("CHAR_SEQ").text);
+        return new Identifier(requireAdvance(TokenType.CHAR_SEQ).text);
     }
     
     function parseLiteral() {
-        if(check("REGEX_LITERAL")) {
+        if(check(TokenType.REGEX_LITERAL)) {
             return new RegexLiteral(advance().text);
         }
         else {
@@ -92,7 +92,7 @@ LEMParser.prototype.parse = function() {
     }
     
     function parseStringLiteral() {
-        require("CHAR_SEQ", "STRING_LITERAL");
+        require(TokenType.CHAR_SEQ, TokenType.STRING_LITERAL);
         
         return new StringLiteral(advance().text);
     }
