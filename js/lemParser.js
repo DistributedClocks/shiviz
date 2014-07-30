@@ -1,4 +1,10 @@
-
+/**
+ * 
+ * @classdesc
+ * 
+ * @constructor
+ * @param {LEMTokenizer} tokenizer
+ */
 function LEMParser(tokenizer) {
     
     this.tokenizer = tokenizer;
@@ -7,6 +13,10 @@ function LEMParser(tokenizer) {
     
 }
 
+/**
+ * 
+ * @returns {AST}
+ */
 LEMParser.prototype.parse = function() {
     
     var context = this;
@@ -15,33 +25,43 @@ LEMParser.prototype.parse = function() {
         return this.result;
     }
     
-    var ret = parseExpression();
+    var ast = parseExpression();
     
     if(this.tokenizer.hasNext()) {
         throw new Exception("Expected: end of input");
     }
     
-    return ret;
+    return ast;
     
+    /*
+     * 
+     */
     function parseExpression() {
-        var ret = parseExpressionContents();
-        if(checkAdvance(TokenType.PIPE)) {
-            return new BinaryOp(BinaryOp.OR, ret, parseExpression());
+        var curr = parseExpressionContents();
+        while(context.tokenizer.hasNext()) {
+            if(checkAdvance(TokenType.PIPE)) {
+                curr = new BinaryOp(BinaryOp.OR, curr, parseExpressionContents());
+            }
+            else if(checkAdvance(TokenType.CARET)) {
+                curr = new BinaryOp(BinaryOp.XOR, curr, parseExpressionContents());
+            }
+            else if(checkAdvance(TokenType.AMP)) {
+                curr = new BinaryOp(BinaryOp.AND, curr, parseExpressionContents());
+            }
+            else if(check(TokenType.L_PAREN, TokenType.CHAR_SEQ, TokenType.STRING_LITERAL)) {
+                curr = new BinaryOp(BinaryOp.AND, curr, parseExpressionContents());
+            }
+            else {
+                return curr;
+            }
         }
-        else if(checkAdvance(TokenType.CARET)) {
-            return new BinaryOp(BinaryOp.XOR, ret, parseExpression());
-        }
-        else if(checkAdvance(TokenType.AMP)) {
-            return new BinaryOp(BinaryOp.AND, ret, parseExpression());
-        }
-        else if(check(TokenType.L_PAREN, TokenType.CHAR_SEQ, TokenType.STRING_LITERAL)) {
-            return new BinaryOp(BinaryOp.AND, ret, parseExpression());
-        }
-        else {
-            return ret;
-        }
+        return curr;
+
     }
 
+    /*
+     * 
+     */
     function parseExpressionContents() {
         require(TokenType.L_PAREN, TokenType.CHAR_SEQ, TokenType.STRING_LITERAL);
         
@@ -69,6 +89,9 @@ LEMParser.prototype.parse = function() {
         }
     }
     
+    /*
+     * 
+     */
     function parseLiteralOrRef() {
         if(checkAdvance(TokenType.DOLLAR)) {
             return parseIdentifier();
@@ -78,10 +101,16 @@ LEMParser.prototype.parse = function() {
         }
     }
     
+    /*
+     * 
+     */
     function parseIdentifier() {
         return new Identifier(requireAdvance(TokenType.CHAR_SEQ).getText());
     }
     
+    /*
+     * 
+     */
     function parseLiteral() {
         if(check(TokenType.REGEX_LITERAL)) {
             return new RegexLiteral(advance().getText());
@@ -91,15 +120,20 @@ LEMParser.prototype.parse = function() {
         }
     }
     
+    /*
+     * 
+     */
     function parseStringLiteral() {
         require(TokenType.CHAR_SEQ, TokenType.STRING_LITERAL);
         
         return new StringLiteral(advance().getText());
     }
     
+    // ----------------------------------------------------------------------
     
-    
-    
+    /*
+     * 
+     */
     function checkAdvance(type) {
         if(check(type)) {
             advance();
@@ -110,15 +144,24 @@ LEMParser.prototype.parse = function() {
         }
     }
     
+    /*
+     * 
+     */
     function requireAdvance(type) {
         require(type);
         return advance();
     }
     
+    /*
+     * 
+     */
     function advance() {
         return context.tokenizer.next();
     }
     
+    /*
+     * 
+     */
     function check() {
         if(!context.tokenizer.hasNext()) {
             return false;
@@ -133,6 +176,9 @@ LEMParser.prototype.parse = function() {
         return false;
     }
     
+    /*
+     * 
+     */
     function require() {
         if(context.tokenizer.hasNext()) {
             var currType = peekType();
@@ -150,6 +196,9 @@ LEMParser.prototype.parse = function() {
         throw new Exception(errString.replace(/or $/, ""));
     }
     
+    /*
+     * 
+     */
     function peekType() {
         return context.tokenizer.peek().getType();
     }
@@ -162,7 +211,7 @@ LEMParser.prototype.parse = function() {
     
     
 //    expression = 
-//        expressionContents, [[PIPE | AMP | CARET], expression]
+//        expressionContents, {[PIPE | AMP | CARET], expressionContents}
 //
 //    expressionContents = 
 //        L_PAREN, expression, R_PAREN
