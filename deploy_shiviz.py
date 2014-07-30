@@ -94,7 +94,12 @@ def main():
     revid = get_cmd_output('hg', ['id', '-i']);
     revid = revid.rstrip()
 
+    # Find out the current branch:
+    branch = get_cmd_output('hg', ['branch']);
+    branch = branch.rstrip();
+
     print "Revid is : " + revid
+    print "Branch is : " + branch
 
     # Remove the unnecessary dev.js that was copied over.
     runcmd("rm " + dist_dir + "js/dev.js")
@@ -150,7 +155,7 @@ def main():
 
         files = os.listdir(dist_dir + './js')
         for file in files:
-            params += [('code_url', 'https://bitbucket.org/bestchai/shiviz/raw/tip/js/' + file)]
+            params += [('code_url', 'https://bitbucket.org/bestchai/shiviz/raw/' + branch + '/js/' + file)]
 
         urlparams = urllib.urlencode(params)
         headers = {'Content-type': 'application/x-www-form-urlencoded'}
