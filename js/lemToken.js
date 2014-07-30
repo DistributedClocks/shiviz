@@ -148,6 +148,7 @@ TokenType.CARET = new TokenType("^");
 
 /**
  * CHAR_SEQ = / [a-zA-Z0-9]* /
+ * 
  * @const
  * @static
  */
@@ -155,6 +156,7 @@ TokenType.CHAR_SEQ = new TokenType(null, true, "a sequence of characters");
 
 /**
  * RegexLiteral = / \/[^\/]*\/ /
+ * 
  * @const
  * @static
  */
@@ -162,6 +164,7 @@ TokenType.REGEX_LITERAL = new TokenType(null, true, "a regular expression");
 
 /**
  * StringLiteral = / "[^"]*" /
+ * 
  * @const
  * @static
  */
