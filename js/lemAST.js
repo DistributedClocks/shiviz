@@ -47,7 +47,16 @@ AST.prototype.accept = function(visitor, pass) {
  * 
  * @classdesc
  * 
- * A node in the abstract syntax tree that represents a binary operation.
+ * A node in the abstract syntax tree that represents a binary operation. The
+ * semantics of each operator defined in terms of javascript operators is as
+ * follows:
+ * <li>BinaryOp.AND: lhs && rhs</li>
+ * <li>BinaryOp.XOR: lhs ^ rhs</li>
+ * <li>BinaryOp.OR: lhs || rhs</li>
+ * <li>BinaryOp.EQUALS: lhs == rhs if rhs is a string. /rhs/.test(lhs) if rhs
+ * is a regex</li>
+ * <li>BinaryOp.NOT_EQUALS: lhs != rhs if rhs is a string. !(/rhs/.test(lhs))
+ * if rhs is a regex</li>
  * 
  * @constructor
  * @extends AST
@@ -127,7 +136,9 @@ BinaryOp.prototype.getRHS = function() {
  * 
  * @classdesc
  * 
- * Identifier represents a reference to a value via its bound identifier
+ * Identifier represents a reference to a value via its bound identifier. In
+ * other words, this represents the result of looking up the binding to an
+ * identifier in the current environment
  * 
  * @constructor
  * @extends AST
@@ -237,7 +248,12 @@ RegexLiteral.prototype.getRegex = function() {
  * 
  * @classdesc
  * 
- * This class represents a search over all of a logEvent's fields
+ * This class represents a search over all of a logEvent's fields. The semantics
+ * of the search are as follows: Consider the set "I" of all identifiers in the
+ * current environment. Let bound(x) be the value bound to identifier x. The
+ * search returns true if and only if there exists an identifier i in I such
+ * that the search text is a case-insensitive substring of bound(i). The search
+ * returns false otherwise.
  * 
  * @constructor
  * @extends AST
