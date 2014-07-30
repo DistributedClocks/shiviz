@@ -60,7 +60,7 @@ View.prototype.getHosts = function() {
  */
 View.prototype.getModel = function() {
     return this.model;
-}
+};
 
 /**
  * Gets the current visual model
@@ -69,7 +69,7 @@ View.prototype.getModel = function() {
  */
 View.prototype.getVisualModel = function() {
     return this.visualGraph;
-}
+};
 
 /**
  * Sets the width of this view
@@ -89,7 +89,7 @@ View.prototype.revert = function() {
     var hp = this.hostPermutation;
     this.model = this.initialModel.clone();
     this.visualGraph = new VisualGraph(this.model, layout, hp);
-}
+};
 
 /**
  * Clears the current visualization and re-draws the current model.

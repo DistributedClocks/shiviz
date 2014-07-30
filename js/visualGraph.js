@@ -1,5 +1,8 @@
 /**
- * @class
+ * Constructs a VisualGraph that is the visualization of the specified graph.
+ * The VisualGraph will have the layout and host permutation specified
+ * 
+ * @classdesc
  * 
  * A VisualGraph represents the visualization of a graph; it describes how the
  * graph is to be drawn. Note that the actual drawing logic is not part of this
@@ -104,7 +107,7 @@ function VisualGraph(graph, layout, hostPermutation) {
 VisualGraph.prototype.update = function() {
     var vn = this.nodeIdToVisualNode;
     for (var n in vn)
-        vn[n].setFillColor(this.hostPermutation.getHostColor(vn[n].getHost()))
+        vn[n].setFillColor(this.hostPermutation.getHostColor(vn[n].getHost()));
     
     this.layout.start(this, this.hostPermutation);
 };

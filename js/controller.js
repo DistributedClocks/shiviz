@@ -31,7 +31,7 @@ Controller.prototype.addView = function(view) {
     tfr.addTransformation(cstf, true);
     this.transformers.push(tfr);
     this.transform();
-}
+};
 
 /**
  * Transforms the model through the listed {@link Transformation}s,
@@ -55,7 +55,7 @@ Controller.prototype.transform = function() {
     transformers.forEach(function(tfr) {
         tfr.transform();
     });
-}
+};
 
 /**
  * Binds events to the nodes.
@@ -146,7 +146,7 @@ Controller.prototype.bindNodes = function(nodes) {
             "data-ln": e.getLineNumber()
         }).show();
     });
-}
+};
 
 /**
  * Binds events to hosts
@@ -219,7 +219,7 @@ Controller.prototype.bindHosts = function(hosts) {
 
         controller.global.drawAll();
     });
-}
+};
 
 /**
  * Binds node highlighting to mouseover event on log lines
@@ -231,7 +231,7 @@ Controller.prototype.bindLines = function(lines) {
         var id = "#node" + $(this).data("id");
         $(id)[0].dispatchEvent(new MouseEvent("mouseover"));
     });
-}
+};
 
 /**
  * Binds unhide to double-click event on hidden hosts.
@@ -274,4 +274,4 @@ Controller.prototype.bindHiddenHosts = function(hh) {
         $(".event").text(e);
         $(".fields").children().remove();
     });
-}
+};
