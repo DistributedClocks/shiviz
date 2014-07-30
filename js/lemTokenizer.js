@@ -80,8 +80,7 @@ LEMTokenizer.prototype.next = function() {
         var ret = this.current;
         this.current = null;
         return ret;
-    }
-    else {
+    } else {
         return this.scan();
     }
 };

@@ -223,8 +223,7 @@ TokenType.ensureStaticInit = function() {
 
         if (tokenType.getIsText()) {
             TokenType.textTokenStringSet[tokenType.getText()] = tokenType;
-        }
-        else {
+        } else {
             TokenType.symbolicTokenStringSet[tokenType.getText()] = tokenType;
         }
     }
