@@ -78,19 +78,34 @@ function BinaryOp(op, lhs, rhs) {
     this.rhs = rhs;
 }
 
-/** @const */
+/**
+ * @const
+ * @static
+ */
 BinaryOp.AND = "AND";
 
-/** @const */
+/**
+ * @const
+ * @static
+ */
 BinaryOp.XOR = "XOR";
 
-/** @const */
+/**
+ * @const
+ * @static
+ */
 BinaryOp.OR = "OR";
 
-/** @const */
+/**
+ * @const
+ * @static
+ */
 BinaryOp.EQUALS = "EQUALS";
 
-/** @const */
+/**
+ * @const
+ * @static
+ */
 BinaryOp.NOT_EQUAL = "NOT_EQUALS";
 
 /**
