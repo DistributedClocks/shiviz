@@ -96,12 +96,6 @@ TokenType.DOLLAR = new TokenType("$");
  * @const
  * @static
  */
-TokenType.APOSTROPHE = new TokenType("'");
-
-/**
- * @const
- * @static
- */
 TokenType.EXCLAMATION_EQUAL = new TokenType("!=");
 
 /**
