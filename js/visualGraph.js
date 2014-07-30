@@ -105,10 +105,6 @@ function VisualGraph(graph, layout, hostPermutation) {
  * Updates the VisualGraph and its layout
  */
 VisualGraph.prototype.update = function() {
-    var vn = this.nodeIdToVisualNode;
-    for (var n in vn)
-        vn[n].setFillColor(this.hostPermutation.getHostColor(vn[n].getHost()));
-    
     this.layout.start(this, this.hostPermutation);
 };
 
