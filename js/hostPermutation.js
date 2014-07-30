@@ -13,7 +13,7 @@
  * {@link HostPermutation#update} to compute the ordering of hosts, and then using one of the getters
  * to retrieve the computed host color and order.</p>
  * 
- * <p>HostPermutation and all it's subclasses must ensure that the computed host 
+ * <p>HostPermutation and all its subclasses must ensure that the computed host 
  * order and colors do not change unless {@link HostPermutation#update} is called. Before the very first
  * time update is called, do not try to retrieve the computed host color and order
  * (i.e by using {@link HostPermutation#getHosts}, etc)</p>

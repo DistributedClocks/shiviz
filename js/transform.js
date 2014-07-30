@@ -28,7 +28,7 @@ function Transformation() {
 
 /**
  * The transform method is solely responsible for
- * performing the actual transformation. The provided VisualGraph and it's underlying
+ * performing the actual transformation. The provided VisualGraph and its underlying
  * {@link ModelGraph} is modified in place
  * 
  * @abstract

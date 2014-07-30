@@ -84,17 +84,13 @@ LEMParser.prototype.parse = function() {
         while (context.tokenizer.hasNext()) {
             if (checkAdvance(TokenType.PIPE)) {
                 curr = new BinaryOp(BinaryOp.OR, curr, parseExpressionContents());
-            }
-            else if (checkAdvance(TokenType.CARET)) {
+            } else if (checkAdvance(TokenType.CARET)) {
                 curr = new BinaryOp(BinaryOp.XOR, curr, parseExpressionContents());
-            }
-            else if (checkAdvance(TokenType.AMP)) {
+            } else if (checkAdvance(TokenType.AMP)) {
                 curr = new BinaryOp(BinaryOp.AND, curr, parseExpressionContents());
-            }
-            else if (check(TokenType.L_PAREN, TokenType.CHAR_SEQ, TokenType.STRING_LITERAL)) {
+            } else if (check(TokenType.L_PAREN, TokenType.CHAR_SEQ, TokenType.STRING_LITERAL)) {
                 curr = new BinaryOp(BinaryOp.AND, curr, parseExpressionContents());
-            }
-            else {
+            } else {
                 return curr;
             }
         }
@@ -109,8 +105,7 @@ LEMParser.prototype.parse = function() {
             var ret = parseExpression();
             requireAdvance(TokenType.R_PAREN);
             return ret;
-        }
-        else {
+        } else {
             if (check(TokenType.STRING_LITERAL)) {
                 return new ImplicitSearch(advance().getText());
             }
@@ -119,11 +114,9 @@ LEMParser.prototype.parse = function() {
 
             if (checkAdvance(TokenType.EQUAL)) {
                 return new BinaryOp(BinaryOp.EQUALS, new Identifier(charSeq.getText()), parseLiteralOrRef());
-            }
-            else if (checkAdvance(TokenType.EXCLAMATION_EQUAL)) {
+            } else if (checkAdvance(TokenType.EXCLAMATION_EQUAL)) {
                 return new BinaryOp(BinaryOp.NOT_EQUALS, new Identifier(charSeq.getText()), parseLiteralOrRef());
-            }
-            else {
+            } else {
                 return new ImplicitSearch(charSeq.getText());
             }
         }
@@ -132,8 +125,7 @@ LEMParser.prototype.parse = function() {
     function parseLiteralOrRef() {
         if (checkAdvance(TokenType.DOLLAR)) {
             return parseIdentifier();
-        }
-        else {
+        } else {
             return parseLiteral();
         }
     }
@@ -145,8 +137,7 @@ LEMParser.prototype.parse = function() {
     function parseLiteral() {
         if (check(TokenType.REGEX_LITERAL)) {
             return new RegexLiteral(advance().getText());
-        }
-        else {
+        } else {
             return parseStringLiteral();
         }
     }
@@ -168,8 +159,7 @@ LEMParser.prototype.parse = function() {
         if (check(type)) {
             advance();
             return true;
-        }
-        else {
+        } else {
             return false;
         }
     }

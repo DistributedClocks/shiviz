@@ -88,7 +88,7 @@ VectorTimestamp.prototype.update = function(other) {
 };
 
 /**
- * <p>Gets the vector timestamp that is identical to this current one, except it's
+ * <p>Gets the vector timestamp that is identical to this current one, except its
  * own hosts clock has been incremented by one.</p>
  * 
  * <p>Note that this method does not modify this, as VectorTimestamps are

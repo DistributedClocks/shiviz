@@ -4,7 +4,7 @@
  * @classdesc
  * 
  * <p>
- * LEMInterpreter interprets a text query given it's
+ * LEMInterpreter interprets a text query given its
  * {@link AST abstract syntax tree} form and a {@link LogEvent} to check.
  * </p>
  * 
