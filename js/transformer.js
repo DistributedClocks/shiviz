@@ -11,8 +11,14 @@
  *                            for.
  */
 function Transformer(model) {
+    
+    /** @private */
 	this.model = model;
+	
+	/** @private */
 	this.transformations = [];
+	
+	/** @private */
 	this.defaultTransformations = [];
 }
 
@@ -31,7 +37,7 @@ Transformer.prototype.getTransformations = function(filter, isDefault) {
 		return tfs.filter(filter);
 	else
 		return tfs;
-}
+};
 
 /**
  * Adds a transformation
@@ -45,7 +51,7 @@ Transformer.prototype.addTransformation = function(tf, isDefault) {
         this.defaultTransformations.push(tf);
     else
         this.transformations.push(tf);
-}
+};
 
 /**
  * Removes a transformation
@@ -62,7 +68,7 @@ Transformer.prototype.removeTransformation = function(tf) {
         else
             return !(tf == t);
     });
-}
+};
 
 /**
  * Gets the model of the transformer
@@ -71,7 +77,7 @@ Transformer.prototype.removeTransformation = function(tf) {
  */
 Transformer.prototype.getModel = function() {
 	return this.model;
-}
+};
 
 /**
  * Sets the model of the transformer
@@ -80,7 +86,7 @@ Transformer.prototype.getModel = function() {
  */
 Transformer.prototype.setModel = function(model) {
 	this.model = model;
-}
+};
 
 /**
  * <p>Transforms the model.</p>
