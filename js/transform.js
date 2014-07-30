@@ -308,7 +308,7 @@ CollapseSequentialNodesTransformation.prototype.transform = function(model) {
 };
 
 /**
- * Constructs a HighlightHostTransformation that highlights the specified hosts
+ * Constructs a HighlightHostTransformation that highlights the specified host
  * 
  * @classdesc
  * 

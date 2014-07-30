@@ -83,16 +83,12 @@ Controller.prototype.bindNodes = function(nodes) {
             controller.global.drawAll();
         }
     }).on("mouseover", function(e) {
-        $("circle").filter(function(i, c) {
-            return $(c).data("focus");
-        }).attr("r", function() {
-            return $(this).data("r");
-        }).data("focus", false);
+        d3.selectAll("circle.focus").classed("focus", false).transition().duration(100).attr({
+            "r": function(d) {return d.getRadius();}
+        });
 
-        $(this).find("circle").data({
-            "focus": true
-        }).attr({
-            "r": $(this).find("circle").data("r") + 2
+        d3.select(this).select("circle").classed("focus", true).transition().duration(100).attr({
+            "r": function(d) {return d.getRadius() + 2;}
         });
 
         $(".event").text(e.getText());
