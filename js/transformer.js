@@ -13,13 +13,13 @@
 function Transformer(model) {
     
     /** @private */
-	this.model = model;
-	
-	/** @private */
-	this.transformations = [];
-	
-	/** @private */
-	this.defaultTransformations = [];
+    this.model = model;
+    
+    /** @private */
+    this.transformations = [];
+    
+    /** @private */
+    this.defaultTransformations = [];
 }
 
 /**
@@ -32,11 +32,11 @@ function Transformer(model) {
  * @return {Array<Transformation>} The list of transformations
  */
 Transformer.prototype.getTransformations = function(filter, isDefault) {
-	var tfs = isDefault ? this.defaultTransformations : this.transformations;
-	if (filter.constructor == Function)
-		return tfs.filter(filter);
-	else
-		return tfs;
+    var tfs = isDefault ? this.defaultTransformations : this.transformations;
+    if (filter.constructor == Function)
+        return tfs.filter(filter);
+    else
+        return tfs;
 };
 
 /**
@@ -76,7 +76,7 @@ Transformer.prototype.removeTransformation = function(tf) {
  * @returns {VisualGraph} The model the transformer acts on
  */
 Transformer.prototype.getModel = function() {
-	return this.model;
+    return this.model;
 };
 
 /**
@@ -85,7 +85,7 @@ Transformer.prototype.getModel = function() {
  * @param {VisualGraph} model The model the transformer should act on
  */
 Transformer.prototype.setModel = function(model) {
-	this.model = model;
+    this.model = model;
 };
 
 /**
@@ -100,31 +100,31 @@ Transformer.prototype.setModel = function(model) {
  * </ul>
  */
 Transformer.prototype.transform = function() {
-	var self = this;
+    var self = this;
 
-	var hh = this.transformations.filter(function(t) {
-		return t.constructor == HighlightHostTransformation;
-	});
-	if (hh.length) {
-		var lhh = hh[hh.length - 1];
-		var oh = lhh.getHosts()[0];
+    var hh = this.transformations.filter(function(t) {
+        return t.constructor == HighlightHostTransformation;
+    });
+    if (hh.length) {
+        var lhh = hh[hh.length - 1];
+        var oh = lhh.getHosts()[0];
 
-		hh.slice(0, hh.length - 1).forEach(function(t) {
-			t.ignore = true;
-			lhh.addHost(t.getHosts()[0]);
-		});
-	}
+        hh.slice(0, hh.length - 1).forEach(function(t) {
+            t.ignore = true;
+            lhh.addHost(t.getHosts()[0]);
+        });
+    }
 
-	var tfs = this.transformations.concat(this.defaultTransformations);
-	tfs.forEach(function(t) {
-		if (t.ignore)
-			t.ignore = false;
-		else
-			t.transform(self.model);
-	});
+    var tfs = this.transformations.concat(this.defaultTransformations);
+    tfs.forEach(function(t) {
+        if (t.ignore)
+            t.ignore = false;
+        else
+            t.transform(self.model);
+    });
 
-	if (hh.length) {
-		lhh.clearHosts();
-		lhh.addHost(oh);
-	}
-}
+    if (hh.length) {
+        lhh.clearHosts();
+        lhh.addHost(oh);
+    }
+};
