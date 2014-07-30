@@ -70,9 +70,10 @@ LEMTokenizer.prototype.hasNext = function() {
 };
 
 /**
- * Gets the next token and removes it from the stream of produced tokens
+ * Gets the next token and removes it from the stream of produced tokens. If
+ * there is no next token, this method returns null
  * 
- * @returns {Token} The next token
+ * @returns {Token} The next token or null if there is no next token
  */
 LEMTokenizer.prototype.next = function() {
     if (this.current != null) {
@@ -86,9 +87,10 @@ LEMTokenizer.prototype.next = function() {
 };
 
 /**
- * Gets the next token but does not remove it.
+ * Gets the next token but does not remove it. If there is no next token, this
+ * method returns null
  * 
- * @returns {Token} The next token
+ * @returns {Token} The next token or null if there is no next token
  */
 LEMTokenizer.prototype.peek = function() {
     if (this.current == null) {
@@ -99,8 +101,15 @@ LEMTokenizer.prototype.peek = function() {
 };
 
 /**
+ * Retrieves the following token from the stream of characters. Note that this
+ * is not the same as {@link LEMTokenizer#next}. The next token read from the
+ * stream, removed, and cached whenever peek is called. The next() method will
+ * return the cached token if there is one. This method returns the following
+ * token from the character stream regardless of the state of the cache. Thus,
+ * this method does not return the next token in the stream in general
  * 
- * @returns {Token}
+ * @private
+ * @returns {Token} The result of the scan
  */
 LEMTokenizer.prototype.scan = function() {
 
@@ -150,8 +159,11 @@ LEMTokenizer.prototype.scan = function() {
         throw new Exception("Invalid character: " + pop());
     }
 
+    // ----------------------------------------------------------------------
+
     /*
-     * 
+     * Handles a group of characters surrounded by delimiters (e.g literal
+     * strings are surrounded by quotes)
      */
     function scanGroup(delim, type) {
         var tokenText = "";
@@ -170,42 +182,42 @@ LEMTokenizer.prototype.scan = function() {
     }
 
     /*
-     * 
+     * Returns true if char is whitespace
      */
     function isWhiteSpace(char) {
         return char == " " || char == "\n" || char == "\r" || char == "\t";
     }
 
     /*
-     * 
+     * Returns true if char is alphanumeric
      */
     function isAlphaNumeric(char) {
         return /^[a-z0-9]$/i.test(char);
     }
 
     /*
-     * 
+     * Returns true if val is the text representation of a symbolic token
      */
     function isSymbolicToken(val) {
         return !!context.symbolicTokens[val];
     }
 
     /*
-     * 
+     * Returns true if val is the text representation of a text token
      */
     function isTextToken(val) {
         return !!context.textTokens[val];
     }
 
     /*
-     * 
+     * Returns the next character in the char stream
      */
     function peek() {
         return context.stack[context.stack.length - 1];
     }
 
     /*
-     * 
+     * Returns the next two characters in the char stream
      */
     function doublePeek() {
         var ret = peek();
@@ -216,14 +228,14 @@ LEMTokenizer.prototype.scan = function() {
     }
 
     /*
-     * 
+     * True if there are more characters in the char stream
      */
     function hasNextChar() {
         return context.stack.length != 0;
     }
 
     /*
-     * 
+     * Removes a character from the char stream and returns it
      */
     function pop() {
         return context.stack.pop();

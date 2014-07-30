@@ -59,8 +59,9 @@ function LEMParser(tokenizer) {
 }
 
 /**
+ * Parses the stream of tokens into an abstract syntax tree
  * 
- * @returns {AST}
+ * @returns {AST} The abstract syntax tree parsed from the stream of tokens
  */
 LEMParser.prototype.parse = function() {
 
@@ -78,9 +79,6 @@ LEMParser.prototype.parse = function() {
 
     return ast;
 
-    /*
-     * 
-     */
     function parseExpression() {
         var curr = parseExpressionContents();
         while (context.tokenizer.hasNext()) {
@@ -104,9 +102,6 @@ LEMParser.prototype.parse = function() {
 
     }
 
-    /*
-     * 
-     */
     function parseExpressionContents() {
         require(TokenType.L_PAREN, TokenType.CHAR_SEQ, TokenType.STRING_LITERAL);
 
@@ -134,9 +129,6 @@ LEMParser.prototype.parse = function() {
         }
     }
 
-    /*
-     * 
-     */
     function parseLiteralOrRef() {
         if (checkAdvance(TokenType.DOLLAR)) {
             return parseIdentifier();
@@ -146,16 +138,10 @@ LEMParser.prototype.parse = function() {
         }
     }
 
-    /*
-     * 
-     */
     function parseIdentifier() {
         return new Identifier(requireAdvance(TokenType.CHAR_SEQ).getText());
     }
 
-    /*
-     * 
-     */
     function parseLiteral() {
         if (check(TokenType.REGEX_LITERAL)) {
             return new RegexLiteral(advance().getText());
@@ -165,9 +151,6 @@ LEMParser.prototype.parse = function() {
         }
     }
 
-    /*
-     * 
-     */
     function parseStringLiteral() {
         require(TokenType.CHAR_SEQ, TokenType.STRING_LITERAL);
 
@@ -177,7 +160,9 @@ LEMParser.prototype.parse = function() {
     // ----------------------------------------------------------------------
 
     /*
-     * 
+     * Checks if the next token is the type specified by the argument and
+     * advances if it does. Also returns true if the next token is the type
+     * specified by the argument.
      */
     function checkAdvance(type) {
         if (check(type)) {
@@ -190,7 +175,8 @@ LEMParser.prototype.parse = function() {
     }
 
     /*
-     * 
+     * Requires that the next token is of the specified type, throwing an error
+     * otherwise. The token stream is then advanced
      */
     function requireAdvance(type) {
         require(type);
@@ -198,14 +184,14 @@ LEMParser.prototype.parse = function() {
     }
 
     /*
-     * 
+     * Gets the next token in the token stream and advances the stream.
      */
     function advance() {
         return context.tokenizer.next();
     }
 
     /*
-     * 
+     * Returns true if the next token's type is one of the arguments
      */
     function check() {
         if (!context.tokenizer.hasNext()) {
@@ -222,7 +208,8 @@ LEMParser.prototype.parse = function() {
     }
 
     /*
-     * 
+     * Requires that the next token's type is one of the arugments. An error is
+     * thrown otherwise
      */
     function require() {
         if (context.tokenizer.hasNext()) {
@@ -242,7 +229,7 @@ LEMParser.prototype.parse = function() {
     }
 
     /*
-     * 
+     * Returns the type of the next token in the stream
      */
     function peekType() {
         return context.tokenizer.peek().getType();
