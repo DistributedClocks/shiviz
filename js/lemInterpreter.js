@@ -55,7 +55,7 @@ LEMInterpreter.prototype.interpret = function(logEvent) {
  * {@link BinaryOp} for information on the semantics of each operator.
  * </p>
  * 
- * @private
+ * @protected
  * @param {BinaryOp} ast
  * @param {Object<String, String>} env The environment - the binding of
  *        identifiers to values as pure-object mapping of strings to strings.
@@ -112,7 +112,7 @@ LEMInterpreter.prototype.visitBinaryOp = function(ast, env) {
  * is unbound in the current environment, an exception is thrown
  * </p>
  * 
- * @private
+ * @protected
  * @param {BinaryOp} ast
  * @param {Object<String, String>} env The environment - the binding of
  *        identifiers to values as pure-object mapping of strings to strings.
@@ -141,7 +141,7 @@ LEMInterpreter.prototype.visitIdentifier = function(ast, env) {
  * this method is visiting.
  * </p>
  * 
- * @private
+ * @protected
  * @param {BinaryOp} ast
  * @param {Object<String, String>} env The environment - the binding of
  *        identifiers to values as pure-object mapping of strings to strings.
@@ -164,7 +164,7 @@ LEMInterpreter.prototype.visitStringLiteral = function(ast, env) {
  * this method is visiting.
  * </p>
  * 
- * @private
+ * @protected
  * @param {BinaryOp} ast
  * @param {Object<String, String>} env The environment - the binding of
  *        identifiers to values as pure-object mapping of strings to strings.
@@ -188,7 +188,7 @@ LEMInterpreter.prototype.visitRegexLiteral = function(ast, env) {
  * {@link ImplicitSearch}
  * </p>
  * 
- * @private
+ * @protected
  * @param {BinaryOp} ast
  * @param {Object<String, String>} env The environment - the binding of
  *        identifiers to values as pure-object mapping of strings to strings.
