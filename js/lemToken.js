@@ -96,12 +96,6 @@ TokenType.DOLLAR = new TokenType("$");
  * @const
  * @static
  */
-TokenType.QUOTE = new TokenType("\"");
-
-/**
- * @const
- * @static
- */
 TokenType.APOSTROPHE = new TokenType("'");
 
 /**
@@ -179,8 +173,6 @@ TokenType.STRING_LITERAL = new TokenType(null, true, "a string literal");
 TokenType.getTokenTypes = function() {
     return [ //
     TokenType.DOLLAR, //
-    TokenType.QUOTE, //
-    TokenType.APOSTROPHE, //
     TokenType.EXCLAMATION_EQUAL, //
     TokenType.EQUAL, //
     TokenType.L_PAREN, //
@@ -188,7 +180,6 @@ TokenType.getTokenTypes = function() {
     TokenType.PIPE, //
     TokenType.AMP, //
     TokenType.CARET, //
-    TokenType.SLASH, //
     TokenType.CHAR_SEQ, //
     TokenType.REGEX_LITERAL, //
     TokenType.STRING_LITERAL //
@@ -227,6 +218,10 @@ TokenType.ensureStaticInit = function() {
     var tokenTypes = TokenType.getTokenTypes();
     for (var i = 0; i < tokenTypes.length; i++) {
         var tokenType = tokenTypes[i];
+        
+        if(!tokenType) {
+            throw new Exception("LEMToken: one of the tokens in TokenType.getTokenTypes is undefined.");
+        }
 
         if (tokenType.getText() == null) {
             return;

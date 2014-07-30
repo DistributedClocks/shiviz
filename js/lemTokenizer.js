@@ -123,24 +123,22 @@ LEMTokenizer.prototype.scan = function() {
         return null;
     }
 
-    if (isSymbolicToken(peek()) || isSymbolicToken(doublePeek())) {
-        if (peek() == "/") {
-            return scanGroup("/", TokenType.REGEX_LITERAL);
-        }
-        else if (peek() == "\"" || peek() == "'") {
-            return scanGroup(peek(), TokenType.STRING_LITERAL);
-        }
-        else if (isSymbolicToken(doublePeek())) {
-            var type = context.symbolicTokens[doublePeek()];
-            var ret = new Token(type, doublePeek());
-            pop();
-            pop();
-            return ret;
-        }
-        else if (isSymbolicToken(peek())) {
-            var type = context.symbolicTokens[peek()];
-            return new Token(type, pop());
-        }
+    if (peek() == "/") {
+        return scanGroup("/", TokenType.REGEX_LITERAL);
+    }
+    else if (peek() == "\"" || peek() == "'") {
+        return scanGroup(peek(), TokenType.STRING_LITERAL);
+    }
+    else if (isSymbolicToken(doublePeek())) {
+        var type = context.symbolicTokens[doublePeek()];
+        var ret = new Token(type, doublePeek());
+        pop();
+        pop();
+        return ret;
+    }
+    else if (isSymbolicToken(peek())) {
+        var type = context.symbolicTokens[peek()];
+        return new Token(type, pop());
     }
     else if (isAlphaNumeric(peek())) {
         var tokenText = "";
