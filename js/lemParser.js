@@ -50,8 +50,10 @@
  */
 function LEMParser(tokenizer) {
 
+    /** @private */
     this.tokenizer = tokenizer;
 
+    /** @private */
     this.result = null;
 
 }
