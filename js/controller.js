@@ -106,7 +106,7 @@ Controller.prototype.bindNodes = function(nodes) {
             }
         }
 
-        $(".focus").css({
+        $(".line.focus").css({
             "color": $(".focus").data("fill"),
             "background": "",
             "width": "inherit"
