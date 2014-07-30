@@ -65,7 +65,7 @@ Token.prototype.getText = function() {
  * 
  * <p>
  * Tokens can be either text-based or symbolic. For example, TokenType.AND
- * ("and") is text-based wherease TokenType.EQUAL ("=") is symbolic
+ * ("and") is text-based whereas TokenType.EQUAL ("=") is symbolic
  * </p>
  * 
  * @constructor
@@ -147,24 +147,21 @@ TokenType.AMP = new TokenType("&");
 TokenType.CARET = new TokenType("^");
 
 /**
- * @const
- * @static
- */
-TokenType.SLASH = new TokenType("/");
-
-/**
+ * CHAR_SEQ = / [a-zA-Z0-9]* /
  * @const
  * @static
  */
 TokenType.CHAR_SEQ = new TokenType(null, true, "a sequence of characters");
 
 /**
+ * RegexLiteral = / \/[^\/]*\/ /
  * @const
  * @static
  */
 TokenType.REGEX_LITERAL = new TokenType(null, true, "a regular expression");
 
 /**
+ * StringLiteral = / "[^"]*" /
  * @const
  * @static
  */
