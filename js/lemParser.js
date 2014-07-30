@@ -154,6 +154,13 @@ LEMParser.prototype.parse = function() {
         return context.tokenizer.peek().getType();
     }
     
+    
+//    change to:
+//        expression = 
+////          expressionContents, {[PIPE | AMP | CARET], expressionContents}
+//  //
+    
+    
 //    expression = 
 //        expressionContents, [[PIPE | AMP | CARET], expression]
 //
