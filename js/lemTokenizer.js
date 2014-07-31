@@ -5,9 +5,10 @@
  * 
  * <p>
  * LEMTokenizer consumes a string of characters and divides into a list of
- * tokens. This is done according to the following grammar specified in Extended
- * Backus–Naur Form. Note that whitespace (as defined in the grammar) are not
- * considered tokens and will not be returned by this tokenizer
+ * tokens. This is done according to the following grammar specified in
+ * {@link http://en.wikipedia.org/wiki/EbnfExtended Backus–Naur Form}. Note
+ * that whitespace (as defined in the grammar) are not considered tokens and
+ * will not be returned by this tokenizer
  * </p>
  * 
  * <p>
@@ -26,7 +27,7 @@
  * </pre>
  * 
  * @constructor
- * @param {String} query
+ * @param {String} query The raw query string to tokenize
  */
 function LEMTokenizer(query) {
 
@@ -80,7 +81,8 @@ LEMTokenizer.prototype.next = function() {
         var ret = this.current;
         this.current = null;
         return ret;
-    } else {
+    }
+    else {
         return this.scan();
     }
 };
@@ -122,11 +124,12 @@ LEMTokenizer.prototype.scan = function() {
         return null;
     }
 
-    if (peek() == "/") {
+    var next = peek();
+    if (next == "/") {
         return scanGroup("/", TokenType.REGEX_LITERAL);
     }
-    else if (peek() == "\"" || peek() == "'") {
-        return scanGroup(peek(), TokenType.STRING_LITERAL);
+    else if (next == "\"" || next == "'") {
+        return scanGroup(next, TokenType.STRING_LITERAL);
     }
     else if (isSymbolicToken(doublePeek())) {
         var type = context.symbolicTokens[doublePeek()];
@@ -135,11 +138,11 @@ LEMTokenizer.prototype.scan = function() {
         pop();
         return ret;
     }
-    else if (isSymbolicToken(peek())) {
-        var type = context.symbolicTokens[peek()];
+    else if (isSymbolicToken(next)) {
+        var type = context.symbolicTokens[next];
         return new Token(type, pop());
     }
-    else if (isAlphaNumeric(peek())) {
+    else if (isAlphaNumeric(next)) {
         var tokenText = "";
         while (hasNextChar() && isAlphaNumeric(peek())) {
             tokenText += pop();

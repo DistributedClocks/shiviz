@@ -75,7 +75,7 @@ LEMInterpreter.prototype.visitBinaryOp = function(ast, env) {
             val = lhs.getVal() == rhs.getVal();
         }
         else {
-            throw new Exception("a"); // TODO
+            throw new Exception("RHS must be a regex or string.");
         }
 
         if (ast.getOp() == LEMInterpreterValue.NOT_EQUALS) {
@@ -94,7 +94,7 @@ LEMInterpreter.prototype.visitBinaryOp = function(ast, env) {
         return new LEMInterpreterValue(LEMInterpreterValue.BOOLEAN, lhs.getVal() && rhs.getVal());
     }
     else {
-        throw new Exception("b"); // TODO
+        throw new Exception("Invalid BinaryOp");
     }
 
 };
