@@ -189,10 +189,10 @@ LEMTokenizer.prototype.scan = function() {
     }
 
     /*
-     * Returns true if char is alphanumeric
+     * Returns true if char is alphanumeric OR an underscore
      */
     function isAlphaNumeric(char) {
-        return /^[a-z0-9]$/i.test(char);
+        return /^\w$/i.test(char);
     }
 
     /*
