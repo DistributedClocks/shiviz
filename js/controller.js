@@ -41,14 +41,14 @@ Controller.prototype.transform = function() {
     var transformers = this.transformers;
 
     // Revert each view to original (untransformed) state
-    this.global.getViews().forEach(function(v) {
-        var ovg = v.getVisualModel();
-        v.revert();
-        var nvg = v.getVisualModel();
+    this.global.getViews().forEach(function(view) {
+        var origVisGraph = view.getVisualModel();
+        view.revert();
+        var newVisGraph = view.getVisualModel();
 
         transformers.forEach(function(tfr) {
-            if (tfr.getModel() === ovg)
-                tfr.setModel(nvg);
+            if (tfr.getVisualModel() === origVisGraph)
+                tfr.setVisualModel(newVisGraph);
         });
     });
 
@@ -161,12 +161,14 @@ Controller.prototype.bindHosts = function(hosts) {
         $(".fields").children().remove();
     }).on("dblclick", function(e) {
         if (d3.event.shiftKey) {
-            if (controller.transformers.length != 1)
+            // TODO: Cleanup!!
+            // Filtering by host
+            if (controller.global.getViews().length != 1)
                 return;
 
             var tfr = controller.transformers[0];
 
-            // Remove hidden hosts
+            // Update hidden hosts list for hosts hidden by highlighting
             var hh = tfr.getTransformations(function(t) {
                 return t.constructor == HighlightHostTransformation;
             });
@@ -177,13 +179,13 @@ Controller.prototype.bindHosts = function(hosts) {
                 });
             }
 
-            var existing = tfr.getTransformations(function(t) {
+            var existingHighlights = tfr.getTransformations(function(t) {
                 if (t.constructor == HighlightHostTransformation)
                     return t.getHosts()[0] == e.getHost();
             });
 
-            if (existing.length) {
-                existing.forEach(function(t) {
+            if (existingHighlights.length) {
+                existingHighlights.forEach(function(t) {
                     tfr.removeTransformation(t);
                 });
             } else {
@@ -204,6 +206,7 @@ Controller.prototype.bindHosts = function(hosts) {
                 });
             }
         } else {
+            // Hide host
             controller.transformers.forEach(function(tfr) {
                 var hhtf = new HideHostTransformation(e.getHost());
                 controller.global.addHiddenHost(e.getHost());
