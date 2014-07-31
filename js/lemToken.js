@@ -53,7 +53,9 @@ Token.prototype.getText = function() {
  * @classdesc
  * 
  * <p>
- * TokenType is an enum. A TokenType specifies the type of a token.
+ * TokenType is an enum. A TokenType specifies the type of a token. The
+ * different token types are the differnt terminal tokens in the syntactic
+ * grammar defined in {@link LEMParser}
  * </p>
  * 
  * <p>
@@ -212,8 +214,8 @@ TokenType.ensureStaticInit = function() {
     var tokenTypes = TokenType.getTokenTypes();
     for (var i = 0; i < tokenTypes.length; i++) {
         var tokenType = tokenTypes[i];
-        
-        if(!tokenType) {
+
+        if (!tokenType) {
             throw new Exception("LEMToken: one of the tokens in TokenType.getTokenTypes is undefined.");
         }
 
@@ -223,7 +225,8 @@ TokenType.ensureStaticInit = function() {
 
         if (tokenType.getIsText()) {
             TokenType.textTokenStringSet[tokenType.getText()] = tokenType;
-        } else {
+        }
+        else {
             TokenType.symbolicTokenStringSet[tokenType.getText()] = tokenType;
         }
     }

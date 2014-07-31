@@ -4,11 +4,14 @@
  * @classdesc
  * 
  * <p>
- * LEMParser is a recursive descent parser that consumes a stream of tokens
- * (provided by a {@link LEMTokenizer}) and produces an abstract syntax tree
- * according to the following syntactic grammar, shown in Extended Backus–Naur
- * Form. The grammar is equivalent to an LL(1) grammar, but is not quite LL(1)
- * in the form shown below
+ * LEMParser is a
+ * {@link http://en.wikipedia.org/wiki/Recursive_descent_parser recursive descent parser}
+ * that consumes a stream of tokens (provided by a {@link LEMTokenizer}) and
+ * produces an {@link AST abstract syntax tree} according to the following
+ * syntactic grammar, shown in
+ * {@link http://en.wikipedia.org/wiki/EbnfExtended Backus–Naur Form}. The
+ * grammar is equivalent to an LL(1) grammar, but is not quite LL(1) in the form
+ * shown below
  * </p>
  * 
  * <p>
@@ -84,13 +87,17 @@ LEMParser.prototype.parse = function() {
         while (context.tokenizer.hasNext()) {
             if (checkAdvance(TokenType.PIPE)) {
                 curr = new BinaryOp(BinaryOp.OR, curr, parseExpressionContents());
-            } else if (checkAdvance(TokenType.CARET)) {
+            }
+            else if (checkAdvance(TokenType.CARET)) {
                 curr = new BinaryOp(BinaryOp.XOR, curr, parseExpressionContents());
-            } else if (checkAdvance(TokenType.AMP)) {
+            }
+            else if (checkAdvance(TokenType.AMP)) {
                 curr = new BinaryOp(BinaryOp.AND, curr, parseExpressionContents());
-            } else if (check(TokenType.L_PAREN, TokenType.CHAR_SEQ, TokenType.STRING_LITERAL)) {
+            }
+            else if (check(TokenType.L_PAREN, TokenType.CHAR_SEQ, TokenType.STRING_LITERAL)) {
                 curr = new BinaryOp(BinaryOp.AND, curr, parseExpressionContents());
-            } else {
+            }
+            else {
                 return curr;
             }
         }
@@ -105,7 +112,8 @@ LEMParser.prototype.parse = function() {
             var ret = parseExpression();
             requireAdvance(TokenType.R_PAREN);
             return ret;
-        } else {
+        }
+        else {
             if (check(TokenType.STRING_LITERAL)) {
                 return new ImplicitSearch(advance().getText());
             }
@@ -114,9 +122,11 @@ LEMParser.prototype.parse = function() {
 
             if (checkAdvance(TokenType.EQUAL)) {
                 return new BinaryOp(BinaryOp.EQUALS, new Identifier(charSeq.getText()), parseLiteralOrRef());
-            } else if (checkAdvance(TokenType.EXCLAMATION_EQUAL)) {
+            }
+            else if (checkAdvance(TokenType.EXCLAMATION_EQUAL)) {
                 return new BinaryOp(BinaryOp.NOT_EQUALS, new Identifier(charSeq.getText()), parseLiteralOrRef());
-            } else {
+            }
+            else {
                 return new ImplicitSearch(charSeq.getText());
             }
         }
@@ -125,7 +135,8 @@ LEMParser.prototype.parse = function() {
     function parseLiteralOrRef() {
         if (checkAdvance(TokenType.DOLLAR)) {
             return parseIdentifier();
-        } else {
+        }
+        else {
             return parseLiteral();
         }
     }
@@ -137,7 +148,8 @@ LEMParser.prototype.parse = function() {
     function parseLiteral() {
         if (check(TokenType.REGEX_LITERAL)) {
             return new RegexLiteral(advance().getText());
-        } else {
+        }
+        else {
             return parseStringLiteral();
         }
     }
@@ -159,7 +171,8 @@ LEMParser.prototype.parse = function() {
         if (check(type)) {
             advance();
             return true;
-        } else {
+        }
+        else {
             return false;
         }
     }
