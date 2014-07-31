@@ -25,6 +25,10 @@ function Global(hostPermutation) {
     /** @private */
     this.controller = new Controller(this);
 
+    Global.SIDE_BAR_WIDTH = 240;
+    Global.HOST_SQUARE_SIZE = 25;
+    Global.HIDDEN_EDGE_LENGTH = 40;
+
     $("#sidebar").css({
         width: Global.SIDE_BAR_WIDTH + "px",
         float: "left"
@@ -44,10 +48,6 @@ function Global(hostPermutation) {
         g.drawAll.call(g);
     });
 }
-
-Global.SIDE_BAR_WIDTH = 240;
-Global.HOST_SQUARE_SIZE = 25;
-Global.HIDDEN_EDGE_LENGTH = 40;
 
 /**
  * Adds a hidden host to the list
@@ -72,7 +72,9 @@ Global.prototype.removeHiddenHost = function(host) {
 /**
  * Redraws the global.
  */
-Global.prototype.drawAll = function(_repeat) {
+Global.prototype.drawAll = function() {
+    // TODO: don't draw twice (workaround)
+    // TODO: Cleanup & comment
     var width = (240 - 12 * (this.views.length - 1)) / this.views.length;
     var hostMargin = this.resize();
     $("table.log").children().remove();
@@ -138,6 +140,8 @@ Global.prototype.resize = function() {
     var global = this;
     var visibleHosts = 0;
 
+    // TODO: Refactor into Controller and update to use hostPermutation
+    // Plus length of hiddenHosts instead of indexOf.
     for (var i = 0; i < this.views.length; i++) {
         var vh = this.views[i].getHosts();
         var hn = 0;
@@ -149,6 +153,7 @@ Global.prototype.resize = function() {
         visibleHosts = visibleHosts + vh.length - hn;
     }
 
+    // TODO: rename to sidebarLeft sidebarRight middleWidth
     var headerWidth = $(".visualization header").outerWidth();
     var sidebarWidth = $("#sidebar").outerWidth();
     var globalWidth = $(window).width() - headerWidth - sidebarWidth;
@@ -168,6 +173,7 @@ Global.prototype.resize = function() {
         hostMargin = 0;
     }
 
+    // TODO: More refactoring
     for (var i = 0; i < this.views.length; i++) {
         var view = this.views[i];
         var hosts = view.getHosts().filter(function (h) {

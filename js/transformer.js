@@ -7,13 +7,13 @@
  * VisualGraph and takes care of transforming the model.
  *
  * @constructor
- * @param {VisualGraph} model The VisualGraph this transformer is responsible
- *                            for.
+ * @param {VisualGraph} visualModel The VisualGraph this transformer is responsible
+ *                                  for.
  */
-function Transformer(model) {
+function Transformer(visualModel) {
     
     /** @private */
-    this.model = model;
+    this.visualModel = visualModel;
     
     /** @private */
     this.transformations = [];
@@ -75,17 +75,17 @@ Transformer.prototype.removeTransformation = function(tf) {
  * 
  * @returns {VisualGraph} The model the transformer acts on
  */
-Transformer.prototype.getModel = function() {
-    return this.model;
+Transformer.prototype.getVisualModel = function() {
+    return this.visualModel;
 };
 
 /**
  * Sets the model of the transformer
  * 
- * @param {VisualGraph} model The model the transformer should act on
+ * @param {VisualGraph} visualModel The model the transformer should act on
  */
-Transformer.prototype.setModel = function(model) {
-    this.model = model;
+Transformer.prototype.setVisualModel = function(visualModel) {
+    this.visualModel = visualModel;
 };
 
 /**

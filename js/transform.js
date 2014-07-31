@@ -326,8 +326,6 @@ CollapseSequentialNodesTransformation.prototype.transform = function(model) {
  */
 function HighlightHostTransformation(host) {
 
-    this.priority = 30;
-
     /** @private */
     this.hosts = {};
 
