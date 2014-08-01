@@ -9,7 +9,7 @@
  * that consumes a stream of tokens (provided by a {@link LEMTokenizer}) and
  * produces an {@link AST abstract syntax tree} according to the following
  * syntactic grammar, shown in
- * {@link http://en.wikipedia.org/wiki/EbnfExtended Backus�Naur Form}. The
+ * {@link http://en.wikipedia.org/wiki/Ebnf Extended Backus-Naur Form}. The
  * grammar is equivalent to an LL(1) grammar, but is not quite LL(1) in the form
  * shown below
  * </p>
