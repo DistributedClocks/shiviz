@@ -9,7 +9,7 @@
  * that consumes a stream of tokens (provided by a {@link LEMTokenizer}) and
  * produces an {@link AST abstract syntax tree} according to the following
  * syntactic grammar, shown in
- * {@link http://en.wikipedia.org/wiki/EbnfExtended Backus–Naur Form}. The
+ * {@link http://en.wikipedia.org/wiki/EbnfExtended Backusï¿½Naur Form}. The
  * grammar is equivalent to an LL(1) grammar, but is not quite LL(1) in the form
  * shown below
  * </p>
@@ -194,9 +194,12 @@ LEMParser.prototype.parse = function() {
     }
 
     /*
-     * Returns true if the next token's type is one of the arguments
+     * Returns true if the next token's type is one of the arguments.
+     * This is an infinite-arity function
+     * 
+     * @param {...TokenType} args
      */
-    function check() {
+    function check(args) {
         if (!context.tokenizer.hasNext()) {
             return false;
         }
@@ -213,8 +216,11 @@ LEMParser.prototype.parse = function() {
     /*
      * Requires that the next token's type is one of the arugments. An error is
      * thrown otherwise
+     * This is an infinite-arity function
+     * 
+     * @param {...TokenType} args
      */
-    function require() {
+    function require(args) {
         if (context.tokenizer.hasNext()) {
             var currType = peekType();
             for (var i = 0; i < arguments.length; i++) {
