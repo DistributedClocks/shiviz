@@ -19,7 +19,7 @@ if(system("unzip -o jsdoc-master.zip > /dev/null 2>&1")) {
 system("cp doc-index.txt ./js/README.md");
 
 # compile using JSDoc3
-if(system("./jsdoc-master/jsdoc -d " . $dest . " ./js ./js/README.md")) {
+if(system("./jsdoc-master/jsdoc -r -d " . $dest . " ./js ./js/README.md")) {
 	system($deltempcmd);
 	die "Compilation failed";
 }
