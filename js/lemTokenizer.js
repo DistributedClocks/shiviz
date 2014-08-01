@@ -6,7 +6,7 @@
  * <p>
  * LEMTokenizer consumes a string of characters and divides into a list of
  * tokens. This is done according to the following grammar specified in
- * {@link http://en.wikipedia.org/wiki/EbnfExtended Backus–Naur Form}. Note
+ * {@link http://en.wikipedia.org/wiki/Ebnf Extended Backus-Naur Form}. Note
  * that whitespace (as defined in the grammar) are not considered tokens and
  * will not be returned by this tokenizer
  * </p>
