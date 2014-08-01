@@ -27,6 +27,8 @@ CustomMotifFinder.prototype.constructor = CustomMotifFinder;
 CustomMotifFinder.prototype.find = function(graph) {
 
     var context = this;
+
+    // This is the motif template we are looking for
     var builderGraph = this.builderGraph;
 
     if (!validateBGraph(builderGraph)) {
@@ -122,20 +124,20 @@ CustomMotifFinder.prototype.find = function(graph) {
     function searchNode(builderNode) {
         var node = bNodeMatch[builderNode.getId()];
 
-        // if builderNode's match is already part of another motif, return
-        // false.
+        // If builderNode's match is already part of another motif, return
+        // false. Disallows overlapping motifs.
         if (used[node.getId()]) {
             return false;
         }
 
-        // tryMatch the next nodes of builderNode and it's match.
+        // tryMatch the next nodes of builderNode and its match.
         var bNodeNext = builderNode.getNext();
         var nodeNext = node.getNext();
         if (!bNodeNext.isTail() && (nodeNext.isTail() || !tryMatch([ bNodeNext ], [ nodeNext ]))) {
             return false;
         }
 
-        // tryMatch the prev nodes of builderNode and it's match.
+        // tryMatch the prev nodes of builderNode and its match.
         var bNodePrev = builderNode.getPrev();
         var nodePrev = node.getPrev();
         if (!bNodePrev.isHead() && (nodePrev.isHead() || !tryMatch([ bNodePrev ], [ nodePrev ]))) {
