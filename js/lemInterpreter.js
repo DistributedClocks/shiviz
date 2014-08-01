@@ -72,7 +72,7 @@ LEMInterpreter.prototype.visitBinaryOp = function(ast, env) {
             val = rhs.getVal().test(lhs.getVal());
         }
         else if (rhs.getType() == LEMInterpreterValue.STRING) {
-            val = lhs.getVal() == rhs.getVal();
+            val = (lhs.getVal() == rhs.getVal());
         }
         else {
             throw new Exception("RHS must be a regex or string.");
