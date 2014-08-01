@@ -255,7 +255,7 @@ section.input .left {
     overflow: hidden;
     background: #fff;
     transition: margin;
-    transition-duration: .06s;
+    transition-duration: .1s;
     transition-timing-function: ease-out;
 }
 
@@ -288,7 +288,7 @@ section.input .left {
 .visualization .highlight {
     position: absolute;
     transition: top, background, height;
-    transition-duration: .06s;
+    transition-duration: .1s;
     transition-timing-function: ease-out;
     box-shadow: 0 0 0 1px #fff;
     z-index: 2;
@@ -408,6 +408,14 @@ svg {
     /*word-break: break-all;*/
     overflow: hidden;
     text-overflow: ellipsis;
+}
+
+#sidebar .hidden {
+    margin-top: 2em;
+}
+#sidebar .hidden svg {
+    float: left;
+    margin-top: 1em;
 }
 
 svg#defs {

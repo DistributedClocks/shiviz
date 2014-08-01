@@ -138,36 +138,35 @@ Shiviz.prototype.visualize = function() {
 
         if (sortType == "length") {
             hostPermutation = new LengthPermutation(descending);
-        }
-        else if (sortType == "order") {
+        } else if (sortType == "order") {
             hostPermutation = new LogOrderPermutation(descending);
-        }
-        else {
+        } else {
             throw new Exception("You must select a way to sort processes.", true);
         }
 
         var global = new Global(hostPermutation);
+        var labelGraph = {};
 
         var labels = parser.getLabels();
-        for (var i = 0; i < labels.length; i++) {
-            var label = labels[i];
+        labels.forEach(function(label) {
             var graph = new ModelGraph(parser.getLogEvents(label));
-            var view = new View(graph, global, hostPermutation, label);
+            labelGraph[label] = graph;
 
-            global.addView(view);
             hostPermutation.addGraph(graph);
-
             if (sortType == "order") {
                 hostPermutation.addLogs(parser.getLogEvents(label));
             }
-        }
-
+        });
+        
         hostPermutation.update();
-        global.drawAll();
 
-        // Check for vertical overflow
-        if ($(document).height() > $(window).height())
-            global.drawAll();
+        labels.forEach(function(label) {
+            var graph = labelGraph[label];
+            var view = new View(graph, global, hostPermutation, label);
+            global.addView(view);
+        });
+
+        global.drawAll();
     } catch (err) {
         this.handleException(err);
     }

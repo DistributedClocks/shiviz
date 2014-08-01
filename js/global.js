@@ -15,20 +15,19 @@ function Global(hostPermutation) {
 
     /** @private */
     this.views = [];
-
-    /** @private */
-    this.transformations = [];
     
     /** @private */
     this.hostPermutation = hostPermutation;
 
     /** @private */
-    this.highlightHostTransformation = new HighlightHostTransformation([]);
-    this.addTransformation(this.highlightHostTransformation);
+    this.hiddenHosts = [];
 
     /** @private */
-    this.hideHostTransformation = new HideHostTransformation();
-    this.addTransformation(this.hideHostTransformation);
+    this.controller = new Controller(this);
+
+    Global.SIDE_BAR_WIDTH = 240;
+    Global.HOST_SQUARE_SIZE = 25;
+    Global.HIDDEN_EDGE_LENGTH = 40;
 
     $("#sidebar").css({
         width: Global.SIDE_BAR_WIDTH + "px",
@@ -49,47 +48,47 @@ function Global(hostPermutation) {
         g.drawAll.call(g);
     });
     
-    
-    // ----- TEMPORARY -------
-    
-    $("#textsearchsub").on("click", function() {
-        try{
-            var text = $("#textsearch").val();
-            g.transformations.pop();
-            g.addTransformation(new HighlightMotifTransformation(new TextQueryFinder(text)));
-            g.drawAll.call(g);
-        }
-        catch(e) {
-            Shiviz.getInstance().handleException(e);
-        }
-    });
 }
 
-Global.SIDE_BAR_WIDTH = 240;
-Global.HOST_SQUARE_SIZE = 25;
-Global.HIDDEN_EDGE_LENGTH = 40;
-
+/**
+ * Adds a hidden host to the list
+ * 
+ * @param {String} host The host to add
+ */
+Global.prototype.addHiddenHost = function(host) {
+    if (this.hiddenHosts.indexOf(host) < 0)
+        this.hiddenHosts.push(host);
+}
 
 /**
- * Adds a transformation that is to be applied to all views. The transformation
- * for a view will not be applied until it is redrawn (i.e by calling
- * view.draw() to redraw a single view or global.drawAll() to redraw all views
- * belonging to this global)
+ * Removes a hidden host to the list
  * 
- * @param {Transformation} transformation The transformation to add
+ * @param {String} host The host to remove
  */
-Global.prototype.addTransformation = function(transformation) {
-    this.transformations.push(transformation);
-};
+Global.prototype.removeHiddenHost = function(host) {
+    var i = this.hiddenHosts.indexOf(host);
+    this.hiddenHosts.splice(i, 1);
+}
 
 /**
  * Redraws the global.
  */
 Global.prototype.drawAll = function() {
-    var hostMargin = this.resize();
-
-    $("table.log").children().remove();
+    // TODO: don't draw twice (workaround)
+    // TODO: Cleanup & comment
     var width = (240 - 12 * (this.views.length - 1)) / this.views.length;
+    var hostMargin = this.resize();
+    $("table.log").children().remove();
+
+    for (var i = 0; i < this.views.length; i++) {
+        $("table.log").append($("<td></td>").width(width + "pt"));
+        this.views[i].draw();
+        $("table.log").append($("<td></td>").addClass("spacer"));
+    }
+
+    hostMargin = this.resize();
+    $("table.log").children().remove();
+
     for (var i = 0; i < this.views.length; i++) {
         $("table.log").append($("<td></td>").width(width + "pt"));
         this.views[i].draw();
@@ -105,75 +104,57 @@ Global.prototype.drawAll = function() {
 };
 
 /**
- * Gets the transformations belonging to this global as an array
- * 
- * @returns {Array.<Transformation>} The transformations
- */
-Global.prototype.getTransformations = function() {
-    return this.transformations.slice();
-};
-
-/**
- * Hides a host from all views and re-draws this global.
- * 
- * @param {String} hostId The host to hide.
- */
-Global.prototype.hideHost = function(hostId) {
-    this.hideHostTransformation.addHost(hostId);
-    this.highlightHostTransformation.clearHostsToHighlight();
-    this.drawAll();
-};
-
-/**
- * Unhides a host from all views and re-draws this global. If the specified host
- * doesn't exist or is not currently hidden, this method does nothing.
- * 
- * @param {String} hostId The host to unhide
- */
-Global.prototype.unhideHost = function(hostId) {
-    this.hideHostTransformation.removeHost(hostId);
-    this.highlightHostTransformation.clearHostsToHighlight();
-    this.drawAll();
-};
-
-Global.prototype.toggleHighlightHost = function(host) {
-    if (this.views.length > 1) {
-        return;
-    }
-    this.highlightHostTransformation.toggleHostToHighlight(host);
-    this.drawAll();
-    this.drawAll();
-};
-
-/**
  * Adds a View to this global.
  * 
  * @param {View} view The view to add
  */
 Global.prototype.addView = function(view) {
     this.views.push(view);
+    this.controller.addView(view);
     this.resize();
 };
+
+/**
+ * Gets the list of Views
+ * 
+ * @returns {Array<View>} The list of views
+ */
+Global.prototype.getViews = function() {
+    return this.views;
+}
+
+/**
+ * Gets the list of current VisualGraphs
+ *
+ * @returns {Array<VisualGraph>} The current models from each View
+ */
+Global.prototype.getVisualModels = function() {
+    return this.views.map(function (v) {
+        return v.getVisualModel();
+    });
+}
 
 /**
  * Resizes the graph
  */
 Global.prototype.resize = function() {
-    var hiddenHosts = this.hideHostTransformation.getHostsToHide();
-    var highHosts = this.highlightHostTransformation.getHiddenHosts();
-    var allHidden = hiddenHosts.concat(highHosts);
+    var global = this;
     var visibleHosts = 0;
 
+    // TODO: Refactor into Controller and update to use hostPermutation
+    // Plus length of hiddenHosts instead of indexOf.
     for (var i = 0; i < this.views.length; i++) {
         var vh = this.views[i].getHosts();
         var hn = 0;
-        for (var j = 0; j < vh.length; j++)
-            if (allHidden.indexOf(vh[j]) > -1)
+        vh.forEach(function(h) {
+            if (global.hiddenHosts.indexOf(h) > -1)
                 hn++;
+        });
 
         visibleHosts = visibleHosts + vh.length - hn;
     }
 
+    // TODO: rename to sidebarLeft sidebarRight middleWidth
     var headerWidth = $(".visualization header").outerWidth();
     var sidebarWidth = $("#sidebar").outerWidth();
     var globalWidth = $(window).width() - headerWidth - sidebarWidth;
@@ -193,10 +174,11 @@ Global.prototype.resize = function() {
         hostMargin = 0;
     }
 
+    // TODO: More refactoring
     for (var i = 0; i < this.views.length; i++) {
         var view = this.views[i];
         var hosts = view.getHosts().filter(function (h) {
-            return allHidden.indexOf(h) < 0;
+            return global.hiddenHosts.indexOf(h) < 0;
         });
         view.setWidth(hosts.length * widthPerHost - hostMargin);
     }
@@ -218,40 +200,29 @@ Global.prototype.drawSideBar = function() {
     var hidden = d3.select(".hidden");
 
     // Draw hidden hosts
-    var hiddenHosts = this.hideHostTransformation.getHostsToHide();
-    var highHosts = this.highlightHostTransformation.getHiddenHosts();
-    var hh = hiddenHosts.concat(highHosts);
+    var hh = this.hiddenHosts;
     if (hh.length <= 0) {
+        $(".hidden").hide();
         return;
     }
+
+    $(".hidden").show();
+
+    var hostsPerLine = Math.floor((Global.SIDE_BAR_WIDTH + 5) / (Global.HOST_SQUARE_SIZE + 5));
+    var count = 0;
+
+    var x = Global.SIDE_BAR_WIDTH;
+    var y = 0;
 
     var hiddenHosts = hidden.append("svg");
     hiddenHosts.attr({
         "width": $("#sidebar").width(),
-        "height": 500,
+        "height": Math.ceil(hh.length / hostsPerLine) * (Global.HOST_SQUARE_SIZE + 5) - 5,
         "class": "hidden-hosts"
     });
 
-    var x = 0;
-    var y = 65;
-
     var hiddenHostsGroup = hiddenHosts.append("g");
     hiddenHostsGroup.append("title").text("Double click to view");
-
-    var hiddenText = hiddenHostsGroup.append("text");
-    hiddenText.attr({
-        "x": x,
-        "y": y
-    });
-    hiddenText.text('Hidden');
-
-    var hostsText = hiddenHostsGroup.append("text");
-    hostsText.attr({
-        "x": x,
-        "y": y,
-        "dy": "1em"
-    });
-    hostsText.text('hosts:');
 
     var rect = hiddenHosts.selectAll().data(hh).enter().append("rect");
     rect.attr("width", Global.HOST_SQUARE_SIZE);
@@ -259,18 +230,7 @@ Global.prototype.drawSideBar = function() {
     rect.style("fill", function(host) {
         return global.hostPermutation.getHostColor(host);
     });
-    rect.on("dblclick", function(e) {
-        global.unhideHost(e);
-    });
-    rect.on("mouseover", function(e) {
-        $(".event").innerHTML = e;
-    });
     rect.append("title").text("Double click to view");
-
-    var hostsPerLine = Math.floor((Global.SIDE_BAR_WIDTH + 5) / (Global.HOST_SQUARE_SIZE + 5));
-    var count = 0;
-    y += 25;
-    x = Global.SIDE_BAR_WIDTH + 1;
 
     rect.attr("y", function(host) {
         count++;
@@ -282,12 +242,14 @@ Global.prototype.drawSideBar = function() {
         return y;
     });
     rect.attr("x", function(host) {
-        x += 30;
+        x += Global.HOST_SQUARE_SIZE + 5;
         if (x + Global.HOST_SQUARE_SIZE > Global.SIDE_BAR_WIDTH) {
             x = 0;
         }
         return x;
     });
+
+    this.controller.bindHiddenHosts(rect);
 };
 
 /**

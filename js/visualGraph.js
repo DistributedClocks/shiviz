@@ -1,22 +1,22 @@
 /**
- * Constructs a VisualGraph. The resulting VisualGraph will represent the visualization of
- * the provided {@link ModelGraph}.
+ * Constructs a VisualGraph that is the visualization of the specified graph.
+ * The VisualGraph will have the layout and host permutation specified
  * 
  * @classdesc
  * 
- * <p>A VisualGraph represents the visualization of a graph; it describes how the
+ * A VisualGraph represents the visualization of a graph; it describes how the
  * graph is to be drawn. Note that the actual drawing logic is not part of this
- * class.</p>
+ * class.
  * 
- * <p>A VisualGraph is a composition of {@link VisualNode}s and {@link VisualEdge}s. It provides
- * methods to get the corresponding {@link VisualNode} or {@link VisualEdge} from graph Nodes</p>
+ * A VisualGraph is a composition of VisualNodes and VisualEdges. It provides
+ * methods to get the corresponding VisualNode or VisualEdge from graph Nodes
  * 
  * @constructor
- * @param {ModelGraph} graph The underlying Graph that this VisualGraph is a
+ * @param {Graph} graph The underlying Graph that this VisualGraph is a
  *        visualization of
  * @param {Layout} layout A layout object that is responsible for setting the
  *        positions of VisualNodes and Edges
- * @param {HostPermutation} hostPermutation Determines the ordering of hosts
+ * @param {HostPermutation} hostPermutation
  */
 function VisualGraph(graph, layout, hostPermutation) {
 
@@ -35,10 +35,7 @@ function VisualGraph(graph, layout, hostPermutation) {
     /** @private */
     this.links = {}; // A mapping of edge IDs to VisualEdges 
 
-    /** @private **/
-    this.lines = {}; // A mapping of y coordinates to VisualNodes
-
-    graph.addObserver(AddNodeEvent, this, function(event, g) {
+    this.graph.addObserver(AddNodeEvent, this, function(event, g) {
         g.addVisualNodeByNode(event.getNewNode());
         g.removeVisualEdgeByNodes(event.getPrev(), event.getNext());
         g.addVisualEdgeByNodes(event.getPrev(), event.getNewNode());
@@ -47,7 +44,7 @@ function VisualGraph(graph, layout, hostPermutation) {
         }
     });
 
-    graph.addObserver(RemoveNodeEvent, this, function(event, g) {
+    this.graph.addObserver(RemoveNodeEvent, this, function(event, g) {
         g.removeVisualEdgeByNodes(event.getPrev(), event.getRemovedNode());
         g.removeVisualEdgeByNodes(event.getRemovedNode(), event.getNext());
         if (!event.getNext().isTail()) {
@@ -56,20 +53,20 @@ function VisualGraph(graph, layout, hostPermutation) {
         g.removeVisualNodeByNode(event.getRemovedNode());
     });
 
-    graph.addObserver(AddFamilyEvent, this, function(event, g) {
+    this.graph.addObserver(AddFamilyEvent, this, function(event, g) {
         g.addVisualEdgeByNodes(event.getParent(), event.getChild());
     });
 
-    graph.addObserver(RemoveFamilyEvent, this, function(event, g) {
+    this.graph.addObserver(RemoveFamilyEvent, this, function(event, g) {
         g.removeVisualEdgeByNodes(event.getParent(), event.getChild());
     });
 
-    graph.addObserver(RemoveHostEvent, this, function(event, g) {
+    this.graph.addObserver(RemoveHostEvent, this, function(event, g) {
         delete g.nodeIdToVisualNode[event.getHead().getId()];
     });
 
     // Create nodes
-    var nodes = graph.getAllNodes();
+    var nodes = this.graph.getAllNodes();
     for (var i = 0; i < nodes.length; i++) {
         var node = nodes[i];
         if (!node.isTail()) {
@@ -101,22 +98,14 @@ function VisualGraph(graph, layout, hostPermutation) {
 
     }
 
-    layout.start(this, this.hostPermutation);
+    this.layout.start(this, this.hostPermutation);
 }
 
+/**
+ * Updates the VisualGraph and its layout
+ */
 VisualGraph.prototype.update = function() {
     this.layout.start(this, this.hostPermutation);
-
-    this.lines = {};
-    var visualNodes = this.getVisualNodes();
-    for (var i in visualNodes) {
-        var node = visualNodes[i];
-        var y = node.getY();
-        if (this.lines[y] === undefined)
-            this.lines[y] = [node];
-        else
-            this.lines[y].push(node);
-    }
 };
 
 /**
@@ -264,6 +253,15 @@ VisualGraph.prototype.getWidth = function() {
 };
 
 /**
+ * Sets the width of the VisualGraph
+ * 
+ * @params {Number} width The width
+ */
+VisualGraph.prototype.setWidth = function(width) {
+    this.layout.setWidth(width);
+};
+
+/**
  * Gets the height of the VisualGraph
  * 
  * @returns {Number} The height
@@ -357,7 +355,8 @@ VisualGraph.prototype.removeVisualEdgeByNodes = function(node1, node2) {
 
 /**
  * Adds hidden family edges to the provided VisualNode
- * 
+ *
+ * @private
  * @param {VisualNode} node
  */
 VisualGraph.prototype.addHiddenEdgeToFamily = function(node) {
