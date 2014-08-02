@@ -61,8 +61,8 @@ AST.prototype.accept = function(visitor, pass) {
  * @constructor
  * @extends AST
  * @param {*} op The binary operator associated with this ast. This parameter
- *        must be one of the constants defined in the BinaryOp class such as
- *        BinaryOp.AND
+ *            must be one of the constants defined in the BinaryOp class such as
+ *            BinaryOp.AND
  * @param {AST} lhs The left hand side operand
  * @param {AST} rhs The right hand side operand
  */

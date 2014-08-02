@@ -1,20 +1,24 @@
 /**
  * Constructs a CollapseSequentialNodeTransformation that will collapse all
- * local consecutive events that have no remote dependencies, subject to the threshold
- * parameter.
+ * local consecutive events that have no remote dependencies, subject to the
+ * threshold parameter.
  * 
  * @classdesc
  * 
- * <p>CollapseSequentialNodeTransformation groups local consecutive events that
+ * <p>
+ * CollapseSequentialNodeTransformation groups local consecutive events that
  * have no remote dependencies. The collapsed nodes will have an increased
  * radius and will contain a label indicating the number of nodes collapsed into
  * it. This transformation provides methods for adding and removing nodes exempt
- * from this collapsing process.</p>
+ * from this collapsing process.
+ * </p>
  * 
- * <p>This transformation collapses nodes that belong to the same group.
+ * <p>
+ * This transformation collapses nodes that belong to the same group.
  * Intuitively, nodes belong to the same group if they are local consecutive
  * events that have no remote dependencies. More formally, a node y is in x's
- * group if y == x or y has no family and y's prev or next node is in x's group.</p>
+ * group if y == x or y has no family and y's prev or next node is in x's group.
+ * </p>
  * 
  * @constructor
  * @extends Transformation
@@ -58,13 +62,17 @@ CollapseSequentialNodesTransformation.prototype.setThreshold = function(threshol
 };
 
 /**
- * <p>Adds an exemption. An exemption is a LogEvent whose Node will never be
- * collapsed.</p>
+ * <p>
+ * Adds an exemption. An exemption is a LogEvent whose Node will never be
+ * collapsed.
+ * </p>
  * 
- * <p>Note that addExemption and removeExemption are not inverses of each other.
+ * <p>
+ * Note that addExemption and removeExemption are not inverses of each other.
  * addExemption affects only the LogEvents of the given node, while
  * removeExemption affects the LogEvents of the given node and all nodes in its
- * group.</p>
+ * group.
+ * </p>
  * 
  * @param {ModelNode} node The node whose LogEvents will be added as exemptions
  */
@@ -76,16 +84,20 @@ CollapseSequentialNodesTransformation.prototype.addExemption = function(node) {
 };
 
 /**
- * <p>Removes an exemption. An exemption is a LogEvent whose Node will never be
- * collapsed</p>
+ * <p>
+ * Removes an exemption. An exemption is a LogEvent whose Node will never be
+ * collapsed
+ * </p>
  * 
- * <p>Note that addExemption and removeExemption are not inverses of each other.
+ * <p>
+ * Note that addExemption and removeExemption are not inverses of each other.
  * addExemption affects only the LogEvents of the given node, while
  * removeExemption affects the LogEvents of the given node and all nodes in its
- * group.</p>
+ * group.
+ * </p>
  * 
- * @param {ModelNode} node The LogEvents of this node and the LogEvents of every node
- *            in its group will be removed as exemptions
+ * @param {ModelNode} node The LogEvents of this node and the LogEvents of every
+ *            node in its group will be removed as exemptions
  */
 CollapseSequentialNodesTransformation.prototype.removeExemption = function(node) {
     if (node.hasChildren() || node.hasParents()) {
@@ -131,8 +143,10 @@ CollapseSequentialNodesTransformation.prototype.toggleExemption = function(node)
 };
 
 /**
- * <p>Determines if any of the LogEvents contained inside the given node is an
- * exemption</p>
+ * <p>
+ * Determines if any of the LogEvents contained inside the given node is an
+ * exemption
+ * </p>
  * 
  * @param {ModelNode} node The node to check
  * @returns {Boolean} True if one of the LogEvents is an exemption
@@ -197,4 +211,3 @@ CollapseSequentialNodesTransformation.prototype.transform = function(model) {
 
     model.update();
 };
-

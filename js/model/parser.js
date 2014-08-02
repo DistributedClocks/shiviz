@@ -3,28 +3,32 @@
  * 
  * @classdesc
  * 
- * <p>LogParser can be used to transform raw log text to {@link LogEvent}s The LogParser
- * class per se is only responsible for dividing the raw text into different
- * executions according to the supplied delimiter. It then creates one
- * {@link ExecutionParser} for each execution to which to task for parsing is then
- * delegated.</p>
+ * <p>
+ * LogParser can be used to transform raw log text to {@link LogEvent}s The
+ * LogParser class per se is only responsible for dividing the raw text into
+ * different executions according to the supplied delimiter. It then creates one
+ * {@link ExecutionParser} for each execution to which to task for parsing is
+ * then delegated.
+ * </p>
  * 
- * <p>The raw log potentially contains text for multiple executions. Delimiters
+ * <p>
+ * The raw log potentially contains text for multiple executions. Delimiters
  * demarcate where one execution's text ends and another begins. Labels can be
  * given to executions by specifying a "trace" capture group within the
  * delimiter regex. (So the label text must be part of the delimiter). This
  * label can later be used to identify an execution. If an execution's text is
- * not preceeded by a delimiter, it is given the empty string as its label.</p>
+ * not preceeded by a delimiter, it is given the empty string as its label.
+ * </p>
  * 
  * @constructor
  * @param {String} rawString the raw log text
  * @param {NamedRegExp} delimiter a regex that specifies the delimiter. Anything
- *        that matches the regex will be treated as a delimiter. A delimiter
- *        acts to separate different executions.
+ *            that matches the regex will be treated as a delimiter. A delimiter
+ *            acts to separate different executions.
  * @param {NamedRegExp} regexp A regex that specifies the log parser. The parser
- *        must contain the named capture groups "clock", "event", and "host"
- *        representing the vector clock, the event string, and the host
- *        respectively.
+ *            must contain the named capture groups "clock", "event", and "host"
+ *            representing the vector clock, the event string, and the host
+ *            respectively.
  */
 function LogParser(rawString, delimiter, regexp) {
 
@@ -67,7 +71,8 @@ function LogParser(rawString, delimiter, regexp) {
                 this.labels.push(currLabels[i]);
             }
         }
-    } else {
+    }
+    else {
         this.labels.push("");
         this.executions[""] = new ExecutionParser(this.rawString, "", regexp);
     }
@@ -85,15 +90,17 @@ LogParser.prototype.getLabels = function() {
 };
 
 /**
- * Returns the {@link LogEvent}s parsed by this. The ordering of LogEvents in the
- * returned array is guaranteed to be the same as the order in which they were
- * encountered in the raw log text
- *
- * @param {String} label The label of the execution you want to get log events from.
+ * Returns the {@link LogEvent}s parsed by this. The ordering of LogEvents in
+ * the returned array is guaranteed to be the same as the order in which they
+ * were encountered in the raw log text
+ * 
+ * @param {String} label The label of the execution you want to get log events
+ *            from.
  * @returns {Array<LogEvent>} An array of LogEvents
  */
 LogParser.prototype.getLogEvents = function(label) {
-    if (!this.executions[label]) return null;
+    if (!this.executions[label])
+        return null;
     return this.executions[label].logEvents;
 };
 
@@ -150,7 +157,8 @@ function ExecutionParser(rawString, label, regexp) {
     function parseTimestamp(clockString, hostString, line) {
         try {
             clock = JSON.parse(clockString);
-        } catch (err) {
+        }
+        catch (err) {
             console.log(clockString);
             var exception = new Exception("An error occured while trying to parse the vector timestamp on line " + (line + 1) + ":");
             exception.append(clockString, "code");
@@ -163,7 +171,8 @@ function ExecutionParser(rawString, label, regexp) {
         try {
             var ret = new VectorTimestamp(clock, hostString);
             return ret;
-        } catch (exception) {
+        }
+        catch (exception) {
             exception.prepend("An error occured while trying to parse the vector timestamp on line " + (line + 1) + ":\n\n");
             exception.append(clockString, "code");
             exception.setUserFriendly(true);

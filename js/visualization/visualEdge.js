@@ -1,45 +1,47 @@
 /**
- * Constructs a VisualEdge. The resulting VisualEdge will represent the visualization
- * of the edge between the two {@link VisualNode}s given as arguments
+ * Constructs a VisualEdge. The resulting VisualEdge will represent the
+ * visualization of the edge between the two {@link VisualNode}s given as
+ * arguments
  * 
  * @classdesc
  * 
- * A VisualEdge is a visualization of an edge between {@link ModelNode}s; it describes how the edge is
- * to be drawn. Note that actual drawing logic is not part of this class
+ * A VisualEdge is a visualization of an edge between {@link ModelNode}s; it
+ * describes how the edge is to be drawn. Note that actual drawing logic is not
+ * part of this class
  * 
  * @constructor
  * @param {VisualNode} sourceVisualNode One of the Nodes that is connected by
- *        this edge. sourceVisualNode.getNode() must either be the parent or the
- *        prev node of targetVisualNode.getNode()
+ *            this edge. sourceVisualNode.getNode() must either be the parent or
+ *            the prev node of targetVisualNode.getNode()
  * @param {VisualNode} targetVisualNode One of the Nodes that is connected by
- *        this edge. targetVisualNode.getNode() must either be the child or the
- *        next node of sourceVisualNode.getNode()
+ *            this edge. targetVisualNode.getNode() must either be the child or
+ *            the next node of sourceVisualNode.getNode()
  */
 function VisualEdge(sourceVisualNode, targetVisualNode) {
-    
+
     /** @private */
     this.sourceVisualNode = sourceVisualNode;
-    
+
     /** @private */
     this.targetVisualNode = targetVisualNode;
-    
+
     /** @private */
     this.width = 1;
-    
+
     /** @private */
     this.dashLength = 0;
-    
+
     /** @private */
     this.color = "#999";
-    
+
     /** @private */
     this.opacity = 0.6;
 }
 
 /**
- * Gets the source {@link VisualNode}. The source VisualNode is the VisualNode connected
- * by this VisualEdge such that getSourceVisualNode().getNode() is either the
- * parent or the prev node of getTargetVisualNode().getNode()
+ * Gets the source {@link VisualNode}. The source VisualNode is the VisualNode
+ * connected by this VisualEdge such that getSourceVisualNode().getNode() is
+ * either the parent or the prev node of getTargetVisualNode().getNode()
  * 
  * @returns {VisualNode} The source VisualNode
  */
@@ -48,9 +50,9 @@ VisualEdge.prototype.getSourceVisualNode = function() {
 };
 
 /**
- * Gets the target {@link VisualNode}. The target VisualNode is the VisualNode connected
- * by this VisualEdge such that getTargetVisualNode().getNode() is either the
- * child or the next node the getSourceVisualNode().getNode()
+ * Gets the target {@link VisualNode}. The target VisualNode is the VisualNode
+ * connected by this VisualEdge such that getTargetVisualNode().getNode() is
+ * either the child or the next node the getSourceVisualNode().getNode()
  * 
  * @returns {VisualNode} The target VisualNode
  */
@@ -112,9 +114,9 @@ VisualEdge.prototype.getColor = function() {
 /**
  * Sets the color of the VisualEdge
  * 
- * @returns {String} The color. The color must be a
- *        string that parses to a valid SVG color as defined in
- *        http://www.w3.org/TR/SVG/types.html#WSP
+ * @returns {String} The color. The color must be a string that parses to a
+ *          valid SVG color as defined in
+ *          http://www.w3.org/TR/SVG/types.html#WSP
  */
 VisualEdge.prototype.setColor = function(newColor) {
     this.color = newColor;

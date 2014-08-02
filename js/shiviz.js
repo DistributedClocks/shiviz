@@ -114,8 +114,8 @@ Shiviz.prototype.resetView = function() {
 };
 
 /**
- * This method creates the visualization. The user's input to UI elements are retrieved and used
- * to construct the visualization accordingly.
+ * This method creates the visualization. The user's input to UI elements are
+ * retrieved and used to construct the visualization accordingly.
  */
 Shiviz.prototype.visualize = function() {
     try {
@@ -138,9 +138,11 @@ Shiviz.prototype.visualize = function() {
 
         if (sortType == "length") {
             hostPermutation = new LengthPermutation(descending);
-        } else if (sortType == "order") {
+        }
+        else if (sortType == "order") {
             hostPermutation = new LogOrderPermutation(descending);
-        } else {
+        }
+        else {
             throw new Exception("You must select a way to sort processes.", true);
         }
 
@@ -157,7 +159,7 @@ Shiviz.prototype.visualize = function() {
                 hostPermutation.addLogs(parser.getLogEvents(label));
             }
         });
-        
+
         hostPermutation.update();
 
         labels.forEach(function(label) {
@@ -167,7 +169,8 @@ Shiviz.prototype.visualize = function() {
         });
 
         global.drawAll();
-    } catch (err) {
+    }
+    catch (err) {
         this.handleException(err);
     }
 };
@@ -177,7 +180,7 @@ Shiviz.prototype.visualize = function() {
  * back button to navigate between tabs.
  * 
  * @param {Integer} index The index of the tab: 0 of home, 1 for input, 2 for
- *        visualization
+ *            visualization
  * @param {Boolean} store Whether or not to store the history state
  * @param {Boolean} force Whether or not to force redrawing of graph
  */
@@ -185,19 +188,19 @@ Shiviz.prototype.go = function(index, store, force) {
     $("section").hide();
     $(window).scrollTop();
     switch (index) {
-    case 0:
-        $(".home").show();
-        break;
-    case 1:
-        $(".input").show();
-        inputHeight();
-        $(window).on("load resize", inputHeight);
-        break;
-    case 2:
-        $(".visualization").show();
-        if (!$("#graph svg").length || force)
-            this.visualize();
-        break;
+        case 0:
+            $(".home").show();
+            break;
+        case 1:
+            $(".input").show();
+            inputHeight();
+            $(window).on("load resize", inputHeight);
+            break;
+        case 2:
+            $(".visualization").show();
+            if (!$("#graph svg").length || force)
+                this.visualize();
+            break;
     }
 
     if (store)

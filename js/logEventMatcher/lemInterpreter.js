@@ -58,7 +58,8 @@ LEMInterpreter.prototype.interpret = function(logEvent) {
  * @protected
  * @param {BinaryOp} ast
  * @param {Object<String, String>} env The environment - the binding of
- *        identifiers to values as pure-object mapping of strings to strings.
+ *            identifiers to values as pure-object mapping of strings to
+ *            strings.
  * @returns {LEMInterpreterValue} The value resulting from visiting and handling
  *          the ast node.
  */
@@ -115,11 +116,12 @@ LEMInterpreter.prototype.visitBinaryOp = function(ast, env) {
  * @protected
  * @param {BinaryOp} ast
  * @param {Object<String, String>} env The environment - the binding of
- *        identifiers to values as pure-object mapping of strings to strings.
+ *            identifiers to values as pure-object mapping of strings to
+ *            strings.
  * @returns {LEMInterpreterValue} The value resulting from visiting and handling
  *          the ast node.
  * @throws {Exception} an exception if the identifier does not exist in the
- *         current environment
+ *             current environment
  */
 LEMInterpreter.prototype.visitIdentifier = function(ast, env) {
     var name = ast.getName();
@@ -144,7 +146,8 @@ LEMInterpreter.prototype.visitIdentifier = function(ast, env) {
  * @protected
  * @param {BinaryOp} ast
  * @param {Object<String, String>} env The environment - the binding of
- *        identifiers to values as pure-object mapping of strings to strings.
+ *            identifiers to values as pure-object mapping of strings to
+ *            strings.
  * @returns {LEMInterpreterValue} The value resulting from visiting and handling
  *          the ast node.
  */
@@ -167,7 +170,8 @@ LEMInterpreter.prototype.visitStringLiteral = function(ast, env) {
  * @protected
  * @param {BinaryOp} ast
  * @param {Object<String, String>} env The environment - the binding of
- *        identifiers to values as pure-object mapping of strings to strings.
+ *            identifiers to values as pure-object mapping of strings to
+ *            strings.
  * @returns {LEMInterpreterValue} The value resulting from visiting and handling
  *          the ast node.
  */
@@ -191,12 +195,13 @@ LEMInterpreter.prototype.visitRegexLiteral = function(ast, env) {
  * @protected
  * @param {BinaryOp} ast
  * @param {Object<String, String>} env The environment - the binding of
- *        identifiers to values as pure-object mapping of strings to strings.
+ *            identifiers to values as pure-object mapping of strings to
+ *            strings.
  * @returns {LEMInterpreterValue} The value resulting from visiting and handling
  *          the ast node.
  */
 LEMInterpreter.prototype.visitImplicitSearch = function(ast, env) {
-    for ( var key in env) {
+    for (var key in env) {
         if (env[key].toLowerCase().indexOf(ast.getText().toLowerCase()) >= 0) {
             return new LEMInterpreterValue(LEMInterpreterValue.BOOLEAN, true);
         }
@@ -215,8 +220,8 @@ LEMInterpreter.prototype.visitImplicitSearch = function(ast, env) {
  * 
  * @constructor
  * @param {*} type The type of the LEMInterpreterValue. This must be one of the
- *        constants defined in LEMInterpreterValue such as
- *        LEMInterpreterValue.REGEX
+ *            constants defined in LEMInterpreterValue such as
+ *            LEMInterpreterValue.REGEX
  * @param {*} val The value represented by this LEMInterpreterValue
  */
 function LEMInterpreterValue(type, val) {

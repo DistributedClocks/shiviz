@@ -13,9 +13,9 @@
  * 
  * @constructor
  * @param {Graph} graph The underlying Graph that this VisualGraph is a
- *        visualization of
+ *            visualization of
  * @param {Layout} layout A layout object that is responsible for setting the
- *        positions of VisualNodes and Edges
+ *            positions of VisualNodes and Edges
  * @param {HostPermutation} hostPermutation
  */
 function VisualGraph(graph, layout, hostPermutation) {
@@ -33,7 +33,7 @@ function VisualGraph(graph, layout, hostPermutation) {
     this.nodeIdToVisualNode = {};
 
     /** @private */
-    this.links = {}; // A mapping of edge IDs to VisualEdges 
+    this.links = {}; // A mapping of edge IDs to VisualEdges
 
     this.graph.addObserver(AddNodeEvent, this, function(event, g) {
         g.addVisualNodeByNode(event.getNewNode());
@@ -127,12 +127,15 @@ VisualGraph.prototype.getHosts = function() {
 };
 
 /**
- * <p>Returns all VisualNodes in this VisualGraph as an array.</p>
+ * <p>
+ * Returns all VisualNodes in this VisualGraph as an array.
+ * </p>
  * 
- * <p>There are no
- * guarantees about the ordering of elements in the returned array. Note that a
- * new array is created to prevent access to the underlying one, so this method
- * takes linear time.</p>
+ * <p>
+ * There are no guarantees about the ordering of elements in the returned array.
+ * Note that a new array is created to prevent access to the underlying one, so
+ * this method takes linear time.
+ * </p>
  * 
  * @returns {Array<VisualNode>} The array of VisualNodes
  */
@@ -145,14 +148,17 @@ VisualGraph.prototype.getVisualNodes = function() {
 };
 
 /**
- * <p>Returns only start VisualNodes in this VisualGraph as an array. Start nodes
+ * <p>
+ * Returns only start VisualNodes in this VisualGraph as an array. Start nodes
  * correspond to dummy head {@link ModelNode}s and may be drawn as a header
- * depending on the visualization</p>
+ * depending on the visualization
+ * </p>
  * 
- * <p>There are no
- * guarantees about the ordering of elements in the returned array. Note that a
- * new array is created to prevent access to the underlying one, so this method
- * takes linear time.</p>
+ * <p>
+ * There are no guarantees about the ordering of elements in the returned array.
+ * Note that a new array is created to prevent access to the underlying one, so
+ * this method takes linear time.
+ * </p>
  * 
  * @returns {Array<VisualNode>} The array of VisualNodes
  */
@@ -168,14 +174,17 @@ VisualGraph.prototype.getStartVisualNodes = function() {
 };
 
 /**
- * <p>Returns non-start VisualNodes in this VisualGraph as an array. Start nodes
+ * <p>
+ * Returns non-start VisualNodes in this VisualGraph as an array. Start nodes
  * correspond to dummy head {@link ModelNode}s and may be drawn as a header
- * depending on the visualization</p>
+ * depending on the visualization
+ * </p>
  * 
- * <p>There are no
- * guarantees about the ordering of elements in the returned array. Note that a
- * new array is created to prevent access to the underlying one, so this method
- * takes linear time.</p>
+ * <p>
+ * There are no guarantees about the ordering of elements in the returned array.
+ * Note that a new array is created to prevent access to the underlying one, so
+ * this method takes linear time.
+ * </p>
  * 
  * @returns {Array<VisualNode>} The array of VisualNodes
  */
@@ -191,12 +200,15 @@ VisualGraph.prototype.getNonStartVisualNodes = function() {
 };
 
 /**
- * <p>Returns all VisualEdges in this VisualGraph as an array.</p>
+ * <p>
+ * Returns all VisualEdges in this VisualGraph as an array.
+ * </p>
  * 
- * <p>There are no
- * guarantees about the ordering of elements in the returned array. Note that a
- * new array is created to prevent access to the underlying one, so this method
- * takes linear time.</p>
+ * <p>
+ * There are no guarantees about the ordering of elements in the returned array.
+ * Note that a new array is created to prevent access to the underlying one, so
+ * this method takes linear time.
+ * </p>
  * 
  * @returns {Array<VisualEdge>} The array of VisualEdges.
  */
@@ -209,11 +221,12 @@ VisualGraph.prototype.getVisualEdges = function() {
 };
 
 /**
- * Gets the VisualNode in this VisualGraph that is the visualization of the {@link ModelNode}
- * provided as a parameter. Returns null if no VisualNode found
+ * Gets the VisualNode in this VisualGraph that is the visualization of the
+ * {@link ModelNode} provided as a parameter. Returns null if no VisualNode
+ * found
  * 
- * @param {ModelNode} node The node whose visualization within this graph will be
- *        returned
+ * @param {ModelNode} node The node whose visualization within this graph will
+ *            be returned
  * @returns {VisualNode} The VisualNode that is the visualization of node or
  *          null if none exists
  */
@@ -286,8 +299,8 @@ VisualGraph.prototype.getEdgeId = function(node1, node2) {
 };
 
 /**
- * Creates a new VisualNode from a ModelNode and adds it to this VisualGraph. The new
- * node is returned.
+ * Creates a new VisualNode from a ModelNode and adds it to this VisualGraph.
+ * The new node is returned.
  * 
  * @private
  * @param {ModelNode} node The graph node from which the VisualNode is created
@@ -303,8 +316,8 @@ VisualGraph.prototype.addVisualNodeByNode = function(node) {
 };
 
 /**
- * Removes a the VisualNode representation of the given {@link ModelNode} from the
- * VisualGraph
+ * Removes a the VisualNode representation of the given {@link ModelNode} from
+ * the VisualGraph
  * 
  * @private
  * @param {ModelNode} node The node whose VisualNode should be removed.
@@ -321,10 +334,10 @@ VisualGraph.prototype.removeVisualNodeByNode = function(node) {
  * parameter ModelNodes. The newly created VisualEdge is returned.
  * 
  * @private
- * @param {ModelNode} node1 One of the end Nodes of the edge that a VisualEdge is
- *        being created for
- * @param {ModelNode} node2 One of the end Nodes of the edge that a VisualEdge is
- *        being created for
+ * @param {ModelNode} node1 One of the end Nodes of the edge that a VisualEdge
+ *            is being created for
+ * @param {ModelNode} node2 One of the end Nodes of the edge that a VisualEdge
+ *            is being created for
  * @returns {VisualEdge} The newly created VisualEdge
  */
 VisualGraph.prototype.addVisualEdgeByNodes = function(node1, node2) {
@@ -339,14 +352,14 @@ VisualGraph.prototype.addVisualEdgeByNodes = function(node1, node2) {
 };
 
 /**
- * Removes from the VisualGraph the {@link VisualEdge} representation of the edge
- * between the two parameter ModelNodes
+ * Removes from the VisualGraph the {@link VisualEdge} representation of the
+ * edge between the two parameter ModelNodes
  * 
  * @private
- * @param {ModelNode} node1 One of the end Nodes of the edge whose VisualEdge should
- *        be removed.
- * @param {ModelNode} node2 One of the end Nodes of the edge whose VisualEdge should
- *        be removed.
+ * @param {ModelNode} node1 One of the end Nodes of the edge whose VisualEdge
+ *            should be removed.
+ * @param {ModelNode} node2 One of the end Nodes of the edge whose VisualEdge
+ *            should be removed.
  */
 VisualGraph.prototype.removeVisualEdgeByNodes = function(node1, node2) {
     var edgeId = this.getEdgeId(node1, node2);
@@ -355,7 +368,7 @@ VisualGraph.prototype.removeVisualEdgeByNodes = function(node1, node2) {
 
 /**
  * Adds hidden family edges to the provided VisualNode
- *
+ * 
  * @private
  * @param {VisualNode} node
  */

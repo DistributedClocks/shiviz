@@ -7,9 +7,9 @@
  * 
  * @constructor
  * @param {String} regexp a string describing a regular expression. All
- *        backslashes must be escaped, e.g. \\d
+ *            backslashes must be escaped, e.g. \\d
  * @param {?String} [flags=""] a string of regexp flags, e.g. "mi" for multiline
- *        case-insensitive
+ *            case-insensitive
  */
 function NamedRegExp(regexp, flags) {
     var match, names = [];
@@ -24,7 +24,8 @@ function NamedRegExp(regexp, flags) {
                 var exc = new Exception("The regular expression you entered was invalid.\n", true);
                 exc.append("There are multiple capture groups named " + match[1]);
                 throw exc;
-            } else {
+            }
+            else {
                 names.push(match[1]);
             }
 
@@ -32,7 +33,8 @@ function NamedRegExp(regexp, flags) {
         }
 
         this.reg = new RegExp(regexp, "g" + flags);
-    } catch (e) {
+    }
+    catch (e) {
         if (e.constructor == Exception)
             throw e;
 
@@ -48,20 +50,28 @@ function NamedRegExp(regexp, flags) {
 }
 
 /**
- * <p>Extension of RegExp.exec() Returns an extended array - first array element is
+ * <p>
+ * Extension of RegExp.exec() Returns an extended array - first array element is
  * matching string, and elements thereafter are captured strings from regular
  * (non-named) groups. Named captures are extend upon arrays, e.g. for a name of
- * "date" the array will contain a property "date" with the captured string.</p>
+ * "date" the array will contain a property "date" with the captured string.
+ * </p>
  * 
- * <p>Multiple matches behave like RegExp.exec(), where each iteration of the call
- * produces the next match, or null if there are no more matches.</p>
+ * <p>
+ * Multiple matches behave like RegExp.exec(), where each iteration of the call
+ * produces the next match, or null if there are no more matches.
+ * </p>
  * 
- * <p>If there is no match for the regular expression, null is returned.</p>
+ * <p>
+ * If there is no match for the regular expression, null is returned.
+ * </p>
  * 
  * @param {String} string test string
- * @returns {Array<String>} array of match & captured matches, extended with named
- *         capture groups as object properties. See documentation for js's {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/RegExp/exec
- *         built in regex} for more information
+ * @returns {Array<String>} array of match & captured matches, extended with
+ *          named capture groups as object properties. See documentation for
+ *          js's
+ *          {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/RegExp/exec
+ *          built in regex} for more information
  */
 NamedRegExp.prototype.exec = function(string) {
     var num = this.no.exec(string);

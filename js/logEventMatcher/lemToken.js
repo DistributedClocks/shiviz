@@ -243,7 +243,7 @@ TokenType.getSymbolicTokenStringSet = function() {
     TokenType.ensureStaticInit();
 
     var ret = {};
-    for ( var key in TokenType.symbolicTokenStringSet) {
+    for (var key in TokenType.symbolicTokenStringSet) {
         ret[key] = TokenType.symbolicTokenStringSet[key];
     }
     return ret;
@@ -261,7 +261,7 @@ TokenType.getTextTokenStringSet = function() {
     TokenType.ensureStaticInit();
 
     var ret = {};
-    for ( var key in TokenType.textTokenStringSet) {
+    for (var key in TokenType.textTokenStringSet) {
         ret[key] = TokenType.textTokenStringSet[key];
     }
     return ret;

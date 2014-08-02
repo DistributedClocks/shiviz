@@ -1,23 +1,23 @@
 /**
- * Constructs a Transformer for a particular {@link View} 
- *  
+ * Constructs a Transformer for a particular {@link View}
+ * 
  * @classdesc
- *
+ * 
  * Transformer keeps track of transformations to be applied to a specific
  * VisualGraph and takes care of transforming the model.
- *
+ * 
  * @constructor
- * @param {VisualGraph} visualModel The VisualGraph this transformer is responsible
- *                                  for.
+ * @param {VisualGraph} visualModel The VisualGraph this transformer is
+ *            responsible for.
  */
 function Transformer(visualModel) {
-    
+
     /** @private */
     this.visualModel = visualModel;
-    
+
     /** @private */
     this.transformations = [];
-    
+
     /** @private */
     this.defaultTransformations = [];
 }
@@ -25,10 +25,10 @@ function Transformer(visualModel) {
 /**
  * Gets transformations
  * 
- * @param  {Function} filter    A function returning a boolean by which
- *                              to filter the transformations
- * @param  {Boolean}  isDefault Whether to look in default transformations
- *                              or regular transformations
+ * @param {Function} filter A function returning a boolean by which to filter
+ *            the transformations
+ * @param {Boolean} isDefault Whether to look in default transformations or
+ *            regular transformations
  * @return {Array<Transformation>} The list of transformations
  */
 Transformer.prototype.getTransformations = function(filter, isDefault) {
@@ -41,10 +41,10 @@ Transformer.prototype.getTransformations = function(filter, isDefault) {
 
 /**
  * Adds a transformation
- *  
+ * 
  * @param {Transformation} tf The transformation to add
- * @param {Boolean} isDefault Whether the transformation is a
- *                            default transformation
+ * @param {Boolean} isDefault Whether the transformation is a default
+ *            transformation
  */
 Transformer.prototype.addTransformation = function(tf, isDefault) {
     if (isDefault)
@@ -56,10 +56,9 @@ Transformer.prototype.addTransformation = function(tf, isDefault) {
 /**
  * Removes a transformation
  * 
- * @param  {Function|Transformation} tf A predicate function that returns
- *                                      true if given transformation is to be
- *                                      removed, OR the transformation that is
- *                                      to be removed
+ * @param {Function|Transformation} tf A predicate function that returns true if
+ *            given transformation is to be removed, OR the transformation that
+ *            is to be removed
  */
 Transformer.prototype.removeTransformation = function(tf) {
     this.transformations = this.transformations.filter(function(t) {
@@ -89,14 +88,20 @@ Transformer.prototype.setVisualModel = function(visualModel) {
 };
 
 /**
- * <p>Transforms the model.</p>
- * <p>The transformations are applied in the order in which they were added, 
- * with exceptions.</p>
- *
- * <p>Exceptions:</p>
+ * <p>
+ * Transforms the model.
+ * </p>
+ * <p>
+ * The transformations are applied in the order in which they were added, with
+ * exceptions.
+ * </p>
+ * 
+ * <p>
+ * Exceptions:
+ * </p>
  * <ul>
- * <li>HighlightHostTransformations are gathered into the last instance, 
- * at which they are then applied all at once.</li>
+ * <li>HighlightHostTransformations are gathered into the last instance, at
+ * which they are then applied all at once.</li>
  * </ul>
  */
 Transformer.prototype.transform = function() {

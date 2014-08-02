@@ -3,10 +3,10 @@
  * 
  * @classdesc
  * 
- * A Motif is a set of edges and nodes that are a subgraph of a {@link AbstractGraph}. Motifs can
- * be used by other classes to identify or store interesting or useful parts of
- * a larger graph. The exact importance of the edges and nodes stored is left up
- * to the utilizing class.
+ * A Motif is a set of edges and nodes that are a subgraph of a
+ * {@link AbstractGraph}. Motifs can be used by other classes to identify or
+ * store interesting or useful parts of a larger graph. The exact importance of
+ * the edges and nodes stored is left up to the utilizing class.
  * 
  * @constructor
  */
@@ -58,10 +58,10 @@ Motif.prototype.getNodes = function() {
  * or is otherwise meaningful in any way. Such checks are the responsibility of
  * classes utilizing Motif
  * 
- * @param {AbstractNode} node1 One of the nodes the edge connects. Must not be identical
- *            to node2
- * @param {AbstractNode} node2 One of the nodes the edge connects. Must not be identical
- *            to node1
+ * @param {AbstractNode} node1 One of the nodes the edge connects. Must not be
+ *            identical to node2
+ * @param {AbstractNode} node2 One of the nodes the edge connects. Must not be
+ *            identical to node1
  */
 Motif.prototype.addEdge = function(node1, node2) {
     this.edges[Motif.getEdgeId(node1, node2)] = [ node1, node2 ];
@@ -70,11 +70,11 @@ Motif.prototype.addEdge = function(node1, node2) {
 /**
  * Adds multiple edges to this motif.
  * 
- * @param {Array<Array<AbstractNode>>} edges The edges to add. edges[i] is the i-th
- *            edge to be added. edge[i][0] and edge[i][1] are the two nodes the
- *            i-th edge connects. For example, if you want to add two edges: one
- *            from x to y and another from t to w, edges would be [ [x, y], [t,
- *            w] ]
+ * @param {Array<Array<AbstractNode>>} edges The edges to add. edges[i] is the
+ *            i-th edge to be added. edge[i][0] and edge[i][1] are the two nodes
+ *            the i-th edge connects. For example, if you want to add two edges:
+ *            one from x to y and another from t to w, edges would be [ [x, y],
+ *            [t, w] ]
  */
 Motif.prototype.addAllEdges = function(edges) {
     for (var i = 0; i < edges.length; i++) {
@@ -83,11 +83,11 @@ Motif.prototype.addAllEdges = function(edges) {
 };
 
 Motif.prototype.addTrail = function(nodes) {
-    for(var i = 1; i < nodes.length; i++) {
-        this.addEdge(nodes[i], nodes[i-1]);
+    for (var i = 1; i < nodes.length; i++) {
+        this.addEdge(nodes[i], nodes[i - 1]);
         this.addNode(nodes[i]);
     }
-    if(nodes.length > 0) {
+    if (nodes.length > 0) {
         this.addNode(nodes[0]);
     }
 };
@@ -95,11 +95,11 @@ Motif.prototype.addTrail = function(nodes) {
 /**
  * Gets all the edges in this motif
  * 
- * @returns {Array<Array<AbstractNode>>} the edges in this motif. edges[i] is the i-th
- *          edge in the motif. edge[i][0] and edge[i][1] are the two nodes the
- *          i-th edge connects. For example, if there are two edges: one from x
- *          to y and another from t to w, the returned array would be [ [x, y],
- *          [t, w] ]
+ * @returns {Array<Array<AbstractNode>>} the edges in this motif. edges[i] is
+ *          the i-th edge in the motif. edge[i][0] and edge[i][1] are the two
+ *          nodes the i-th edge connects. For example, if there are two edges:
+ *          one from x to y and another from t to w, the returned array would be [
+ *          [x, y], [t, w] ]
  */
 Motif.prototype.getEdges = function() {
     var edges = [];
