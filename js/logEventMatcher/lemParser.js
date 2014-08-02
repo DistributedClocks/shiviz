@@ -194,8 +194,8 @@ LEMParser.prototype.parse = function() {
     }
 
     /*
-     * Returns true if the next token's type is one of the arguments.
-     * This is an infinite-arity function
+     * Returns true if the next token's type is one of the arguments. This is an
+     * infinite-arity function
      * 
      * @param {...TokenType} args
      */
@@ -215,8 +215,7 @@ LEMParser.prototype.parse = function() {
 
     /*
      * Requires that the next token's type is one of the arugments. An error is
-     * thrown otherwise
-     * This is an infinite-arity function
+     * thrown otherwise This is an infinite-arity function
      * 
      * @param {...TokenType} args
      */

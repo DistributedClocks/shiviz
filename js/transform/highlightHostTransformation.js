@@ -3,13 +3,17 @@
  * 
  * @classdesc
  * 
- * <p>HighlightHostTransformation "highlights" a set of hosts by removing all edges
+ * <p>
+ * HighlightHostTransformation "highlights" a set of hosts by removing all edges
  * not incident on the set of highlighted nodes. The highlighted hosts are drawn
- * with a border to distinguish them from unhighlighted ones.</p>
+ * with a border to distinguish them from unhighlighted ones.
+ * </p>
  * 
- * <p>In the case that the set of hosts to highlight is empty, this transformation
+ * <p>
+ * In the case that the set of hosts to highlight is empty, this transformation
  * does nothing. In the case that a specified host does not exist, it is
- * ignored.</p>
+ * ignored.
+ * </p>
  * 
  * @constructor
  * @extends Transformation
@@ -83,14 +87,18 @@ HighlightHostTransformation.prototype.clearHosts = function() {
 };
 
 /**
- * <p>Gets the hosts that are hidden by the transformation.</p>
+ * <p>
+ * Gets the hosts that are hidden by the transformation.
+ * </p>
  * 
- * <p>When hosts are highlighted, irrelevant hosts will be hidden. This method
+ * <p>
+ * When hosts are highlighted, irrelevant hosts will be hidden. This method
  * returns those implicitly hidden hosts (not the hosts that are specified to be
  * hidden). Since the hosts to be hidden are only calculated when the transform
  * method is invoked, this method will return the implicity hidden hosts from
  * the last call to transform. If transform has yet to be called, this method
- * returns an empty array.</p>
+ * returns an empty array.
+ * </p>
  * 
  * @returns {Array<String>} The array of hosts.
  */

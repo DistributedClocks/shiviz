@@ -3,13 +3,17 @@
  * 
  * @classdesc
  * 
- * <p>This transformation generates a transformed model by removing this
+ * <p>
+ * This transformation generates a transformed model by removing this
  * Transformation's hostToHide from the provided model. It removes all nodes for
  * the hostToHide and any edges touching a node for the hostToHide and adds
- * transitive edges. The added transitive edges will be drawn with dashed lines.</p>
+ * transitive edges. The added transitive edges will be drawn with dashed lines.
+ * </p>
  * 
- * <p>If this transformation is applied to a graph that doesn't have the specified
- * host, then this transformation does nothing</p>
+ * <p>
+ * If this transformation is applied to a graph that doesn't have the specified
+ * host, then this transformation does nothing
+ * </p>
  * 
  * @constructor
  * @param {String} host The host to hide from the model
@@ -72,4 +76,3 @@ HideHostTransformation.prototype.transform = function(model) {
     graph.removeHost(this.host);
     model.update();
 };
-

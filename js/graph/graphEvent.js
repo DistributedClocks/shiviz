@@ -13,13 +13,13 @@
  * @param {AbstractNode} next newNode's next node
  */
 function AddNodeEvent(newNode, prev, next) {
-    
+
     /** @private */
     this.newNode = newNode;
-    
+
     /** @private */
     this.prev = prev;
-    
+
     /** @private */
     this.next = next;
 };
@@ -67,13 +67,13 @@ AddNodeEvent.prototype.getNext = function() {
  * @param {AbstractNode} next newNode's next node
  */
 function RemoveNodeEvent(removedNode, prev, next) {
-    
+
     /** @private */
     this.removedNode = removedNode;
-    
+
     /** @private */
     this.prev = prev;
-    
+
     /** @private */
     this.next = next;
 };
@@ -114,16 +114,16 @@ RemoveNodeEvent.prototype.getNext = function() {
  * @constructor
  * @protected
  * @extends Event
- * @param {AbstractNode} parent The parent node in the newly created family relationship
- *        (i.e the node that gained a new child)
- * @param {AbstractNode} child The child node in the newly created family relationship
- *        (i.e the node that gained a new parent)
+ * @param {AbstractNode} parent The parent node in the newly created family
+ *            relationship (i.e the node that gained a new child)
+ * @param {AbstractNode} child The child node in the newly created family
+ *            relationship (i.e the node that gained a new parent)
  */
 function AddFamilyEvent(parent, child) {
-    
+
     /** @private */
     this.parent = parent;
-    
+
     /** @private */
     this.child = child;
 }
@@ -157,16 +157,16 @@ AddFamilyEvent.prototype.getChild = function() {
  * @constructor
  * @protected
  * @extends Event
- * @param {AbstractNode} parent The parent node in the removed family relationship (i.e
- *        the node that lost a new child)
- * @param {AbstractNode} child The child node in the removed family relationship (i.e
- *        the node that lost a new parent)
+ * @param {AbstractNode} parent The parent node in the removed family
+ *            relationship (i.e the node that lost a new child)
+ * @param {AbstractNode} child The child node in the removed family relationship
+ *            (i.e the node that lost a new parent)
  */
 function RemoveFamilyEvent(parent, child) {
-    
+
     /** @private */
     this.parent = parent;
-    
+
     /** @private */
     this.child = child;
 }
@@ -206,10 +206,10 @@ RemoveFamilyEvent.prototype.getChild = function() {
  * @param {AbstractNode} head The head node of the host that was removed
  */
 function RemoveHostEvent(host, head) {
-    
+
     /** @private */
     this.host = host;
-    
+
     /** @private */
     this.head = head;
 }

@@ -4,13 +4,13 @@
  * 
  * @classdesc
  * 
- * A VisualNode represents the visualization of an {@link ModelNode} that is, this class
- * describes how the Node should be drawn (such as its size, color, etc). Note
- * that the actual drawing logic is not part of this class.
+ * A VisualNode represents the visualization of an {@link ModelNode} that is,
+ * this class describes how the Node should be drawn (such as its size, color,
+ * etc). Note that the actual drawing logic is not part of this class.
  * 
  * @constructor
- * @param {ModelNode} node The node to associate with this VisualNode. This object
- *        will then be a visualization of the argument
+ * @param {ModelNode} node The node to associate with this VisualNode. This
+ *            object will then be a visualization of the argument
  */
 function VisualNode(node) {
     /** @private */
@@ -68,7 +68,8 @@ VisualNode.prototype.getId = function() {
 };
 
 /**
- * Gets the underlying {@link ModelNode} that this VisualNode is a visualization of
+ * Gets the underlying {@link ModelNode} that this VisualNode is a visualization
+ * of
  * 
  * @returns {ModelNode} The underlying node
  */
@@ -144,8 +145,8 @@ VisualNode.prototype.getFillColor = function() {
  * Sets the fill color of the VisualNode.
  * 
  * @param {String} newFillColor The new fill color. The color must be a string
- *        that parses to a valid SVG color as defined in
- *        http://www.w3.org/TR/SVG/types.html#WSP
+ *            that parses to a valid SVG color as defined in
+ *            http://www.w3.org/TR/SVG/types.html#WSP
  */
 VisualNode.prototype.setFillColor = function(newFillColor) {
     this.fillColor = newFillColor;
@@ -164,8 +165,8 @@ VisualNode.prototype.getStrokeColor = function() {
  * Sets the stroke color of the VisualNode.
  * 
  * @param {String} newStrokeColor The new stroke color. The color must be a
- *        string that parses to a valid SVG color as defined in
- *        http://www.w3.org/TR/SVG/types.html#WSP
+ *            string that parses to a valid SVG color as defined in
+ *            http://www.w3.org/TR/SVG/types.html#WSP
  */
 VisualNode.prototype.setStrokeColor = function(newStrokeColor) {
     this.strokeColor = newStrokeColor;

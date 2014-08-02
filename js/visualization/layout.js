@@ -10,28 +10,29 @@
  * @abstract
  */
 function Layout() {
-    
+
     if (this.constructor == Layout) {
         throw new Exception("Cannot instantiate Layout; Layout is an abstract class");
     }
-    
+
 }
 
 /**
  * This method is solely responsible for actually performing the layout (i.e by
- * manipulating the x and y coordinates of {@link VisualNode}s in the {@link VisualGraph}. 
+ * manipulating the x and y coordinates of {@link VisualNode}s in the
+ * {@link VisualGraph}.
  * 
  * @abstract
  */
 Layout.prototype.start = function() {
-    
+
 };
 
 /**
  * @classdesc
  * 
- * SpaceTimeLayout arranges a {@link VisualGraph} as a space-time diagram with hosts
- * laid out horizontally and time increasing with y coordinate.
+ * SpaceTimeLayout arranges a {@link VisualGraph} as a space-time diagram with
+ * hosts laid out horizontally and time increasing with y coordinate.
  * 
  * @constructor
  * @extends Layout
@@ -39,13 +40,13 @@ Layout.prototype.start = function() {
  * @param {Number} delta The vertical distance between nodes
  */
 function SpaceTimeLayout(width, delta) {
-    
+
     /** @private */
     this.width = width;
-    
+
     /** @private */
     this.delta = delta;
-    
+
     /** @private */
     this.height = 0;
 }
@@ -56,15 +57,16 @@ SpaceTimeLayout.prototype.constructor = SpaceTimeLayout;
 
 /**
  * This method is solely responsible for actually performing the layout (i.e by
- * manipulating the x and y coordinates of {@link VisualNode}s in the {@link VisualGraph}.  A
- * topological sort is performed to ensure that the y-coordinate of any
- * VisualNode's Node is greater than that of its prev and parent nodes
+ * manipulating the x and y coordinates of {@link VisualNode}s in the
+ * {@link VisualGraph}. A topological sort is performed to ensure that the
+ * y-coordinate of any VisualNode's Node is greater than that of its prev and
+ * parent nodes
  * 
  * @param {VisualGraph} visualGraph The visualGraph to lay out
  * @param {HostPermutation} hostPermutation
  */
 SpaceTimeLayout.prototype.start = function(visualGraph, hostPermutation) {
-    
+
     this.height = 0;
 
     var nodeToNumParents = {};
@@ -110,7 +112,8 @@ SpaceTimeLayout.prototype.start = function(visualGraph, hostPermutation) {
         if (this.width > Global.HOST_SQUARE_SIZE * 2) {
             widthPerHost = 0;
             leftMargin = (this.width - Global.HOST_SQUARE_SIZE) / 2;
-        } else {
+        }
+        else {
             widthPerHost = 25;
             leftMargin = Global.HOST_SQUARE_SIZE / 2;
         }

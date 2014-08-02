@@ -25,7 +25,7 @@ function Exception(message, isUserFriendly) {
     /** @private */
     this._isUserFriendly = !!isUserFriendly;
 
-    if(message) {
+    if (message) {
         this.append(message);
     }
 }
@@ -57,9 +57,9 @@ Exception.prototype.isUserFriendly = function() {
  * added after existing text
  * 
  * @param {String} string The message text to append
- * @param {?String} [style] The text style. Should be one of 'bold', 'italic', or
- *        'code'. This parameter should be omitted or set to null if normal, unstyled text is
- *        desired
+ * @param {?String} [style] The text style. Should be one of 'bold', 'italic',
+ *            or 'code'. This parameter should be omitted or set to null if
+ *            normal, unstyled text is desired
  */
 Exception.prototype.append = function(string, style) {
     this.rawString += string;
@@ -72,8 +72,8 @@ Exception.prototype.append = function(string, style) {
  * 
  * @param {String} string The message text to prepend
  * @param {String} style The text style. Should be one of 'bold', 'italic', or
- *        'code'. This parameter should be omitted if normal, unstyled text is
- *        desired
+ *            'code'. This parameter should be omitted if normal, unstyled text
+ *            is desired
  */
 Exception.prototype.prepend = function(string, style) {
     this.rawString = string + this.rawString;

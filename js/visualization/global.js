@@ -3,19 +3,20 @@
  * 
  * @classdesc
  * 
- * A Global is the visualization in its entirety. It is a composition of {@link View}s
- * and is responsible for coordinating information that's shared across Views. 
- * It is also responsible for drawing things shared across all
+ * A Global is the visualization in its entirety. It is a composition of
+ * {@link View}s and is responsible for coordinating information that's shared
+ * across Views. It is also responsible for drawing things shared across all
  * Views such as the list of hidden hosts
  * 
  * @constructor
- * @param {HostPermutation} hostPermuation describes how the hosts should be ordered
+ * @param {HostPermutation} hostPermuation describes how the hosts should be
+ *            ordered
  */
 function Global(hostPermutation) {
 
     /** @private */
     this.views = [];
-    
+
     /** @private */
     this.hostPermutation = hostPermutation;
 
@@ -42,12 +43,12 @@ function Global(hostPermutation) {
     });
 
     var g = this;
-    
+
     $(window).unbind("resize");
     $(window).on("resize", function() {
         g.drawAll.call(g);
     });
-    
+
 }
 
 /**
@@ -125,11 +126,11 @@ Global.prototype.getViews = function() {
 
 /**
  * Gets the list of current VisualGraphs
- *
+ * 
  * @returns {Array<VisualGraph>} The current models from each View
  */
 Global.prototype.getVisualModels = function() {
-    return this.views.map(function (v) {
+    return this.views.map(function(v) {
         return v.getVisualModel();
     });
 }
@@ -177,7 +178,7 @@ Global.prototype.resize = function() {
     // TODO: More refactoring
     for (var i = 0; i < this.views.length; i++) {
         var view = this.views[i];
-        var hosts = view.getHosts().filter(function (h) {
+        var hosts = view.getHosts().filter(function(h) {
             return global.hiddenHosts.indexOf(h) < 0;
         });
         view.setWidth(hosts.length * widthPerHost - hostMargin);

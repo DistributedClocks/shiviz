@@ -1,11 +1,11 @@
 /**
  * Constructs a Controller to control the given {@link Global}
- *
+ * 
  * @classdesc
- *
- * The Controller manipulates the model on user input.
- * It is responsible for maintaining {@link Transformation}s.
- *
+ * 
+ * The Controller manipulates the model on user input. It is responsible for
+ * maintaining {@link Transformation}s.
+ * 
  * @constructor
  * @param {Global} global Current Global object
  */
@@ -19,9 +19,8 @@ function Controller(global) {
 
 /**
  * Creates a {@link Transformer} for the new {@link View}, and adds default
- * transformation. Should be called from Global every time a
- * view is added.
- *  
+ * transformation. Should be called from Global every time a view is added.
+ * 
  * @param {View} view The View that was added.
  */
 Controller.prototype.addView = function(view) {
@@ -34,8 +33,8 @@ Controller.prototype.addView = function(view) {
 };
 
 /**
- * Transforms the model through the listed {@link Transformation}s,
- * in the order provided in the list
+ * Transforms the model through the listed {@link Transformation}s, in the
+ * order provided in the list
  */
 Controller.prototype.transform = function() {
     var transformers = this.transformers;
@@ -65,7 +64,7 @@ Controller.prototype.transform = function() {
  * <li>shift + click: toggles collapsed node</li>
  * </ul>
  * 
- * @param  {d3.selection} nodes A D3 selection of the nodes.
+ * @param {d3.selection} nodes A D3 selection of the nodes.
  */
 Controller.prototype.bindNodes = function(nodes) {
     var controller = this;
@@ -84,11 +83,15 @@ Controller.prototype.bindNodes = function(nodes) {
         }
     }).on("mouseover", function(e) {
         d3.selectAll("circle.focus").classed("focus", false).transition().duration(100).attr({
-            "r": function(d) {return d.getRadius();}
+            "r": function(d) {
+                return d.getRadius();
+            }
         });
 
         d3.select(this).select("circle").classed("focus", true).transition().duration(100).attr({
-            "r": function(d) {return d.getRadius() + 2;}
+            "r": function(d) {
+                return d.getRadius() + 2;
+            }
         });
 
         $(".event").text(e.getText());
@@ -97,9 +100,15 @@ Controller.prototype.bindNodes = function(nodes) {
             var fields = e.getNode().getLogEvents()[0].getFields();
             var fieldText = "";
             for (var i in fields) {
-                var $f = $("<tr>", { "class": "field" });
-                var $t = $("<th>", { "class": "title" }).text(i + ":");
-                var $v = $("<td>", { "class": "value" }).text(fields[i]);
+                var $f = $("<tr>", {
+                    "class": "field"
+                });
+                var $t = $("<th>", {
+                    "class": "title"
+                }).text(i + ":");
+                var $v = $("<td>", {
+                    "class": "value"
+                }).text(fields[i]);
 
                 $f.append($t).append($v);
                 $(".fields").append($f);
@@ -146,13 +155,13 @@ Controller.prototype.bindNodes = function(nodes) {
 
 /**
  * Binds events to hosts
- *
+ * 
  * <ul>
  * <li>double-click: Hides the host</li>
  * <li>shift+double-click: Highlights the host</li>
  * </ul>
  * 
- * @param  {d3.selection} hosts A D3 selection of the host rects
+ * @param {d3.selection} hosts A D3 selection of the host rects
  */
 Controller.prototype.bindHosts = function(hosts) {
     var controller = this;
@@ -188,7 +197,8 @@ Controller.prototype.bindHosts = function(hosts) {
                 existingHighlights.forEach(function(t) {
                     tfr.removeTransformation(t);
                 });
-            } else {
+            }
+            else {
                 var hightf = new HighlightHostTransformation(e.getHost());
                 tfr.addTransformation(hightf);
             }
@@ -205,7 +215,8 @@ Controller.prototype.bindHosts = function(hosts) {
                     controller.global.addHiddenHost(h);
                 });
             }
-        } else {
+        }
+        else {
             // Hide host
             controller.transformers.forEach(function(tfr) {
                 var hhtf = new HideHostTransformation(e.getHost());
@@ -223,7 +234,7 @@ Controller.prototype.bindHosts = function(hosts) {
 /**
  * Binds node highlighting to mouseover event on log lines
  * 
- * @param  {jQuery.selection} lines A jQuery selection of the log lines
+ * @param {jQuery.selection} lines A jQuery selection of the log lines
  */
 Controller.prototype.bindLines = function(lines) {
     lines.unbind().on("mouseover", function() {
@@ -235,7 +246,7 @@ Controller.prototype.bindLines = function(lines) {
 /**
  * Binds unhide to double-click event on hidden hosts.
  * 
- * @param  {d3.selection} hh The hidden hosts
+ * @param {d3.selection} hh The hidden hosts
  */
 Controller.prototype.bindHiddenHosts = function(hh) {
     var controller = this;

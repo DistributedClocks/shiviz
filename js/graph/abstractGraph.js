@@ -1,42 +1,59 @@
 /**
- * The constructor for this abstract class will typically be invoked by concrete sub-classes
+ * The constructor for this abstract class will typically be invoked by concrete
+ * sub-classes
  * 
  * @classdesc
  * 
- * <p>An AbstractGraph contains the hosts and {@link AbstractNode}s that makes up the model.</p>
+ * <p>
+ * An AbstractGraph contains the hosts and {@link AbstractNode}s that makes up
+ * the model.
+ * </p>
  * 
- * <p>An AbstractGraph can be thought of as a set of augmented linked-lists. Each host is
- * associated with a linked-list that is "augmented" in the sense that nodes can
- * also be connected to nodes in other linked lists. The first and last nodes in
- * each linked list are dummy head and tail nodes respectively.</p>
+ * <p>
+ * An AbstractGraph can be thought of as a set of augmented linked-lists. Each
+ * host is associated with a linked-list that is "augmented" in the sense that
+ * nodes can also be connected to nodes in other linked lists. The first and
+ * last nodes in each linked list are dummy head and tail nodes respectively.
+ * </p>
  * 
- * <p>Traversing an AbstractGraph is much like traversing a linked list. For example, to
- * visit all nodes whose host is equal to "loadBalancer":
+ * <p>
+ * Traversing an AbstractGraph is much like traversing a linked list. For
+ * example, to visit all nodes whose host is equal to "loadBalancer":
+ * 
  * <pre>
  * var currentNode = this.getHeadByHost('loadBalancer').getNext();
  * while (!currentNode.isTail()) {
  *     // do something to currentNode
  *     currentNode = currentNode.getNext();
  * }
- * </pre></p>
+ * </pre>
  * 
- * <p>The AbstractGraph class makes the following guarantees about nodes in the graph:
+ * </p>
+ * 
+ * <p>
+ * The AbstractGraph class makes the following guarantees about nodes in the
+ * graph:
  * <li>node.getNext() == null if and only if node.isTail() == true</li>
- * <li>node.getPrev() == null if and only if node.isHead() == true</li></p>
+ * <li>node.getPrev() == null if and only if node.isHead() == true</li>
+ * </p>
  * 
- * <p>AbstractGraph implements the {@link http://en.wikipedia.org/wiki/Observer_pattern observer pattern}. AbstractGraph will notify registered observers
- * when certain events happen such as the removal of a node, the addition of
- * edges between nodes, removal of a host, etc.</p>
- *
+ * <p>
+ * AbstractGraph implements the
+ * {@link http://en.wikipedia.org/wiki/Observer_pattern observer pattern}.
+ * AbstractGraph will notify registered observers when certain events happen
+ * such as the removal of a node, the addition of edges between nodes, removal
+ * of a host, etc.
+ * </p>
+ * 
  * @constructor
  * @abstract
  */
 function AbstractGraph() {
-    
-    if(this.constructor == AbstractGraph) {
+
+    if (this.constructor == AbstractGraph) {
         throw new Exception("Cannot instantiate AbstractGraph; AbstractGraph is an abstract class");
     }
-    
+
     /** @private */
     this.hosts = [];
 
@@ -112,8 +129,8 @@ AbstractGraph.prototype.hasHost = function(host) {
 };
 
 /**
- * Removes a host from the model. The host itself and all nodes on the host will be removed.
- * In addition all connections to and from this host will be
+ * Removes a host from the model. The host itself and all nodes on the host will
+ * be removed. In addition all connections to and from this host will be
  * removed. If the host doesn't exist, this method does nothing
  * 
  * @param {String} host the name of the host to hide
@@ -142,13 +159,17 @@ AbstractGraph.prototype.removeHost = function(host) {
 };
 
 /**
- * <p>Gets all non-dummy (i.e non-head and non-tail) nodes in the graph as an
- * array.</p>
+ * <p>
+ * Gets all non-dummy (i.e non-head and non-tail) nodes in the graph as an
+ * array.
+ * </p>
  * 
- * <p>This function makes no guarantees about the ordering of nodes in the array
+ * <p>
+ * This function makes no guarantees about the ordering of nodes in the array
  * returned. Also note that a new array is created to prevent modification of
  * the underlying private data structure, so this function takes linear rather
- * than constant time on the number of nodes.</p>
+ * than constant time on the number of nodes.
+ * </p>
  * 
  * @returns {Array<AbstractNode>} an array of all non-dummy nodes
  */
@@ -166,12 +187,16 @@ AbstractGraph.prototype.getNodes = function() {
 };
 
 /**
- * <p>Gets all dummy (head/tail) nodes in the graph as an array.</p>
+ * <p>
+ * Gets all dummy (head/tail) nodes in the graph as an array.
+ * </p>
  * 
- * <p>This function makes no guarantees about the ordering of nodes in the array
+ * <p>
+ * This function makes no guarantees about the ordering of nodes in the array
  * returned. Also note that a new array is created to prevent modification of
  * the underlying private data structure, so this function takes linear rather
- * than constant time on the number of nodes.</p>
+ * than constant time on the number of nodes.
+ * </p>
  * 
  * @returns {Array<AbstractNode>} an array of all dummy nodes
  */
@@ -188,12 +213,16 @@ AbstractGraph.prototype.getDummyNodes = function() {
 };
 
 /**
- * <p>Gets all nodes including dummy nodes</p>
+ * <p>
+ * Gets all nodes including dummy nodes
+ * </p>
  * 
- * <p>This function makes no guarantees about the ordering of nodes in the array
+ * <p>
+ * This function makes no guarantees about the ordering of nodes in the array
  * returned. Also note that a new array is created to prevent modification of
  * the underlying private data structure, so this function takes linear rather
- * than constant time on the number of nodes.</p>
+ * than constant time on the number of nodes.
+ * </p>
  * 
  * @returns {Array<AbstractNode>} an array of all nodes in the model
  */
@@ -202,17 +231,21 @@ AbstractGraph.prototype.getAllNodes = function() {
 };
 
 /**
- * <p>Returns the non-dummy nodes of the graph in topologically sorted order. A
+ * <p>
+ * Returns the non-dummy nodes of the graph in topologically sorted order. A
  * topologically sorted order is one where, for all i and j such that j > i,
- * there does not exist a directed edge from nodes[j] to nodes[i].</p>
+ * there does not exist a directed edge from nodes[j] to nodes[i].
+ * </p>
  * 
- * <p>In the case that there are multiple permissible orderings, this method makes
- * no guarantees about which one will be returned. This method may not even return
- * the same order each time it's called.</p>
+ * <p>
+ * In the case that there are multiple permissible orderings, this method makes
+ * no guarantees about which one will be returned. This method may not even
+ * return the same order each time it's called.
+ * </p>
  * 
  * @returns {Array<AbstractNode>} the nodes in topologically sorted order.
- * @throws An exception if the graph contains a cycle. There cannot exist a topologically
- * sorted order if there exists a cycle.
+ * @throws An exception if the graph contains a cycle. There cannot exist a
+ *             topologically sorted order if there exists a cycle.
  */
 AbstractGraph.prototype.getNodesTopologicallySorted = function() {
     toposort = [];
@@ -266,25 +299,28 @@ AbstractGraph.prototype.getNodesTopologicallySorted = function() {
  * 
  * @callback AbstractGraph~ObserverCallback
  * @param {Event} event The event object.
- * @param {*} context Arbitrary data provided to the callback function
- * specified when adding observers
+ * @param {*} context Arbitrary data provided to the callback function specified
+ *            when adding observers
  */
 
 /**
- * <p>Adds an observer to this graph. The observer will be notified (by invoking
+ * <p>
+ * Adds an observer to this graph. The observer will be notified (by invoking
  * the provided callback function) of events when events of the specified type
  * occur. There cannot exist two observers that are identical. The newly added
  * observer will replace another if it is identical to the other one. Two
  * observers are considered identical if they were registered with the same type
- * and callback.</p>
+ * and callback.
+ * </p>
  * 
  * @param {Function} type The type of event you want to observe. Use the
- *        constructor function of the event class. For example, if you want to
- *        observe {@link AddNodeEvent}s, type would just be "AddNodeEvent".
- * @param {*} context This object will be provided to the callback function
- *        when it is invoked.
- * @param {AbstractGraph~ObserverCallback} callback The callback function. The parameters of the
- *        callback should be event, context
+ *            constructor function of the event class. For example, if you want
+ *            to observe {@link AddNodeEvent}s, type would just be
+ *            "AddNodeEvent".
+ * @param {*} context This object will be provided to the callback function when
+ *            it is invoked.
+ * @param {AbstractGraph~ObserverCallback} callback The callback function. The
+ *            parameters of the callback should be event, context
  */
 AbstractGraph.prototype.addObserver = function(type, context, callback) {
     if (AbstractGraph.validEvents.indexOf(type) < 0) {
@@ -298,13 +334,15 @@ AbstractGraph.prototype.addObserver = function(type, context, callback) {
 };
 
 /**
- * <p>Removes an observer from this graph. If the specified observer cannot be
- * found, this function does nothing.</p>
+ * <p>
+ * Removes an observer from this graph. If the specified observer cannot be
+ * found, this function does nothing.
+ * </p>
  * 
  * @param {Function} type The type of event you want to observe. Use the
- *        constructor function of the event class. For example, if you want to
- *        remove an observer for {@link AbstractGraph}s, type would just be
- *        "AddNodeEvent".
+ *            constructor function of the event class. For example, if you want
+ *            to remove an observer for {@link AbstractGraph}s, type would just
+ *            be "AddNodeEvent".
  * @param {AbstractGraph~ObserverCallback} callback The callback function.
  */
 AbstractGraph.prototype.removeObserver = function(type, callback) {
@@ -316,14 +354,18 @@ AbstractGraph.prototype.removeObserver = function(type, callback) {
 };
 
 /**
- * <p>Notifies all registered observers of an event. Dispatching any event will
- * also dispatch a {@link ChangeEvent}. Note that you cannot directly dispatch a
- * {@link ChangeEvent}.</p>
+ * <p>
+ * Notifies all registered observers of an event. Dispatching any event will
+ * also dispatch a {@link ChangeEvent}. Note that you cannot directly dispatch
+ * a {@link ChangeEvent}.
+ * </p>
  * 
- * <p>You should only notify observers of events after the corresponding action has
- * been completed. For example, a {@link RemoveNodeEvent} should only be dispatched
- * after the node has been removed from the graph and the prev and next nodes of
- * the removed node have been linked.</p>
+ * <p>
+ * You should only notify observers of events after the corresponding action has
+ * been completed. For example, a {@link RemoveNodeEvent} should only be
+ * dispatched after the node has been removed from the graph and the prev and
+ * next nodes of the removed node have been linked.
+ * </p>
  * 
  * @private
  * @param {Event} event The event object to dispatch.

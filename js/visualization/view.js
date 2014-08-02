@@ -12,7 +12,7 @@
  * @param {String} label
  */
 function View(model, global, hostPermutation, label) {
-    
+
     /** @private */
     this.hostPermutation = hostPermutation;
 
@@ -81,8 +81,8 @@ View.prototype.setWidth = function(newWidth) {
 };
 
 /**
- * Reverts the View to initial graph & creates a new VisualGraph
- * for the initial model
+ * Reverts the View to initial graph & creates a new VisualGraph for the initial
+ * model
  */
 View.prototype.revert = function() {
     var layout = new SpaceTimeLayout(0, 56);
@@ -318,11 +318,11 @@ View.prototype.draw = function() {
             var node = visualNodes[i];
             var y = node.getY();
             if (lines[y] === undefined)
-                lines[y] = [node];
+                lines[y] = [ node ];
             else
                 lines[y].push(node);
         }
-        
+
         delete lines[0];
 
         for (var y in lines) {

@@ -1,6 +1,6 @@
 /**
- * Constructs a LogEvents given the log text, a {@link VectorTimestamp} and
- * the line number associated with this log event <>
+ * Constructs a LogEvents given the log text, a {@link VectorTimestamp} and the
+ * line number associated with this log event <>
  * 
  * @classdesc
  * 
@@ -12,8 +12,8 @@
  * @param {String} text the text of the log (description)
  * @param {VectorTimestamp} vectorTimestamp the vector timestamp of the log
  * @param {Number} lineNum the line number of the event in the log
- * @param {?Object<String, String>} [fields={}] a mapping of field names to field values
- * extracted using regex.
+ * @param {?Object<String, String>} [fields={}] a mapping of field names to
+ *            field values extracted using regex.
  */
 function LogEvent(text, vectorTimestamp, lineNum, fields) {
     /** @private */

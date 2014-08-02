@@ -9,7 +9,7 @@
  * @constructor
  * @extends MotifFinder
  * @param {BuilderGraph} builderGraph The builderGraph that specifies the
- *        user-defined motif
+ *            user-defined motif
  */
 function CustomMotifFinder(builderGraph) {
 
@@ -17,7 +17,7 @@ function CustomMotifFinder(builderGraph) {
     this.builderGraph = builderGraph;
 }
 
-//CustomMotifFinder extends MotifFinder
+// CustomMotifFinder extends MotifFinder
 CustomMotifFinder.prototype = Object.create(MotifFinder.prototype);
 CustomMotifFinder.prototype.constructor = CustomMotifFinder;
 
