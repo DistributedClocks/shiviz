@@ -88,6 +88,24 @@ Transformer.prototype.setVisualModel = function(visualModel) {
 };
 
 /**
+ * Gets the hosts hidden by transformations in the transformer
+ * @return {Object} Hidden hosts, with host IDs as keys
+ */
+Transformer.prototype.getHiddenHosts = function() {
+    var hiddenHosts = {};
+    this.transformations.forEach(function(tf) {
+        if (tf instanceof HideHostTransformation)
+            hiddenHosts[tf.getHost()] = true;
+        else if (tf instanceof HighlightHostTransformation)
+            tf.getHiddenHosts().forEach(function(hh) {
+                hiddenHosts[hh] = true;
+            });
+    });
+
+    return hiddenHosts;
+}
+
+/**
  * <p>
  * Transforms the model.
  * </p>

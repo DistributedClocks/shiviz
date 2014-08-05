@@ -51,6 +51,19 @@ Controller.prototype.addView = function(view) {
 };
 
 /**
+ * Gets a set of hidden hosts
+ * @return {Object} The set of hidden hosts with host IDs as keys
+ */
+Controller.prototype.getHiddenHosts = function() {
+    var hiddenHosts = {};
+    this.transformers.forEach(function(tfr) {
+        $.extend(hiddenHosts, tfr.getHiddenHosts());
+    });
+
+    return hiddenHosts;
+};
+
+/**
  * Transforms the model through the listed {@link Transformation}s, in the
  * order provided in the list
  */
@@ -195,17 +208,6 @@ Controller.prototype.bindHosts = function(hosts) {
 
             var tfr = controller.transformers[0];
 
-            // Update hidden hosts list for hosts hidden by highlighting
-            var hh = tfr.getTransformations(function(t) {
-                return t instanceof HighlightHostTransformation;
-            });
-            if (hh.length) {
-                var hiddenHosts = hh[hh.length - 1].getHiddenHosts();
-                hiddenHosts.forEach(function(h) {
-                    controller.global.removeHiddenHost(h);
-                });
-            }
-
             var existingHighlights = tfr.getTransformations(function(t) {
                 if (t instanceof HighlightHostTransformation)
                     return t.getHosts()[0] == e.getHost();
@@ -222,23 +224,11 @@ Controller.prototype.bindHosts = function(hosts) {
             }
 
             controller.transform();
-
-            // Add hidden hosts back
-            hh = tfr.getTransformations(function(t) {
-                return t instanceof HighlightHostTransformation;
-            });
-            if (hh.length) {
-                var hiddenHosts = hh[hh.length - 1].getHiddenHosts();
-                hiddenHosts.forEach(function(h) {
-                    controller.global.addHiddenHost(h);
-                });
-            }
         }
         else {
             // Hide host
             controller.transformers.forEach(function(tfr) {
                 var hhtf = new HideHostTransformation(e.getHost());
-                controller.global.addHiddenHost(e.getHost());
                 tfr.addTransformation(hhtf);
             });
 
@@ -296,7 +286,6 @@ Controller.prototype.bindHiddenHosts = function(hh) {
         });
 
         controller.transform();
-        controller.global.removeHiddenHost(e);
         controller.global.drawAll();
     }).on("mouseover", function(e) {
         $(".event").text(e);
