@@ -15,6 +15,17 @@ function Controller(global) {
 
     /** @private */
     this.transformers = [];
+
+    var self = this;
+
+    $(window).unbind("scroll");
+    $(window).bind("scroll", self.onScroll);
+    $(window).scroll();
+
+    $(window).unbind("resize");
+    $(window).on("resize", function() {
+        self.global.drawAll();
+    });
 }
 
 /**
@@ -292,3 +303,20 @@ Controller.prototype.bindHiddenHosts = function(hh) {
         $(".fields").children().remove();
     });
 };
+
+/**
+ * Ensures things are positioned correctly on scroll
+ * 
+ * @private
+ * @param {Event} e The event object JQuery passes to the handler
+ */
+Controller.prototype.onScroll = function(e) {
+    var x = window.pageXOffset;
+    $("#hostBar").css("margin-left", -x);
+    $(".log").css("margin-left", x);
+
+    if ($(".line.focus").length)
+        $(".highlight").css({
+            "left": $(".line.focus").offset().left - parseFloat($(".line.focus").css("margin-left"))
+        });
+}
