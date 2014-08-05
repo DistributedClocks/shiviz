@@ -266,16 +266,11 @@ Controller.prototype.bindHiddenHosts = function(hh) {
             });
 
             if (high.length) {
-                var hh = tfr.getTransformations(function(t) {
-                    return t instanceof HighlightHostTransformation;
-                });
-                var hiddenHosts = hh[hh.length - 1].getHiddenHosts();
-                hiddenHosts.forEach(function(h) {
-                    controller.global.removeHiddenHost(h);
-                });
+                tfr.getTransformations(function(t) {
+                    if (t instanceof HighlightHostTransformation)
+                        tfr.removeTransformation(t);
 
-                hh.forEach(function(t) {
-                    tfr.removeTransformation(t);
+                    return false;
                 });
             }
 
