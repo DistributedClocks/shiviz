@@ -29,22 +29,7 @@ function Global() {
     Global.HIDDEN_EDGE_LENGTH = 40;
 
     $("#sidebar").css({
-        width: Global.SIDE_BAR_WIDTH + "px",
-        float: "left"
-    });
-
-    $(window).unbind("scroll");
-    $(window).on("scroll", null, this, this.scrollHandler);
-
-    this.scrollHandler({
-        data: this
-    });
-
-    var g = this;
-
-    $(window).unbind("resize");
-    $(window).on("resize", function() {
-        g.drawAll.call(g);
+        width: Global.SIDE_BAR_WIDTH + "px"
     });
 }
 
@@ -267,21 +252,4 @@ Global.prototype.drawSideBar = function() {
     });
 
     this.controller.bindHiddenHosts(rect);
-};
-
-/**
- * Ensures things are positioned correctly on scroll
- * 
- * @private
- * @param {Event} The event object JQuery passes to the handler
- */
-Global.prototype.scrollHandler = function(event) {
-    var x = window.pageXOffset;
-    $("#hostBar").css("margin-left", -x);
-    $(".log").css("margin-left", x);
-
-    if ($(".line.focus").length)
-        $(".highlight").css({
-            "left": $(".line.focus").offset().left - parseFloat($(".line.focus").css("margin-left"))
-        });
 };
