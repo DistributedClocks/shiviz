@@ -184,15 +184,15 @@ LEMTokenizer.prototype.scan = function() {
     /*
      * Returns true if char is whitespace
      */
-    function isWhiteSpace(char) {
-        return char == " " || char == "\n" || char == "\r" || char == "\t";
+    function isWhiteSpace(chr) {
+        return chr == " " || chr == "\n" || chr == "\r" || chr == "\t";
     }
 
     /*
      * Returns true if char is alphanumeric OR an underscore
      */
-    function isAlphaNumeric(char) {
-        return /^\w$/i.test(char);
+    function isAlphaNumeric(chr) {
+        return /^\w$/i.test(chr);
     }
 
     /*

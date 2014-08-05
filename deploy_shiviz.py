@@ -124,13 +124,10 @@ def main():
     ('output_info', 'compiled_code')
     ]
 
-    files = os.listdir(dist_dir + './js')
-
-    print "Files to minify: "
-    print files
-
-    for file in files:
-        params += [('code_url', 'https://bitbucket.org/bestchai/shiviz/raw/tip/js/' + file)]
+    url = 'https://bitbucket.org/bestchai/shiviz/raw/tip/'
+    for root, dirs, files in os.walk('js'):
+        for file in files:
+            params += [('code_url', url + os.path.join(root, file))]
 
     urlparams = urllib.urlencode(params)
     headers = {'Content-type': 'application/x-www-form-urlencoded'}
@@ -153,9 +150,10 @@ def main():
         ('output_info', 'errors')
         ]
 
-        files = os.listdir(dist_dir + './js')
-        for file in files:
-            params += [('code_url', 'https://bitbucket.org/bestchai/shiviz/raw/' + branch + '/js/' + file)]
+        url = 'https://bitbucket.org/bestchai/shiviz/raw/tip/'
+        for root, dirs, files in os.walk('js'):
+            for file in files:
+                params += [('code_url', url + os.path.join(root, file))]
 
         urlparams = urllib.urlencode(params)
         headers = {'Content-type': 'application/x-www-form-urlencoded'}
