@@ -68,22 +68,25 @@ Global.prototype.removeHiddenHost = function(host) {
  * Redraws the global.
  */
 Global.prototype.drawAll = function() {
+    // Clear the log lines
+    $("table.log").children().remove();
+
+    // Remove old visualizations
+    $("#graph svg").remove();
+
     // Determine the max height of any view
     // And if larger than window height (scrollbar will appear)
     // then make scrollbar appear BEFORE calling resize
     var maxHeight = Math.max.apply(null, this.views.map(function(v) {
-        return v.getVisualModel().getHeight()
+        v.getVisualModel().update();
+        return v.getVisualModel().getHeight();
     }));
 
-    if (maxHeight > $(window).height())
-        $("#vizContainer").height(maxHeight);
+    $("#vizContainer").height(maxHeight);
 
     // Find the width per log line column
     var logColWidth = (240 - 12 * (this.views.length - 1)) / this.views.length;
     var hostMargin = this.resize();
-
-    // Clear the log lines
-    $("table.log").children().remove();
 
     for (var i = 0; i < this.views.length; i++) {
         $("table.log").append($("<td></td>").width(logColWidth + "pt"));
