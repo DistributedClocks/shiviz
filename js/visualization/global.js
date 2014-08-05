@@ -9,16 +9,14 @@
  * Views such as the list of hidden hosts
  * 
  * @constructor
- * @param {HostPermutation} hostPermuation describes how the hosts should be
- *            ordered
  */
-function Global(hostPermutation) {
+function Global() {
 
     /** @private */
     this.views = [];
 
     /** @private */
-    this.hostPermutation = hostPermutation;
+    this.hostPermutation = null;
 
     /** @private */
     this.hiddenHosts = [];
@@ -48,8 +46,18 @@ function Global(hostPermutation) {
     $(window).on("resize", function() {
         g.drawAll.call(g);
     });
-
 }
+
+/**
+ * Reverts Global to its original state
+ */
+Global.prototype.revert = function() {
+    this.views = [];
+    this.hostPermutation = null;
+    this.hiddenHosts = [];
+
+    this.controller.revert();
+};
 
 /**
  * Adds a hidden host to the list
@@ -59,7 +67,7 @@ function Global(hostPermutation) {
 Global.prototype.addHiddenHost = function(host) {
     if (this.hiddenHosts.indexOf(host) < 0)
         this.hiddenHosts.push(host);
-}
+};
 
 /**
  * Removes a hidden host to the list
@@ -69,7 +77,7 @@ Global.prototype.addHiddenHost = function(host) {
 Global.prototype.removeHiddenHost = function(host) {
     var i = this.hiddenHosts.indexOf(host);
     this.hiddenHosts.splice(i, 1);
-}
+};
 
 /**
  * Redraws the global.
@@ -122,10 +130,10 @@ Global.prototype.addView = function(view) {
  */
 Global.prototype.getViews = function() {
     return this.views;
-}
+};
 
 /**
- * Gets the list of current VisualGraphs
+ * Gets the list of current {@link VisualGraph}s
  * 
  * @returns {Array<VisualGraph>} The current models from each View
  */
@@ -133,7 +141,15 @@ Global.prototype.getVisualModels = function() {
     return this.views.map(function(v) {
         return v.getVisualModel();
     });
-}
+};
+
+/**
+ * Sets the host permutation
+ * @param {HostPermutation} hostPermutation
+ */
+Global.prototype.setHostPermutation = function(hostPermutation) {
+    this.hostPermutation = hostPermutation;
+};
 
 /**
  * Resizes the graph
