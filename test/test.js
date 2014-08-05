@@ -318,8 +318,10 @@ function testQuery(description, query, log, fields, expected) {
 beginSection("Global.js");
 $("body").append($("<div id='sideBar'></div>"));
 $("body").append($("<div id='reference'></div>"));
-var global = new Global(hostPermutation);
+var global = new Global();
 var view = new View(graph, global, hostPermutation, "lable");
+
+global.setHostPermutation(hostPermutation);
 
 assert("addView", function () {
     global.addView(view);
