@@ -110,10 +110,6 @@ View.prototype.draw = function() {
 
     var svg = d3.select("#vizContainer").append("svg");
 
-    // Remove old diagrams, but only the ones with the same ID
-    // so we don't remove the other executions
-    d3.selectAll("." + this.id).remove();
-
     svg.attr({
         "height": this.visualGraph.getHeight(),
         "width": this.visualGraph.getWidth(),
