@@ -18,6 +18,13 @@ function Controller(global) {
 }
 
 /**
+ * Reverts the Controller to its original state
+ */
+Controller.prototype.revert = function() {
+    this.transformers = [];
+};
+
+/**
  * Creates a {@link Transformer} for the new {@link View}, and adds default
  * transformation. Should be called from Global every time a view is added.
  * 

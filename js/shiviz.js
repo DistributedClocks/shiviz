@@ -18,6 +18,9 @@ function Shiviz() {
         throw new Exception("Cannot instantiate Shiviz. Shiviz is a singleton; use Shiviz.getInstance()");
     }
 
+    /** @private */
+    this.global = new Global();
+
     var context = this;
 
     $(".input input, .input textarea").on('input propertychange', function(e) {
@@ -119,6 +122,8 @@ Shiviz.prototype.resetView = function() {
  */
 Shiviz.prototype.visualize = function() {
     try {
+        var self = this;
+
         d3.selectAll("#graph svg").remove();
 
         var log = $("#input").val();
@@ -146,10 +151,9 @@ Shiviz.prototype.visualize = function() {
             throw new Exception("You must select a way to sort processes.", true);
         }
 
-        var global = new Global(hostPermutation);
         var labelGraph = {};
-
         var labels = parser.getLabels();
+
         labels.forEach(function(label) {
             var graph = new ModelGraph(parser.getLogEvents(label));
             labelGraph[label] = graph;
@@ -160,15 +164,18 @@ Shiviz.prototype.visualize = function() {
             }
         });
 
+        this.global.revert();
+
         hostPermutation.update();
+        this.global.setHostPermutation(hostPermutation);
 
         labels.forEach(function(label) {
             var graph = labelGraph[label];
-            var view = new View(graph, global, hostPermutation, label);
-            global.addView(view);
+            var view = new View(graph, self.global, hostPermutation, label);
+            self.global.addView(view);
         });
 
-        global.drawAll();
+        this.global.drawAll();
     }
     catch (err) {
         this.handleException(err);
