@@ -90,7 +90,7 @@ Controller.prototype.bindNodes = function(nodes) {
         if (d3.event.shiftKey) {
             controller.transformers.forEach(function(tfr) {
                 var ct = tfr.getTransformations(function(t) {
-                    return t.constructor == CollapseSequentialNodesTransformation;
+                    return t instanceof CollapseSequentialNodesTransformation;
                 }, true).forEach(function(t) {
                     t.toggleExemption(e.getNode());
                 });
@@ -197,7 +197,7 @@ Controller.prototype.bindHosts = function(hosts) {
 
             // Update hidden hosts list for hosts hidden by highlighting
             var hh = tfr.getTransformations(function(t) {
-                return t.constructor == HighlightHostTransformation;
+                return t instanceof HighlightHostTransformation;
             });
             if (hh.length) {
                 var hiddenHosts = hh[hh.length - 1].getHiddenHosts();
@@ -207,7 +207,7 @@ Controller.prototype.bindHosts = function(hosts) {
             }
 
             var existingHighlights = tfr.getTransformations(function(t) {
-                if (t.constructor == HighlightHostTransformation)
+                if (t instanceof HighlightHostTransformation)
                     return t.getHosts()[0] == e.getHost();
             });
 
@@ -225,7 +225,7 @@ Controller.prototype.bindHosts = function(hosts) {
 
             // Add hidden hosts back
             hh = tfr.getTransformations(function(t) {
-                return t.constructor == HighlightHostTransformation;
+                return t instanceof HighlightHostTransformation;
             });
             if (hh.length) {
                 var hiddenHosts = hh[hh.length - 1].getHiddenHosts();
@@ -271,13 +271,13 @@ Controller.prototype.bindHiddenHosts = function(hh) {
     hh.on("dblclick", function(e) {
         controller.transformers.forEach(function(tfr) {
             var high = tfr.getTransformations(function(t) {
-                if (t.constructor == HighlightHostTransformation)
+                if (t instanceof HighlightHostTransformation)
                     return t.getHiddenHosts().indexOf(e) > -1;
             });
 
             if (high.length) {
                 var hh = tfr.getTransformations(function(t) {
-                    return t.constructor == HighlightHostTransformation;
+                    return t instanceof HighlightHostTransformation;
                 });
                 var hiddenHosts = hh[hh.length - 1].getHiddenHosts();
                 hiddenHosts.forEach(function(h) {
@@ -290,7 +290,7 @@ Controller.prototype.bindHiddenHosts = function(hh) {
             }
 
             tfr.removeTransformation(function(t) {
-                if (t.constructor == HideHostTransformation)
+                if (t instanceof HideHostTransformation)
                     return t.getHost() == e;
             });
         });

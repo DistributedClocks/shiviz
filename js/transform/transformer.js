@@ -33,7 +33,7 @@ function Transformer(visualModel) {
  */
 Transformer.prototype.getTransformations = function(filter, isDefault) {
     var tfs = isDefault ? this.defaultTransformations : this.transformations;
-    if (filter.constructor == Function)
+    if (filter instanceof Function)
         return tfs.filter(filter);
     else
         return tfs;
@@ -62,7 +62,7 @@ Transformer.prototype.addTransformation = function(tf, isDefault) {
  */
 Transformer.prototype.removeTransformation = function(tf) {
     this.transformations = this.transformations.filter(function(t) {
-        if (tf.constructor == Function)
+        if (tf instanceof Function)
             return !tf(t);
         else
             return !(tf == t);
@@ -108,7 +108,7 @@ Transformer.prototype.transform = function() {
     var self = this;
 
     var hh = this.transformations.filter(function(t) {
-        return t.constructor == HighlightHostTransformation;
+        return t instanceof HighlightHostTransformation;
     });
     if (hh.length) {
         var lhh = hh[hh.length - 1];
