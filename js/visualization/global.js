@@ -19,9 +19,6 @@ function Global() {
     this.hostPermutation = null;
 
     /** @private */
-    this.hiddenHosts = [];
-
-    /** @private */
     this.controller = new Controller(this);
 
     Global.SIDE_BAR_WIDTH = 240;
@@ -42,26 +39,6 @@ Global.prototype.revert = function() {
     this.hiddenHosts = [];
 
     this.controller.revert();
-};
-
-/**
- * Adds a hidden host to the list
- * 
- * @param {String} host The host to add
- */
-Global.prototype.addHiddenHost = function(host) {
-    if (this.hiddenHosts.indexOf(host) < 0)
-        this.hiddenHosts.push(host);
-};
-
-/**
- * Removes a hidden host to the list
- * 
- * @param {String} host The host to remove
- */
-Global.prototype.removeHiddenHost = function(host) {
-    var i = this.hiddenHosts.indexOf(host);
-    this.hiddenHosts.splice(i, 1);
 };
 
 /**
@@ -153,38 +130,26 @@ Global.prototype.setHostPermutation = function(hostPermutation) {
  */
 Global.prototype.resize = function() {
     var global = this;
-    var visibleHosts = 0;
+    var hiddenHosts = Object.keys(this.controller.getHiddenHosts()).length;
+    var allHosts = this.hostPermutation.getHosts().length;   
+    var visibleHosts = allHosts - hiddenHosts;
 
-    // TODO: Refactor into Controller and update to use hostPermutation
-    // Plus length of hiddenHosts instead of indexOf.
-    for (var i = 0; i < this.views.length; i++) {
-        var vh = this.views[i].getHosts();
-        var hn = 0;
-        vh.forEach(function(h) {
-            if (global.hiddenHosts.indexOf(h) > -1)
-                hn++;
-        });
-
-        visibleHosts = visibleHosts + vh.length - hn;
-    }
-
-    // TODO: rename to sidebarLeft sidebarRight middleWidth
-    var headerWidth = $(".visualization header").outerWidth();
-    var sidebarWidth = $("#sidebar").outerWidth();
-    var globalWidth = $(window).width() - headerWidth - sidebarWidth;
-    var totalMargin = globalWidth - visibleHosts * Global.HOST_SQUARE_SIZE;
+    var sidebarLeft = $(".visualization header").outerWidth();
+    var sidebarRight = $("#sidebar").outerWidth();
+    var middleWidth = $(window).width() - sidebarLeft - sidebarRight;
+    var totalMargin = middleWidth - visibleHosts * Global.HOST_SQUARE_SIZE;
     var hostMargin = totalMargin / (visibleHosts + this.views.length - 2);
 
     if (hostMargin < Global.HOST_SQUARE_SIZE) {
         hostMargin = Global.HOST_SQUARE_SIZE;
         totalMargin = hostMargin * (visibleHosts + this.views.length - 2);
-        globalWidth = totalMargin + visibleHosts * Global.HOST_SQUARE_SIZE;
+        middleWidth = totalMargin + visibleHosts * Global.HOST_SQUARE_SIZE;
     }
 
     var widthPerHost = Global.HOST_SQUARE_SIZE + hostMargin;
 
     if (visibleHosts == 1) {
-        widthPerHost = globalWidth;
+        widthPerHost = middleWidth;
         hostMargin = 0;
     }
 
@@ -192,12 +157,12 @@ Global.prototype.resize = function() {
     for (var i = 0; i < this.views.length; i++) {
         var view = this.views[i];
         var hosts = view.getHosts().filter(function(h) {
-            return global.hiddenHosts.indexOf(h) < 0;
+            return !global.controller.getHiddenHosts()[h];
         });
         view.setWidth(hosts.length * widthPerHost - hostMargin);
     }
 
-    $("#graph").width(globalWidth);
+    $("#graph").width(middleWidth);
 
     return hostMargin;
 };
@@ -214,7 +179,7 @@ Global.prototype.drawSideBar = function() {
     var hidden = d3.select(".hidden");
 
     // Draw hidden hosts
-    var hh = this.hiddenHosts;
+    var hh = Object.keys(this.controller.getHiddenHosts());
     if (hh.length <= 0) {
         $(".hidden").hide();
         return;
