@@ -133,7 +133,7 @@ CollapseSequentialNodesTransformation.prototype.removeExemption = function(node)
  * 
  * @param {ModelNode} node The node to toggle.
  */
-CollapseSequentialNodesTransformation.prototype.toggleExemption = function(node) {
+CollapseSequentialNodesTransformation.prototype.toggleCollapse = function(node) {
     if (this.isExempt(node)) {
         this.removeExemption(node);
     }

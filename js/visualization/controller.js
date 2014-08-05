@@ -105,7 +105,7 @@ Controller.prototype.bindNodes = function(nodes) {
                 var ct = tfr.getTransformations(function(t) {
                     return t instanceof CollapseSequentialNodesTransformation;
                 }, true).forEach(function(t) {
-                    t.toggleExemption(e.getNode());
+                    t.toggleCollapse(e.getNode());
                 });
             });
 
