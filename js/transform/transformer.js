@@ -125,7 +125,7 @@ Transformer.prototype.transform = function() {
         if (t.ignore)
             t.ignore = false;
         else
-            t.transform(self.model);
+            t.transform(self.visualModel);
     });
 
     if (hh.length) {
