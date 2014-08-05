@@ -35,7 +35,7 @@ function NamedRegExp(regexp, flags) {
         this.reg = new RegExp(regexp, "g" + flags);
     }
     catch (e) {
-        if (e.constructor == Exception)
+        if (e instanceof Exception)
             throw e;
 
         var exception = new Exception("The following regular expression entered was invalid.\n", true);
