@@ -68,30 +68,39 @@ Global.prototype.removeHiddenHost = function(host) {
  * Redraws the global.
  */
 Global.prototype.drawAll = function() {
-    // TODO: don't draw twice (workaround)
-    // TODO: Cleanup & comment
-    var width = (240 - 12 * (this.views.length - 1)) / this.views.length;
+    // Determine the max height of any view
+    // And if larger than window height (scrollbar will appear)
+    // then make scrollbar appear BEFORE calling resize
+    var maxHeight = Math.max.apply(null, this.views.map(function(v) {
+        return v.getVisualModel().getHeight()
+    }));
+
+    if (maxHeight > $(window).height())
+        $("#vizContainer").height(maxHeight);
+
+    // Find the width per log line column
+    var logColWidth = (240 - 12 * (this.views.length - 1)) / this.views.length;
     var hostMargin = this.resize();
+
+    // Clear the log lines
     $("table.log").children().remove();
 
     for (var i = 0; i < this.views.length; i++) {
-        $("table.log").append($("<td></td>").width(width + "pt"));
+        $("table.log").append($("<td></td>").width(logColWidth + "pt"));
+
+        // Draw the view
         this.views[i].draw();
+
+        // Add the spacer after log column
         $("table.log").append($("<td></td>").addClass("spacer"));
     }
 
-    hostMargin = this.resize();
-    $("table.log").children().remove();
-
-    for (var i = 0; i < this.views.length; i++) {
-        $("table.log").append($("<td></td>").width(width + "pt"));
-        this.views[i].draw();
-        $("table.log").append($("<td></td>").addClass("spacer"));
-    }
-
+    // Add spacing between views
     $("#vizContainer > svg:not(:last-child), #hostBar > svg:not(:last-child)").css({
         "margin-right": hostMargin * 2 + "px"
     });
+
+    // Remove last log line spacer
     $("table.log .spacer:last-child").remove();
 
     this.drawSideBar();
