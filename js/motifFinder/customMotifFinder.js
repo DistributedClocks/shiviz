@@ -9,7 +9,7 @@
  * @constructor
  * @extends MotifFinder
  * @param {BuilderGraph} builderGraph The builderGraph that specifies the
- *            user-defined motif
+ *        user-defined motif
  */
 function CustomMotifFinder(builderGraph) {
 
@@ -37,6 +37,8 @@ CustomMotifFinder.prototype.find = function(graph) {
 
     var nodeMatch = {}; // node to builderNode
     var bNodeMatch = {}; // builderNode to node
+    var hostMatch = {}; // graph host to builderGraph host
+    var hostNumBound = {}; // graph host to number of nodes bound to that host
     var used = {}; // nodes already part of other motifs
 
     var motif = new Motif();
@@ -46,7 +48,9 @@ CustomMotifFinder.prototype.find = function(graph) {
     for (var n = 0; n < nodes.length; n++) {
         var cnode = nodes[n];
 
-        setNodeMatch(startBuilderNode, cnode);
+        if (!setNodeMatch(startBuilderNode, cnode)) {
+            continue;
+        }
         if (searchNode(startBuilderNode)) {
             handleFound();
         }
@@ -111,8 +115,10 @@ CustomMotifFinder.prototype.find = function(graph) {
             }
         }
 
-        nodeMatch = {}; // node to builderNode
-        bNodeMatch = {}; // builderNode to node
+        nodeMatch = {};
+        bNodeMatch = {};
+        hostMatch = {};
+        hostNumBound = {};
     }
 
     /*
@@ -121,31 +127,13 @@ CustomMotifFinder.prototype.find = function(graph) {
      * a graph node. True is returned upon successfully finding a valid motif.
      * False otherwise.
      */
-    function searchNode(builderNode) {
-        var node = bNodeMatch[builderNode.getId()];
+    function searchNode(bNode) {
+        var node = bNodeMatch[bNode.getId()];
 
-        // If builderNode's match is already part of another motif, return
-        // false. Disallows overlapping motifs.
-        if (used[node.getId()]) {
-            return false;
-        }
-
-        // tryMatch the next nodes of builderNode and its match.
-        var bNodeNext = builderNode.getNext();
-        var nodeNext = node.getNext();
-        if (!bNodeNext.isTail() && (nodeNext.isTail() || !tryMatch([ bNodeNext ], [ nodeNext ]))) {
-            return false;
-        }
-
-        // tryMatch the prev nodes of builderNode and its match.
-        var bNodePrev = builderNode.getPrev();
-        var nodePrev = node.getPrev();
-        if (!bNodePrev.isHead() && (nodePrev.isHead() || !tryMatch([ bNodePrev ], [ nodePrev ]))) {
-            return false;
-        }
-
-        // tryMatch children and parents
-        return tryMatch(builderNode.getChildren(), node.getChildren()) && tryMatch(builderNode.getParents(), node.getParents());
+        return tryMatch([ bNode.getNext() ], [ node.getNext() ]) //
+                && tryMatch([ bNode.getPrev() ], [ node.getPrev() ]) //
+                && tryMatch(bNode.getChildren(), node.getChildren()) //
+                && tryMatch(bNode.getParents(), node.getParents()); //
     }
 
     /*
@@ -157,14 +145,28 @@ CustomMotifFinder.prototype.find = function(graph) {
      */
     function tryMatch(bNodeGroup, nodeGroup) {
 
-        // Remove all used nodes (nodes part of a motif already) from nodeGroup
-        var unusedNodeGroup = [];
+        // Remove all used nodes (nodes part of a motif already) from nodeGroup.
+        // In addition, removes dummy nodes
+        nodeGroup = nodeGroup.filter(function(elem) {
+            return !used[elem.getId()] && !elem.isDummy();
+        });
+
+        // Remove all dummy nodes from bNodeGroup
+        bNodeGroup = bNodeGroup.filter(function(elem) {
+            return !elem.isDummy();
+        });
+
+        // Creates a set out of nodeGroup, so membership test is O(1)
+        var nodeGroupSet = {};
         for (var i = 0; i < nodeGroup.length; i++) {
-            if (!used[nodeGroup[i].getId()]) {
-                unusedNodeGroup.push(nodeGroup[i]);
-            }
+            nodeGroupSet[nodeGroup[i].getId()] = true;
         }
-        nodeGroup = unusedNodeGroup;
+
+        // Creates a set out of bNodeGroup, so membership test is O(1)
+        var bNodeGroupSet = {};
+        for (var i = 0; i < bNodeGroup.length; i++) {
+            bNodeGroupSet[bNodeGroup[i].getId()] = true;
+        }
 
         /*
          * For each bNode, we check to see if it has already been matched. If
@@ -172,11 +174,6 @@ CustomMotifFinder.prototype.find = function(graph) {
          * Otherwise, we make sure that the bNode's match is part of nodeGroup,
          * and we return false if that's not the case
          */
-        var nodeGroupSet = {};
-        for (var i = 0; i < nodeGroup.length; i++) {
-            nodeGroupSet[nodeGroup[i].getId()] = true;
-        }
-
         var freeBNodeGroup = []; // unmatched bNodes
         for (var i = 0; i < bNodeGroup.length; i++) {
             var match = bNodeMatch[bNodeGroup[i].getId()];
@@ -189,11 +186,6 @@ CustomMotifFinder.prototype.find = function(graph) {
         }
 
         // The process is repeated for graph nodes
-        var bNodeGroupSet = {};
-        for (var i = 0; i < bNodeGroup.length; i++) {
-            bNodeGroupSet[bNodeGroup[i].getId()] = true;
-        }
-
         var freeNodeGroup = [];
         for (var i = 0; i < nodeGroup.length; i++) {
             var match = nodeMatch[nodeGroup[i].getId()];
@@ -239,7 +231,9 @@ CustomMotifFinder.prototype.find = function(graph) {
                 }
 
                 var node = group[loc];
-                setNodeMatch(freeBNodeGroup[nextLoc], node);
+                if (!setNodeMatch(freeBNodeGroup[nextLoc], node)) {
+                    continue;
+                }
                 taken[loc] = true;
 
                 if (tryPermutations(group, perm, taken, nextLoc + 1)) {
@@ -253,12 +247,33 @@ CustomMotifFinder.prototype.find = function(graph) {
         }
     }
 
+    /* 
+     * Matches bNode and node. Neither must already have a match.
+     * If matching bNode and node is invalid, this method returns false.
+     * This method returns true otherwise
+     */
     function setNodeMatch(bNode, node) {
-        if (!!nodeMatch[node.getId()]) {
-            removeNodeMatch(node);
+        if (nodeMatch[node.getId()] || bNodeMatch[bNode.getId()]) {
+            throw new Exception("bNode or node already has a match");
         }
+
+        var fail = used[node.getId()] //
+                || (hostMatch[node.getHost()] && hostMatch[node.getHost()] != bNode.getHost()); //
+
+        if (fail) {
+            return false;
+        }
+
+        if (!hostNumBound[node.getHost()]) {
+            hostNumBound[node.getHost()] = 0;
+        }
+        hostNumBound[node.getHost()]++;
+
+        hostMatch[node.getHost()] = bNode.getHost();
         nodeMatch[node.getId()] = bNode;
         bNodeMatch[bNode.getId()] = node;
+
+        return true;
     }
 
     function removeNodeMatch(node) {
@@ -267,6 +282,11 @@ CustomMotifFinder.prototype.find = function(graph) {
         }
         delete bNodeMatch[nodeMatch[node.getId()].getId()];
         delete nodeMatch[node.getId()];
+        hostNumBound[node.getHost()]--;
+
+        if (hostNumBound[node.getHost()] == 0) {
+            delete hostMatch[node.getHost()];
+        }
     }
 
 };
