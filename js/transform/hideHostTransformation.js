@@ -23,6 +23,8 @@ function HideHostTransformation(host) {
     this.host = host;
 }
 
+HideHostTransformation.prototype = new Transformation();
+
 /**
  * Returns the host that is hidden
  * 

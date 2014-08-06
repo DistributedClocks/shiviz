@@ -19,7 +19,8 @@
  * @extends Transformation
  * @param {String} host The host to highlight
  */
-function HighlightHostTransformation(host) {
+function HighlightHostTransformation(hosts) {
+    var self = this;
 
     /** @private */
     this.hosts = {};
@@ -30,8 +31,12 @@ function HighlightHostTransformation(host) {
     /** @private */
     this.hideHostTransformations = [];
 
-    this.addHost(host);
+    hosts.forEach(function(host) {
+        self.addHost(host);
+    });
 }
+
+HighlightHostTransformation.prototype = new Transformation();
 
 /**
  * Gets the highlighted host(s)
