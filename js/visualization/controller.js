@@ -101,6 +101,7 @@ Controller.prototype.bindNodes = function(nodes) {
     var controller = this;
     nodes.on("click", function(e) {
         if (d3.event.shiftKey) {
+            // Toggle node collapsing
             controller.transformers.forEach(function(tfr) {
                 var ct = tfr.getTransformations(function(t) {
                     return t instanceof CollapseSequentialNodesTransformation;
@@ -201,13 +202,16 @@ Controller.prototype.bindHosts = function(hosts) {
         $(".fields").children().remove();
     }).on("dblclick", function(e) {
         if (d3.event.shiftKey) {
-            // TODO: Cleanup!!
             // Filtering by host
+
+            // If more than one view / execution then return
             if (controller.global.getViews().length != 1)
                 return;
 
             var tfr = controller.transformers[0];
 
+            // Is this host already highlighted? If so,
+            // unhighlight. Otherwise, highlight.
             var existingHighlights = tfr.getTransformations(function(t) {
                 if (t.type == "highlight")
                     return t.host == e.getHost();
@@ -224,8 +228,7 @@ Controller.prototype.bindHosts = function(hosts) {
                 });
 
             controller.transform();
-        }
-        else {
+        } else {
             // Hide host
             controller.transformers.forEach(function(tfr) {
                 var hhtf = new HideHostTransformation(e.getHost());
@@ -298,4 +301,4 @@ Controller.prototype.onScroll = function(e) {
         $(".highlight").css({
             "left": $(".line.focus").offset().left - parseFloat($(".line.focus").css("margin-left"))
         });
-}
+};
