@@ -35,6 +35,8 @@ function CollapseSequentialNodesTransformation(threshold) {
     this.exemptLogEvents = {};
 }
 
+CollapseSequentialNodesTransformation.prototype = new Transformation();
+
 /**
  * Gets the threshold. Nodes are collapsed if the number of nodes in the group
  * is greater than or equal to the threshold. The threshold must be greater than

@@ -209,19 +209,19 @@ Controller.prototype.bindHosts = function(hosts) {
             var tfr = controller.transformers[0];
 
             var existingHighlights = tfr.getTransformations(function(t) {
-                if (t instanceof HighlightHostTransformation)
-                    return t.getHosts()[0] == e.getHost();
+                if (t.type == "highlight")
+                    return t.host == e.getHost();
             });
 
-            if (existingHighlights.length) {
+            if (existingHighlights.length)
                 existingHighlights.forEach(function(t) {
                     tfr.removeTransformation(t);
                 });
-            }
-            else {
-                var hightf = new HighlightHostTransformation(e.getHost());
-                tfr.addTransformation(hightf);
-            }
+            else
+                tfr.addTransformation({
+                    type: "highlight",
+                    host: e.getHost()
+                });
 
             controller.transform();
         }
@@ -260,14 +260,9 @@ Controller.prototype.bindHiddenHosts = function(hh) {
     var controller = this;
     hh.on("dblclick", function(e) {
         controller.transformers.forEach(function(tfr) {
-            var high = tfr.getTransformations(function(t) {
-                if (t instanceof HighlightHostTransformation)
-                    return t.getHiddenHosts().indexOf(e) > -1;
-            });
-
-            if (high.length) {
+            if (tfr.getHiddenByHighlight()[e]) {
                 tfr.getTransformations(function(t) {
-                    if (t instanceof HighlightHostTransformation)
+                    if (t.type == "highlight")
                         tfr.removeTransformation(t);
 
                     return false;

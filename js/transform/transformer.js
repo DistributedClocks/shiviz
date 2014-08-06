@@ -20,6 +20,9 @@ function Transformer(visualModel) {
 
     /** @private */
     this.defaultTransformations = [];
+
+    /** @private */
+    this.hiddenByHighlight = {};
 }
 
 /**
@@ -96,14 +99,18 @@ Transformer.prototype.getHiddenHosts = function() {
     this.transformations.forEach(function(tf) {
         if (tf instanceof HideHostTransformation)
             hiddenHosts[tf.getHost()] = true;
-        else if (tf instanceof HighlightHostTransformation)
-            tf.getHiddenHosts().forEach(function(hh) {
-                hiddenHosts[hh] = true;
-            });
     });
 
-    return hiddenHosts;
+    return $.extend(hiddenHosts, this.hiddenByHighlight);
 }
+
+/**
+ * Gets the set of hosts hidden by highlight transformations
+ * @return {Object} Hosts hidden by highlight transformation
+ */
+Transformer.prototype.getHiddenByHighlight = function() {
+    return this.hiddenByHighlight;
+};
 
 /**
  * <p>
@@ -138,12 +145,26 @@ Transformer.prototype.transform = function() {
         });
     }
 
+    this.hiddenByHighlight = {};
+
     var tfs = this.transformations.concat(this.defaultTransformations);
+    var highHosts = [];
     tfs.forEach(function(t) {
-        if (t.ignore)
-            t.ignore = false;
-        else
+        console.log(highHosts);
+        if (t instanceof Transformation) {
+            if (highHosts.length) {
+                var highlight = new HighlightHostTransformation(highHosts);
+                highlight.transform(self.visualModel);
+                highlight.getHiddenHosts().forEach(function(host) {
+                    self.hiddenByHighlight[host] = true;
+                });
+                highHosts = [];
+            }
+
             t.transform(self.visualModel);
+        } else if (t.type == "highlight") {
+            highHosts.push(t.host);
+        }
     });
 
     if (hh.length) {
