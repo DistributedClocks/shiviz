@@ -130,9 +130,10 @@ Global.prototype.setHostPermutation = function(hostPermutation) {
  */
 Global.prototype.resize = function() {
     var global = this;
-    var hiddenHosts = Object.keys(this.controller.getHiddenHosts()).length;
+    var hiddenHosts = this.controller.getHiddenHosts();
+    var numHidden = Object.keys(hiddenHosts).length;
     var allHosts = this.hostPermutation.getHosts().length;   
-    var visibleHosts = allHosts - hiddenHosts;
+    var visibleHosts = allHosts - numHidden;
 
     var sidebarLeft = $(".visualization header").outerWidth();
     var sidebarRight = $("#sidebar").outerWidth();
@@ -153,14 +154,12 @@ Global.prototype.resize = function() {
         hostMargin = 0;
     }
 
-    // TODO: More refactoring
-    for (var i = 0; i < this.views.length; i++) {
-        var view = this.views[i];
+    this.views.forEach(function(view) {
         var hosts = view.getHosts().filter(function(h) {
-            return !global.controller.getHiddenHosts()[h];
+            return !hiddenHosts[h];
         });
         view.setWidth(hosts.length * widthPerHost - hostMargin);
-    }
+    });
 
     $("#graph").width(middleWidth);
 
