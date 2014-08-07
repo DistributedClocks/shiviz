@@ -75,6 +75,13 @@ Global.prototype.removeHiddenHost = function(host) {
  * Redraws the global.
  */
 Global.prototype.drawAll = function() {
+    d3.select("circle.sel").each(function(d) {
+        $(this).remove();
+        d.setSelected(false);
+    });
+
+    $(".dialog").hide();
+
     // TODO: don't draw twice (workaround)
     // TODO: Cleanup & comment
     var width = (240 - 12 * (this.views.length - 1)) / this.views.length;
