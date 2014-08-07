@@ -150,7 +150,6 @@ Transformer.prototype.transform = function() {
     var tfs = this.transformations.concat(this.defaultTransformations);
     var highHosts = [];
     tfs.forEach(function(t) {
-        console.log(highHosts);
         if (t instanceof Transformation) {
             if (highHosts.length) {
                 var highlight = new HighlightHostTransformation(highHosts);
