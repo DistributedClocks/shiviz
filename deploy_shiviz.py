@@ -56,6 +56,31 @@ def runcmd(s):
     '''
     print "os.system: " + s
     return os.system(s)
+
+
+def minify(info):
+    params = [
+    ('code_url', 'http://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.js'),
+    ('code_url', 'http://d3js.org/d3.v3.min.js'),
+    ('compilation_level', 'SIMPLE_OPTIMIZATIONS'),
+    ('output_format', 'text'),
+    ('output_info', info)
+    ]
+
+    url = 'https://bitbucket.org/bestchai/shiviz/raw/tip/'
+    for root, dirs, files in os.walk('js'):
+        for file in files:
+            if not ('dev.js' in file):
+                params += [('code_url', url + os.path.join(root, file))]
+
+    urlparams = urllib.urlencode(params)
+    headers = {'Content-type': 'application/x-www-form-urlencoded'}
+    conn = httplib.HTTPConnection('closure-compiler.appspot.com')
+    conn.request('POST', '/compile', urlparams, headers)
+    response = conn.getresponse()
+    data = response.read() 
+
+    return data
     
 
 def main():
@@ -103,9 +128,6 @@ def main():
     print "Revid is : " + revid
     print "Branch is : " + branch
 
-    # Remove the unnecessary dev.js that was copied over.
-    runcmd("rm " + dist_dir + "js/dev.js")
-
     # Remove any files containing '#'
     runcmd("cd " + dist_dir + " && find . | grep '#' | xargs rm")
 
@@ -117,57 +139,14 @@ def main():
 
     # Minify the code
     print "Minifying... please wait"
-
-    params = [
-    ('code_url', 'http://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.js'),
-    ('code_url', 'http://d3js.org/d3.v3.min.js'),
-    ('compilation_level', 'SIMPLE_OPTIMIZATIONS'),
-    ('output_format', 'text'),
-    ('output_info', 'compiled_code')
-    ]
-
-    url = 'https://bitbucket.org/bestchai/shiviz/raw/tip/'
-    for root, dirs, files in os.walk('js'):
-        for file in files:
-            if not ('dev.js' in file):
-                params += [('code_url', url + os.path.join(root, file))]
-
-    urlparams = urllib.urlencode(params)
-    headers = {'Content-type': 'application/x-www-form-urlencoded'}
-    conn = httplib.HTTPConnection('closure-compiler.appspot.com')
-    conn.request('POST', '/compile', urlparams, headers)
-    response = conn.getresponse()
-    data = response.read()
-
+    data = minify('compiled_code')
     conn.close()
 
     print "Minified size: %i" % len(data)
 
     if len(data) < 500:
         print "Minification failed!"
-        params = [
-        ('code_url', 'http://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.js'),
-        ('code_url', 'http://d3js.org/d3.v3.min.js'),
-        ('compilation_level', 'SIMPLE_OPTIMIZATIONS'),
-        ('output_format', 'text'),
-        ('output_info', 'errors')
-        ]
-
-        url = 'https://bitbucket.org/bestchai/shiviz/raw/tip/'
-        for root, dirs, files in os.walk('js'):
-            for file in files:
-                if not ('dev.js' in file):
-                    params += [('code_url', url + os.path.join(root, file))]
-
-        urlparams = urllib.urlencode(params)
-        headers = {'Content-type': 'application/x-www-form-urlencoded'}
-        conn = httplib.HTTPConnection('closure-compiler.appspot.com')
-        conn.request('POST', '/compile', urlparams, headers)
-        response = conn.getresponse()
-        data = response.read()
-
-        print data
-
+        print minify('errors')
         conn.close()
     else:
         data = data.replace("revision: ZZZ", "revision: %s" % revid)
@@ -198,4 +177,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
