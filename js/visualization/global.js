@@ -75,13 +75,6 @@ Global.prototype.removeHiddenHost = function(host) {
  * Redraws the global.
  */
 Global.prototype.drawAll = function() {
-    d3.select("circle.sel").each(function(d) {
-        $(this).remove();
-        d.setSelected(false);
-    });
-
-    $(".dialog").hide();
-
     // TODO: don't draw twice (workaround)
     // TODO: Cleanup & comment
     var width = (240 - 12 * (this.views.length - 1)) / this.views.length;
@@ -192,6 +185,20 @@ Global.prototype.resize = function() {
     }
 
     $("#graph").width(globalWidth);
+
+    var sel = d3.select("circle.sel").data()[0];
+    if (sel) {
+        var $svg = $(d3.select("circle.sel").node()).parents("svg");
+        var $dialog = $(".dialog");
+        if (sel.getX() > $svg.width() / 2)
+            $dialog.css({
+                "left": sel.getX() + $svg.offset().left + 40
+            }).removeClass("right").addClass("left").show();
+        else
+            $dialog.css({
+                "left": sel.getX() + $svg.offset().left - $dialog.width() - 40
+            }).removeClass("left").addClass("right").show();
+    }
 
     return hostMargin;
 };
