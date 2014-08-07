@@ -80,8 +80,10 @@ def main():
         sys.exit(-1)
 
     # Copy over the source.
-    if (os.path.exists(src_dir)):
+    if not (os.path.exists(src_dir)):
         runcmd("cp -R " + src_dir + "* " + dist_dir)
+        # Remove js source code since we will be using a minified version (see below).
+        runcmd("rm -rf " + dist_dir + "/js/*")
     else:
         print "Error: source dir is not where it is expected."
         sys.exit(-1)
@@ -127,7 +129,8 @@ def main():
     url = 'https://bitbucket.org/bestchai/shiviz/raw/tip/'
     for root, dirs, files in os.walk('js'):
         for file in files:
-            params += [('code_url', url + os.path.join(root, file))]
+            if not ('dev.js' in file):
+                params += [('code_url', url + os.path.join(root, file))]
 
     urlparams = urllib.urlencode(params)
     headers = {'Content-type': 'application/x-www-form-urlencoded'}
@@ -153,7 +156,8 @@ def main():
         url = 'https://bitbucket.org/bestchai/shiviz/raw/tip/'
         for root, dirs, files in os.walk('js'):
             for file in files:
-                params += [('code_url', url + os.path.join(root, file))]
+                if not ('dev.js' in file):
+                    params += [('code_url', url + os.path.join(root, file))]
 
         urlparams = urllib.urlencode(params)
         headers = {'Content-type': 'application/x-www-form-urlencoded'}
