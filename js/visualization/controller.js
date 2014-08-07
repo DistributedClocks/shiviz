@@ -15,7 +15,27 @@ function Controller(global) {
 
     /** @private */
     this.transformers = [];
+    
+    var context = this;
+    
+    $("#searchInput").keypress(function(e) {
+        if (e.which == 13) {
+            var text = $("#searchInput").val();
+            context.query(text);
+          } 
+    });
 }
+
+Controller.prototype.query = function(queryText) {
+    var highlightTransformation = new HighlightMotifTransformation(new TextQueryMotifFinder(queryText), false);
+    
+    this.transformers.forEach(function(transformer) {
+        transformer.addTransformation(highlightTransformation);
+    });
+    
+    this.transform();
+    this.global.drawAll();
+};
 
 /**
  * Creates a {@link Transformer} for the new {@link View}, and adds default
