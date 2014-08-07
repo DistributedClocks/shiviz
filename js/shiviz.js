@@ -263,4 +263,5 @@ Shiviz.prototype.handleException = function(err) {
 
 $(document).ready(function() {
     Shiviz.instance = new Shiviz();
+    SearchBarController.instance = new SearchBarController(); // TODO
 });
