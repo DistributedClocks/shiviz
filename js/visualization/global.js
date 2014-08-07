@@ -159,6 +159,9 @@ Global.prototype.resize = function() {
     var headerWidth = $(".visualization header").outerWidth();
     var sidebarWidth = $("#sidebar").outerWidth();
     var globalWidth = $(window).width() - headerWidth - sidebarWidth;
+    
+    SearchBarController.getInstance().setWidth(globalWidth);
+    
     var totalMargin = globalWidth - visibleHosts * Global.HOST_SQUARE_SIZE;
     var hostMargin = totalMargin / (visibleHosts + this.views.length - 2);
 

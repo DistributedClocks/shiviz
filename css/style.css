@@ -362,13 +362,6 @@ svg {
     fill: transparent;
 }
 
-#searchBar {
-    top: 0;
-    width: 100%;
-    position: fixed;
-    background: white;
-}
-
 #hostBar {
 	position: fixed;
     padding-top: 2em;
@@ -470,4 +463,147 @@ svg#defs {
     left: 0;
     z-index: 98;
     background: rgba(255,255,255,.8);
+}
+
+
+#searchBar {
+    top: 0;
+    position: fixed;
+    background: white;
+    z-index: 89;
+}
+
+#searchDropdown {
+    display: none;
+    background: #04a;
+    color: #eee;
+    padding: 1em;
+}
+
+#searchCover {
+    display: none;
+    width: 100%;
+    height: 100%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 88;
+    background: rgba(255,255,255,0);
+}
+
+
+.container {
+	margin: 1em auto;
+}
+
+#drawSVG {
+	height: 500px;
+	float: left;
+}
+
+circle {
+	stroke: #fff;
+	stroke-width: 2px;
+	cursor: pointer;
+}
+
+circle.hover {
+	opacity: .6;
+	display: none;
+	cursor: default;
+}
+
+line {
+	stroke: #999;
+	stroke-width: 1px;
+	opacity: .6;
+}
+
+.add {
+	float: left;
+	color: #fff;
+	height: 25px;
+	width: 25px;
+	opacity: .6;
+	font: inherit;
+	outline: none;
+	border: none;
+	cursor: pointer;
+}
+.add:hover {
+	opacity: .8;
+}
+.add:active {
+	opacity: 1;
+}
+.add:disabled {
+	display: none;
+}
+
+.out {
+	float: right;
+	margin: 1em;
+	-webkit-user-select: text;
+	-moz-user-select: text;
+	-ms-user-select: text;
+	user-select: text;
+}
+
+.dialog {
+	width: 200px;
+	height: 300px;
+	background: #eee;
+	font-family: sans-serif;
+	position: absolute;
+	display: none;
+}
+
+.dialog .triangle {
+	position: absolute;
+	width: 0;
+	height: 0;
+	border-style: solid;
+	border-width: 10px;
+	border-color: inherit;
+	border-bottom-color: transparent;
+}
+.dialog.right .triangle {
+	border-right-color: transparent;
+	right: -20px;
+	top: 0;
+}
+.dialog.left .triangle {
+	border-left-color: transparent;
+	left: -20px;
+	top: 0;
+}
+/*.dialog .triangle:before {
+	content: "";
+	display: block;
+	position: absolute;
+	width: 0;
+	height: 0;
+	border-style: solid;
+	border-width: 10px;
+	border-color: inherit;
+	border-bottom-color: transparent;
+}
+*/
+/*.dialog .triangle.right:before {
+	border-left-color: #aaa;
+	border-top-color: #aaa;
+	right: -8px;
+	top: -9px;
+}
+*/
+/*.dialog .triangle.left:before {
+	border-right-color: #aaa;
+	border-top-color: #aaa;
+	left: -8px;
+	top: -9px;
+}*/
+
+.dialog .name {
+	margin: 1em;
+	color: white;
 }
