@@ -12,6 +12,10 @@
  */
 function Global() {
 
+    if (!!Global.instance) {
+        throw new Exception("An instance of Global already exists - use getInstance() instead.");
+    }
+
     /** @private */
     this.views = [];
 
@@ -28,6 +32,21 @@ function Global() {
     $("#sidebar").css({
         width: Global.SIDE_BAR_WIDTH + "px"
     });
+}
+
+/**
+ * @private
+ * @static
+ */
+Global.instance = null;
+
+/**
+ * Gets the current instance of Global
+ * 
+ * @return {Global} The singleton instance
+ */
+Global.getInstance = function() {
+    return Global.instance;
 }
 
 /**
