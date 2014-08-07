@@ -39,7 +39,7 @@ CustomMotifFinder.prototype.find = function(graph) {
     var bNodeMatch = {}; // builderNode to node
     var hostMatch = {}; // graph host to builderGraph host
     var hostNumBound = {}; // graph host to number of nodes bound to that host
-    var used = {}; // nodes already part of other motifs
+    var inOtherMotif = {}; // nodes already part of other motifs
 
     var motif = new Motif();
 
@@ -104,7 +104,7 @@ CustomMotifFinder.prototype.find = function(graph) {
             var currBNode = bNodes[i];
             var nodeToAdd = bNodeMatch[currBNode.getId()];
             motif.addNode(nodeToAdd);
-            used[nodeToAdd.getId()] = true;
+            inOtherMotif[nodeToAdd.getId()] = true;
 
             var connections = currBNode.getConnections();
 
@@ -148,7 +148,7 @@ CustomMotifFinder.prototype.find = function(graph) {
         // Remove all used nodes (nodes part of a motif already) from nodeGroup.
         // In addition, removes dummy nodes
         nodeGroup = nodeGroup.filter(function(elem) {
-            return !used[elem.getId()] && !elem.isDummy();
+            return !inOtherMotif[elem.getId()] && !elem.isDummy();
         });
 
         // Remove all dummy nodes from bNodeGroup
@@ -167,12 +167,11 @@ CustomMotifFinder.prototype.find = function(graph) {
         for (var i = 0; i < bNodeGroup.length; i++) {
             bNodeGroupSet[bNodeGroup[i].getId()] = true;
         }
-
+        
         /*
-         * For each bNode, we check to see if it has already been matched. If
-         * not, then we add it to an array containing un-matched bNodes.
-         * Otherwise, we make sure that the bNode's match is part of nodeGroup,
-         * and we return false if that's not the case
+         * We populate an array of "free" bNodes - bNodes that haven't yet been 
+         * matched to a node. If we encounter an already matched bNode, its match
+         * must be part of nodeGroup (otherwise we return false immediately)
          */
         var freeBNodeGroup = []; // unmatched bNodes
         for (var i = 0; i < bNodeGroup.length; i++) {
@@ -257,7 +256,7 @@ CustomMotifFinder.prototype.find = function(graph) {
             throw new Exception("bNode or node already has a match");
         }
 
-        var fail = used[node.getId()] //
+        var fail = inOtherMotif[node.getId()] //
                 || (hostMatch[node.getHost()] && hostMatch[node.getHost()] != bNode.getHost()); //
 
         if (fail) {
