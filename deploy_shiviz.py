@@ -80,7 +80,7 @@ def main():
         sys.exit(-1)
 
     # Copy over the source.
-    if not (os.path.exists(src_dir)):
+    if (os.path.exists(src_dir)):
         runcmd("cp -R " + src_dir + "* " + dist_dir)
         # Remove js source code since we will be using a minified version (see below).
         runcmd("rm -rf " + dist_dir + "/js/*")
