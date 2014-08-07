@@ -25,8 +25,20 @@ function Global() {
     /** @private */
     this.controller = new Controller(this);
 
+    /**
+     * @static
+     * @const
+     */
     Global.SIDE_BAR_WIDTH = 240;
+    /**
+     * @static
+     * @const
+     */
     Global.HOST_SQUARE_SIZE = 25;
+    /**
+     * @static
+     * @const
+     */
     Global.HIDDEN_EDGE_LENGTH = 40;
 
     $("#sidebar").css({
