@@ -80,17 +80,66 @@ Controller.prototype.bindNodes = function(nodes) {
 
             controller.transform();
             controller.global.drawAll();
+        } else {
+            d3.select("circle.sel").each(function(d) {
+                $(this).remove();
+                d.setSelected(false);
+            });
+
+            e.setSelected(true);
+
+            var selcirc = d3.select("#node" + e.getId()).insert("circle", "circle");
+            selcirc.style({
+                "fill": function(d) {
+                    return d.getFillColor();
+                }
+            });
+            selcirc.attr({
+                "class": "sel",
+                "r": function(d) {
+                    return d.getRadius() + 6;
+                }
+            });
+
+            var $dialog = $(".dialog");
+            var $svg = $(this).parents("svg");
+            if (e.getX() > $svg.width() / 2)
+                $dialog.css({
+                    "left": e.getX() + $svg.offset().left + 40
+                }).removeClass("right").addClass("left").show();
+            else
+                $dialog.css({
+                    "left": e.getX() + $svg.offset().left - $dialog.width() - 40
+                }).removeClass("left").addClass("right").show();
+
+            $dialog.css({
+                "top": e.getY() + $svg.offset().top,
+                "background": e.getFillColor(),
+                "border-color": e.getFillColor()
+            });
+
+            $dialog.find(".name").text(e.getText());
         }
     }).on("mouseover", function(e) {
-        d3.selectAll("circle.focus").classed("focus", false).transition().duration(100).attr({
+        d3.selectAll("g.focus .sel").transition().duration(100).attr({
+            "r": function(d) {
+                return d.getRadius() + 4;
+            }
+        });
+        d3.selectAll("g.focus").classed("focus", false).select("circle:not(.sel)").transition().duration(100).attr({
             "r": function(d) {
                 return d.getRadius();
             }
         });
 
-        d3.select(this).select("circle").classed("focus", true).transition().duration(100).attr({
+        d3.select(this).classed("focus", true).select("circle:not(.sel)").transition().duration(100).attr({
             "r": function(d) {
                 return d.getRadius() + 2;
+            }
+        });
+        d3.selectAll("g.focus .sel").transition().duration(100).attr({
+            "r": function(d) {
+                return d.getRadius() + 6;
             }
         });
 
