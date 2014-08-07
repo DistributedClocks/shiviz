@@ -79,6 +79,7 @@ def minify(info):
     conn.request('POST', '/compile', urlparams, headers)
     response = conn.getresponse()
     data = response.read() 
+    conn.close()
 
     return data
     
@@ -140,14 +141,12 @@ def main():
     # Minify the code
     print "Minifying... please wait"
     data = minify('compiled_code')
-    conn.close()
 
     print "Minified size: %i" % len(data)
 
     if len(data) < 500:
         print "Minification failed!"
         print minify('errors')
-        conn.close()
     else:
         data = data.replace("revision: ZZZ", "revision: %s" % revid)
         minified = open(dist_dir + 'js/min.js', 'w')
