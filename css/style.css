@@ -457,6 +457,7 @@ svg#defs {
 .dialog .name {
     margin: 1em;
     color: white;
+    word-break: break-all;
 }
 
 /* Error box */
