@@ -72,6 +72,11 @@ input.mono {
     font-family: monospace;
 }
 
+input.search {
+    font-family: monospace;
+    font-size: 14pt;
+}
+
 select {
     outline: none;
     font-size: 12pt;
@@ -357,9 +362,15 @@ svg {
     fill: transparent;
 }
 
-#hostBar {
+#searchBar {
     top: 0;
+    width: 100%;
     position: fixed;
+    background: white;
+}
+
+#hostBar {
+	position: fixed;
     padding-top: 2em;
     background: white;
 }
