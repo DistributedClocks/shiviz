@@ -340,6 +340,33 @@ function convert() {
     });
 
     $(".out").text(s);
+    
+    // =================================
+
+    var bg = new BuilderGraph(hosts.map(function(h) {
+        return h.name;
+    }));
+
+    hosts.forEach(function(h) {
+        var head = bg.getHead(h.name);
+        var curr = head;
+        h.nodes.forEach(function(n) {
+            var bn = new BuilderNode();
+            n.bn = bn;
+            curr.insertNext(bn);
+            curr = n.bn;
+        });
+    });
+
+    nodes.forEach(function(n) {
+        n.children.sort(function(a, b) {
+            return a.y < b.y;
+        }).forEach(function(m) {
+            n.bn.addChild(m.bn);
+        });
+    });
+
+    return bg;
 }
 
 function isValid(c) {
