@@ -9,7 +9,7 @@
  * @constructor
  * @extends MotifFinder
  * @param {BuilderGraph} builderGraph The builderGraph that specifies the
- *        user-defined motif
+ *            user-defined motif
  */
 function CustomMotifFinder(builderGraph) {
 
@@ -135,31 +135,41 @@ CustomMotifFinder.prototype.find = function(graph) {
                 && tryMatch(bNode.getChildren(), node.getChildren()) //
                 && tryMatch(bNode.getParents(), node.getParents()); //
     }
-    
-    
+
+    /*
+     * Tries and match a builderNode parent/child to a modelNode parent/child.
+     * True is returned on success, false otherwise.
+     */
     function tryMatchAdjacent(bNode, node) {
-        if(bNode.isDummy()) {
+        if (bNode.isDummy()) {
             return true;
         }
-        
-        if(node.isDummy()) {
+
+        if (node.isDummy()) {
             return false;
         }
-        
+
         var bmatch = bNodeMatch[bNode.getId()];
         var nmatch = nodeMatch[node.getId()];
-        
+
         if (!bmatch && !nmatch) {
-            if(!setNodeMatch(bNode, node)) {
+            // return false if we can't match bNode to node
+            if (!setNodeMatch(bNode, node)) {
                 return false;
             }
-            if(searchNode(bNode)) {
+
+            // if search succeeds, return true
+            if (searchNode(bNode)) {
                 return true;
             }
+
+            // remove matching and fail
             removeNodeMatch(node);
             return false;
         }
         else {
+            // if bNode or node already has a match, they must be matched to
+            // each other
             return bmatch == node;
         }
     }
@@ -168,8 +178,7 @@ CustomMotifFinder.prototype.find = function(graph) {
      * This method tries to match the provided builderNodes to the provided
      * graph nodes. True is returned on success, false otherwise. For the match
      * to be considered a success, each BuilderNode must be matched to a graph
-     * node. However, it is not necessary that each node be matched to a
-     * builderNode
+     * node, and each ModelNode must be matched to a BuilderNode
      */
     function tryMatch(bNodeGroup, nodeGroup) {
 
@@ -190,11 +199,12 @@ CustomMotifFinder.prototype.find = function(graph) {
         for (var i = 0; i < bNodeGroup.length; i++) {
             bNodeGroupSet[bNodeGroup[i].getId()] = true;
         }
-        
+
         /*
-         * We populate an array of "free" bNodes - bNodes that haven't yet been 
-         * matched to a node. If we encounter an already matched bNode, its match
-         * must be part of nodeGroup (otherwise we return false immediately)
+         * We populate an array of "free" bNodes - bNodes that haven't yet been
+         * matched to a node. If we encounter an already matched bNode, its
+         * match must be part of nodeGroup (otherwise we return false
+         * immediately)
          */
         var freeBNodeGroup = []; // unmatched bNodes
         for (var i = 0; i < bNodeGroup.length; i++) {
@@ -264,10 +274,10 @@ CustomMotifFinder.prototype.find = function(graph) {
         }
     }
 
-    /* 
-     * Matches bNode and node. Neither must already have a match.
-     * If matching bNode and node is invalid, this method returns false.
-     * This method returns true otherwise
+    /*
+     * Matches bNode and node. Neither must already have a match. If matching
+     * bNode and node is invalid, this method returns false. This method returns
+     * true otherwise
      */
     function setNodeMatch(bNode, node) {
         if (nodeMatch[node.getId()] || bNodeMatch[bNode.getId()]) {
