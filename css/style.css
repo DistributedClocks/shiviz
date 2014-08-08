@@ -72,11 +72,6 @@ input.mono {
     font-family: monospace;
 }
 
-input.search {
-    font-family: monospace;
-    font-size: 14pt;
-}
-
 select {
     outline: none;
     font-size: 12pt;
@@ -84,7 +79,9 @@ select {
     padding: 0;
 }
 
-input:focus, textarea:focus {
+input:focus,
+input.focus,
+textarea:focus {
     border-color: black;
 }
 
@@ -238,6 +235,15 @@ section.input .left {
     z-index: 4;
 }
 
+.visualization .left #tabs {
+    height: 2em;
+    background: #fff;
+    width: 264pt;
+    top: 6em;
+    position: fixed;
+    z-index: 4;
+}
+
 .visualization .log {
     position: absolute;
     border-collapse: collapse;
@@ -324,6 +330,84 @@ section.input .left {
     padding-right: 240px;
 }
 
+#searchbar {
+    position: fixed;
+    top: 0;
+    height: 2em;
+    padding: 2em 5px;
+    background: #fff;
+    z-index: 4;
+}
+#searchbar #bar {
+    height: 24pt;
+    width: calc(100% - 10px);
+    z-index: 1;
+}
+#searchbar #bar input {
+    height: 24pt;
+    font-size: 12pt;
+    margin: 0;
+    float: left;
+    width: calc(100% - 24pt);
+    border-right: none;
+}
+#searchbar #bar button {
+    float: left;
+    margin: 0;
+    width: 24pt;
+    height: 24pt;
+    padding: 0;
+}
+#searchbar #bar input:focus + button,
+#searchbar #bar input.focus + button {
+    border: 1px solid #000;
+}
+#searchbar #panel {
+    display: none;
+    width: calc(100% - 9px - 24pt);
+    border: 1px solid black;
+    border-top: none;
+    box-sizing: border-box;
+    overflow: hidden;
+    padding: .4em;
+    background: #fff;
+}
+#searchbar #panel svg {
+    height: 500px;
+    float: left;
+}
+#searchbar #panel circle.hover {
+    opacity: .6;
+    display: none;
+    cursor: default;
+}
+#searchbar #panel .add {
+    float: left;
+    color: #fff;
+    height: 25px;
+    width: 25px;
+    opacity: .6;
+    font: inherit;
+    outline: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    margin: 0;
+}
+#searchbar #panel .add:hover {
+    opacity: .8;
+}
+#searchbar #panel .add:active {
+    opacity: 1;
+}
+#searchbar #panel .add:disabled {
+    display: none;
+}
+#searchbar #panel .out {
+    float: right;
+    margin: 0;
+}
+
 svg {
     user-select: none;
     -ms-user-select: none;
@@ -332,7 +416,7 @@ svg {
 }
 
 #vizContainer {
-    margin-top: 2em;
+    margin-top: 4em;
     white-space: nowrap;
 }
 
@@ -340,12 +424,14 @@ svg {
     vertical-align: top;
 }
 
-#vizContainer svg line {
+#vizContainer svg line,
+#panel line {
     stroke: #999;
     stroke-opacity: 0.6;
 }
 
-#vizContainer svg g circle {
+#vizContainer svg g circle,
+#panel circle {
     stroke: #fff;
     stroke-width: 2px;
 }
@@ -364,7 +450,6 @@ svg {
 
 #hostBar {
 	position: fixed;
-    padding-top: 2em;
     background: white;
 }
 
@@ -463,90 +548,6 @@ svg#defs {
     left: 0;
     z-index: 98;
     background: rgba(255,255,255,.8);
-}
-
-
-#searchBar {
-    top: 0;
-    position: fixed;
-    background: white;
-    z-index: 89;
-}
-
-#searchDropdown {
-    display: none;
-    background: #04a;
-    color: #eee;
-    padding: 1em;
-}
-
-#searchCover {
-    display: none;
-    width: 100%;
-    height: 100%;
-    position: fixed;
-    top: 0;
-    left: 0;
-    z-index: 88;
-    background: rgba(255,255,255,0);
-}
-
-
-.container {
-	margin: 1em auto;
-}
-
-#drawSVG {
-	height: 500px;
-	float: left;
-}
-
-circle {
-	stroke: #fff;
-	stroke-width: 2px;
-	cursor: pointer;
-}
-
-circle.hover {
-	opacity: .6;
-	display: none;
-	cursor: default;
-}
-
-line {
-	stroke: #999;
-	stroke-width: 1px;
-	opacity: .6;
-}
-
-.add {
-	float: left;
-	color: #fff;
-	height: 25px;
-	width: 25px;
-	opacity: .6;
-	font: inherit;
-	outline: none;
-	border: none;
-	cursor: pointer;
-}
-.add:hover {
-	opacity: .8;
-}
-.add:active {
-	opacity: 1;
-}
-.add:disabled {
-	display: none;
-}
-
-.out {
-	float: right;
-	margin: 1em;
-	-webkit-user-select: text;
-	-moz-user-select: text;
-	-ms-user-select: text;
-	user-select: text;
 }
 
 .dialog {

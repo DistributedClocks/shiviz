@@ -135,7 +135,8 @@ Controller.prototype.bindNodes = function(nodes) {
 
         $(".highlight").css({
             "width": $line.width(),
-            "height": $line.height()
+            "height": $line.height(),
+            "opacity": e.getOpacity()
         });
 
         var top = parseFloat($line.css("top")) || 0;

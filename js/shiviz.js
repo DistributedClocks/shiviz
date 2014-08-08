@@ -169,6 +169,7 @@ Shiviz.prototype.visualize = function() {
         });
 
         global.drawAll();
+        SearchBar.getInstance().setGlobal(global);
     }
     catch (err) {
         this.handleException(err);
@@ -263,5 +264,5 @@ Shiviz.prototype.handleException = function(err) {
 
 $(document).ready(function() {
     Shiviz.instance = new Shiviz();
-    SearchBarController.instance = new SearchBarController(); // TODO
+    SearchBar.instance = new SearchBar();
 });

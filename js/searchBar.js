@@ -1,60 +1,77 @@
-function SearchBarController() {
-
+function SearchBar() {
     var context = this;
 
-    $("#searchInput").keypress(function(e) {
+    $("#searchbar #bar input").on("keydown", function(e) {
         try {
             if (e.which == 13) {
-                var text = $("#searchInput").val();
+                var text = this.value;
                 context.query(text);
+                context.hide();
             }
+        } catch (exception) {
+            Shiviz.getInstance().handleException(exception);
         }
-        catch (exception) {
+    }).on("input", function() {
+        if (this.value.length)
+            $("#bar button").prop("disabled", false)
+        else
+            $("#bar button").prop("disabled", true)
+    }).on("focus", function() {
+        $(this).addClass("focus");
+        $("#searchbar #panel").show();
+        $(window).on("mousedown", function(e) {
+            var $target = $(e.target);
+            if (!$target.parents("#searchbar").length)
+                context.hide();
+        });
+    });
+
+    $("#searchbar #bar button").on("click", function() {
+        try {
+            var text = $("#bar input").val();
+            context.query(text);
+            context.hide();
+        } catch (exception) {
             Shiviz.getInstance().handleException(exception);
         }
     });
 
-    $("#searchInput").focus(function() {
-        $("#searchDropdown").show();
-        $("#searchCover").show();
-    });
-
-    $("#searchCover").on("click", function() {
-        $("#searchDropdown").hide();
-        $("#searchCover").hide();
-    });
-
     this.highlightTransformation = null;
+    this.global = null;
 }
 
-SearchBarController.instance = null;
+SearchBar.instance = null;
 
-SearchBarController.getInstance = function() {
+SearchBar.getInstance = function() {
     return this.instance;
 };
 
-SearchBarController.prototype.setWidth = function(width) {
-    $("#searchBar").outerWidth(width);
-    $("#searchDropdown").outerWidth(width);
-    
-//    $("#searchDropdown").outerHeight(1000);
-};
+SearchBar.prototype.hide = function() {
+    $("#bar input").blur().removeClass("focus");
+    $("#searchbar #panel").hide();
+    $(window).unbind("mousedown");
+}
 
-SearchBarController.prototype.query = function(queryText) {
+SearchBar.prototype.setGlobal = function(global) {
+    this.global = global;
+}
+
+SearchBar.prototype.query = function(queryText) {
     var context = this;
+    var controller = this.global.getController();
 
     if (this.highlightTransformation != null) {
-        this.transformers.forEach(function(transformer) {
-            transformer.removeTransformation(context.highlightTransformation);
+        controller.transformers.forEach(function(transformer) {
+            transformer.removeTransformation(context.highlightTransformation, true);
         });
     }
 
     this.highlightTransformation = new HighlightMotifTransformation(new TextQueryMotifFinder(queryText), false);
 
-    this.transformers.forEach(function(transformer) {
-        transformer.addTransformation(context.highlightTransformation);
+    controller.transformers.forEach(function(transformer) {
+        transformer.addTransformation(context.highlightTransformation, true);
     });
 
-    this.transform();
+    controller.transform();
     this.global.drawAll();
 };

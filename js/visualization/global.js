@@ -136,6 +136,14 @@ Global.prototype.getVisualModels = function() {
 }
 
 /**
+ * Gets the {@link Controller}
+ * @returns {Controller} The controller
+ */
+Global.prototype.getController = function() {
+    return this.controller;
+}
+
+/**
  * Resizes the graph
  */
 Global.prototype.resize = function() {
@@ -160,7 +168,7 @@ Global.prototype.resize = function() {
     var sidebarWidth = $("#sidebar").outerWidth();
     var globalWidth = $(window).width() - headerWidth - sidebarWidth;
     
-    SearchBarController.getInstance().setWidth(globalWidth);
+    $("#searchbar").width(globalWidth);
     
     var totalMargin = globalWidth - visibleHosts * Global.HOST_SQUARE_SIZE;
     var hostMargin = totalMargin / (visibleHosts + this.views.length - 2);
