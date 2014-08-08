@@ -130,10 +130,38 @@ CustomMotifFinder.prototype.find = function(graph) {
     function searchNode(bNode) {
         var node = bNodeMatch[bNode.getId()];
 
-        return tryMatch([ bNode.getNext() ], [ node.getNext() ]) //
-                && tryMatch([ bNode.getPrev() ], [ node.getPrev() ]) //
+        return tryMatchAdjacent(bNode.getNext(), node.getNext()) //
+                && tryMatchAdjacent(bNode.getPrev(), node.getPrev()) //
                 && tryMatch(bNode.getChildren(), node.getChildren()) //
                 && tryMatch(bNode.getParents(), node.getParents()); //
+    }
+    
+    
+    function tryMatchAdjacent(bNode, node) {
+        if(bNode.isDummy()) {
+            return true;
+        }
+        
+        if(node.isDummy()) {
+            return false;
+        }
+        
+        var bmatch = bNodeMatch[bNode.getId()];
+        var nmatch = nodeMatch[node.getId()];
+        
+        if (!bmatch && !nmatch) {
+            if(!setNodeMatch(bNode, node)) {
+                return false;
+            }
+            if(searchNode(bNode)) {
+                return true;
+            }
+            removeNodeMatch(node);
+            return false;
+        }
+        else {
+            return bmatch == node;
+        }
     }
 
     /*
@@ -148,12 +176,7 @@ CustomMotifFinder.prototype.find = function(graph) {
         // Remove all used nodes (nodes part of a motif already) from nodeGroup.
         // In addition, removes dummy nodes
         nodeGroup = nodeGroup.filter(function(elem) {
-            return !inOtherMotif[elem.getId()] && !elem.isDummy();
-        });
-
-        // Remove all dummy nodes from bNodeGroup
-        bNodeGroup = bNodeGroup.filter(function(elem) {
-            return !elem.isDummy();
+            return !inOtherMotif[elem.getId()];
         });
 
         // Creates a set out of nodeGroup, so membership test is O(1)
@@ -197,13 +220,8 @@ CustomMotifFinder.prototype.find = function(graph) {
         }
 
         // If there are fewer free nodes than free bNodes, fail
-        if (freeNodeGroup.length < freeBNodeGroup.length) {
+        if (freeNodeGroup.length != freeBNodeGroup.length) {
             return false;
-        }
-
-        // If there are no free bNodes, return true
-        if (freeBNodeGroup.length == 0) {
-            return true;
         }
 
         return tryPermutations(freeNodeGroup, [], [], 0);
