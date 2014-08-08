@@ -1,5 +1,5 @@
-var $svg = $("#drawSVG");
-var $hover = $(".hover");
+var $svg = $("#panel svg");
+var $hover = $("#panel .hover");
 
 function bind() {
     $svg.unbind().on("mousemove", function (e) {
@@ -120,8 +120,6 @@ function bind() {
 $(".add").click(function () {
     new Host();
 });
-
-
 
 var hosts = [];
 var nodes = [];

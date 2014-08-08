@@ -218,22 +218,25 @@
                     <li><a title="Source" href="//bitbucket.org/bestchai/shiviz/src">s</a></li>
                 </ul>
             </header>
+            <div id="tabs"></div>
             <table class="log">
                 <tr></tr>
             </table>
             <div class="highlight"></div>
         </div>
         <div id="graph">
-            <div id="searchBar">
-                <input id="searchInput" type="text" class="search" value="asdsd">
-                <div id="searchDropdown">
-                    <div class="container">
-		                <svg id="drawSVG">
-			                <circle r="5" class="hover"></circle>
-		                </svg>
-		                <button class="add">+</button>
-	                </div>
+            <div id="searchbar">
+                <div id="bar">
+                    <input type="text" class="mono">
+                    <button disabled>Go</button>
                 </div>
+                <div id="panel">
+                  <svg>
+                     <circle r="5" class="hover"></circle>
+                 </svg>
+                 <button class="add">+</button>
+                 <pre class="out"></pre>
+             </div>
             </div>
             <div id="hostBar"></div>
             <div id="vizContainer"></div>
@@ -247,8 +250,6 @@
 
     <div id="errorbox" class="error"></div>
     <div id="errorcover" class="error"></div>
-    
-    <div id="searchCover"></div>
 
     <svg id="defs">
         <defs>

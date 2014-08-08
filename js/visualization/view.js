@@ -172,6 +172,7 @@ View.prototype.draw = function() {
                 return "node" + d.getId();
             }
         });
+
         nodes.append("title").text(function(d) {
             return d.getText();
         });
@@ -222,6 +223,9 @@ View.prototype.draw = function() {
             },
             "stroke-width": function(d) {
                 return d.getStrokeWidth() + "px";
+            },
+            "opacity": function(d) {
+                return d.getOpacity();
             }
         });
         circle.attr({
@@ -342,7 +346,8 @@ View.prototype.draw = function() {
                 }).addClass("line").css({
                     "top": y + "px",
                     "margin-top": startMargin + "em",
-                    "color": vn[i].getFillColor()
+                    "color": vn[i].getFillColor(),
+                    "opacity": vn[i].getOpacity()
                 }).text(text);
                 $(".log td:last-child").append($div);
                 startMargin++;
@@ -363,7 +368,8 @@ View.prototype.draw = function() {
                         "id": overflow[o].getId()
                     }).addClass("line").css({
                         "margin-top": o + "em",
-                        "color": overflow[o].getFillColor()
+                        "color": overflow[o].getFillColor(),
+                        "opacity": vn[i].getOpacity()
                     }).text(text));
                     startMargin++;
                 }
