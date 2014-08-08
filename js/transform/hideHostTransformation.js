@@ -23,7 +23,9 @@ function HideHostTransformation(host) {
     this.host = host;
 }
 
-HideHostTransformation.prototype = new Transformation();
+// HideHostTransformation extends Transformation
+HideHostTransformation.prototype = Object.create(Transformation.prototype);
+HideHostTransformation.prototype.constructor = HideHostTransformation;
 
 /**
  * Returns the host that is hidden
@@ -32,7 +34,7 @@ HideHostTransformation.prototype = new Transformation();
  */
 HideHostTransformation.prototype.getHost = function() {
     return this.host;
-}
+};
 
 /**
  * Performs the transformation on the given VisualGraph. The VisualGraph and its
