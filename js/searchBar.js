@@ -1,61 +1,89 @@
-function SearchBarController() {
-
+function SearchBar() {
     var context = this;
 
-    $("#searchInput").keypress(function(e) {
+    $("#searchbar #bar input").on("keydown", function(e) {
         try {
             if (e.which == 13) {
-                var text = $("#searchInput").val();
-                context.query(text);
+                if (nodes.length) {
+                    var bg = convert();
+                    context.query(bg);
+                } else {
+                    var text = this.value;
+                    context.query(text);
+                }
+
+                context.hide();
             }
+        } catch (exception) {
+            Shiviz.getInstance().handleException(exception);
         }
-        catch (exception) {
+    }).on("input", function() {
+        if (this.value.length)
+            $("#bar button").prop("disabled", false)
+        else
+            $("#bar button").prop("disabled", true)
+    }).on("focus", function() {
+        $(this).addClass("focus");
+        $("#searchbar #panel").show();
+        $(window).on("mousedown", function(e) {
+            var $target = $(e.target);
+            if (!$target.parents("#searchbar").length)
+                context.hide();
+        });
+    });
+
+    $("#searchbar #bar button").on("click", function() {
+        try {
+            var text = $("#bar input").val();
+            context.query(text);
+            context.hide();
+        } catch (exception) {
             Shiviz.getInstance().handleException(exception);
         }
     });
 
-    $("#searchInput").focus(function() {
-        $("#searchDropdown").show();
-        $("#searchCover").show();
-    });
-
-    $("#searchCover").on("click", function() {
-        $("#searchDropdown").hide();
-        $("#searchCover").hide();
-    });
-
     this.highlightTransformation = null;
+    this.global = null;
 }
 
-SearchBarController.instance = null;
+SearchBar.instance = null;
 
-SearchBarController.getInstance = function() {
+SearchBar.getInstance = function() {
     return this.instance;
 };
 
-SearchBarController.prototype.setWidth = function(width) {
-    $("#clearSearchButton").outerWidth(50);
-    $("#searchBar").outerWidth(width-50);
-    $("#searchDropdown").outerWidth(width);
-    
-//    $("#searchDropdown").outerHeight(1000);
-};
+SearchBar.prototype.hide = function() {
+    $("#bar input").blur().removeClass("focus");
+    $("#searchbar #panel").hide();
+    $(window).unbind("mousedown");
+}
 
-SearchBarController.prototype.query = function(queryText) {
+SearchBar.prototype.setGlobal = function(global) {
+    this.global = global;
+}
+
+SearchBar.prototype.query = function(query) {
     var context = this;
+    var controller = this.global.getController();
 
     if (this.highlightTransformation != null) {
-        this.transformers.forEach(function(transformer) {
-            transformer.removeTransformation(context.highlightTransformation);
+        controller.transformers.forEach(function(transformer) {
+            transformer.removeTransformation(context.highlightTransformation, true);
         });
     }
 
-    this.highlightTransformation = new HighlightMotifTransformation(new TextQueryMotifFinder(queryText), false);
+    if (typeof query == "string") {
+        var finder = new TextQueryMotifFinder(query);
+    } else if (query instanceof BuilderGraph) {
+        var finder = new CustomMotifFinder(query);
+    }
 
-    this.transformers.forEach(function(transformer) {
-        transformer.addTransformation(context.highlightTransformation);
+    this.highlightTransformation = new HighlightMotifTransformation(finder);
+
+    controller.transformers.forEach(function(transformer) {
+        transformer.addTransformation(context.highlightTransformation, true);
     });
 
-    this.transform();
+    controller.transform();
     this.global.drawAll();
 };
