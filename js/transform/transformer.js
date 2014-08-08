@@ -59,14 +59,24 @@ Transformer.prototype.addTransformation = function(tf, isDefault) {
  * @param {Function|Transformation} tf A predicate function that returns true if
  *            given transformation is to be removed, OR the transformation that
  *            is to be removed
+ * @param {Boolean} def Whether the transformation to remove is a default
+ *            transformation.
  */
-Transformer.prototype.removeTransformation = function(tf) {
-    this.transformations = this.transformations.filter(function(t) {
-        if (tf.constructor == Function)
-            return !tf(t);
-        else
-            return !(tf == t);
-    });
+Transformer.prototype.removeTransformation = function(tf, def) {
+    if (def)
+        this.defaultTransformations = this.defaultTransformations.filter(function(t) {
+            if (tf.constructor == Function)
+                return !tf(t);
+            else
+                return !(tf == t);
+        });
+    else
+        this.transformations = this.transformations.filter(function(t) {
+            if (tf.constructor == Function)
+                return !tf(t);
+            else
+                return !(tf == t);
+        });
 };
 
 /**
