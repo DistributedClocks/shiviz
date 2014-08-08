@@ -36,7 +36,9 @@ function HighlightHostTransformation(hosts) {
     });
 }
 
-HighlightHostTransformation.prototype = new Transformation();
+// HighlightMotifTransformation extends Transformation
+HighlightHostTransformation.prototype = Object.create(Transformation.prototype);
+HighlightHostTransformation.prototype.constructor = HighlightHostTransformation;
 
 /**
  * Gets the highlighted host(s)
