@@ -4,8 +4,14 @@ function SearchBar() {
     $("#searchbar #bar input").on("keydown", function(e) {
         try {
             if (e.which == 13) {
-                var text = this.value;
-                context.query(text);
+                if (nodes.length) {
+                    var bg = convert();
+                    context.query(bg);
+                } else {
+                    var text = this.value;
+                    context.query(text);
+                }
+
                 context.hide();
             }
         } catch (exception) {
@@ -56,7 +62,7 @@ SearchBar.prototype.setGlobal = function(global) {
     this.global = global;
 }
 
-SearchBar.prototype.query = function(queryText) {
+SearchBar.prototype.query = function(query) {
     var context = this;
     var controller = this.global.getController();
 
@@ -66,7 +72,13 @@ SearchBar.prototype.query = function(queryText) {
         });
     }
 
-    this.highlightTransformation = new HighlightMotifTransformation(new TextQueryMotifFinder(queryText), false);
+    if (typeof query == "string") {
+        var finder = new TextQueryMotifFinder(query);
+    } else if (query instanceof BuilderGraph) {
+        var finder = new CustomMotifFinder(query);
+    }
+
+    this.highlightTransformation = new HighlightMotifTransformation(finder);
 
     controller.transformers.forEach(function(transformer) {
         transformer.addTransformation(context.highlightTransformation, true);
