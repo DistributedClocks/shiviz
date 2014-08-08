@@ -34,7 +34,8 @@ SearchBarController.getInstance = function() {
 };
 
 SearchBarController.prototype.setWidth = function(width) {
-    $("#searchBar").outerWidth(width);
+    $("#clearSearchButton").outerWidth(50);
+    $("#searchBar").outerWidth(width-50);
     $("#searchDropdown").outerWidth(width);
     
 //    $("#searchDropdown").outerHeight(1000);

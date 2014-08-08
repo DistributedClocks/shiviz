@@ -159,7 +159,6 @@ function Host() {
     hosts.push(this);
 
     $svg.width(hosts.length * 65);
-    $(".container").width(hosts.length * 65 + 25);
     $(".add").css("background", Host.colors[Host.colors.length - 1]);
 }
 
@@ -195,7 +194,6 @@ Host.prototype.remove = function () {
     this.line.remove();
 
     $svg.width(hosts.length * 65);
-    $(".container").width(hosts.length * 65 + 25);
     $(".add").css("background", Host.colors[Host.colors.length - 1]);
     $(".add").removeAttr("disabled");
 
