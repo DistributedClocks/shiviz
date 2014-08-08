@@ -3,10 +3,11 @@ function SearchBar() {
 
     $("#searchbar #bar input").on("keydown", function(e) {
         try {
-            if (e.which == 13) {
+            if (e.which == 13 && (this.value.length || nodes.length)) {
                 if (nodes.length) {
-                    var bg = convert();
+                    var bg = convertToBG();
                     context.query(bg);
+                    context.clearMotif();
                 } else {
                     var text = this.value;
                     context.query(text);
@@ -56,6 +57,14 @@ SearchBar.prototype.hide = function() {
     $("#bar input").blur().removeClass("focus");
     $("#searchbar #panel").hide();
     $(window).unbind("mousedown");
+}
+
+SearchBar.prototype.clearMotif = function() {
+    for (var i = hosts.length - 1; i > 1; i--)
+        hosts[i].remove();
+
+    for (var i = nodes.length - 1; i > -1; i--)
+        nodes[i].remove();
 }
 
 SearchBar.prototype.setGlobal = function(global) {

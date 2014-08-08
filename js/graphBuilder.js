@@ -338,9 +338,9 @@ function convert() {
     });
 
     $(".out").text(s);
-    
-    // =================================
+}
 
+function convertToBG() {
     var bg = new BuilderGraph(hosts.map(function(h) {
         return h.name;
     }));
