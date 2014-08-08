@@ -59,6 +59,10 @@ def runcmd(s):
 
 
 def minify(info):
+    '''
+    Minifies all of the js code under js/ using Google's API and
+    returns the minified resulting js code.
+    '''
     params = [
     ('code_url', 'http://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.js'),
     ('code_url', 'http://d3js.org/d3.v3.min.js'),
@@ -68,6 +72,7 @@ def minify(info):
     ]
 
     url = 'https://bitbucket.org/bestchai/shiviz/raw/tip/'
+    # Traverse all of the files underneath the js/ dir
     for root, dirs, files in os.walk('js'):
         for file in files:
             if not ('dev.js' in file):
@@ -141,25 +146,27 @@ def main():
     # Minify the code
     print "Minifying... please wait"
     data = minify('compiled_code')
-
     print "Minified size: %i" % len(data)
 
     if len(data) < 500:
         print "Minification failed!"
         print minify('errors')
-    else:
-        data = data.replace("revision: ZZZ", "revision: %s" % revid)
-        minified = open(dist_dir + 'js/min.js', 'w')
-        minified.write(data)
-        minified.close()
+        return
 
-        # Replace reference to js files with minified js in deployed version
-        # of index.html.
-        runcmd("sed -i '' -e 's/<script[^>]*><\/script>//g' " + dist_dir + "index.html")
-        runcmd("sed -i '' -e 's/<\/body>/<script src=\"js\/min.js\"><\/script><\/body>/g' " + dist_dir + "index.html")
+    print "Minification successful!"
+    # Add hg revision id to the minified code.
+    data = data.replace("revision: ZZZ", "revision: %s" % revid)
 
-        print "Minification successful!"
+    # Save the minified code into js/min.js
+    minified = open(dist_dir + 'js/min.js', 'w')
+    minified.write(data)
+    minified.close()
 
+    # Replace reference to js files with minified js in deployed version
+    # of index.html.
+    runcmd("sed -i '' -e 's/<script[^>]*><\/script>//g' " + dist_dir + "index.html")
+    runcmd("sed -i '' -e 's/<\/body>/<script src=\"js\/min.js\"><\/script><\/body>/g' " + dist_dir + "index.html")
+    
     # Add any files that are new and remove any files that no longer exist
     runcmd("cd " + dist_dir + " && hg addremove")
 
