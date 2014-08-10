@@ -19,26 +19,30 @@
  * @extends Transformation
  * @param {String} host The host to highlight
  */
-function HighlightHostTransformation(hosts) {
+function HighlightHostTransformation() {
     var self = this;
 
     /** @private */
     this.hosts = {};
 
     /** @private */
-    this.hiddenHosts = [];
+    this.hiddenHosts = {};
 
     /** @private */
     this.hideHostTransformations = [];
-
-    hosts.forEach(function(host) {
-        self.addHost(host);
-    });
 }
 
 // HighlightMotifTransformation extends Transformation
 HighlightHostTransformation.prototype = Object.create(Transformation.prototype);
 HighlightHostTransformation.prototype.constructor = HighlightHostTransformation;
+
+HighlightHostTransformation.prototype.isHighlighted = function(host) {
+    return !!this.hosts[host];
+};
+
+HighlightHostTransformation.prototype.isHidden = function(host) {
+    return !!this.hiddenHosts[host];
+};
 
 /**
  * Gets the highlighted host(s)
@@ -47,7 +51,7 @@ HighlightHostTransformation.prototype.constructor = HighlightHostTransformation;
  */
 HighlightHostTransformation.prototype.getHosts = function() {
     return Object.keys(this.hosts);
-}
+};
 
 /**
  * Adds a host to the set of hosts to highlight.
@@ -110,15 +114,16 @@ HighlightHostTransformation.prototype.clearHosts = function() {
  * @returns {Array<String>} The array of hosts.
  */
 HighlightHostTransformation.prototype.getHiddenHosts = function() {
-    return this.hiddenHosts.slice();
+    return Object.keys(this.hiddenHosts);
 };
 
 /**
  * Overrides {@link Transformation#transform}
  */
 HighlightHostTransformation.prototype.transform = function(model) {
-    var self = this;
     var graph = model.getGraph();
+    this.hiddenHosts = {};
+    this.hideHostTransformations = [];
 
     var numHosts = 0;
     for (var key in this.hosts) {
@@ -131,11 +136,8 @@ HighlightHostTransformation.prototype.transform = function(model) {
     }
 
     if (numHosts == 0) {
-        this.hiddenHosts = [];
         return;
     }
-
-    var hideHostTransformation = new HideHostTransformation();
 
     var hosts = graph.getHosts();
     for (var i = 0; i < hosts.length; i++) {
@@ -171,17 +173,13 @@ HighlightHostTransformation.prototype.transform = function(model) {
         }
 
         if (numCommunicated != numHosts) {
-            if (this.hiddenHosts.indexOf(host) < 0) {
-                this.hideHostTransformations.push(new HideHostTransformation(host));
-                this.hiddenHosts.push(host);
-            }
+            var hideHostTransformation = new HideHostTransformation(host);
+            hideHostTransformation.transform(model);
+            this.hideHostTransformations.push(hideHostTransformation);
+            this.hiddenHosts[host] = true;
         }
 
     }
-
-    this.hideHostTransformations.forEach(function(t) {
-        t.transform(model);
-    });
 
     model.update();
 };

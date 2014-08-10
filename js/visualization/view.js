@@ -7,11 +7,10 @@
  * 
  * @constructor
  * @param {Graph} model
- * @param {Global} global
  * @param {HostPermutation} hostPermutation
  * @param {String} label
  */
-function View(model, global, hostPermutation, label) {
+function View(model, hostPermutation, label) {
 
     /** @private */
     this.hostPermutation = hostPermutation;
@@ -21,28 +20,20 @@ function View(model, global, hostPermutation, label) {
 
     /** @private */
     this.initialModel = model;
+    
+    /** @private */
+    this.layout = new SpaceTimeLayout(0, 56);
 
     /** @private */
-    this.model = model;
-
-    /** @private */
-    this.global = global;
-
-    /** @private */
-    this.visualGraph = new VisualGraph(this.model, new SpaceTimeLayout(0, 56), this.hostPermutation);
-
-    /** @private */
-    this.width = 500;
+    this.visualGraph = new VisualGraph(model, this.layout, hostPermutation);
+    
+    this.transformer = new Transformer();
 }
 
-/**
- * Gets the Global that this view belongs to
- * 
- * @returns {Global} The global that this view belongs to
- */
-View.prototype.getGlobal = function() {
-    return this.global;
+View.prototype.getTransformer = function() {
+    return this.transformer;
 };
+
 
 /**
  * Gets the hosts as an array
@@ -77,18 +68,7 @@ View.prototype.getVisualModel = function() {
  * @param {Number} newWidth The new width
  */
 View.prototype.setWidth = function(newWidth) {
-    this.width = newWidth;
-};
-
-/**
- * Reverts the View to initial graph & creates a new VisualGraph for the initial
- * model
- */
-View.prototype.revert = function() {
-    var layout = new SpaceTimeLayout(0, 56);
-    var hp = this.hostPermutation;
-    this.model = this.initialModel.clone();
-    this.visualGraph = new VisualGraph(this.model, layout, hp);
+    this.layout.setWidth(newWidth);
 };
 
 /**
@@ -100,9 +80,12 @@ View.prototype.draw = function() {
     if (this.id == null) {
         this.id = "view" + d3.selectAll("#vizContainer > svg").size();
     }
+    
+    this.model = this.initialModel.clone();
+    this.visualGraph = new VisualGraph(this.model, this.layout, this.hostPermutation);
+    this.transformer.transform(this.visualGraph);
 
     // Update the VisualGraph
-    this.visualGraph.setWidth(this.width);
     this.visualGraph.update();
 
     // Define locally so that we can use in lambdas below
@@ -238,7 +221,7 @@ View.prototype.draw = function() {
         });
 
         // Bind the nodes
-        view.global.controller.bindNodes(nodes);
+        Global.getInstance().controller.bindNodes(nodes); //TODO
     }
 
     function drawHosts() {
@@ -304,7 +287,7 @@ View.prototype.draw = function() {
         });
 
         // Bind the hosts
-        view.global.controller.bindHosts(hosts);
+        Global.getInstance().controller.bindHosts(hosts); //TODO
     }
 
     function drawLogLines() {
@@ -369,6 +352,6 @@ View.prototype.draw = function() {
         }
 
         // Bind the log lines
-        view.global.controller.bindLines($(".log .line:not(.more)"));
+        Global.getInstance().controller.bindLines($(".log .line:not(.more)")); //TODO
     }
 };
