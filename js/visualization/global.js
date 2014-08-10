@@ -13,7 +13,7 @@
 function Global() {
 
     if (!!Global.instance) {
-        throw new Exception("An instance of Global already exists - use getInstance() instead.");
+        throw new Exception("Global is a singleton - use getInstance() instead.");
     }
 
     /** @private */
@@ -46,6 +46,18 @@ function Global() {
     });
 }
 
+Global.prototype.getHiddenHosts = function() {
+    var hiddenHosts = {};
+    
+    this.views.forEach(function(view) {
+        view.getTransformer().getHiddenHosts().forEach(function(host) {
+            hiddenHosts[host] = true;
+        });
+    });
+    
+    return hiddenHosts;
+};
+
 /**
  * @private
  * @static
@@ -58,8 +70,11 @@ Global.instance = null;
  * @return {Global} The singleton instance
  */
 Global.getInstance = function() {
+    if(!Global.instance) {
+        Global.instance = new Global();
+    }
     return Global.instance;
-}
+};
 
 /**
  * Reverts Global to its original state
@@ -69,7 +84,6 @@ Global.prototype.revert = function() {
     this.hostPermutation = null;
     this.hiddenHosts = [];
 
-    this.controller.revert();
 };
 
 /**
@@ -124,7 +138,7 @@ Global.prototype.drawAll = function() {
  */
 Global.prototype.addView = function(view) {
     this.views.push(view);
-    this.controller.addView(view);
+//    this.controller.addView(view);
     this.resize();
 };
 
@@ -134,19 +148,9 @@ Global.prototype.addView = function(view) {
  * @returns {Array<View>} The list of views
  */
 Global.prototype.getViews = function() {
-    return this.views;
+    return this.views.slice();
 };
 
-/**
- * Gets the list of current {@link VisualGraph}s
- * 
- * @returns {Array<VisualGraph>} The current models from each View
- */
-Global.prototype.getVisualModels = function() {
-    return this.views.map(function(v) {
-        return v.getVisualModel();
-    });
-};
 
 /**
  * Sets the host permutation
@@ -161,7 +165,7 @@ Global.prototype.setHostPermutation = function(hostPermutation) {
  */
 Global.prototype.resize = function() {
     var global = this;
-    var hiddenHosts = this.controller.getHiddenHosts();
+    var hiddenHosts = this.getHiddenHosts();
     var numHidden = Object.keys(hiddenHosts).length;
     var allHosts = this.hostPermutation.getHosts().length;   
     var visibleHosts = allHosts - numHidden;
@@ -209,7 +213,7 @@ Global.prototype.drawSideBar = function() {
     var hidden = d3.select(".hidden");
 
     // Draw hidden hosts
-    var hh = Object.keys(this.controller.getHiddenHosts());
+    var hh = Object.keys(this.getHiddenHosts());
     if (hh.length <= 0) {
         $(".hidden").hide();
         return;

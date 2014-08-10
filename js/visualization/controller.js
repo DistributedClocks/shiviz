@@ -7,14 +7,8 @@
  * maintaining {@link Transformation}s.
  * 
  * @constructor
- * @param {Global} global Current Global object
  */
-function Controller(global) {
-    /** @private */
-    this.global = global;
-
-    /** @private */
-    this.transformers = [];
+function Controller() {
 
     var self = this;
 
@@ -24,68 +18,16 @@ function Controller(global) {
 
     $(window).unbind("resize");
     $(window).on("resize", function() {
-        self.global.drawAll();
+        try {
+            Global.getInstance().drawAll();
+        }
+        catch(exception) {
+            Shiviz.getInstance().handleException(exception);
+        }
     });
+   
 }
 
-/**
- * Reverts the Controller to its original state
- */
-Controller.prototype.revert = function() {
-    this.transformers = [];
-};
-
-/**
- * Creates a {@link Transformer} for the new {@link View}, and adds default
- * transformation. Should be called from Global every time a view is added.
- * 
- * @param {View} view The View that was added.
- */
-Controller.prototype.addView = function(view) {
-    var cstf = new CollapseSequentialNodesTransformation(2);
-    var tfr = new Transformer(view.getVisualModel());
-
-    tfr.addTransformation(cstf, true);
-    this.transformers.push(tfr);
-    this.transform();
-};
-
-/**
- * Gets a set of hidden hosts
- * @return {Object} The set of hidden hosts with host IDs as keys
- */
-Controller.prototype.getHiddenHosts = function() {
-    var hiddenHosts = {};
-    this.transformers.forEach(function(tfr) {
-        $.extend(hiddenHosts, tfr.getHiddenHosts());
-    });
-
-    return hiddenHosts;
-};
-
-/**
- * Transforms the model through the listed {@link Transformation}s, in the
- * order provided in the list
- */
-Controller.prototype.transform = function() {
-    var transformers = this.transformers;
-
-    // Revert each view to original (untransformed) state
-    this.global.getViews().forEach(function(view) {
-        var origVisGraph = view.getVisualModel();
-        view.revert();
-        var newVisGraph = view.getVisualModel();
-
-        transformers.forEach(function(tfr) {
-            if (tfr.getVisualModel() === origVisGraph)
-                tfr.setVisualModel(newVisGraph);
-        });
-    });
-
-    transformers.forEach(function(tfr) {
-        tfr.transform();
-    });
-};
 
 /**
  * Binds events to the nodes.
@@ -102,16 +44,12 @@ Controller.prototype.bindNodes = function(nodes) {
     nodes.on("click", function(e) {
         if (d3.event.shiftKey) {
             // Toggle node collapsing
-            controller.transformers.forEach(function(tfr) {
-                var ct = tfr.getTransformations(function(t) {
-                    return t instanceof CollapseSequentialNodesTransformation;
-                }, true).forEach(function(t) {
-                    t.toggleCollapse(e.getNode());
-                });
+            var views = Global.getInstance().getViews();
+            views.forEach(function(view) {
+                view.getTransformer().toggleCollapseNode(e.getNode());
             });
 
-            controller.transform();
-            controller.global.drawAll();
+            Global.getInstance().drawAll();
         }
     }).on("mouseover", function(e) {
         d3.selectAll("circle.focus").classed("focus", false).transition().duration(100).attr({
@@ -130,7 +68,6 @@ Controller.prototype.bindNodes = function(nodes) {
         $(".fields").children().remove();
         if (!e.isCollapsed()) {
             var fields = e.getNode().getLogEvents()[0].getFields();
-            var fieldText = "";
             for (var i in fields) {
                 var $f = $("<tr>", {
                     "class": "field"
@@ -201,44 +138,28 @@ Controller.prototype.bindHosts = function(hosts) {
         $(".event").text(e.getText());
         $(".fields").children().remove();
     }).on("dblclick", function(e) {
+        
+        var views = Global.getInstance().getViews();
+        
         if (d3.event.shiftKey) {
             // Filtering by host
-
+           
             // If more than one view / execution then return
-            if (controller.global.getViews().length != 1)
+            if (views.length != 1)
                 return;
-
-            var tfr = controller.transformers[0];
-
-            // Is this host already highlighted? If so,
-            // unhighlight. Otherwise, highlight.
-            var existingHighlights = tfr.getTransformations(function(t) {
-                if (t.type == "highlight")
-                    return t.host == e.getHost();
+            
+            views.forEach(function(view) {
+               view.getTransformer().toggleHighlightHost(e.getHost()); 
             });
 
-            if (existingHighlights.length)
-                existingHighlights.forEach(function(t) {
-                    tfr.removeTransformation(t);
-                });
-            else
-                tfr.addTransformation({
-                    type: "highlight",
-                    host: e.getHost()
-                });
-
-            controller.transform();
         } else {
             // Hide host
-            controller.transformers.forEach(function(tfr) {
-                var hhtf = new HideHostTransformation(e.getHost());
-                tfr.addTransformation(hhtf);
-            });
-
-            controller.transform();
+            views.forEach(function(view) {
+                view.getTransformer().hideHost(e.getHost());
+             });
         }
 
-        controller.global.drawAll();
+        Global.getInstance().drawAll();
     });
 };
 
@@ -262,24 +183,13 @@ Controller.prototype.bindLines = function(lines) {
 Controller.prototype.bindHiddenHosts = function(hh) {
     var controller = this;
     hh.on("dblclick", function(e) {
-        controller.transformers.forEach(function(tfr) {
-            if (tfr.getHiddenByHighlight()[e]) {
-                tfr.getTransformations(function(t) {
-                    if (t.type == "highlight")
-                        tfr.removeTransformation(t);
-
-                    return false;
-                });
-            }
-
-            tfr.removeTransformation(function(t) {
-                if (t instanceof HideHostTransformation)
-                    return t.getHost() == e;
-            });
+        
+        var views = Global.getInstance().getViews();
+        views.forEach(function(view) {
+          view.getTransformer().unhideHost(e);  
         });
-
-        controller.transform();
-        controller.global.drawAll();
+        Global.getInstance().drawAll();
+        
     }).on("mouseover", function(e) {
         $(".event").text(e);
         $(".fields").children().remove();

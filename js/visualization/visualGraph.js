@@ -266,15 +266,6 @@ VisualGraph.prototype.getWidth = function() {
 };
 
 /**
- * Sets the width of the VisualGraph
- * 
- * @params {Number} width The width
- */
-VisualGraph.prototype.setWidth = function(width) {
-    this.layout.setWidth(width);
-};
-
-/**
  * Gets the height of the VisualGraph
  * 
  * @returns {Number} The height

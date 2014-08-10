@@ -18,9 +18,6 @@ function Shiviz() {
         throw new Exception("Cannot instantiate Shiviz. Shiviz is a singleton; use Shiviz.getInstance()");
     }
 
-    /** @private */
-    this.global = new Global();
-
     var context = this;
 
     $(".input input, .input textarea").on('input propertychange', function(e) {
@@ -122,7 +119,6 @@ Shiviz.prototype.resetView = function() {
  */
 Shiviz.prototype.visualize = function() {
     try {
-        var self = this;
 
         d3.selectAll("#graph svg").remove();
 
@@ -164,18 +160,18 @@ Shiviz.prototype.visualize = function() {
             }
         });
 
-        this.global.revert();
+        Global.getInstance().revert();
 
         hostPermutation.update();
-        this.global.setHostPermutation(hostPermutation);
+        Global.getInstance().setHostPermutation(hostPermutation);
 
         labels.forEach(function(label) {
             var graph = labelGraph[label];
-            var view = new View(graph, self.global, hostPermutation, label);
-            self.global.addView(view);
+            var view = new View(graph, hostPermutation, label);
+            Global.getInstance().addView(view);
         });
 
-        this.global.drawAll();
+        Global.getInstance().drawAll();
     }
     catch (err) {
         this.handleException(err);

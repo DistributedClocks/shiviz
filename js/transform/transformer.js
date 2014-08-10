@@ -7,110 +7,69 @@
  * VisualGraph and takes care of transforming the model.
  * 
  * @constructor
- * @param {VisualGraph} visualModel The VisualGraph this transformer is
- *            responsible for.
  */
-function Transformer(visualModel) {
-
-    /** @private */
-    this.visualModel = visualModel;
+function Transformer() {
 
     /** @private */
     this.transformations = [];
-
-    /** @private */
-    this.defaultTransformations = [];
-
-    /** @private */
-    this.hiddenByHighlight = {};
+    
+    this.hostToHidingTransform = {};
+    
+    this.collapseSequentialNodesTransformation = new CollapseSequentialNodesTransformation(2);
+    
+    this.highlightHostTransformation = new HighlightHostTransformation();
+    
 }
 
-/**
- * Gets transformations
- * 
- * @param {Function} filter A function returning a boolean by which to filter
- *            the transformations
- * @param {Boolean} isDefault Whether to look in default transformations or
- *            regular transformations
- * @return {Array<Transformation>} The list of transformations
- */
-Transformer.prototype.getTransformations = function(filter, isDefault) {
-    var tfs = isDefault ? this.defaultTransformations : this.transformations;
-    if (filter instanceof Function)
-        return tfs.filter(filter);
-    else
-        return tfs;
+Transformer.prototype.hideHost = function(host) {
+    if(this.hostToHidingTransform[host]) {
+        return;
+    }
+    var trans = new HideHostTransformation(host);
+    this.hostToHidingTransform[host] = trans;
+    this.transformations.push(trans);
 };
 
-/**
- * Adds a transformation
- * 
- * @param {Transformation} tf The transformation to add
- * @param {Boolean} isDefault Whether the transformation is a default
- *            transformation
- */
-Transformer.prototype.addTransformation = function(tf, isDefault) {
-    if (isDefault)
-        this.defaultTransformations.push(tf);
-    else
-        this.transformations.push(tf);
+Transformer.prototype.unhideHost = function(host) {
+    var trans = this.hostToHidingTransform[host];
+    if(trans) {
+        var index = this.transformations.indexOf(trans);
+        this.transformations.splice(index, 1);
+        delete this.hostToHidingTransform[host];
+    }
+    else if(this.highlightHostTransformation.isHidden(host)) {
+        this.highlightHostTransformation.clearHosts();
+    }
 };
 
-/**
- * Removes a transformation
- * 
- * @param {Function|Transformation} tf A predicate function that returns true if
- *            given transformation is to be removed, OR the transformation that
- *            is to be removed
- */
-Transformer.prototype.removeTransformation = function(tf) {
-    this.transformations = this.transformations.filter(function(t) {
-        if (tf instanceof Function)
-            return !tf(t);
-        else
-            return !(tf == t);
-    });
+Transformer.prototype.highlightHost = function(host) {
+    this.highlightHostTransformation.addHost(host);
 };
 
-/**
- * Gets the model of the transformer
- * 
- * @returns {VisualGraph} The model the transformer acts on
- */
-Transformer.prototype.getVisualModel = function() {
-    return this.visualModel;
+Transformer.prototype.unhighlighHost = function(host) {
+    this.highlightHostTransformation.removeHost(host);
 };
 
-/**
- * Sets the model of the transformer
- * 
- * @param {VisualGraph} visualModel The model the transformer should act on
- */
-Transformer.prototype.setVisualModel = function(visualModel) {
-    this.visualModel = visualModel;
+Transformer.prototype.toggleHighlightHost = function(host) {
+    this.highlightHostTransformation.toggleHost(host);
 };
 
-/**
- * Gets the hosts hidden by transformations in the transformer
- * @return {Object} Hidden hosts, with host IDs as keys
- */
+Transformer.prototype.collapseNode = function(node) {
+    this.collapseSequentialNodesTransformation.removeExemption(node);
+};
+
+Transformer.prototype.uncollapseNode = function(node) {
+    this.collapseSequentialNodesTransformation.addExemption(node);
+};
+
+Transformer.prototype.toggleCollapseNode = function(node) {
+    this.collapseSequentialNodesTransformation.toggleExemption(node);
+};
+
 Transformer.prototype.getHiddenHosts = function() {
-    var hiddenHosts = {};
-    this.transformations.forEach(function(tf) {
-        if (tf instanceof HideHostTransformation)
-            hiddenHosts[tf.getHost()] = true;
-    });
-
-    return $.extend(hiddenHosts, this.hiddenByHighlight);
-}
-
-/**
- * Gets the set of hosts hidden by highlight transformations
- * @return {Object} Hosts hidden by highlight transformation
- */
-Transformer.prototype.getHiddenByHighlight = function() {
-    return this.hiddenByHighlight;
+    return Object.keys(this.hostToHidingTransform).concat(this.highlightHostTransformation.getHiddenHosts());
 };
+
 
 /**
  * <p>
@@ -129,45 +88,13 @@ Transformer.prototype.getHiddenByHighlight = function() {
  * which they are then applied all at once.</li>
  * </ul>
  */
-Transformer.prototype.transform = function() {
-    var self = this;
-
-    var hh = this.transformations.filter(function(t) {
-        return t instanceof HighlightHostTransformation;
-    });
-    if (hh.length) {
-        var lhh = hh[hh.length - 1];
-        var oh = lhh.getHosts()[0];
-
-        hh.slice(0, hh.length - 1).forEach(function(t) {
-            t.ignore = true;
-            lhh.addHost(t.getHosts()[0]);
-        });
+Transformer.prototype.transform = function(visualModel) {
+    this.collapseSequentialNodesTransformation.transform(visualModel);
+    
+    for (var i = 0; i < this.transformations.length; i++) {
+        var trans = this.transformations[i];
+      trans.transform(visualModel);
     }
-
-    this.hiddenByHighlight = {};
-
-    var tfs = this.transformations.concat(this.defaultTransformations);
-    var highHosts = [];
-    tfs.forEach(function(t) {
-        if (t instanceof Transformation) {
-            if (highHosts.length) {
-                var highlight = new HighlightHostTransformation(highHosts);
-                highlight.transform(self.visualModel);
-                highlight.getHiddenHosts().forEach(function(host) {
-                    self.hiddenByHighlight[host] = true;
-                });
-                highHosts = [];
-            }
-
-            t.transform(self.visualModel);
-        } else if (t.type == "highlight") {
-            highHosts.push(t.host);
-        }
-    });
-
-    if (hh.length) {
-        lhh.clearHosts();
-        lhh.addHost(oh);
-    }
+    
+    this.highlightHostTransformation.transform(visualModel);
 };
