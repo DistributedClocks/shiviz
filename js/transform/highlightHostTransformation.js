@@ -20,7 +20,6 @@
  * @param {String} host The host to highlight
  */
 function HighlightHostTransformation() {
-    var self = this;
 
     /** @private */
     this.hosts = {};
