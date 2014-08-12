@@ -169,31 +169,42 @@ Global.prototype.setHostPermutation = function(hostPermutation) {
 };
 
 /**
+ * Gets the {@link Controller}
+ * @returns {Controller} The controller
+ */
+Global.prototype.getController = function() {
+    return this.controller;
+};
+
+/**
  * Resizes the graph
  */
 Global.prototype.resize = function() {
-    var global = this;
     var hiddenHosts = this.getHiddenHosts();
     var numHidden = Object.keys(hiddenHosts).length;
     var allHosts = this.hostPermutation.getHosts().length;   
     var visibleHosts = allHosts - numHidden;
 
-    var sidebarLeft = $(".visualization header").outerWidth();
-    var sidebarRight = $("#sidebar").outerWidth();
-    var middleWidth = $(window).width() - sidebarLeft - sidebarRight;
-    var totalMargin = middleWidth - visibleHosts * Global.HOST_SQUARE_SIZE;
+    // TODO: rename to sidebarLeft sidebarRight middleWidth
+    var headerWidth = $(".visualization header").outerWidth();
+    var sidebarWidth = $("#sidebar").outerWidth();
+    var globalWidth = $(window).width() - headerWidth - sidebarWidth;
+    
+    $("#searchbar").width(globalWidth);
+    
+    var totalMargin = globalWidth - visibleHosts * Global.HOST_SQUARE_SIZE;
     var hostMargin = totalMargin / (visibleHosts + this.views.length - 2);
 
     if (hostMargin < Global.HOST_SQUARE_SIZE) {
         hostMargin = Global.HOST_SQUARE_SIZE;
         totalMargin = hostMargin * (visibleHosts + this.views.length - 2);
-        middleWidth = totalMargin + visibleHosts * Global.HOST_SQUARE_SIZE;
+        globalWidth = totalMargin + visibleHosts * Global.HOST_SQUARE_SIZE;
     }
 
     var widthPerHost = Global.HOST_SQUARE_SIZE + hostMargin;
 
     if (visibleHosts == 1) {
-        widthPerHost = middleWidth;
+        widthPerHost = globalWidth;
         hostMargin = 0;
     }
 
@@ -204,7 +215,7 @@ Global.prototype.resize = function() {
         view.setWidth(hosts.length * widthPerHost - hostMargin);
     });
 
-    $("#graph").width(middleWidth);
+    $("#graph").width(globalWidth);
 
     return hostMargin;
 };

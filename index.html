@@ -218,12 +218,26 @@
                     <li><a title="Source" href="//bitbucket.org/bestchai/shiviz/src">s</a></li>
                 </ul>
             </header>
+            <div id="tabs"></div>
             <table class="log">
                 <tr></tr>
             </table>
             <div class="highlight"></div>
         </div>
         <div id="graph">
+            <div id="searchbar">
+                <div id="bar">
+                    <input type="text" class="mono">
+                    <button disabled>Go</button>
+                </div>
+                <div id="panel">
+                  <svg>
+                     <circle r="5" class="hover"></circle>
+                 </svg>
+                 <button class="add">+</button>
+                 <pre class="out"></pre>
+             </div>
+            </div>
             <div id="hostBar"></div>
             <div id="vizContainer"></div>
         </div>
@@ -251,6 +265,9 @@
     <script type="text/javascript" src="js/dev.js"></script>
     <!-- -->
     
+    <script type="text/javascript" src="js/searchBar.js"></script>
+    <script type="text/javascript" src="js/graphBuilder.js"></script>
+    
     <script type="text/javascript" src="js/graph/graphEvent.js"></script>
     <script type="text/javascript" src="js/graph/abstractGraph.js"></script>
     <script type="text/javascript" src="js/graph/abstractNode.js"></script>
@@ -276,6 +293,7 @@
     <script type="text/javascript" src="js/motifFinder/customMotifFinder.js"></script>
     <script type="text/javascript" src="js/motifFinder/motif.js"></script>
     <script type="text/javascript" src="js/motifFinder/requestResponseFinder.js"></script>
+    <script type="text/javascript" src="js/motifFinder/textQueryMotifFinder.js"></script>
     <script type="text/javascript" src="js/shiviz.js"></script>
     <script type="text/javascript" src="js/transform/collapseSequentialNodesTransformation.js"></script>
     <script type="text/javascript" src="js/transform/hideHostTransformation.js"></script>
@@ -292,6 +310,8 @@
     <script type="text/javascript" src="js/visualization/visualEdge.js"></script>
     <script type="text/javascript" src="js/visualization/visualGraph.js"></script>
     <script type="text/javascript" src="js/visualization/visualNode.js"></script>
+    
+    
 
 
 </body>

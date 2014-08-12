@@ -104,7 +104,7 @@ Shiviz.prototype.resetView = function() {
     $(".event").text("(click to view)");
     $(".fields").html("");
 
-    d3.selectAll("#graph svg").remove();
+    d3.selectAll("#vizContainer svg").remove();
 
     // Reset the color of all of the log-links.
     $(".log-link").css({
@@ -119,8 +119,7 @@ Shiviz.prototype.resetView = function() {
  */
 Shiviz.prototype.visualize = function() {
     try {
-
-        d3.selectAll("#graph svg").remove();
+        d3.selectAll("#vizContainer svg").remove();
 
         var log = $("#input").val();
         var delimiterString = $("#delimiter").val().trim();
@@ -148,8 +147,8 @@ Shiviz.prototype.visualize = function() {
         }
 
         var labelGraph = {};
-        var labels = parser.getLabels();
 
+        var labels = parser.getLabels();
         labels.forEach(function(label) {
             var graph = new ModelGraph(parser.getLogEvents(label));
             labelGraph[label] = graph;
@@ -201,7 +200,7 @@ Shiviz.prototype.go = function(index, store, force) {
             break;
         case 2:
             $(".visualization").show();
-            if (!$("#graph svg").length || force)
+            if (!$("#vizContainer svg").length || force)
                 this.visualize();
             break;
     }
