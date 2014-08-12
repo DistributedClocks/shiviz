@@ -1,4 +1,7 @@
-function SearchBar() {
+function SearchBar(global) {
+    
+    this.global = global;
+    
     var context = this;
 
     $("#searchbar #bar input").on("keydown", function(e) {
@@ -45,12 +48,6 @@ function SearchBar() {
 
 }
 
-SearchBar.instance = new SearchBar();
-
-SearchBar.getInstance = function() {
-    return this.instance;
-};
-
 SearchBar.prototype.hide = function() {
     $("#bar input").blur().removeClass("focus");
     $("#searchbar #panel").hide();
@@ -66,7 +63,7 @@ SearchBar.prototype.clearMotif = function() {
 };
 
 SearchBar.prototype.query = function(query) {
-    var controller = Global.getInstance().getController();
+    var controller = this.global.getController();
 
     if (typeof query == "string") {
         var finder = new TextQueryMotifFinder(query);
@@ -74,10 +71,10 @@ SearchBar.prototype.query = function(query) {
         var finder = new CustomMotifFinder(query);
     }
 
-    var views = Global.getInstance().getViews();
+    var views = this.global.getViews();
     views.forEach(function(view) {
         view.getTransformer().highlightMotif(finder, false);
     });
     
-    Global.getInstance().drawAll();
+    this.global.drawAll();
 };

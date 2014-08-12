@@ -8,10 +8,11 @@
  * 
  * @constructor
  */
-function Controller() {
+function Controller(global) {
 
+    this.global = global;
+    
     var self = this;
-
 
     $(window).unbind("scroll");
     $(window).bind("scroll", self.onScroll);
@@ -20,7 +21,7 @@ function Controller() {
     $(window).unbind("resize");
     $(window).on("resize", function() {
         try {
-            Global.getInstance().drawAll();
+            self.global.drawAll();
         }
         catch(exception) {
             Shiviz.getInstance().handleException(exception);
@@ -45,12 +46,12 @@ Controller.prototype.bindNodes = function(nodes) {
     nodes.on("click", function(e) {
         if (d3.event.shiftKey) {
             // Toggle node collapsing
-            var views = Global.getInstance().getViews();
+            var views = controller.global.getViews();
             views.forEach(function(view) {
                 view.getTransformer().toggleCollapseNode(e.getNode());
             });
 
-            Global.getInstance().drawAll();
+            controller.global.drawAll();
         }
     }).on("mouseover", function(e) {
         d3.selectAll("circle.focus").classed("focus", false).transition().duration(100).attr({
@@ -141,7 +142,7 @@ Controller.prototype.bindHosts = function(hosts) {
         $(".fields").children().remove();
     }).on("dblclick", function(e) {
         
-        var views = Global.getInstance().getViews();
+        var views = controller.global.getViews();
         
         if (d3.event.shiftKey) {
             // Filtering by host
@@ -161,7 +162,7 @@ Controller.prototype.bindHosts = function(hosts) {
              });
         }
 
-        Global.getInstance().drawAll();
+        controller.global.drawAll();
     });
 };
 
@@ -186,11 +187,11 @@ Controller.prototype.bindHiddenHosts = function(hh) {
     var controller = this;
     hh.on("dblclick", function(e) {
         
-        var views = Global.getInstance().getViews();
+        var views = controller.global.getViews();
         views.forEach(function(view) {
           view.getTransformer().unhideHost(e);  
         });
-        Global.getInstance().drawAll();
+        controller.global.drawAll();
         
     }).on("mouseover", function(e) {
         $(".event").text(e);
