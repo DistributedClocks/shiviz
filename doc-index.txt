@@ -6,3 +6,7 @@
 
 * Check out [ShiVector](https://bitbucket.org/bestchai/shivector/wiki/), a tool
   to convert existing logs into a ShiViz-supported format.
+
+---
+
+abstractGraph.js and abstractNode.js contain the key model for Shiviz.
