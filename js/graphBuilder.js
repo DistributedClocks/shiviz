@@ -146,7 +146,7 @@ function Host() {
     }).on("dblclick", function () {
         host.remove();
     }).prependTo($svg);
-
+    
     this.line = SVGElement("line").attr({
         "x1": this.x,
         "y1": 30,
@@ -282,14 +282,14 @@ Line.prototype.remove = function () {
     Array.remove(this.parent.lines, this);
     Array.remove(this.child.lines, this);
     this.line.remove();
-}
+};
 
 Array.find = function (arr, arg) {
     if (arg.constructor == Function)
         return arr.filter(arg)[0];
     else
         return arr[arr.indexOf(arg)];
-}
+};
 
 Array.remove = function (arr, arg) {
     if (arg.constructor == Function) {

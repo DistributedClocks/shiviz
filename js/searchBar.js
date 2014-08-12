@@ -43,7 +43,6 @@ function SearchBar() {
         }
     });
 
-    this.highlightTransformation = null;
 }
 
 SearchBar.instance = new SearchBar();
@@ -67,14 +66,7 @@ SearchBar.prototype.clearMotif = function() {
 };
 
 SearchBar.prototype.query = function(query) {
-    var context = this;
     var controller = Global.getInstance().getController();
-
-    if (this.highlightTransformation != null) {
-        controller.transformers.forEach(function(transformer) {
-            transformer.removeTransformation(context.highlightTransformation, true);
-        });
-    }
 
     if (typeof query == "string") {
         var finder = new TextQueryMotifFinder(query);
@@ -82,12 +74,10 @@ SearchBar.prototype.query = function(query) {
         var finder = new CustomMotifFinder(query);
     }
 
-    this.highlightTransformation = new HighlightMotifTransformation(finder);
-
-    controller.transformers.forEach(function(transformer) {
-        transformer.addTransformation(context.highlightTransformation, true);
+    var views = Global.getInstance().getViews();
+    views.forEach(function(view) {
+        view.getTransformer().highlightMotif(finder, false);
     });
-
-    controller.transform();
+    
     Global.getInstance().drawAll();
 };
