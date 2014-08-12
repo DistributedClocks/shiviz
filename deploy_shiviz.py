@@ -96,7 +96,6 @@ def main():
     
     src_dir = "./"
     dist_dir = "../bestchai.bitbucket.org/shiviz/"
-    doc_dir = "../bestchai.bitbucket.org/shiviz/docs/"
 
     print "Deploying to: " + dist_dir
     print "from: " + src_dir
@@ -120,7 +119,7 @@ def main():
         sys.exit(-1)
 
     # Compile docs
-    if (runcmd("perl docgen.pl " + doc_dir) != 0):
+    if (runcmd("perl docgen.pl " + dist_dir) != 0):
         sys.exit(-1)
 
     # Find out the current revision id:

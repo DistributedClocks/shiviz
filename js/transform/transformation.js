@@ -16,9 +16,9 @@
  * @abstract
  */
 function Transformation() {
-    if (this.constructor == Transformation) {
-        throw new Exception("Cannot instantiate Transformation; Transformation is an abstract class");
-    }
+     if (this.constructor == Transformation) {
+         throw new Exception("Cannot instantiate Transformation; Transformation is an abstract class");
+     }
 };
 
 /**

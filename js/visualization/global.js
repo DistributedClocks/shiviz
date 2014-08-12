@@ -1,5 +1,6 @@
 /**
- * Constructs a Global
+ * Constructs a Global. The constructor for this singleton should never be 
+ * invoked directly.
  * 
  * @classdesc
  * 
@@ -9,96 +10,130 @@
  * Views such as the list of hidden hosts
  * 
  * @constructor
- * @param {HostPermutation} hostPermuation describes how the hosts should be
- *            ordered
+ * @private
  */
-function Global(hostPermutation) {
+function Global() {
+
+    if (!!Global.instance) {
+        throw new Exception("Global is a singleton - use getInstance() instead.");
+    }
 
     /** @private */
     this.views = [];
 
     /** @private */
-    this.hostPermutation = hostPermutation;
-
-    /** @private */
-    this.hiddenHosts = [];
+    this.hostPermutation = null;
 
     /** @private */
     this.controller = new Controller(this);
 
+    /**
+     * @static
+     * @const
+     */
     Global.SIDE_BAR_WIDTH = 240;
+    /**
+     * @static
+     * @const
+     */
     Global.HOST_SQUARE_SIZE = 25;
+    /**
+     * @static
+     * @const
+     */
     Global.HIDDEN_EDGE_LENGTH = 40;
 
     $("#sidebar").css({
-        width: Global.SIDE_BAR_WIDTH + "px",
-        float: "left"
+        width: Global.SIDE_BAR_WIDTH + "px"
     });
-
-    $(window).unbind("scroll");
-    $(window).on("scroll", null, this, this.scrollHandler);
-
-    this.scrollHandler({
-        data: this
-    });
-
-    var g = this;
-
-    $(window).unbind("resize");
-    $(window).on("resize", function() {
-        g.drawAll.call(g);
-    });
-
 }
 
 /**
- * Adds a hidden host to the list
- * 
- * @param {String} host The host to add
+ * @private
+ * @static
  */
-Global.prototype.addHiddenHost = function(host) {
-    if (this.hiddenHosts.indexOf(host) < 0)
-        this.hiddenHosts.push(host);
-}
+Global.instance = null;
 
 /**
- * Removes a hidden host to the list
+ * Gets the current instance of Global
  * 
- * @param {String} host The host to remove
+ * @return {Global} The singleton instance
  */
-Global.prototype.removeHiddenHost = function(host) {
-    var i = this.hiddenHosts.indexOf(host);
-    this.hiddenHosts.splice(i, 1);
-}
+Global.getInstance = function() {
+    if(!Global.instance) {
+        Global.instance = new Global();
+    }
+    return Global.instance;
+};
+
+/**
+ * Reverts Global to its original state
+ */
+Global.prototype.revert = function() {
+    this.views = [];
+    this.hostPermutation = null;
+    this.hiddenHosts = [];
+
+};
+
+/**
+ * Returns all hidden hosts over all views
+ * 
+ * @private
+ * @returns {Set<Hosts>}
+ */
+Global.prototype.getHiddenHosts = function() {
+    var hiddenHosts = {};
+    
+    this.views.forEach(function(view) {
+        view.getTransformer().getHiddenHosts().forEach(function(host) {
+            hiddenHosts[host] = true;
+        });
+    });
+    
+    return hiddenHosts;
+};
 
 /**
  * Redraws the global.
  */
 Global.prototype.drawAll = function() {
-    // TODO: don't draw twice (workaround)
-    // TODO: Cleanup & comment
-    var width = (240 - 12 * (this.views.length - 1)) / this.views.length;
+    // Clear the log lines
+    $("table.log").children().remove();
+
+    // Remove old visualizations
+    $("#graph svg").remove();
+
+    // Determine the max height of any view
+    // And if larger than window height (scrollbar will appear)
+    // then make scrollbar appear BEFORE calling resize
+    var maxHeight = Math.max.apply(null, this.views.map(function(v) {
+        v.getVisualModel().update();
+        return v.getVisualModel().getHeight();
+    }));
+
+    $("#vizContainer").height(maxHeight);
+
+    // Find the width per log line column
+    var logColWidth = (240 - 12 * (this.views.length - 1)) / this.views.length;
     var hostMargin = this.resize();
-    $("table.log").children().remove();
 
     for (var i = 0; i < this.views.length; i++) {
-        $("table.log").append($("<td></td>").width(width + "pt"));
+        $("table.log").append($("<td></td>").width(logColWidth + "pt"));
+
+        // Draw the view
         this.views[i].draw();
+
+        // Add the spacer after log column
         $("table.log").append($("<td></td>").addClass("spacer"));
     }
 
-    hostMargin = this.resize();
-    $("table.log").children().remove();
-
-    for (var i = 0; i < this.views.length; i++) {
-        $("table.log").append($("<td></td>").width(width + "pt"));
-        this.views[i].draw();
-        $("table.log").append($("<td></td>").addClass("spacer"));
-    }
-
+    // Add spacing between views
     $("#vizContainer > svg:not(:last-child), #hostBar > svg:not(:last-child)").css({
         "margin-right": hostMargin * 2 + "px"
     });
+
+    // Remove last log line spacer
     $("table.log .spacer:last-child").remove();
 
     this.drawSideBar();
@@ -111,7 +146,7 @@ Global.prototype.drawAll = function() {
  */
 Global.prototype.addView = function(view) {
     this.views.push(view);
-    this.controller.addView(view);
+//    this.controller.addView(view);
     this.resize();
 };
 
@@ -121,70 +156,55 @@ Global.prototype.addView = function(view) {
  * @returns {Array<View>} The list of views
  */
 Global.prototype.getViews = function() {
-    return this.views;
-}
+    return this.views.slice();
+};
+
 
 /**
- * Gets the list of current VisualGraphs
- * 
- * @returns {Array<VisualGraph>} The current models from each View
+ * Sets the host permutation
+ * @param {HostPermutation} hostPermutation
  */
-Global.prototype.getVisualModels = function() {
-    return this.views.map(function(v) {
-        return v.getVisualModel();
-    });
-}
+Global.prototype.setHostPermutation = function(hostPermutation) {
+    this.hostPermutation = hostPermutation;
+};
 
 /**
  * Resizes the graph
  */
 Global.prototype.resize = function() {
     var global = this;
-    var visibleHosts = 0;
+    var hiddenHosts = this.getHiddenHosts();
+    var numHidden = Object.keys(hiddenHosts).length;
+    var allHosts = this.hostPermutation.getHosts().length;   
+    var visibleHosts = allHosts - numHidden;
 
-    // TODO: Refactor into Controller and update to use hostPermutation
-    // Plus length of hiddenHosts instead of indexOf.
-    for (var i = 0; i < this.views.length; i++) {
-        var vh = this.views[i].getHosts();
-        var hn = 0;
-        vh.forEach(function(h) {
-            if (global.hiddenHosts.indexOf(h) > -1)
-                hn++;
-        });
-
-        visibleHosts = visibleHosts + vh.length - hn;
-    }
-
-    // TODO: rename to sidebarLeft sidebarRight middleWidth
-    var headerWidth = $(".visualization header").outerWidth();
-    var sidebarWidth = $("#sidebar").outerWidth();
-    var globalWidth = $(window).width() - headerWidth - sidebarWidth;
-    var totalMargin = globalWidth - visibleHosts * Global.HOST_SQUARE_SIZE;
+    var sidebarLeft = $(".visualization header").outerWidth();
+    var sidebarRight = $("#sidebar").outerWidth();
+    var middleWidth = $(window).width() - sidebarLeft - sidebarRight;
+    var totalMargin = middleWidth - visibleHosts * Global.HOST_SQUARE_SIZE;
     var hostMargin = totalMargin / (visibleHosts + this.views.length - 2);
 
     if (hostMargin < Global.HOST_SQUARE_SIZE) {
         hostMargin = Global.HOST_SQUARE_SIZE;
         totalMargin = hostMargin * (visibleHosts + this.views.length - 2);
-        globalWidth = totalMargin + visibleHosts * Global.HOST_SQUARE_SIZE;
+        middleWidth = totalMargin + visibleHosts * Global.HOST_SQUARE_SIZE;
     }
 
     var widthPerHost = Global.HOST_SQUARE_SIZE + hostMargin;
 
     if (visibleHosts == 1) {
-        widthPerHost = globalWidth;
+        widthPerHost = middleWidth;
         hostMargin = 0;
     }
 
-    // TODO: More refactoring
-    for (var i = 0; i < this.views.length; i++) {
-        var view = this.views[i];
+    this.views.forEach(function(view) {
         var hosts = view.getHosts().filter(function(h) {
-            return global.hiddenHosts.indexOf(h) < 0;
+            return !hiddenHosts[h];
         });
         view.setWidth(hosts.length * widthPerHost - hostMargin);
-    }
+    });
 
-    $("#graph").width(globalWidth);
+    $("#graph").width(middleWidth);
 
     return hostMargin;
 };
@@ -201,7 +221,7 @@ Global.prototype.drawSideBar = function() {
     var hidden = d3.select(".hidden");
 
     // Draw hidden hosts
-    var hh = this.hiddenHosts;
+    var hh = Object.keys(this.getHiddenHosts());
     if (hh.length <= 0) {
         $(".hidden").hide();
         return;
@@ -251,21 +271,4 @@ Global.prototype.drawSideBar = function() {
     });
 
     this.controller.bindHiddenHosts(rect);
-};
-
-/**
- * Ensures things are positioned correctly on scroll
- * 
- * @private
- * @param {Event} The event object JQuery passes to the handler
- */
-Global.prototype.scrollHandler = function(event) {
-    var x = window.pageXOffset;
-    $("#hostBar").css("margin-left", -x);
-    $(".log").css("margin-left", x);
-
-    if ($(".line.focus").length)
-        $(".highlight").css({
-            "left": $(".line.focus").offset().left - parseFloat($(".line.focus").css("margin-left"))
-        });
 };
