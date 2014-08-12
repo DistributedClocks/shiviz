@@ -60,15 +60,13 @@ RequestResponseFinder.prototype.find = function(graph) {
     var seen = {}; // Nodes already part of a motif
     var context = this;
 
-    var traversal = new DFSGraphTraversal(); // define a strategy for
-                                                // traversing the graph
+    var traversal = new DFSGraphTraversal(); // define a strategy for traversing the graph
 
     traversal.setVisitFunction("startNode", function(gt, startNode, state, data) {
 
-        var fail = seen[startNode.getId()]; // fail if node is already part of
-                                            // another motif
-        fail |= startNode.getChildren().length > 1;
-        fail |= startNode.hasParents();
+        var fail = seen[startNode.getId()] // node is already part of another motif
+                || startNode.getChildren().length > 1 //
+                || startNode.hasParents();
 
         if (fail) {
             return;
@@ -80,17 +78,12 @@ RequestResponseFinder.prototype.find = function(graph) {
 
     traversal.setVisitFunction("responderChain", function(gt, node, state, chainLength) {
 
-        var fail = seen[node.getId()]; // fail if node is already part of
-                                        // another motif
-        fail |= node.getParents().length > 1;
-        fail |= (node.hasParents() && chainLength != 0); // or if node isn't
-                                                            // the first node in
-                                                            // the responder
-                                                            // chain and has
-                                                            // parents
-        fail |= node.isTail();
-        fail |= node.getChildren().length > 1;
-        fail |= chainLength > context.maxLEResponder;
+        var fail = seen[node.getId()] // fail if node is already part of another motif
+                || node.getParents().length > 1 //
+                || (node.hasParents() && chainLength != 0) // or if node isn't the first node in the responder chain and has parents
+                || node.isTail() //
+                || node.getChildren().length > 1 //
+                || chainLength > context.maxLEResponder; //
 
         if (fail) {
             return;
@@ -106,12 +99,10 @@ RequestResponseFinder.prototype.find = function(graph) {
         var trail = gt.getTrail();
         var startNode = trail[trail.length - 1];
 
-        var fail = seen[node.getId()]; // fail if node is already part of
-                                        // another motif
-        fail |= node.hasChildren();
-        fail |= node.getParents().length > 1;
-        fail |= node.getHost() != startNode.getHost(); // start and end nodes
-                                                        // must have same host
+        var fail = seen[node.getId()] // fail if node is already part of another motif
+                || node.hasChildren() //
+                || node.getParents().length > 1 //
+                || node.getHost() != startNode.getHost(); // start and end nodes must have same host
 
         if (fail) {
             return;
@@ -129,7 +120,7 @@ RequestResponseFinder.prototype.find = function(graph) {
 
         motif.addTrail(trail);
 
-        for (var i = 0; i < trail.length; i++) {
+        for ( var i = 0; i < trail.length; i++) {
             seen[trail[i].getId()] = true;
         }
 
@@ -137,7 +128,7 @@ RequestResponseFinder.prototype.find = function(graph) {
 
     });
 
-    for (var i = 0; i < nodes.length; i++) {
+    for ( var i = 0; i < nodes.length; i++) {
         traversal.reset();
         traversal.addNode(nodes[i], "startNode", null);
         traversal.run();
