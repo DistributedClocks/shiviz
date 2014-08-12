@@ -12,7 +12,7 @@
  * @extends AbstractNode
  */
 function BuilderNode() {
-    AbstractNode.apply(this);
+    AbstractNode.call(this);
 
 }
 
