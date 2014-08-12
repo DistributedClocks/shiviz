@@ -102,7 +102,8 @@ Global.prototype.drawAll = function() {
     $("table.log").children().remove();
 
     // Remove old visualizations
-    $("#graph svg").remove();
+    $("#vizContainer svg").remove();
+    $("#hostBar svg").remove();
 
     // Determine the max height of any view
     // And if larger than window height (scrollbar will appear)
