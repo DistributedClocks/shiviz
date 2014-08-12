@@ -1,5 +1,6 @@
 /**
- * Constructs a Global
+ * Constructs a Global. The constructor for this singleton should never be 
+ * invoked directly.
  * 
  * @classdesc
  * 
@@ -9,6 +10,7 @@
  * Views such as the list of hidden hosts
  * 
  * @constructor
+ * @private
  */
 function Global() {
 
@@ -46,18 +48,6 @@ function Global() {
     });
 }
 
-Global.prototype.getHiddenHosts = function() {
-    var hiddenHosts = {};
-    
-    this.views.forEach(function(view) {
-        view.getTransformer().getHiddenHosts().forEach(function(host) {
-            hiddenHosts[host] = true;
-        });
-    });
-    
-    return hiddenHosts;
-};
-
 /**
  * @private
  * @static
@@ -84,6 +74,24 @@ Global.prototype.revert = function() {
     this.hostPermutation = null;
     this.hiddenHosts = [];
 
+};
+
+/**
+ * Returns all hidden hosts over all views
+ * 
+ * @private
+ * @returns {Set<Hosts>}
+ */
+Global.prototype.getHiddenHosts = function() {
+    var hiddenHosts = {};
+    
+    this.views.forEach(function(view) {
+        view.getTransformer().getHiddenHosts().forEach(function(host) {
+            hiddenHosts[host] = true;
+        });
+    });
+    
+    return hiddenHosts;
 };
 
 /**

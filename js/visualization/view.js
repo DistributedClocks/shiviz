@@ -1,12 +1,12 @@
 /**
+ * Constructs a View that draws the specified model
+ * 
  * @class
  * 
- * A View for a ShiViz graph. A View is responsible for drawing a single
- * VisualGraph. It also collects transformations that generate new iterations of
- * the model.
+ * A View is responsible for drawing a single VisualGraph.
  * 
  * @constructor
- * @param {Graph} model
+ * @param {ModelGraph} model
  * @param {HostPermutation} hostPermutation
  * @param {String} label
  */
@@ -20,20 +20,27 @@ function View(model, hostPermutation, label) {
 
     /** @private */
     this.initialModel = model;
-    
+
     /** @private */
     this.layout = new SpaceTimeLayout(0, 56);
 
     /** @private */
     this.visualGraph = new VisualGraph(model, this.layout, hostPermutation);
-    
+
+    /** @private */
     this.transformer = new Transformer();
 }
 
+/**
+ * Gets the transformer associated with this view. In other words, the
+ * transformer configured for and responsible for transforming the
+ * {@link VisualGraph} that this view draws.
+ * 
+ * @returns {Transformer} The transformer associated with this view
+ */
 View.prototype.getTransformer = function() {
     return this.transformer;
 };
-
 
 /**
  * Gets the hosts as an array
@@ -80,7 +87,7 @@ View.prototype.draw = function() {
     if (this.id == null) {
         this.id = "view" + d3.selectAll("#vizContainer > svg").size();
     }
-    
+
     this.model = this.initialModel.clone();
     this.visualGraph = new VisualGraph(this.model, this.layout, this.hostPermutation);
     this.transformer.transform(this.visualGraph);
@@ -221,7 +228,7 @@ View.prototype.draw = function() {
         });
 
         // Bind the nodes
-        Global.getInstance().controller.bindNodes(nodes); //TODO
+        Global.getInstance().controller.bindNodes(nodes); // TODO
     }
 
     function drawHosts() {
@@ -287,7 +294,7 @@ View.prototype.draw = function() {
         });
 
         // Bind the hosts
-        Global.getInstance().controller.bindHosts(hosts); //TODO
+        Global.getInstance().controller.bindHosts(hosts); // TODO
     }
 
     function drawLogLines() {
@@ -352,6 +359,6 @@ View.prototype.draw = function() {
         }
 
         // Bind the log lines
-        Global.getInstance().controller.bindLines($(".log .line:not(.more)")); //TODO
+        Global.getInstance().controller.bindLines($(".log .line:not(.more)")); // TODO
     }
 };
