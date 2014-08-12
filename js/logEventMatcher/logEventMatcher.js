@@ -25,7 +25,7 @@ function LogEventMatcher(query) {
         this.interpreter = new LEMInterpreter(this.ast);
     }
     catch (e) {
-        if (e.constructor == Exception) {
+        if (e instanceof Exception) {
             e.setUserFriendly(true);
             e.append("\n");
             var querytext = query + "\n";
@@ -53,7 +53,7 @@ LogEventMatcher.prototype.match = function(logEvent) {
         return this.interpreter.interpret(logEvent);
     }
     catch (e) {
-        if (e.constructor == Exception) {
+        if (e instanceof Exception) {
             e.setUserFriendly(true);
             e.append("\n");
             e.append(this.query, "code");

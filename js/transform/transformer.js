@@ -1,135 +1,223 @@
 /**
- * Constructs a Transformer for a particular {@link View}
+ * Constructs a Transformer
  * 
  * @classdesc
  * 
- * Transformer keeps track of transformations to be applied to a specific
- * VisualGraph and takes care of transforming the model.
+ * <p>
+ * A Transformer is responsible for transforming a {@link VisualGraph} and the
+ * underlying {@link ModelGraph}. Transformer exposes methods such as
+ * {@link Transformer#hideHost} that allow other classes to specify how this
+ * transformer should transform graphs. Internally, it manages a bunch of
+ * {@link Transformation}s to achieve the desired effect.
+ * </p>
+ * 
+ * <p>
+ * Shiviz {@link Transformation}s can interact with each other in complex ways.
+ * For this reason, Transformer does not expose Transformations to outside
+ * classes, but instead acts as a black box that can be used to transform graphs
+ * </p>
+ * 
+ * <p>
+ * Typical usage for this class involves invoking methods such as
+ * {@link Transformer#collapseNode} to specifiy how the graph should be
+ * transformed and then invoking the {@link Transformer#transform} method. Note
+ * that no graphs or visual graphs are actually modified until the transform
+ * method is called.
+ * </p>
  * 
  * @constructor
- * @param {VisualGraph} visualModel The VisualGraph this transformer is
- *            responsible for.
  */
-function Transformer(visualModel) {
-
-    /** @private */
-    this.visualModel = visualModel;
+function Transformer() {
 
     /** @private */
     this.transformations = [];
 
     /** @private */
-    this.defaultTransformations = [];
+    this.hostToHidingTransform = {};
+
+    /** @private */
+    this.collapseSequentialNodesTransformation = new CollapseSequentialNodesTransformation(2);
+
+    /** @private */
+    this.highlightHostTransformation = new HighlightHostTransformation();
+
+    /** @private */
+    this.highlightHostToIndex = {};
+
+    /** @private */
+    this.highlightMotifTransformation = null;
+
+    /** @private */
+    this.hiddenHosts = [];
+
 }
 
 /**
- * Gets transformations
+ * Sets this transformer to hide the specified host. If the specified host is
+ * already set to be hidden, this method does nothing.
  * 
- * @param {Function} filter A function returning a boolean by which to filter
- *            the transformations
- * @param {Boolean} isDefault Whether to look in default transformations or
- *            regular transformations
- * @return {Array<Transformation>} The list of transformations
+ * @param {String} host The host that is to be hidden
  */
-Transformer.prototype.getTransformations = function(filter, isDefault) {
-    var tfs = isDefault ? this.defaultTransformations : this.transformations;
-    if (filter.constructor == Function)
-        return tfs.filter(filter);
-    else
-        return tfs;
-};
-
-/**
- * Adds a transformation
- * 
- * @param {Transformation} tf The transformation to add
- * @param {Boolean} isDefault Whether the transformation is a default
- *            transformation
- */
-Transformer.prototype.addTransformation = function(tf, isDefault) {
-    if (isDefault)
-        this.defaultTransformations.push(tf);
-    else
-        this.transformations.push(tf);
-};
-
-/**
- * Removes a transformation
- * 
- * @param {Function|Transformation} tf A predicate function that returns true if
- *            given transformation is to be removed, OR the transformation that
- *            is to be removed
- */
-Transformer.prototype.removeTransformation = function(tf) {
-    this.transformations = this.transformations.filter(function(t) {
-        if (tf.constructor == Function)
-            return !tf(t);
-        else
-            return !(tf == t);
-    });
-};
-
-/**
- * Gets the model of the transformer
- * 
- * @returns {VisualGraph} The model the transformer acts on
- */
-Transformer.prototype.getVisualModel = function() {
-    return this.visualModel;
-};
-
-/**
- * Sets the model of the transformer
- * 
- * @param {VisualGraph} visualModel The model the transformer should act on
- */
-Transformer.prototype.setVisualModel = function(visualModel) {
-    this.visualModel = visualModel;
+Transformer.prototype.hideHost = function(host) {
+    if (this.hostToHidingTransform[host]) {
+        return;
+    }
+    var trans = new HideHostTransformation(host);
+    this.hostToHidingTransform[host] = trans;
+    this.transformations.push(trans);
 };
 
 /**
  * <p>
- * Transforms the model.
- * </p>
- * <p>
- * The transformations are applied in the order in which they were added, with
- * exceptions.
+ * Unsets this transformer to hide the specified host. If the specified host is
+ * not currently set to be hidden, this method does nothing.
  * </p>
  * 
  * <p>
- * Exceptions:
+ * A host could've been hidden either explicitly with a call to
+ * {@link Transformer#hideHost} or implicitly when a host is highlighted. In the
+ * latter case, all highlighted nodes will be unhighlighted as well.
  * </p>
- * <ul>
- * <li>HighlightHostTransformations are gathered into the last instance, at
- * which they are then applied all at once.</li>
- * </ul>
+ * 
+ * @param {String} host The host that is no longer to be hidden
  */
-Transformer.prototype.transform = function() {
-    var self = this;
+Transformer.prototype.unhideHost = function(host) {
+    var trans = this.hostToHidingTransform[host];
+    if (trans) {
+        var index = this.transformations.indexOf(trans);
+        this.transformations.splice(index, 1);
+        delete this.hostToHidingTransform[host];
+    }
+    else if (this.highlightHostTransformation.isHidden(host)) {
+        this.highlightHostTransformation.clearHosts();
+    }
+};
 
-    var hh = this.transformations.filter(function(t) {
-        return t.constructor == HighlightHostTransformation;
-    });
-    if (hh.length) {
-        var lhh = hh[hh.length - 1];
-        var oh = lhh.getHosts()[0];
+/**
+ * Sets this transformer to highlight the specified host.
+ * 
+ * @param {String} host The host to be highlighted
+ */
+Transformer.prototype.highlightHost = function(host) {
+    this.highlightHostTransformation.addHost(host);
+    this.highlightHostToIndex[host] = this.transformations.length;
+};
 
-        hh.slice(0, hh.length - 1).forEach(function(t) {
-            t.ignore = true;
-            lhh.addHost(t.getHosts()[0]);
-        });
+/**
+ * Unsets this transformer to highlight the specified host.
+ * 
+ * @param {String} host The host that is no longer to be highlighted
+ */
+Transformer.prototype.unhighlighHost = function(host) {
+    this.highlightHostTransformation.removeHost(host);
+    delete this.highlightHostToIndex[host];
+};
+
+/**
+ * Toggles highlighting of the specified host.
+ * 
+ * @param {String} host
+ */
+Transformer.prototype.toggleHighlightHost = function(host) {
+    if (this.highlightHostTransformation.isHighlighted(host)) {
+        this.unhighlighHost(host);
+    }
+    else {
+        this.highlightHost(host);
+    }
+};
+
+/**
+ * Sets this transformer to collapse the node and its group into one.
+ * Intuitively, the node's group are the nodes surrounding the argument that
+ * have no family.
+ * 
+ * @param {ModelNode} node
+ */
+Transformer.prototype.collapseNode = function(node) {
+    this.collapseSequentialNodesTransformation.removeExemption(node);
+};
+
+/**
+ * Sets this transformer to not collapse the node or any of the nodes in its
+ * group. Intuitively, the node's group are the nodes surrounding the argument
+ * that have no family.
+ * 
+ * @param {ModelNode} node
+ */
+Transformer.prototype.uncollapseNode = function(node) {
+    this.collapseSequentialNodesTransformation.addExemption(node);
+};
+
+/**
+ * Toggles collapsing of the node
+ * 
+ * @param {ModelNode} node
+ */
+Transformer.prototype.toggleCollapseNode = function(node) {
+    this.collapseSequentialNodesTransformation.toggleExemption(node);
+};
+
+/**
+ * Sets this transformer to highlight a motif found by a MotifFinder. Only one
+ * motif can be highlighted at a time, thus if there is already a motif set to
+ * be highlighted, that one is replaced.
+ * 
+ * @param {MotifFinder} motifFinder The motif finder that specifies which nodes
+ *            and edges are to be highlighted
+ * @param {Boolean} ignoreEdges edges will not be highlighted if true
+ */
+Transformer.prototype.highlightMotif = function(motifFinder, ignoreEdges) {
+    this.highlightMotifTransformation = new HighlightMotifTransformation(motifFinder, ignoreEdges);
+};
+
+/**
+ * Sets this transformer to not highlight motifs.
+ */
+Transformer.prototype.unhighlightMotif = function() {
+    this.highlightMotifTransformation = null;
+};
+
+/**
+ * Get all of the hosts hidden by this transformer by the last invocation of
+ * {@link Transformer#transform}. If the transform method has never been
+ * called, this method returns an empty array.
+ * 
+ * @returns {Array<String>} the hosts that have been hidden by this
+ *          transformer.
+ */
+Transformer.prototype.getHiddenHosts = function() {
+    return this.hiddenHosts;
+};
+
+/**
+ * Transforms the specified {@link VisualGraph} and the underlying
+ * {@link ModelGraph} based on the settings of this transformer. Note that this
+ * method is solely responsible for modifying visual and model graphs
+ */
+Transformer.prototype.transform = function(visualModel) {
+    this.collapseSequentialNodesTransformation.transform(visualModel);
+
+    var maxIndex = 0;
+    for (var key in this.highlightHostToIndex) {
+        maxIndex = Math.max(maxIndex, this.highlightHostToIndex[key]);
     }
 
-    var tfs = this.transformations.concat(this.defaultTransformations);
-    tfs.forEach(function(t) {
-        if (t.ignore)
-            t.ignore = false;
-        else
-            t.transform(self.visualModel);
-    });
-
-    if (hh.length) {
-        lhh.clearHosts();
-        lhh.addHost(oh);
+    for (var i = 0; i < maxIndex; i++) {
+        var trans = this.transformations[i];
+        trans.transform(visualModel);
     }
+
+    this.highlightHostTransformation.transform(visualModel);
+
+    for (var i = maxIndex; i < this.transformations.length; i++) {
+        var trans = this.transformations[i];
+        trans.transform(visualModel);
+    }
+
+    if (this.highlightMotifTransformation != null) {
+        this.highlightMotifTransformation.transform(visualModel);
+    }
+
+    this.hiddenHosts = Object.keys(this.hostToHidingTransform).concat(this.highlightHostTransformation.getHiddenHosts());
 };

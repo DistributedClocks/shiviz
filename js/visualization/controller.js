@@ -7,54 +7,27 @@
  * maintaining {@link Transformation}s.
  * 
  * @constructor
- * @param {Global} global Current Global object
  */
-function Controller(global) {
-    /** @private */
-    this.global = global;
+function Controller() {
 
-    /** @private */
-    this.transformers = [];
+    var self = this;
+
+    $(window).unbind("scroll");
+    $(window).bind("scroll", self.onScroll);
+    $(window).scroll();
+
+    $(window).unbind("resize");
+    $(window).on("resize", function() {
+        try {
+            Global.getInstance().drawAll();
+        }
+        catch(exception) {
+            Shiviz.getInstance().handleException(exception);
+        }
+    });
+   
 }
 
-/**
- * Creates a {@link Transformer} for the new {@link View}, and adds default
- * transformation. Should be called from Global every time a view is added.
- * 
- * @param {View} view The View that was added.
- */
-Controller.prototype.addView = function(view) {
-    var cstf = new CollapseSequentialNodesTransformation(2);
-    var tfr = new Transformer(view.getVisualModel());
-
-    tfr.addTransformation(cstf, true);
-    this.transformers.push(tfr);
-    this.transform();
-};
-
-/**
- * Transforms the model through the listed {@link Transformation}s, in the
- * order provided in the list
- */
-Controller.prototype.transform = function() {
-    var transformers = this.transformers;
-
-    // Revert each view to original (untransformed) state
-    this.global.getViews().forEach(function(view) {
-        var origVisGraph = view.getVisualModel();
-        view.revert();
-        var newVisGraph = view.getVisualModel();
-
-        transformers.forEach(function(tfr) {
-            if (tfr.getVisualModel() === origVisGraph)
-                tfr.setVisualModel(newVisGraph);
-        });
-    });
-
-    transformers.forEach(function(tfr) {
-        tfr.transform();
-    });
-};
 
 /**
  * Binds events to the nodes.
@@ -70,16 +43,13 @@ Controller.prototype.bindNodes = function(nodes) {
     var controller = this;
     nodes.on("click", function(e) {
         if (d3.event.shiftKey) {
-            controller.transformers.forEach(function(tfr) {
-                var ct = tfr.getTransformations(function(t) {
-                    return t.constructor == CollapseSequentialNodesTransformation;
-                }, true).forEach(function(t) {
-                    t.toggleExemption(e.getNode());
-                });
+            // Toggle node collapsing
+            var views = Global.getInstance().getViews();
+            views.forEach(function(view) {
+                view.getTransformer().toggleCollapseNode(e.getNode());
             });
 
-            controller.transform();
-            controller.global.drawAll();
+            Global.getInstance().drawAll();
         }
     }).on("mouseover", function(e) {
         d3.selectAll("circle.focus").classed("focus", false).transition().duration(100).attr({
@@ -98,7 +68,6 @@ Controller.prototype.bindNodes = function(nodes) {
         $(".fields").children().remove();
         if (!e.isCollapsed()) {
             var fields = e.getNode().getLogEvents()[0].getFields();
-            var fieldText = "";
             for (var i in fields) {
                 var $f = $("<tr>", {
                     "class": "field"
@@ -169,65 +138,28 @@ Controller.prototype.bindHosts = function(hosts) {
         $(".event").text(e.getText());
         $(".fields").children().remove();
     }).on("dblclick", function(e) {
+        
+        var views = Global.getInstance().getViews();
+        
         if (d3.event.shiftKey) {
-            // TODO: Cleanup!!
             // Filtering by host
-            if (controller.global.getViews().length != 1)
+           
+            // If more than one view / execution then return
+            if (views.length != 1)
                 return;
-
-            var tfr = controller.transformers[0];
-
-            // Update hidden hosts list for hosts hidden by highlighting
-            var hh = tfr.getTransformations(function(t) {
-                return t.constructor == HighlightHostTransformation;
-            });
-            if (hh.length) {
-                var hiddenHosts = hh[hh.length - 1].getHiddenHosts();
-                hiddenHosts.forEach(function(h) {
-                    controller.global.removeHiddenHost(h);
-                });
-            }
-
-            var existingHighlights = tfr.getTransformations(function(t) {
-                if (t.constructor == HighlightHostTransformation)
-                    return t.getHosts()[0] == e.getHost();
+            
+            views.forEach(function(view) {
+               view.getTransformer().toggleHighlightHost(e.getHost()); 
             });
 
-            if (existingHighlights.length) {
-                existingHighlights.forEach(function(t) {
-                    tfr.removeTransformation(t);
-                });
-            }
-            else {
-                var hightf = new HighlightHostTransformation(e.getHost());
-                tfr.addTransformation(hightf);
-            }
-
-            controller.transform();
-
-            // Add hidden hosts back
-            hh = tfr.getTransformations(function(t) {
-                return t.constructor == HighlightHostTransformation;
-            });
-            if (hh.length) {
-                var hiddenHosts = hh[hh.length - 1].getHiddenHosts();
-                hiddenHosts.forEach(function(h) {
-                    controller.global.addHiddenHost(h);
-                });
-            }
-        }
-        else {
+        } else {
             // Hide host
-            controller.transformers.forEach(function(tfr) {
-                var hhtf = new HideHostTransformation(e.getHost());
-                controller.global.addHiddenHost(e.getHost());
-                tfr.addTransformation(hhtf);
-            });
-
-            controller.transform();
+            views.forEach(function(view) {
+                view.getTransformer().hideHost(e.getHost());
+             });
         }
 
-        controller.global.drawAll();
+        Global.getInstance().drawAll();
     });
 };
 
@@ -251,37 +183,32 @@ Controller.prototype.bindLines = function(lines) {
 Controller.prototype.bindHiddenHosts = function(hh) {
     var controller = this;
     hh.on("dblclick", function(e) {
-        controller.transformers.forEach(function(tfr) {
-            var high = tfr.getTransformations(function(t) {
-                if (t.constructor == HighlightHostTransformation)
-                    return t.getHiddenHosts().indexOf(e) > -1;
-            });
-
-            if (high.length) {
-                var hh = tfr.getTransformations(function(t) {
-                    return t.constructor == HighlightHostTransformation;
-                });
-                var hiddenHosts = hh[hh.length - 1].getHiddenHosts();
-                hiddenHosts.forEach(function(h) {
-                    controller.global.removeHiddenHost(h);
-                });
-
-                hh.forEach(function(t) {
-                    tfr.removeTransformation(t);
-                });
-            }
-
-            tfr.removeTransformation(function(t) {
-                if (t.constructor == HideHostTransformation)
-                    return t.getHost() == e;
-            });
+        
+        var views = Global.getInstance().getViews();
+        views.forEach(function(view) {
+          view.getTransformer().unhideHost(e);  
         });
-
-        controller.transform();
-        controller.global.removeHiddenHost(e);
-        controller.global.drawAll();
+        Global.getInstance().drawAll();
+        
     }).on("mouseover", function(e) {
         $(".event").text(e);
         $(".fields").children().remove();
     });
+};
+
+/**
+ * Ensures things are positioned correctly on scroll
+ * 
+ * @private
+ * @param {Event} e The event object JQuery passes to the handler
+ */
+Controller.prototype.onScroll = function(e) {
+    var x = window.pageXOffset;
+    $("#hostBar").css("margin-left", -x);
+    $(".log").css("margin-left", x);
+
+    if ($(".line.focus").length)
+        $(".highlight").css({
+            "left": $(".line.focus").offset().left - parseFloat($(".line.focus").css("margin-left"))
+        });
 };

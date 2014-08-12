@@ -119,6 +119,7 @@ Shiviz.prototype.resetView = function() {
  */
 Shiviz.prototype.visualize = function() {
     try {
+
         d3.selectAll("#graph svg").remove();
 
         var log = $("#input").val();
@@ -146,10 +147,9 @@ Shiviz.prototype.visualize = function() {
             throw new Exception("You must select a way to sort processes.", true);
         }
 
-        var global = new Global(hostPermutation);
         var labelGraph = {};
-
         var labels = parser.getLabels();
+
         labels.forEach(function(label) {
             var graph = new ModelGraph(parser.getLogEvents(label));
             labelGraph[label] = graph;
@@ -160,15 +160,18 @@ Shiviz.prototype.visualize = function() {
             }
         });
 
+        Global.getInstance().revert();
+
         hostPermutation.update();
+        Global.getInstance().setHostPermutation(hostPermutation);
 
         labels.forEach(function(label) {
             var graph = labelGraph[label];
-            var view = new View(graph, global, hostPermutation, label);
-            global.addView(view);
+            var view = new View(graph, hostPermutation, label);
+            Global.getInstance().addView(view);
         });
 
-        global.drawAll();
+        Global.getInstance().drawAll();
     }
     catch (err) {
         this.handleException(err);

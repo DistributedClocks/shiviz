@@ -6,7 +6,7 @@ use strict;
 
 die "\nUsage: perl docgen.pl OUTPUT_DIRECTORY.\n\n" if @ARGV != 1;
 
-my $dest = $ARGV[0];
+my $dest = $ARGV[0] . "/docs";
 my $deltempcmd = "rm -r ./jsdoc-master ./js/README.md > /dev/null 2>&1";
 
 # Unzip JSDoc3. JSDoc3 is zipped to decrease its size and to keep it one file
@@ -16,7 +16,7 @@ if(system("unzip -o jsdoc-master.zip > /dev/null 2>&1")) {
 }
 
 # copy doc-index.txt to appropriate location
-system("cp doc-index.txt ./js/README.md");
+system("cp doc-index.md ./js/README.md");
 
 # compile using JSDoc3
 if(system("./jsdoc-master/jsdoc -r -d " . $dest . " ./js ./js/README.md")) {

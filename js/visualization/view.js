@@ -1,17 +1,16 @@
 /**
+ * Constructs a View that draws the specified model
+ * 
  * @class
  * 
- * A View for a ShiViz graph. A View is responsible for drawing a single
- * VisualGraph. It also collects transformations that generate new iterations of
- * the model.
+ * A View is responsible for drawing a single VisualGraph.
  * 
  * @constructor
- * @param {Graph} model
- * @param {Global} global
+ * @param {ModelGraph} model
  * @param {HostPermutation} hostPermutation
  * @param {String} label
  */
-function View(model, global, hostPermutation, label) {
+function View(model, hostPermutation, label) {
 
     /** @private */
     this.hostPermutation = hostPermutation;
@@ -23,25 +22,24 @@ function View(model, global, hostPermutation, label) {
     this.initialModel = model;
 
     /** @private */
-    this.model = model;
+    this.layout = new SpaceTimeLayout(0, 56);
 
     /** @private */
-    this.global = global;
+    this.visualGraph = new VisualGraph(model, this.layout, hostPermutation);
 
     /** @private */
-    this.visualGraph = new VisualGraph(this.model, new SpaceTimeLayout(0, 56), this.hostPermutation);
-
-    /** @private */
-    this.width = 500;
+    this.transformer = new Transformer();
 }
 
 /**
- * Gets the Global that this view belongs to
+ * Gets the transformer associated with this view. In other words, the
+ * transformer configured for and responsible for transforming the
+ * {@link VisualGraph} that this view draws.
  * 
- * @returns {Global} The global that this view belongs to
+ * @returns {Transformer} The transformer associated with this view
  */
-View.prototype.getGlobal = function() {
-    return this.global;
+View.prototype.getTransformer = function() {
+    return this.transformer;
 };
 
 /**
@@ -77,18 +75,7 @@ View.prototype.getVisualModel = function() {
  * @param {Number} newWidth The new width
  */
 View.prototype.setWidth = function(newWidth) {
-    this.width = newWidth;
-};
-
-/**
- * Reverts the View to initial graph & creates a new VisualGraph for the initial
- * model
- */
-View.prototype.revert = function() {
-    var layout = new SpaceTimeLayout(0, 56);
-    var hp = this.hostPermutation;
-    this.model = this.initialModel.clone();
-    this.visualGraph = new VisualGraph(this.model, layout, hp);
+    this.layout.setWidth(newWidth);
 };
 
 /**
@@ -101,18 +88,17 @@ View.prototype.draw = function() {
         this.id = "view" + d3.selectAll("#vizContainer > svg").size();
     }
 
+    this.model = this.initialModel.clone();
+    this.visualGraph = new VisualGraph(this.model, this.layout, this.hostPermutation);
+    this.transformer.transform(this.visualGraph);
+
     // Update the VisualGraph
-    this.visualGraph.setWidth(this.width);
     this.visualGraph.update();
 
     // Define locally so that we can use in lambdas below
     var view = this;
 
     var svg = d3.select("#vizContainer").append("svg");
-
-    // Remove old diagrams, but only the ones with the same ID
-    // so we don't remove the other executions
-    d3.selectAll("." + this.id).remove();
 
     svg.attr({
         "height": this.visualGraph.getHeight(),
@@ -242,7 +228,7 @@ View.prototype.draw = function() {
         });
 
         // Bind the nodes
-        view.global.controller.bindNodes(nodes);
+        Global.getInstance().controller.bindNodes(nodes); // TODO
     }
 
     function drawHosts() {
@@ -308,7 +294,7 @@ View.prototype.draw = function() {
         });
 
         // Bind the hosts
-        view.global.controller.bindHosts(hosts);
+        Global.getInstance().controller.bindHosts(hosts); // TODO
     }
 
     function drawLogLines() {
@@ -373,6 +359,6 @@ View.prototype.draw = function() {
         }
 
         // Bind the log lines
-        view.global.controller.bindLines($(".log .line:not(.more)"));
+        Global.getInstance().controller.bindLines($(".log .line:not(.more)")); // TODO
     }
 };
