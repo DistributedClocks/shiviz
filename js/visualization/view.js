@@ -10,7 +10,7 @@
  * @param {HostPermutation} hostPermutation
  * @param {String} label
  */
-function View(model, hostPermutation, label) {
+function View(model, hostPermutation, label, controller) {
 
     /** @private */
     this.hostPermutation = hostPermutation;
@@ -29,6 +29,8 @@ function View(model, hostPermutation, label) {
 
     /** @private */
     this.transformer = new Transformer();
+    
+    this.controller = controller;
 }
 
 /**
@@ -232,7 +234,7 @@ View.prototype.draw = function() {
         });
 
         // Bind the nodes
-        Global.getInstance().controller.bindNodes(nodes); // TODO
+        view.controller.bindNodes(nodes); // TODO
     }
 
     function drawHosts() {
@@ -298,7 +300,7 @@ View.prototype.draw = function() {
         });
 
         // Bind the hosts
-        Global.getInstance().controller.bindHosts(hosts); // TODO
+        view.controller.bindHosts(hosts); // TODO
     }
 
     function drawLogLines() {
@@ -365,6 +367,6 @@ View.prototype.draw = function() {
         }
 
         // Bind the log lines
-        Global.getInstance().controller.bindLines($(".log .line:not(.more)")); // TODO
+        view.controller.bindLines($(".log .line:not(.more)")); // TODO
     }
 };

@@ -27,54 +27,27 @@ function Global() {
     /** @private */
     this.controller = new Controller(this);
 
-    /**
-     * @static
-     * @const
-     */
-    Global.SIDE_BAR_WIDTH = 240;
-    /**
-     * @static
-     * @const
-     */
-    Global.HOST_SQUARE_SIZE = 25;
-    /**
-     * @static
-     * @const
-     */
-    Global.HIDDEN_EDGE_LENGTH = 40;
-
     $("#sidebar").css({
         width: Global.SIDE_BAR_WIDTH + "px"
     });
 }
 
 /**
- * @private
  * @static
+ * @const
  */
-Global.instance = null;
-
+Global.SIDE_BAR_WIDTH = 240;
 /**
- * Gets the current instance of Global
- * 
- * @return {Global} The singleton instance
+ * @static
+ * @const
  */
-Global.getInstance = function() {
-    if(!Global.instance) {
-        Global.instance = new Global();
-    }
-    return Global.instance;
-};
-
+Global.HOST_SQUARE_SIZE = 25;
 /**
- * Reverts Global to its original state
+ * @static
+ * @const
  */
-Global.prototype.revert = function() {
-    this.views = [];
-    this.hostPermutation = null;
-    this.hiddenHosts = [];
+Global.HIDDEN_EDGE_LENGTH = 40;
 
-};
 
 /**
  * Returns all hidden hosts over all views
@@ -147,7 +120,7 @@ Global.prototype.drawAll = function() {
  */
 Global.prototype.addView = function(view) {
     this.views.push(view);
-//    this.controller.addView(view);
+//    view.controller = this.controller; //TODO
     this.resize();
 };
 

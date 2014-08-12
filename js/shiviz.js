@@ -159,18 +159,19 @@ Shiviz.prototype.visualize = function() {
             }
         });
 
-        Global.getInstance().revert();
+        var global = new Global();
+        new SearchBar(global); // TODO
 
         hostPermutation.update();
-        Global.getInstance().setHostPermutation(hostPermutation);
+        global.setHostPermutation(hostPermutation);
 
         labels.forEach(function(label) {
             var graph = labelGraph[label];
-            var view = new View(graph, hostPermutation, label);
-            Global.getInstance().addView(view);
+            var view = new View(graph, hostPermutation, label, global.controller); //TODO
+            global.addView(view);
         });
 
-        Global.getInstance().drawAll();
+        global.drawAll();
     }
     catch (err) {
         this.handleException(err);
