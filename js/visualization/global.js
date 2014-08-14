@@ -12,7 +12,7 @@
  * @constructor
  * @private
  */
-function Global() {
+function Global($vizContainer, $sidebar) {
 
     if (!!Global.instance) {
         throw new Exception("Global is a singleton - use getInstance() instead.");
@@ -26,8 +26,12 @@ function Global() {
 
     /** @private */
     this.controller = new Controller(this);
+    
+    this.$vizContainer = $vizContainer;
+    
+    this.$sidebar = $sidebar;
 
-    $("#sidebar").css({
+    this.$sidebar.css({
         width: Global.SIDE_BAR_WIDTH + "px"
     });
 }
@@ -71,12 +75,6 @@ Global.prototype.getHiddenHosts = function() {
  * Redraws the global.
  */
 Global.prototype.drawAll = function() {
-    // Clear the log lines
-    $("table.log").children().remove();
-
-    // Remove old visualizations
-    $("#vizContainer svg").remove();
-    $("#hostBar svg").remove();
 
     // Determine the max height of any view
     // And if larger than window height (scrollbar will appear)
@@ -86,29 +84,18 @@ Global.prototype.drawAll = function() {
         return v.getVisualModel().getHeight();
     }));
 
-    $("#vizContainer").height(maxHeight);
+    this.$vizContainer.height(maxHeight);
 
-    // Find the width per log line column
-    var logColWidth = (240 - 12 * (this.views.length - 1)) / this.views.length;
     var hostMargin = this.resize();
-
+    
     for (var i = 0; i < this.views.length; i++) {
-        $("table.log").append($("<td></td>").width(logColWidth + "pt"));
-
-        // Draw the view
         this.views[i].draw();
-
-        // Add the spacer after log column
-        $("table.log").append($("<td></td>").addClass("spacer"));
     }
 
     // Add spacing between views
     $("#vizContainer > svg:not(:last-child), #hostBar > svg:not(:last-child)").css({
         "margin-right": hostMargin * 2 + "px"
     });
-
-    // Remove last log line spacer
-    $("table.log .spacer:last-child").remove();
 
     this.drawSideBar();
 };
@@ -161,7 +148,7 @@ Global.prototype.resize = function() {
 
     // TODO: rename to sidebarLeft sidebarRight middleWidth
     var headerWidth = $(".visualization header").outerWidth();
-    var sidebarWidth = $("#sidebar").outerWidth();
+    var sidebarWidth = this.$sidebar.outerWidth();
     var globalWidth = $(window).width() - headerWidth - sidebarWidth;
     
     $("#searchbar").width(globalWidth);
@@ -189,8 +176,6 @@ Global.prototype.resize = function() {
         view.setWidth(hosts.length * widthPerHost - hostMargin);
     });
 
-    $("#graph").width(globalWidth);
-
     return hostMargin;
 };
 
@@ -200,7 +185,8 @@ Global.prototype.resize = function() {
  * @private
  */
 Global.prototype.drawSideBar = function() {
-    $("#sidebar .hidden svg").remove();
+    
+    this.$sidebar.children(".hidden").children("svg").remove();
 
     var global = this;
     var hidden = d3.select(".hidden");
@@ -208,11 +194,11 @@ Global.prototype.drawSideBar = function() {
     // Draw hidden hosts
     var hh = Object.keys(this.getHiddenHosts());
     if (hh.length <= 0) {
-        $(".hidden").hide();
+        this.$sidebar.children(".hidden").hide();
         return;
     }
 
-    $(".hidden").show();
+    this.$sidebar.children(".hidden").show();
 
     var hostsPerLine = Math.floor((Global.SIDE_BAR_WIDTH + 5) / (Global.HOST_SQUARE_SIZE + 5));
     var count = 0;
@@ -222,7 +208,7 @@ Global.prototype.drawSideBar = function() {
 
     var hiddenHosts = hidden.append("svg");
     hiddenHosts.attr({
-        "width": $("#sidebar").width(),
+        "width": this.$sidebar.width(),
         "height": Math.ceil(hh.length / hostsPerLine) * (Global.HOST_SQUARE_SIZE + 5) - 5,
         "class": "hidden-hosts"
     });

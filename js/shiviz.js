@@ -159,17 +159,36 @@ Shiviz.prototype.visualize = function() {
             }
         });
 
-        var global = new Global();
+        var global = new Global($("#vizContainer"), $("#sidebar"));
         new SearchBar(global); // TODO
 
         hostPermutation.update();
         global.setHostPermutation(hostPermutation);
+        
+        var logColWidth = (240 - 12 * (labels.length - 1)) / labels.length;
 
-        labels.forEach(function(label) {
+        
+        $("table.log").empty(); //TODO: check
+//        $("#sidebar").empty();
+        d3.select("#hostBar").selectAll("*").remove();
+        d3.select("#vizContainer").selectAll("*").remove();
+        
+        for(var i = 0; i < labels.length; i++) {
+            var label = labels[i];
+            var logTable = $("<td></td>");
+            $("table.log").append(logTable.width(logColWidth + "pt"));
+            
+            // Add the spacer after log column
+            if(i != labels.length - 1) {
+                $("table.log").append($("<td></td>").addClass("spacer"));
+            }
+            
             var graph = labelGraph[label];
-            var view = new View(graph, hostPermutation, label, global.controller); //TODO
+            var mainSVG = d3.select("#vizContainer").append("svg");
+            var hostSVG = d3.select("#hostBar").append("svg");
+            var view = new View(mainSVG, hostSVG, logTable, graph, hostPermutation, label, global.controller); //TODO
             global.addView(view);
-        });
+        }
 
         global.drawAll();
     }
