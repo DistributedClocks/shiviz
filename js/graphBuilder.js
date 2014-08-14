@@ -6,7 +6,7 @@ function GraphBuilder($svg) {
     
     this.hosts = [];
     
-    this.nodes = [];
+//    this.nodes = [];
 
     this.bind();
     
@@ -20,26 +20,42 @@ function GraphBuilder($svg) {
     this.addHost();
 }
 
+GraphBuilder.prototype.getSVG = function() {
+    return this.$svg;
+};
+
 GraphBuilder.prototype.addHost = function() {
-    this.hosts.push(new Host(this.$svg, this.hosts.length));
+    this.hosts.push(new Host(this, this.hosts.length));
     
     this.$svg.width(this.hosts.length * 65);
 };
 
-GraphBuilder.prototype.addNode = function(x, y, tmp) {
-    host = Array.find(this.hosts, function (h) {
-        return h.x == x;
+GraphBuilder.prototype.getHostByX = function(x) {
+    for(var i = 0; i < this.hosts.length; i++) {
+        if(this.hosts[i].x == x) {
+            return this.hosts[i];
+        }
+    }
+    return null;
+};
+
+GraphBuilder.prototype.getNodes = function() {
+    var nodes = [];
+    this.hosts.forEach(function(host) {
+        nodes = nodes.concat(host.nodes);
     });
-    
-    var node = new Node(this.$svg, x, y, tmp, host.color);
-    
-    this.nodes.push(node);
-    
-   host.nodes.push(this);
-    this.convert();
-    this.bind();
-    
-    return node;
+    return nodes;
+};
+
+GraphBuilder.prototype.getNodeByCoord = function(x, y) {
+    var nodes = this.getNodes();
+    for(var i = 0; i < nodes.length; i++) {
+        var node = nodes[i];
+        if(node.x == x && node.y == y) {
+            return node;
+        }
+    }
+    return null;
 };
 
 GraphBuilder.prototype.bind = function() {
@@ -78,12 +94,10 @@ GraphBuilder.prototype.bind = function() {
         });
     }).on("mousedown", function (e) {
         var hx = $hover.attr("cx"), hy = $hover.attr("cy");
-        var existing = Array.find(context.nodes, function (n) {
-            return n.x == hx && n.y == hy;
-        });
+        var existing = context.getNodeByCoord(hx, hy);
 
         if (!existing && !$hover.hidden) {
-            var n = context.addNode(hx, hy, true);
+            var n = context.getHostByX(hx).addNode(hy, true);
             var $c = $(n.circle);
             $c.mousedown();
             n.properties();
@@ -112,7 +126,7 @@ GraphBuilder.prototype.bind = function() {
             var x = e.offsetX || (e.pageX - context.$svg.offset().left);
             var y = e.offsetY || (e.pageY - context.$svg.offset().top);
 
-            var a = context.nodes.map(function (n) {
+            var a = context.getNodes().map(function (n) {
                 return [n.x, n.y];
             }).filter(isValid).concat([[$hover.attr("cx"), $hover.attr("cy")]]);
 
@@ -124,12 +138,10 @@ GraphBuilder.prototype.bind = function() {
             });
         }).on("mouseup", function () {
             var hx = $hover.attr("cx"), hy = $hover.attr("cy");
-            var existing = Array.find(context.nodes, function (n) {
-                return n.x == hx && n.y == hy;
-            });
+            var existing = context.getNodeByCoord(hx, hy);
 
             if (!existing && !$hover.hidden) {
-                var child = context.addNode(hx, hy);
+                var child = context.getHostByX(hx).addNode(hy, true);
                 child.properties();
                 if (parent.y < child.y)
                     parent.addChild(child, $line);
@@ -162,7 +174,7 @@ GraphBuilder.prototype.bind = function() {
     
     
     function isValid(c) {
-        var n = Array.find(context.nodes, function (n) {
+        var n = Array.find(context.getNodes(), function (n) {
             return n.state && (!(n.x == c[0]) != !(n.y == c[1]));
         });
 
@@ -170,9 +182,9 @@ GraphBuilder.prototype.bind = function() {
     }
 };
 
-function Host($svg, hostNum) {
+function Host(graphBuilder, hostNum) {
     
-    this.$svg = $svg;
+    this.graphBuilder = graphBuilder;
     
     if (!Host.colors.length)
         return;
@@ -194,18 +206,28 @@ function Host($svg, hostNum) {
         "y": 0
     }).on("dblclick", function () {
         host.remove();
-    }).prependTo($svg);
+    }).prependTo(graphBuilder.getSVG());
     
     this.line = SVGElement("line").attr({
         "x1": this.x,
         "y1": 30,
         "x2": this.x,
         "y2": 500
-    }).prependTo($svg);
+    }).prependTo(graphBuilder.getSVG());
 
     $(".add").css("background", Host.colors[Host.colors.length - 1]);
 }
 
+Host.prototype.addNode = function(y, tmp) {
+
+    var node = new Node(this.graphBuilder, this.x, y, tmp, this.color);
+    
+   this.nodes.push(node);
+    this.graphBuilder.convert();
+    this.graphBuilder.bind();
+    
+    return node;
+};
 
 
 Host.colors = [];
@@ -246,9 +268,9 @@ Host.colors = [];
 //    convert();
 //};
 
-function Node($svg, x, y, tmp, color) {
+function Node(graphBuilder, x, y, tmp, color) {
     
-    this.$svg = $svg;
+    this.graphBuilder = graphBuilder;
     
     this.x = parseFloat(x);
     this.y = parseFloat(y);
@@ -265,7 +287,7 @@ function Node($svg, x, y, tmp, color) {
         "cx": x,
         "cy": y,
         "fill": context.color
-    }).appendTo($svg);
+    }).appendTo(graphBuilder.getSVG());
 
     this.circle[0].node = this;
 
@@ -287,7 +309,7 @@ Node.prototype.addChild = function (n, l) {
     this.lines.push(line);
     n.parents.push(this);
     n.lines.push(line);
-    convert();
+    this.graphBuilder.convert();
 };
 
 //Node.prototype.removeChild = function (n) {
@@ -299,17 +321,18 @@ Node.prototype.properties = function () {
     var $dialog = $(".dialog");
     var node = this;
 
-    if (node.x > this.$svg.width() / 2)
+    var svg = this.graphBuilder.getSVG();
+    if (node.x > svg.width() / 2)
         $dialog.css({
-            "left": node.x + this.$svg.offset().left + 40
+            "left": node.x + svg.offset().left + 40
         }).removeClass("right").addClass("left").show();
     else
         $dialog.css({
-            "left": node.x + this.$svg.offset().left - $dialog.width() - 40
+            "left": node.x + svg.offset().left - $dialog.width() - 40
         }).removeClass("left").addClass("right").show();
 
     $dialog.css({
-        "top": node.y + this.$svg.offset().top,
+        "top": node.y + svg.offset().top,
         "background": node.color,
         "border-color": node.color
     });
@@ -363,7 +386,7 @@ GraphBuilder.prototype.convert = function() {
         });
     });
 
-    this.nodes.forEach(function (n) {
+    this.getNodes().forEach(function (n) {
         n.children.forEach(function (c) {
             for (var h in n.clock) {
                 if (c.clock[h] == undefined || n.clock[h] > c.clock[h])
