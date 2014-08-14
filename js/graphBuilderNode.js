@@ -48,29 +48,6 @@ GraphBuilderNode.prototype.removeChild = function (n) {
     Array.remove(n.parents, this);
 };
 
-GraphBuilderNode.prototype.properties = function () {
-    var $dialog = $(".dialog");
-    var node = this;
-
-    var svg = this.graphBuilder.getSVG();
-    if (node.x > svg.width() / 2)
-        $dialog.css({
-            "left": node.x + svg.offset().left + 40
-        }).removeClass("right").addClass("left").show();
-    else
-        $dialog.css({
-            "left": node.x + svg.offset().left - $dialog.width() - 40
-        }).removeClass("left").addClass("right").show();
-
-    $dialog.css({
-        "top": node.y + svg.offset().top,
-        "background": node.color,
-        "border-color": node.color
-    });
-
-    $dialog.find(".name").text(node.name);
-};
-
 
 function Line(parent, child, line) {
     this.parent = parent;
