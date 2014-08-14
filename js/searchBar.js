@@ -23,9 +23,9 @@ function SearchBar(global) {
         }
     }).on("input", function() {
         if (this.value.length)
-            $("#bar button").prop("disabled", false)
-        else
-            $("#bar button").prop("disabled", true)
+            $("#bar button").prop("disabled", false);
+        else;
+            $("#bar button").prop("disabled", true);
     }).on("focus", function() {
         $(this).addClass("focus");
         $("#searchbar #panel").show();
@@ -63,7 +63,6 @@ SearchBar.prototype.clearMotif = function() {
 };
 
 SearchBar.prototype.query = function(query) {
-    var controller = this.global.getController();
 
     if (typeof query == "string") {
         var finder = new TextQueryMotifFinder(query);
