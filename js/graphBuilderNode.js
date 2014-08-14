@@ -25,6 +25,14 @@ function GraphBuilderNode(graphBuilder, x, y, tmp, color) {
 
 }
 
+GraphBuilderNode.prototype.getLines = function() {
+    return this.lines.slice();
+};
+
+GraphBuilderNode.prototype.getCircle = function() {
+    return this.circle;
+};
+
 
 GraphBuilderNode.prototype.addChild = function (n, l) {
     var line = new Line(this, n, l);

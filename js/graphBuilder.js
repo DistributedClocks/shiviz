@@ -6,9 +6,6 @@ function GraphBuilder($svg) {
     
     this.hosts = [];
     
-//    this.nodes = [];
-
-    this.bind();
     
     var context = this;
     
@@ -16,18 +13,35 @@ function GraphBuilder($svg) {
         context.addHost();
     });
     
+    
+    this.bind();
     this.addHost();
     this.addHost();
 }
+
+GraphBuilder.MAX_HOSTS = 5;
 
 GraphBuilder.prototype.getSVG = function() {
     return this.$svg;
 };
 
 GraphBuilder.prototype.addHost = function() {
+    
+    if(this.hosts.length >= GraphBuilder.MAX_HOSTS) {
+        throw new Exception("GraphBuilder.prototype.addHost: no new hosts may be added");
+    }
+    
     this.hosts.push(new GraphBuilderHost(this, this.hosts.length));
     
     this.$svg.width(this.hosts.length * 65);
+    
+    
+    if(this.hosts.length == GraphBuilder.MAX_HOSTS) {
+        $(".add").attr("disabled", true);
+    }
+    else {
+        $(".add").css("background", GraphBuilderHost.colors[this.hosts.length]);
+    }
 };
 
 GraphBuilder.prototype.removeHost = function (host) {
@@ -54,7 +68,6 @@ GraphBuilder.prototype.removeHost = function (host) {
             n.circle.attr("cx", h.x);
         });
     });
-    Host.colors.push(this.color);
 
     host.removeAllNodes();
     
@@ -130,9 +143,7 @@ GraphBuilder.prototype.bind = function() {
         else
             $hover.show().hidden = false;
 
-        var color = Array.find(context.hosts, function (h) {
-            return h.x == c.x;
-        }).color;
+        var color = context.getHostByX(c.x).getColor();
 
         $hover.attr({
             "cx": c.x,
