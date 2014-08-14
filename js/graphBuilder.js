@@ -138,10 +138,12 @@ GraphBuilder.prototype.bind = function() {
 
         if (!c.x) return;
 
-        if (y < 25 || c.y < 25)
+        if (y < 25 || c.y < 25) {
             $hover.hide().hidden = true;
-        else
+        }
+        else {
             $hover.show().hidden = false;
+        }
 
         var color = context.getHostByX(c.x).getColor();
 
@@ -158,7 +160,6 @@ GraphBuilder.prototype.bind = function() {
             var n = context.getHostByX(hx).addNode(hy, true);
             var $c = $(n.circle);
             $c.mousedown();
-            n.properties();
         }
     });
 
@@ -199,8 +200,7 @@ GraphBuilder.prototype.bind = function() {
             var existing = context.getNodeByCoord(hx, hy);
 
             if (!existing && !$hover.hidden) {
-                var child = context.getHostByX(hx).addNode(hy, true);
-                child.properties();
+                var child = context.getHostByX(hx).addNode(hy, false);
                 if (parent.y < child.y)
                     parent.addChild(child, $line);
                 else
@@ -226,8 +226,6 @@ GraphBuilder.prototype.bind = function() {
             context.getHostByNode(parent).removeNode(parent);
             context.bind();
         });
-    }).on("click", function (e) {
-        e.target.node.properties();
     });
     
     
@@ -238,9 +236,25 @@ GraphBuilder.prototype.bind = function() {
 
         return n === undefined;
     }
+
+    
+    function closest(array, x, y, d) {
+        var r = {};
+        for (var i = 0; i < array.length; i++) {
+            var ix = parseFloat(array[i][0]);
+            var iy = parseFloat(array[i][1]);
+            var id = Math.sqrt(Math.pow(x - ix, 2) + Math.pow(y - iy, 2));
+            if ((!d || id < d) && (r.dist === undefined || id < r.dist)) {
+                r.index = i;
+                r.dist = id;
+                r.x = ix;
+                r.y = iy;
+            }
+        }
+
+        return r;
+    }
 };
-
-
 
 
 
@@ -328,22 +342,6 @@ function convertToBG() {
 }
 
 
-function closest(array, x, y, d) {
-    var r = {};
-    for (var i = 0; i < array.length; i++) {
-        var ix = parseFloat(array[i][0]);
-        var iy = parseFloat(array[i][1]);
-        var id = Math.sqrt(Math.pow(x - ix, 2) + Math.pow(y - iy, 2));
-        if ((!d || id < d) && (r.dist === undefined || id < r.dist)) {
-            r.index = i;
-            r.dist = id;
-            r.x = ix;
-            r.y = iy;
-        }
-    }
-
-    return r;
-}
 
 function SVGElement(tag) {
     return $(document.createElementNS("http://www.w3.org/2000/svg", tag));
