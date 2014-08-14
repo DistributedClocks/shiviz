@@ -1,13 +1,57 @@
-var $svg = $("#panel svg");
 var $hover = $("#panel .hover");
 
-function bind() {
-    $svg.unbind().on("mousemove", function (e) {
-        var x = e.offsetX || (e.pageX - $svg.offset().left);
-        var y = e.offsetY || (e.pageY - $svg.offset().top);
+function GraphBuilder($svg) {
+    
+    this.$svg = $svg;
+    
+    this.hosts = [];
+    
+    this.nodes = [];
+
+    this.bind();
+    
+    var context = this;
+    
+    $(".add").click(function () {
+        context.addHost();
+    });
+    
+    this.addHost();
+    this.addHost();
+}
+
+GraphBuilder.prototype.addHost = function() {
+    this.hosts.push(new Host(this.$svg, this.hosts.length));
+    
+    this.$svg.width(this.hosts.length * 65);
+};
+
+GraphBuilder.prototype.addNode = function(x, y, tmp) {
+    host = Array.find(this.hosts, function (h) {
+        return h.x == x;
+    });
+    
+    var node = new Node(this.$svg, x, y, tmp, host.color);
+    
+    this.nodes.push(node);
+    
+   host.nodes.push(this);
+    this.convert();
+    this.bind();
+    
+    return node;
+};
+
+GraphBuilder.prototype.bind = function() {
+    
+    var context = this;
+    
+    context.$svg.unbind().on("mousemove", function (e) {
+        var x = e.offsetX || (e.pageX - context.$svg.offset().left);
+        var y = e.offsetY || (e.pageY - context.$svg.offset().top);
 
         var arr = [];
-        hosts.forEach(function (h) {
+        context.hosts.forEach(function (h) {
             dy = Math.max(62.5, Math.round((y - 12.5) / 50) * 50 + 12.5);
             arr.push([h.x, dy]);
             arr.push([h.x, dy - 50]);
@@ -23,7 +67,7 @@ function bind() {
         else
             $hover.show().hidden = false;
 
-        var color = Array.find(hosts, function (h) {
+        var color = Array.find(context.hosts, function (h) {
             return h.x == c.x;
         }).color;
 
@@ -34,12 +78,12 @@ function bind() {
         });
     }).on("mousedown", function (e) {
         var hx = $hover.attr("cx"), hy = $hover.attr("cy");
-        var existing = Array.find(nodes, function (n) {
+        var existing = Array.find(context.nodes, function (n) {
             return n.x == hx && n.y == hy;
         });
 
         if (!existing && !$hover.hidden) {
-            var n = new Node(hx, hy, true);
+            var n = context.addNode(hx, hy, true);
             var $c = $(n.circle);
             $c.mousedown();
             n.properties();
@@ -53,11 +97,11 @@ function bind() {
             "y1": $(this).attr("cy"),
             "x2": $(this).attr("cx"),
             "y2": $(this).attr("cy")
-        }).prependTo($svg);
+        }).prependTo(context.$svg);
 
         parent.state = "active";
 
-        $svg.on("mousemove", function (e) {
+        context.$svg.on("mousemove", function (e) {
             if ($hover.hidden) {
                 $line.hide();
                 return;
@@ -65,10 +109,10 @@ function bind() {
                 $line.show();
             }
 
-            var x = e.offsetX || (e.pageX - $svg.offset().left);
-            var y = e.offsetY || (e.pageY - $svg.offset().top);
+            var x = e.offsetX || (e.pageX - context.$svg.offset().left);
+            var y = e.offsetY || (e.pageY - context.$svg.offset().top);
 
-            var a = nodes.map(function (n) {
+            var a = context.nodes.map(function (n) {
                 return [n.x, n.y];
             }).filter(isValid).concat([[$hover.attr("cx"), $hover.attr("cy")]]);
 
@@ -80,12 +124,12 @@ function bind() {
             });
         }).on("mouseup", function () {
             var hx = $hover.attr("cx"), hy = $hover.attr("cy");
-            var existing = Array.find(nodes, function (n) {
+            var existing = Array.find(context.nodes, function (n) {
                 return n.x == hx && n.y == hy;
             });
 
             if (!existing && !$hover.hidden) {
-                var child = new Node(hx, hy);
+                var child = context.addNode(hx, hy);
                 child.properties();
                 if (parent.y < child.y)
                     parent.addChild(child, $line);
@@ -103,28 +147,33 @@ function bind() {
             }
 
             parent.state = false;
-            bind();
+            context.bind();
         }).on("mouseout", function (e) {
             var $t = $(e.relatedTarget);
-            if ($t[0] == $svg[0] || $t.parents("svg").length)
+            if ($t[0] == context.$svg[0] || $t.parents("svg").length)
                 return;
             $line.remove();
             parent.remove();
-            bind();
+            context.bind();
         });
     }).on("click", function (e) {
         e.target.node.properties();
     });
-}
+    
+    
+    function isValid(c) {
+        var n = Array.find(context.nodes, function (n) {
+            return n.state && (!(n.x == c[0]) != !(n.y == c[1]));
+        });
 
-$(".add").click(function () {
-    new Host();
-});
+        return n === undefined;
+    }
+};
 
-var hosts = [];
-var nodes = [];
-
-function Host() {
+function Host($svg, hostNum) {
+    
+    this.$svg = $svg;
+    
     if (!Host.colors.length)
         return;
     else if (Host.colors.length == 1)
@@ -132,7 +181,7 @@ function Host() {
 
     var host = this;
 
-    this.rx = hosts.length * 65;
+    this.rx = hostNum * 65;
     this.x = this.rx + 12.5;
     this.color = Host.colors.pop();
     this.nodes = [];
@@ -154,85 +203,83 @@ function Host() {
         "y2": 500
     }).prependTo($svg);
 
-    hosts.push(this);
-
-    $svg.width(hosts.length * 65);
     $(".add").css("background", Host.colors[Host.colors.length - 1]);
 }
+
+
 
 Host.colors = [];
 
-Host.prototype.remove = function () {
-    Array.remove(hosts, this);
-    hosts.forEach(function (h, i) {
-        h.rx = i * 65;
-        h.x = h.rx + 12.5;
-        h.rect.attr("x", h.rx);
-        h.line.attr({
-            "x1": h.x,
-            "x2": h.x
-        });
+//Host.prototype.remove = function () {
+//    Array.remove(hosts, this);
+//    hosts.forEach(function (h, i) {
+//        h.rx = i * 65;
+//        h.x = h.rx + 12.5;
+//        h.rect.attr("x", h.rx);
+//        h.line.attr({
+//            "x1": h.x,
+//            "x2": h.x
+//        });
+//
+//        h.nodes.forEach(function (n) {
+//            n.lines.forEach(function (l) {
+//                if (l.line.attr("x1") == n.x)
+//                    l.line.attr("x1", h.x);
+//                else
+//                    l.line.attr("x2", h.x);
+//            });
+//            n.x = h.x;
+//            n.circle.attr("cx", h.x);
+//        });
+//    });
+//    Host.colors.push(this.color);
+//
+//    while (this.nodes.length)
+//        this.nodes[0].remove();
+//    this.rect.remove();
+//    this.line.remove();
+//
+//    $svg.width(hosts.length * 65);
+//    $(".add").css("background", Host.colors[Host.colors.length - 1]);
+//    $(".add").removeAttr("disabled");
+//
+//    convert();
+//};
 
-        h.nodes.forEach(function (n) {
-            n.lines.forEach(function (l) {
-                if (l.line.attr("x1") == n.x)
-                    l.line.attr("x1", h.x);
-                else
-                    l.line.attr("x2", h.x);
-            });
-            n.x = h.x;
-            n.circle.attr("cx", h.x);
-        });
-    });
-    Host.colors.push(this.color);
-
-    while (this.nodes.length)
-        this.nodes[0].remove();
-    this.rect.remove();
-    this.line.remove();
-
-    $svg.width(hosts.length * 65);
-    $(".add").css("background", Host.colors[Host.colors.length - 1]);
-    $(".add").removeAttr("disabled");
-
-    convert();
-}
-
-function Node(x, y, tmp) {
+function Node($svg, x, y, tmp, color) {
+    
+    this.$svg = $svg;
+    
     this.x = parseFloat(x);
     this.y = parseFloat(y);
     this.state = tmp ? "tmp" : false;
     this.parents = [];
     this.children = [];
     this.lines = [];
-    this.host = Array.find(hosts, function (h) {
-        return h.x == x;
-    });
+    
+    this.color = color;
 
+    var context = this;
     this.circle = $(SVGElement("circle")).attr({
         "r": 5,
         "cx": x,
         "cy": y,
-        "fill": this.host.color
+        "fill": context.color
     }).appendTo($svg);
 
     this.circle[0].node = this;
 
-    this.host.nodes.push(this);
-    nodes.push(this);
-    bind();
-    convert();
 }
 
-Node.prototype.remove = function () {
-    Array.remove(nodes, this);
-    this.lines.forEach(function (l) {
-        l.remove();
-    });
-    Array.remove(this.host.nodes, this);
-    this.circle.remove();
-    convert();
-}
+//Node.prototype.remove = function () {
+//    Array.remove(nodes, this);
+//    this.lines.forEach(function (l) {
+//        l.remove();
+//    });
+//    Array.remove(this.host.nodes, this);
+//    this.circle.remove();
+//    convert();
+//};
 
 Node.prototype.addChild = function (n, l) {
     var line = new Line(this, n, l);
@@ -241,34 +288,34 @@ Node.prototype.addChild = function (n, l) {
     n.parents.push(this);
     n.lines.push(line);
     convert();
-}
+};
 
-Node.prototype.removeChild = function (n) {
-    Array.remove(this.children, n);
-    Array.remove(n.parents, this);
-}
+//Node.prototype.removeChild = function (n) {
+//    Array.remove(this.children, n);
+//    Array.remove(n.parents, this);
+//};
 
 Node.prototype.properties = function () {
     var $dialog = $(".dialog");
     var node = this;
 
-    if (node.x > $svg.width() / 2)
+    if (node.x > this.$svg.width() / 2)
         $dialog.css({
-            "left": node.x + $svg.offset().left + 40
+            "left": node.x + this.$svg.offset().left + 40
         }).removeClass("right").addClass("left").show();
     else
         $dialog.css({
-            "left": node.x + $svg.offset().left - $dialog.width() - 40
+            "left": node.x + this.$svg.offset().left - $dialog.width() - 40
         }).removeClass("left").addClass("right").show();
 
     $dialog.css({
-        "top": node.y + $svg.offset().top,
-        "background": node.host.color,
-        "border-color": node.host.color
+        "top": node.y + this.$svg.offset().top,
+        "background": node.color,
+        "border-color": node.color
     });
 
     $dialog.find(".name").text(node.name);
-}
+};
 
 
 function Line(parent, child, line) {
@@ -277,12 +324,12 @@ function Line(parent, child, line) {
     this.line = line;
 }
 
-Line.prototype.remove = function () {
-    this.parent.removeChild(this.child);
-    Array.remove(this.parent.lines, this);
-    Array.remove(this.child.lines, this);
-    this.line.remove();
-};
+//Line.prototype.remove = function () {
+//    this.parent.removeChild(this.child);
+//    Array.remove(this.parent.lines, this);
+//    Array.remove(this.child.lines, this);
+//    this.line.remove();
+//};
 
 Array.find = function (arr, arg) {
     if (arg.constructor == Function)
@@ -300,12 +347,12 @@ Array.remove = function (arr, arg) {
     }
 
     arr.splice(arr.indexOf(arg), 1);
-}
+};
 
-function convert() {
+GraphBuilder.prototype.convert = function() {
     var s = "";
 
-    hosts.forEach(function (h, i) {
+    this.hosts.forEach(function (h, i) {
         h.name = String.fromCharCode(97 + i);
         h.nodes.sort(function (a, b) {
             return a.y > b.y;
@@ -316,7 +363,7 @@ function convert() {
         });
     });
 
-    nodes.forEach(function (n) {
+    this.nodes.forEach(function (n) {
         n.children.forEach(function (c) {
             for (var h in n.clock) {
                 if (c.clock[h] == undefined || n.clock[h] > c.clock[h])
@@ -325,7 +372,7 @@ function convert() {
         });
     });
 
-    hosts.forEach(function (h) {
+    this.hosts.forEach(function (h) {
         var clock = {};
         h.nodes.forEach(function (n) {
             for (var m in n.clock) {
@@ -338,7 +385,7 @@ function convert() {
     });
 
     $(".out").text(s);
-}
+};
 
 function convertToBG() {
     var bg = new BuilderGraph(hosts.map(function(h) {
@@ -367,20 +414,13 @@ function convertToBG() {
     return bg;
 }
 
-function isValid(c) {
-    var n = Array.find(nodes, function (n) {
-        return n.state && (!(n.x == c[0]) != !(n.y == c[1]));
-    });
-
-    return n === undefined;
-}
 
 function closest(array, x, y, d) {
     var r = {};
     for (var i = 0; i < array.length; i++) {
         var ix = parseFloat(array[i][0]);
         var iy = parseFloat(array[i][1]);
-        var id = Math.sqrt(Math.pow(x - ix, 2) + Math.pow(y - iy, 2))
+        var id = Math.sqrt(Math.pow(x - ix, 2) + Math.pow(y - iy, 2));
         if ((!d || id < d) && (r.dist === undefined || id < r.dist)) {
             r.index = i;
             r.dist = id;
@@ -422,8 +462,3 @@ function HSVtoRGB(h, s, v) {
 
 for (var i = 9; i > 0; i--)
     Host.colors.push(HSVtoRGB(i / 9 + .4, .4, .8));
-
-new Host();
-new Host();
-
-bind();

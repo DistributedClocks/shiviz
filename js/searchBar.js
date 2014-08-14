@@ -2,6 +2,8 @@ function SearchBar(global) {
     
     this.global = global;
     
+    this.graphBuilder = new GraphBuilder($("#panel svg"));
+    
     var context = this;
 
     $("#searchbar #bar input").on("keydown", function(e) {
