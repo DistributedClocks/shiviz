@@ -30,9 +30,56 @@ GraphBuilder.prototype.addHost = function() {
     this.$svg.width(this.hosts.length * 65);
 };
 
+GraphBuilder.prototype.removeHost = function (host) {
+    
+    Array.remove(this.hosts, host);
+    
+    this.hosts.forEach(function (h, i) {
+        h.rx = i * 65;
+        h.x = h.rx + 12.5;
+        h.rect.attr("x", h.rx);
+        h.line.attr({
+            "x1": h.x,
+            "x2": h.x
+        });
+
+        h.nodes.forEach(function (n) {
+            n.lines.forEach(function (l) {
+                if (l.line.attr("x1") == n.x)
+                    l.line.attr("x1", h.x);
+                else
+                    l.line.attr("x2", h.x);
+            });
+            n.x = h.x;
+            n.circle.attr("cx", h.x);
+        });
+    });
+    Host.colors.push(this.color);
+
+    host.removeAllNodes();
+    
+    host.rect.remove();
+    host.line.remove();
+
+    this.$svg.width(this.hosts.length * 65);
+    $(".add").css("background", Host.colors[Host.colors.length - 1]);
+    $(".add").removeAttr("disabled");
+
+    this.convert();
+};
+
 GraphBuilder.prototype.getHostByX = function(x) {
     for(var i = 0; i < this.hosts.length; i++) {
         if(this.hosts[i].x == x) {
+            return this.hosts[i];
+        }
+    }
+    return null;
+};
+
+GraphBuilder.prototype.getHostByNode = function(node) {
+    for(var i = 0; i < this.hosts.length; i++) {
+        if(this.hosts[i].x == node.x) {
             return this.hosts[i];
         }
     }
@@ -165,7 +212,7 @@ GraphBuilder.prototype.bind = function() {
             if ($t[0] == context.$svg[0] || $t.parents("svg").length)
                 return;
             $line.remove();
-            parent.remove();
+            context.getHostByNode(parent).removeNode(parent);
             context.bind();
         });
     }).on("click", function (e) {
@@ -205,7 +252,7 @@ function Host(graphBuilder, hostNum) {
         "x": this.rx,
         "y": 0
     }).on("dblclick", function () {
-        host.remove();
+        graphBuilder.removeHost(host);
     }).prependTo(graphBuilder.getSVG());
     
     this.line = SVGElement("line").attr({
@@ -229,44 +276,26 @@ Host.prototype.addNode = function(y, tmp) {
     return node;
 };
 
+Host.prototype.removeNode = function (node) {
+    node.lines.forEach(function (l) {
+        l.remove();
+    });
+    Array.remove(this.nodes, this);
+    node.circle.remove();
+    this.graphBuilder.convert();
+};
+
+Host.prototype.removeAllNodes = function() {
+    for(var i = 0; i < this.nodes.length; i++) {
+        this.removeNode(this.nodes[i]);
+    }
+    this.nodes = [];
+};
+
 
 Host.colors = [];
 
-//Host.prototype.remove = function () {
-//    Array.remove(hosts, this);
-//    hosts.forEach(function (h, i) {
-//        h.rx = i * 65;
-//        h.x = h.rx + 12.5;
-//        h.rect.attr("x", h.rx);
-//        h.line.attr({
-//            "x1": h.x,
-//            "x2": h.x
-//        });
-//
-//        h.nodes.forEach(function (n) {
-//            n.lines.forEach(function (l) {
-//                if (l.line.attr("x1") == n.x)
-//                    l.line.attr("x1", h.x);
-//                else
-//                    l.line.attr("x2", h.x);
-//            });
-//            n.x = h.x;
-//            n.circle.attr("cx", h.x);
-//        });
-//    });
-//    Host.colors.push(this.color);
-//
-//    while (this.nodes.length)
-//        this.nodes[0].remove();
-//    this.rect.remove();
-//    this.line.remove();
-//
-//    $svg.width(hosts.length * 65);
-//    $(".add").css("background", Host.colors[Host.colors.length - 1]);
-//    $(".add").removeAttr("disabled");
-//
-//    convert();
-//};
+
 
 function Node(graphBuilder, x, y, tmp, color) {
     
@@ -293,15 +322,7 @@ function Node(graphBuilder, x, y, tmp, color) {
 
 }
 
-//Node.prototype.remove = function () {
-//    Array.remove(nodes, this);
-//    this.lines.forEach(function (l) {
-//        l.remove();
-//    });
-//    Array.remove(this.host.nodes, this);
-//    this.circle.remove();
-//    convert();
-//};
+
 
 Node.prototype.addChild = function (n, l) {
     var line = new Line(this, n, l);
@@ -312,10 +333,10 @@ Node.prototype.addChild = function (n, l) {
     this.graphBuilder.convert();
 };
 
-//Node.prototype.removeChild = function (n) {
-//    Array.remove(this.children, n);
-//    Array.remove(n.parents, this);
-//};
+Node.prototype.removeChild = function (n) {
+    Array.remove(this.children, n);
+    Array.remove(n.parents, this);
+};
 
 Node.prototype.properties = function () {
     var $dialog = $(".dialog");
@@ -347,12 +368,12 @@ function Line(parent, child, line) {
     this.line = line;
 }
 
-//Line.prototype.remove = function () {
-//    this.parent.removeChild(this.child);
-//    Array.remove(this.parent.lines, this);
-//    Array.remove(this.child.lines, this);
-//    this.line.remove();
-//};
+Line.prototype.remove = function () {
+    this.parent.removeChild(this.child);
+    Array.remove(this.parent.lines, this);
+    Array.remove(this.child.lines, this);
+    this.line.remove();
+};
 
 Array.find = function (arr, arg) {
     if (arg.constructor == Function)
