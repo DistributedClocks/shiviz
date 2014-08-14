@@ -25,7 +25,7 @@ GraphBuilder.prototype.getSVG = function() {
 };
 
 GraphBuilder.prototype.addHost = function() {
-    this.hosts.push(new Host(this, this.hosts.length));
+    this.hosts.push(new GraphBuilderHost(this, this.hosts.length));
     
     this.$svg.width(this.hosts.length * 65);
 };
@@ -229,151 +229,9 @@ GraphBuilder.prototype.bind = function() {
     }
 };
 
-function Host(graphBuilder, hostNum) {
-    
-    this.graphBuilder = graphBuilder;
-    
-    if (!Host.colors.length)
-        return;
-    else if (Host.colors.length == 1)
-        $(".add").attr("disabled", true);
-
-    var host = this;
-
-    this.rx = hostNum * 65;
-    this.x = this.rx + 12.5;
-    this.color = Host.colors.pop();
-    this.nodes = [];
-
-    this.rect = SVGElement("rect").attr({
-        "width": 25,
-        "height": 25,
-        "fill": this.color,
-        "x": this.rx,
-        "y": 0
-    }).on("dblclick", function () {
-        graphBuilder.removeHost(host);
-    }).prependTo(graphBuilder.getSVG());
-    
-    this.line = SVGElement("line").attr({
-        "x1": this.x,
-        "y1": 30,
-        "x2": this.x,
-        "y2": 500
-    }).prependTo(graphBuilder.getSVG());
-
-    $(".add").css("background", Host.colors[Host.colors.length - 1]);
-}
-
-Host.prototype.addNode = function(y, tmp) {
-
-    var node = new Node(this.graphBuilder, this.x, y, tmp, this.color);
-    
-   this.nodes.push(node);
-    this.graphBuilder.convert();
-    this.graphBuilder.bind();
-    
-    return node;
-};
-
-Host.prototype.removeNode = function (node) {
-    node.lines.forEach(function (l) {
-        l.remove();
-    });
-    Array.remove(this.nodes, this);
-    node.circle.remove();
-    this.graphBuilder.convert();
-};
-
-Host.prototype.removeAllNodes = function() {
-    for(var i = 0; i < this.nodes.length; i++) {
-        this.removeNode(this.nodes[i]);
-    }
-    this.nodes = [];
-};
-
-
-Host.colors = [];
 
 
 
-function Node(graphBuilder, x, y, tmp, color) {
-    
-    this.graphBuilder = graphBuilder;
-    
-    this.x = parseFloat(x);
-    this.y = parseFloat(y);
-    this.state = tmp ? "tmp" : false;
-    this.parents = [];
-    this.children = [];
-    this.lines = [];
-    
-    this.color = color;
-
-    var context = this;
-    this.circle = $(SVGElement("circle")).attr({
-        "r": 5,
-        "cx": x,
-        "cy": y,
-        "fill": context.color
-    }).appendTo(graphBuilder.getSVG());
-
-    this.circle[0].node = this;
-
-}
-
-
-
-Node.prototype.addChild = function (n, l) {
-    var line = new Line(this, n, l);
-    this.children.push(n);
-    this.lines.push(line);
-    n.parents.push(this);
-    n.lines.push(line);
-    this.graphBuilder.convert();
-};
-
-Node.prototype.removeChild = function (n) {
-    Array.remove(this.children, n);
-    Array.remove(n.parents, this);
-};
-
-Node.prototype.properties = function () {
-    var $dialog = $(".dialog");
-    var node = this;
-
-    var svg = this.graphBuilder.getSVG();
-    if (node.x > svg.width() / 2)
-        $dialog.css({
-            "left": node.x + svg.offset().left + 40
-        }).removeClass("right").addClass("left").show();
-    else
-        $dialog.css({
-            "left": node.x + svg.offset().left - $dialog.width() - 40
-        }).removeClass("left").addClass("right").show();
-
-    $dialog.css({
-        "top": node.y + svg.offset().top,
-        "background": node.color,
-        "border-color": node.color
-    });
-
-    $dialog.find(".name").text(node.name);
-};
-
-
-function Line(parent, child, line) {
-    this.parent = parent;
-    this.child = child;
-    this.line = line;
-}
-
-Line.prototype.remove = function () {
-    this.parent.removeChild(this.child);
-    Array.remove(this.parent.lines, this);
-    Array.remove(this.child.lines, this);
-    this.line.remove();
-};
 
 Array.find = function (arr, arg) {
     if (arg.constructor == Function)
@@ -480,29 +338,4 @@ function SVGElement(tag) {
     return $(document.createElementNS("http://www.w3.org/2000/svg", tag));
 }
 
-function HSVtoRGB(h, s, v) {
-    var r, g, b, i, f, p, q, t;
-    if (h && s === undefined && v === undefined) {
-        s = h.s, v = h.v, h = h.h;
-    }
-    i = Math.floor(h * 6);
-    f = h * 6 - i;
-    p = v * (1 - s);
-    q = v * (1 - f * s);
-    t = v * (1 - (1 - f) * s);
-    switch (i % 6) {
-        case 0: r = v, g = t, b = p; break;
-        case 1: r = q, g = v, b = p; break;
-        case 2: r = p, g = v, b = t; break;
-        case 3: r = p, g = q, b = v; break;
-        case 4: r = t, g = p, b = v; break;
-        case 5: r = v, g = p, b = q; break;
-    }
-    r = Math.floor(r * 255);
-    g = Math.floor(g * 255);
-    b = Math.floor(b * 255);
-    return "rgb(" + r + "," + g + "," + b + ")";
-}
 
-for (var i = 9; i > 0; i--)
-    Host.colors.push(HSVtoRGB(i / 9 + .4, .4, .8));
