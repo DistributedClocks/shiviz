@@ -92,9 +92,6 @@ View.prototype.setWidth = function(newWidth) {
 View.prototype.draw = function() {
     // Assign a unique ID to each execution so we can distinguish
     // them
-    if (this.id == null) {
-        this.id = "view" + d3.selectAll("#vizContainer > svg").size();
-    }
 
     this.model = this.initialModel.clone();
     this.visualGraph = new VisualGraph(this.model, this.layout, this.hostPermutation);
@@ -111,7 +108,6 @@ View.prototype.draw = function() {
     this.svg.attr({
         "height": this.visualGraph.getHeight(),
         "width": this.visualGraph.getWidth(),
-        "class": this.id
     });
 
     drawLinks();
@@ -376,6 +372,6 @@ View.prototype.draw = function() {
         }
 
         // Bind the log lines
-        view.controller.bindLines($(".log .line:not(.more)")); // TODO
+        view.controller.bindLines($(".visualization .log .line:not(.more)")); // TODO
     }
 };

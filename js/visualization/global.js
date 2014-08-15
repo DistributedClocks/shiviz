@@ -176,6 +176,7 @@ Global.prototype.resize = function() {
         view.setWidth(hosts.length * widthPerHost - hostMargin);
     });
 
+//    $("#middle").width(globalWidth); 
     return hostMargin;
 };
 

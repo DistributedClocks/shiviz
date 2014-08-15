@@ -68,6 +68,51 @@ function Shiviz() {
     $("#visualize").on("click", function() {
         context.go(2, true, true);
     });
+    
+    
+    
+    try{
+    
+    var global = new Global($("#vizContainer"), $("#sidebar")); 
+    
+    var log = "x1@a {\"a\":1}";
+    var regexp = new NamedRegExp("(?<event>.*)@(?<host>\\S*) (?<clock>{.*})", "m");
+    var parser = new LogParser(log, null, regexp);
+    var hostPermutation = new LengthPermutation(true);
+    
+    var labels = parser.getLabels();
+        var graph = new ModelGraph(parser.getLogEvents(labels[0]));
+
+        hostPermutation.addGraph(graph);
+    
+    hostPermutation.update();
+    global.setHostPermutation(hostPermutation);
+    
+    var logColWidth = (240 - 12 * (labels.length - 1)) / labels.length;
+
+    
+    for(var i = 0; i < labels.length; i++) {
+        var label = labels[i];
+        var logTable = $("<td></td>");
+        $("#asdf").append(logTable.width(logColWidth + "pt"));
+        
+        // Add the spacer after log column
+        if(i != labels.length - 1) {
+            $("#asdf").append($("<td></td>").addClass("spacer"));
+        }
+        
+        var mainSVG = d3.select("#vizContainer").append("svg");
+        var hostSVG = d3.select("#hostBar").append("svg");
+        var view = new View(mainSVG, hostSVG, logTable, graph, hostPermutation, label, global.controller); //TODO
+        global.addView(view);
+    }
+
+    global.drawAll();
+    
+    }
+    catch(e) {
+        this.handleException(e);
+    }
 
 }
 
@@ -159,6 +204,11 @@ Shiviz.prototype.visualize = function() {
             }
         });
 
+        $("table.log").empty(); //TODO: check
+        $("#sidebar .hidden svg").remove()
+      d3.select("#hostBar").selectAll("*").remove();
+      d3.select("#vizContainer").selectAll("*").remove();
+        
         var global = new Global($("#vizContainer"), $("#sidebar"));
         new SearchBar(global); // TODO
 
@@ -168,19 +218,14 @@ Shiviz.prototype.visualize = function() {
         var logColWidth = (240 - 12 * (labels.length - 1)) / labels.length;
 
         
-        $("table.log").empty(); //TODO: check
-//        $("#sidebar").empty();
-        d3.select("#hostBar").selectAll("*").remove();
-        d3.select("#vizContainer").selectAll("*").remove();
-        
         for(var i = 0; i < labels.length; i++) {
             var label = labels[i];
             var logTable = $("<td></td>");
-            $("table.log").append(logTable.width(logColWidth + "pt"));
+            $("#logtable").append(logTable.width(logColWidth + "pt"));
             
             // Add the spacer after log column
             if(i != labels.length - 1) {
-                $("table.log").append($("<td></td>").addClass("spacer"));
+                $("#logtable").append($("<td></td>").addClass("spacer"));
             }
             
             var graph = labelGraph[label];

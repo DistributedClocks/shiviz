@@ -325,7 +325,7 @@ section.input .left {
     box-shadow: 0 -1px #fff, 0 1px #fff;
 }
 
-.visualization #graph {
+.visualization #middle {
     margin-left: 264pt;
     padding-right: 240px;
 }
@@ -449,7 +449,7 @@ svg {
 }
 
 #hostBar {
-	position: fixed;
+    position: fixed;
     background: white;
 }
 
