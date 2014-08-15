@@ -56,6 +56,19 @@ VectorTimestamp.prototype.getOwnTime = function() {
 };
 
 /**
+ * Returns the entire vector clock as a JSON object
+ * 
+ * @returns {Object} the clock
+ */
+VectorTimestamp.prototype.getClock = function() {
+    var clock = {};
+    for(var key in this.clock) {
+        clock[key] = this.clock[key];
+    }
+    return clock;
+};
+
+/**
  * <p>
  * Returns a vector timestamp that is this updated with the argument. The
  * timestamp updating is done according to the

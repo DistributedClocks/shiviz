@@ -1,4 +1,6 @@
 function GraphBuilderHost(graphBuilder, hostNum) {
+    
+    this.hostNum = hostNum;
 
 
     this.graphBuilder = graphBuilder;
@@ -29,6 +31,14 @@ function GraphBuilderHost(graphBuilder, hostNum) {
 }
 
 GraphBuilderHost.hasStaticInit = false;
+
+GraphBuilderHost.prototype.getName = function() {
+    return "host" + this.hostNum;
+};
+
+GraphBuilderHost.prototype.getNodes = function() {
+    return this.nodes.slice();
+};
 
 GraphBuilderHost.prototype.addNode = function(y, tmp) {
 
