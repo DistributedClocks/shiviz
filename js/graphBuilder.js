@@ -48,7 +48,7 @@ GraphBuilder.prototype.convertFromBG = function(bg) {
     nodes.forEach(function(n) {
         var head = n.getPrev().isHead() ? 0 : 1;
         nodeToParents[n.getId()] = n.getParents().length + head;
-        nodeToY[n.getId()] = GraphBuilder.START_OFFSET;
+        nodeToY[n.getId()] = GraphBuilder.START_OFFSET + GraphBuilder.Y_SPACING * 2;
     });
 
     var next = nodes.filter(function(n) {
@@ -378,9 +378,9 @@ Array.remove = function (arr, arg) {
 };
 
 GraphBuilder.prototype.convert = function() {
-    var vts = new VectorTimestampSerializer("{\"host\":\"`HOST`\",\"clock\":`CLOCK`}", ",", "#motif=[", "]");
-    var builderGraph = this.convertToBG();
-    // $("#searchbar #bar input").val(vts.serialize(builderGraph.toVectorTimestamps()));
+//    var vts = new VectorTimestampSerializer("{\"host\":\"`HOST`\",\"clock\":`CLOCK`}", ",", "#motif=[", "]");
+//    var builderGraph = this.convertToBG();
+//    $("#searchbar #bar input").val(vts.serialize(builderGraph.toVectorTimestamps()));
 };
 
 GraphBuilder.prototype.convertToBG = function() {
