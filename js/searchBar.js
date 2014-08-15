@@ -3,6 +3,8 @@ function SearchBar(global) {
     this.global = global;
     this.graphBuilder = new GraphBuilder(this);
 
+    window.graphBuilder = this.graphBuilder;
+
     // Temporary flag until serialization is implemented
     this.searchMotif = false;
     

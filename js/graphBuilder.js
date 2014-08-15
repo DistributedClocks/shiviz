@@ -26,6 +26,75 @@ GraphBuilder.Y_SPACING = 50;
 GraphBuilder.BOX = 25;
 GraphBuilder.HALF_BOX = GraphBuilder.BOX / 2;
 
+GraphBuilder.prototype.convertFromBG = function(bg) {
+    var context = this;
+
+    while (this.hosts.length > 0)
+        this.removeHost(this.hosts[this.hosts.length - 1]);
+
+    var hostMap = {};
+
+    var hosts = bg.getHosts();
+    bg.getHosts().forEach(function(h) {
+        var host = context.addHost();
+        hostMap[h] = host;
+    }); 
+
+    var nodeToParents = {};
+    var nodeToY = {};
+    var nodeToGBNode = {};
+
+    var nodes = bg.getNodes();
+    nodes.forEach(function(n) {
+        var head = n.getPrev().isHead() ? 0 : 1;
+        nodeToParents[n.getId()] = n.getParents().length + head;
+        nodeToY[n.getId()] = GraphBuilder.START_OFFSET;
+    });
+
+    var next = nodes.filter(function(n) {
+        return !nodeToParents[n.getId()];
+    });
+
+    while (next.length) {
+        var curr = next.pop();
+
+        var node = hostMap[curr.getHost()].addNode(nodeToY[curr.getId()]);
+        nodeToGBNode[curr.getId()] = node;
+
+        var cnext = curr.getNext().isTail() ? [] : [curr.getNext()];
+        var children = curr.getChildren().concat(cnext);
+
+        children.forEach(function(n) {
+            var id = n.getId();
+            var numParents = --nodeToParents[id];
+            nodeToParents[id] = numParents;
+            nodeToY[id] = nodeToY[curr.getId()] + GraphBuilder.Y_SPACING;
+
+            if (numParents == 0)
+                next.push(n);
+        });
+    }
+
+    nodes.forEach(function(n) {
+        var gbn = nodeToGBNode[n.getId()];
+        var children = n.getChildren();
+        children.forEach(function(c) {
+            var gbc = nodeToGBNode[c.getId()];
+            var c1 = gbn.getCoords();
+            var c2 = gbc.getCoords();
+
+            var $line = SVGElement("line").attr({
+                "x1": c1[0],
+                "x2": c2[0],
+                "y1": c1[1],
+                "y2": c2[1]
+            }).prependTo(context.$svg);
+
+            gbn.addChild(gbc, $line);
+        });
+    });
+}
+
 GraphBuilder.prototype.getSVG = function() {
     return this.$svg;
 };
@@ -36,16 +105,18 @@ GraphBuilder.prototype.addHost = function() {
         throw new Exception("GraphBuilder.prototype.addHost: no new hosts may be added");
     }
     
-    this.hosts.push(new GraphBuilderHost(this, this.hosts.length));
-    
+    var host = new GraphBuilderHost(this, this.hosts.length);
+    this.hosts.push(host);
+
     this.$svg.width(this.hosts.length * 65);
-    
     
     if (this.hosts.length == GraphBuilder.MAX_HOSTS) {
         $(".add").attr("disabled", true);
     } else {
         $(".add").css("background", this.colors[this.colors.length - 1]);
     }
+
+    return host;
 };
 
 GraphBuilder.prototype.removeHost = function(host) {
@@ -309,7 +380,7 @@ Array.remove = function (arr, arg) {
 GraphBuilder.prototype.convert = function() {
     var vts = new VectorTimestampSerializer("{\"host\":\"`HOST`\",\"clock\":`CLOCK`}", ",", "#motif=[", "]");
     var builderGraph = this.convertToBG();
-    $("#searchbar #bar input").val(vts.serialize(builderGraph.toVectorTimestamps()));
+    // $("#searchbar #bar input").val(vts.serialize(builderGraph.toVectorTimestamps()));
 };
 
 GraphBuilder.prototype.convertToBG = function() {
@@ -320,7 +391,9 @@ GraphBuilder.prototype.convertToBG = function() {
     this.hosts.forEach(function(h) {
         var head = bg.getHead(h.getName());
         var curr = head;
-        h.nodes.forEach(function(n) {
+        h.nodes.sort(function(a, b) {
+            return a.y - b.y;
+        }).forEach(function(n) {
             var bn = new BuilderNode();
             n.bn = bn;
             curr.insertNext(bn);
@@ -330,7 +403,7 @@ GraphBuilder.prototype.convertToBG = function() {
 
     this.getNodes().forEach(function(n) {
         n.children.sort(function(a, b) {
-            return a.y < b.y;
+            return a.y - b.y;
         }).forEach(function(m) {
             n.bn.addChild(m.bn);
         });

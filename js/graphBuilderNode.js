@@ -41,8 +41,11 @@ GraphBuilderNode.prototype.getCircle = function() {
     return this.circle;
 };
 
+GraphBuilderNode.prototype.getCoords = function() {
+    return [this.x, this.y];
+};
 
-GraphBuilderNode.prototype.addChild = function (n, l) {
+GraphBuilderNode.prototype.addChild = function(n, l) {
     var line = new Line(this, n, l);
     this.children.push(n);
     this.lines.push(line);
@@ -51,7 +54,7 @@ GraphBuilderNode.prototype.addChild = function (n, l) {
     this.graphBuilder.convert();
 };
 
-GraphBuilderNode.prototype.removeChild = function (n) {
+GraphBuilderNode.prototype.removeChild = function(n) {
     Array.remove(this.children, n);
     Array.remove(n.parents, this);
 };
