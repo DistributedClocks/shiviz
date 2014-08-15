@@ -68,9 +68,9 @@ GraphBuilder.prototype.convertFromBG = function(bg) {
 
         children.forEach(function(n) {
             var id = n.getId();
+            
             var numParents = --nodeToParents[id];
-            nodeToParents[id] = numParents;
-            nodeToY[id] = nodeToY[curr.getId()] + GraphBuilder.Y_SPACING;
+            nodeToY[id] = Math.max(nodeToY[id], nodeToY[curr.getId()] + GraphBuilder.Y_SPACING);
 
             if (numParents == 0)
                 next.push(n);
