@@ -21,11 +21,10 @@ function SearchBar(global) {
     }).on("input", function() {
         
         var match = null;
+        context.graphBuilder.lockConversion();
         
         if(this.value.indexOf("#") < 0) {
-            var v = this.value;
             context.clearMotif();
-            this.value = v;
         }
         else if(match = this.value.trim().match(/^#(motif\s*=\s*)?(.*)/i)){
             var json = match[2];
@@ -50,6 +49,9 @@ function SearchBar(global) {
             //TODO
             console.log("OMFG");
         }
+        
+        context.graphBuilder.unlockConversion();
+
 
         if (this.value.length || context.searchMotif)
             $("#bar button").prop("disabled", false);
