@@ -17,8 +17,11 @@ function SearchBar(global) {
             Shiviz.getInstance().handleException(exception);
         }
     }).on("input", function() {
-        if (this.value.length)
+        if (this.value.length) {
+            var v = this.value;
             context.clearMotif();
+            this.value = v;
+        }
 
         if (this.value.length || context.searchMotif)
             $("#bar button").prop("disabled", false);
@@ -78,7 +81,6 @@ SearchBar.prototype.notify = function(n) {
     } else {
         $("#bar button").prop("disabled", false);
         this.searchMotif = true;
-        this.clearText();
     }
 }
 
