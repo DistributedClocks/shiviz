@@ -2,6 +2,8 @@
 
 function GraphBuilderNode(graphBuilder, x, y, tmp, color) {
     
+    this.id = GraphBuilderNode.id++;
+    
     this.graphBuilder = graphBuilder;
     
     this.x = parseFloat(x);
@@ -25,6 +27,12 @@ function GraphBuilderNode(graphBuilder, x, y, tmp, color) {
 
 }
 
+GraphBuilderNode.id = 0;
+
+GraphBuilderNode.prototype.getId = function() {
+    return this.id;
+};
+
 GraphBuilderNode.prototype.getLines = function() {
     return this.lines.slice();
 };
@@ -46,6 +54,10 @@ GraphBuilderNode.prototype.addChild = function (n, l) {
 GraphBuilderNode.prototype.removeChild = function (n) {
     Array.remove(this.children, n);
     Array.remove(n.parents, this);
+};
+
+GraphBuilderNode.prototype.getChildren = function() {
+    return this.children.slice();
 };
 
 

@@ -276,51 +276,68 @@ Array.remove = function (arr, arg) {
     arr.splice(arr.indexOf(arg), 1);
 };
 
-GraphBuilder.prototype.convert = function() {
-    var s = "";
-
-    this.hosts.forEach(function (h, i) {
-        h.name = String.fromCharCode(97 + i);
-        h.nodes.sort(function (a, b) {
-            return a.y > b.y;
-        }).forEach(function (n, i) {
-            n.name = h.name + (i + 1);
-            n.clock = {};
-            n.clock[h.name] = i + 1;
+GraphBuilder.prototype.toVectorClocks = function() {
+    
+    var orderedNodes = [];
+    var nodeToVectorTimestamp = {};
+    
+    this.hosts.forEach(function(host) {
+        host.getNodes().forEach(function(node, index){
+            orderedNodes.push(node);
+            var clock = {};
+            clock[host.getName()] = index + 1;
+            nodeToVectorTimestamp[node.getId()] = new VectorTimestamp(clock, host.getName());
         });
     });
-
-    this.getNodes().forEach(function (n) {
-        n.children.forEach(function (c) {
-            for (var h in n.clock) {
-                if (c.clock[h] == undefined || n.clock[h] > c.clock[h])
-                    c.clock[h] = n.clock[h];
-            }
+    
+    var nodes = this.getNodes().sort(function(a, b) {
+        return a.y - b.y;
+    });
+    
+    nodes.forEach(function(node) {
+        node.getChildren().forEach(function(child) {
+            var childVT = nodeToVectorTimestamp[child.getId()];
+            var nodeVT = nodeToVectorTimestamp[node.getId()];
+            nodeToVectorTimestamp[child.getId()] = childVT.update(nodeVT);
         });
     });
-
-    this.hosts.forEach(function (h) {
-        var clock = {};
-        h.nodes.forEach(function (n) {
-            for (var m in n.clock) {
-                if (clock[m] == undefined || n.clock[m] > clock[m])
-                    clock[m] = n.clock[m];
-            }
-            n.clock = clock;
-            s += n.name + '\n' + h.name + ' ' + JSON.stringify(n.clock) + '\n';
-        });
+    
+    this.hosts.forEach(function(host) {
+        var nodes = host.getNodes();
+        if(nodes.length == 0) {
+            return;
+        }
+        
+        var vt = nodeToVectorTimestamp[nodes[0].getId()];
+        
+        for(var i = 1; i < nodes.length; i++) {
+            var id = nodes[i].getId();
+            vt = vt.update(nodeToVectorTimestamp[id]);
+            nodeToVectorTimestamp[id] = vt;
+        }
+    });
+    
+    return orderedNodes.map(function(node) {
+        return nodeToVectorTimestamp[node.getId()];
     });
 
-    $(".out").text(s);
 };
 
-function convertToBG() {
-    var bg = new BuilderGraph(hosts.map(function(h) {
-        return h.name;
+GraphBuilder.prototype.convert = function() {
+
+    var vts = new VectorTimestampSerializer("{\"host\":\"`HOST`\",\"clock\":`CLOCK`}", ",", "#motif=[", "]");
+    $("#searchbar #bar input").val(vts.serialize(this.toVectorClocks()));
+    
+
+};
+
+GraphBuilder.prototype.convertToBG = function() {
+    var bg = new BuilderGraph(this.hosts.map(function(h) {
+        return h.getName();
     }));
 
-    hosts.forEach(function(h) {
-        var head = bg.getHead(h.name);
+    this.hosts.forEach(function(h) {
+        var head = bg.getHead(h.getName());
         var curr = head;
         h.nodes.forEach(function(n) {
             var bn = new BuilderNode();
@@ -330,7 +347,7 @@ function convertToBG() {
         });
     });
 
-    nodes.forEach(function(n) {
+    this.getNodes().forEach(function(n) {
         n.children.sort(function(a, b) {
             return a.y < b.y;
         }).forEach(function(m) {
@@ -339,7 +356,7 @@ function convertToBG() {
     });
 
     return bg;
-}
+};
 
 
 
