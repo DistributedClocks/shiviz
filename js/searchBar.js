@@ -26,23 +26,24 @@ function SearchBar(global) {
         if(this.value.indexOf("#") < 0) {
             context.clearMotif();
         }
-        else if(match = this.value.trim().match(/^#(motif\s*=\s*)?(.*)/i)){
-            var json = match[2];
+        else if(match = this.value.trim().match(/^#(motif\s*=\s*)?(\[.*\])/i)){
+            
             try {
+                var json = match[2];
                 JSON.parse(json);
+                var parsingRegex = new NamedRegExp("(?<event>)\\{\\\"host\\\":\\\"(?<host>[^\\}]+)\\\",\\\"clock\\\":(?<clock>\\{[^\\}]*\\})\\}", "i");
+                var parser = new LogParser(json, null, parsingRegex);
+                var logEvents = parser.getLogEvents(parser.getLabels()[0]);
+                var vectorTimestamps = logEvents.map(function(logEvent){
+                    return logEvent.getVectorTimestamp();
+                });
+                var builderGraph = BuilderGraph.fromVectorTimestamps(vectorTimestamps);
+                context.graphBuilder.convertFromBG(builderGraph);
             }
             catch(exception) {
-                throw new Exception("ASDF", true);
+//                throw new Exception("ASDF", true);
             }
             
-            var parsingRegex = new NamedRegExp("(?<event>)\\{\\\"host\\\":\\\"(?<host>[^\\}]+)\\\",\\\"clock\\\":(?<clock>\\{[^\\}]*\\})\\}", "i");
-            var parser = new LogParser(json, null, parsingRegex);
-            var logEvents = parser.getLogEvents(parser.getLabels()[0]);
-            var vectorTimestamps = logEvents.map(function(logEvent){
-                return logEvent.getVectorTimestamp();
-            });
-            var builderGraph = BuilderGraph.fromVectorTimestamps(vectorTimestamps);
-            context.graphBuilder.convertFromBG(builderGraph);
 
         }
         else {
