@@ -304,57 +304,11 @@ Array.remove = function (arr, arg) {
     arr.splice(arr.indexOf(arg), 1);
 };
 
-GraphBuilder.prototype.toVectorClocks = function() {
-    
-    var orderedNodes = [];
-    var nodeToVectorTimestamp = {};
-    
-    this.hosts.forEach(function(host) {
-        host.getNodes().forEach(function(node, index){
-            orderedNodes.push(node);
-            var clock = {};
-            clock[host.getName()] = index + 1;
-            nodeToVectorTimestamp[node.getId()] = new VectorTimestamp(clock, host.getName());
-        });
-    });
-    
-    var nodes = this.getNodes().sort(function(a, b) {
-        return a.y - b.y;
-    });
-    
-    nodes.forEach(function(node) {
-        node.getChildren().forEach(function(child) {
-            var childVT = nodeToVectorTimestamp[child.getId()];
-            var nodeVT = nodeToVectorTimestamp[node.getId()];
-            nodeToVectorTimestamp[child.getId()] = childVT.update(nodeVT);
-        });
-    });
-    
-    this.hosts.forEach(function(host) {
-        var nodes = host.getNodes();
-        if(nodes.length == 0) {
-            return;
-        }
-        
-        var vt = nodeToVectorTimestamp[nodes[0].getId()];
-        
-        for(var i = 1; i < nodes.length; i++) {
-            var id = nodes[i].getId();
-            vt = vt.update(nodeToVectorTimestamp[id]);
-            nodeToVectorTimestamp[id] = vt;
-        }
-    });
-    
-    return orderedNodes.map(function(node) {
-        return nodeToVectorTimestamp[node.getId()];
-    });
-
-};
-
 GraphBuilder.prototype.convert = function() {
 
     var vts = new VectorTimestampSerializer("{\"host\":\"`HOST`\",\"clock\":`CLOCK`}", ",", "#motif=[", "]");
-    $("#searchbar #bar input").val(vts.serialize(this.toVectorClocks()));
+    var builderGraph = this.convertToBG();
+    $("#searchbar #bar input").val(vts.serialize(builderGraph.toVectorTimestamps()));
     
 
 };
