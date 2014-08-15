@@ -17,10 +17,14 @@ function SearchBar(global) {
             Shiviz.getInstance().handleException(exception);
         }
     }).on("input", function() {
-        if (this.value.length) {
+        
+        if(this.value.indexOf("#") < 0) {
             var v = this.value;
             context.clearMotif();
             this.value = v;
+        }
+        else {
+            //TODO: reverse serialize
         }
 
         if (this.value.length || context.searchMotif)
@@ -82,14 +86,16 @@ SearchBar.prototype.notify = function(n) {
         $("#bar button").prop("disabled", false);
         this.searchMotif = true;
     }
-}
+};
+
 
 SearchBar.prototype.query = function(query) {
 
+    var finder = null;
     if (typeof query == "string") {
-        var finder = new TextQueryMotifFinder(query);
+        finder = new TextQueryMotifFinder(query);
     } else if (query instanceof BuilderGraph) {
-        var finder = new CustomMotifFinder(query);
+        finder = new CustomMotifFinder(query);
     }
 
     var views = this.global.getViews();
