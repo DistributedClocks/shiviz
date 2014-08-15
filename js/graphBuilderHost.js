@@ -1,4 +1,6 @@
 function GraphBuilderHost(graphBuilder, hostNum) {
+    
+    this.hostNum = hostNum;
 
     if (!GraphBuilderHost.hasStaticInit) {
         GraphBuilderHost.hasStaticInit = true;
@@ -73,6 +75,14 @@ function GraphBuilderHost(graphBuilder, hostNum) {
 GraphBuilderHost.colors = [];
 
 GraphBuilderHost.hasStaticInit = false;
+
+GraphBuilderHost.prototype.getName = function() {
+    return "host" + this.hostNum;
+};
+
+GraphBuilderHost.prototype.getNodes = function() {
+    return this.nodes.slice();
+};
 
 GraphBuilderHost.prototype.addNode = function(y, tmp) {
 
