@@ -33,7 +33,7 @@ function GraphBuilderHost(graphBuilder, hostNum) {
 GraphBuilderHost.hasStaticInit = false;
 
 GraphBuilderHost.prototype.getName = function() {
-    return "host" + this.hostNum;
+    return String.fromCharCode(97 + this.hostNum);
 };
 
 GraphBuilderHost.prototype.getNodes = function() {
