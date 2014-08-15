@@ -359,6 +359,7 @@ section.input .left {
     margin-top: 1px;
     left: calc(100% - 59pt);
     background: white;
+    cursor: pointer;
 }
 #searchbar #bar .clear div {
     width: 1px;

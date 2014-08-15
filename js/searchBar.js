@@ -52,6 +52,7 @@ function SearchBar(global) {
             console.log("OMFG");
         }
 
+        $("#searchbar #bar button").click();
         context.graphBuilder.unlockConversion();
 
         if (this.value.trim().length)
@@ -73,6 +74,7 @@ function SearchBar(global) {
             context.updateMode();
 
             if (context.mode == SearchBar.MODE_EMPTY) {
+                context.clearResults();
                 return;
             }
             else if (context.mode == SearchBar.MODE_STRUCTURAL) {
@@ -85,10 +87,10 @@ function SearchBar(global) {
                 console.log("ASDSDA"); //TODO
             }
 
-            context.hide();
+            // context.hide();
         }
         catch (exception) {
-            Shiviz.getInstance().handleException(exception);
+            // Shiviz.getInstance().handleException(exception);
         }
     });
 
@@ -139,7 +141,15 @@ SearchBar.prototype.clearText = function() {
 SearchBar.prototype.clear = function() {
     this.clearText();
     this.clearMotif();
+    this.clearResults();
 };
+
+SearchBar.prototype.clearResults = function() {
+    this.global.getViews().forEach(function(view) {
+        view.getTransformer().unhighlightMotif();
+    });
+    this.global.drawAll();
+}
 
 SearchBar.prototype.queryText = function(query) {
     var finder = new TextQueryMotifFinder(query);
@@ -156,3 +166,7 @@ SearchBar.prototype.queryMotif = function(builderGraph) {
     });
     this.global.drawAll();
 };
+
+SearchBar.prototype.notify = function() {
+    $("#searchbar #bar button").click();
+}
