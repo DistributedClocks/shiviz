@@ -2,6 +2,8 @@ function GraphBuilder(searchbox) {
 
     this.searchbox = searchbox;
     
+    this.conversionLocked = false;
+    
     this.$svg = $("#panel svg");
     this.$hover = this.$svg.find(".hover");
     
@@ -377,10 +379,23 @@ Array.remove = function (arr, arg) {
     arr.splice(arr.indexOf(arg), 1);
 };
 
+GraphBuilder.prototype.lockConversion = function() {
+    this.conversionLocked = true;
+};
+
+GraphBuilder.prototype.unlockConversion = function() {
+    this.conversionLocked = false;
+};
+
 GraphBuilder.prototype.convert = function() {
-//    var vts = new VectorTimestampSerializer("{\"host\":\"`HOST`\",\"clock\":`CLOCK`}", ",", "#motif=[", "]");
-//    var builderGraph = this.convertToBG();
-//    $("#searchbar #bar input").val(vts.serialize(builderGraph.toVectorTimestamps()));
+    
+    if(this.conversionLocked) {
+        return;
+    }
+    
+    var vts = new VectorTimestampSerializer("{\"host\":\"`HOST`\",\"clock\":`CLOCK`}", ",", "#motif=[", "]");
+    var builderGraph = this.convertToBG();
+    $("#searchbar #bar input").val(vts.serialize(builderGraph.toVectorTimestamps()));
 };
 
 GraphBuilder.prototype.convertToBG = function() {
