@@ -63,18 +63,17 @@ BuilderGraph.prototype.addHost = function(host) {
     this.hostToTail[host] = tail;
 };
 
-
 BuilderGraph.prototype.toVectorTimestamps = function() {
-    
+
     var nodeToVT = {};
     var orderedNodes = [];
-    
-    for(var i = 0; i < this.hosts.length; i++) {
+
+    for (var i = 0; i < this.hosts.length; i++) {
         var host = this.hosts[i];
         var curr = this.getHead(host).getNext();
         var num = 1;
-        
-        while(!curr.isTail()) {
+
+        while (!curr.isTail()) {
             orderedNodes.push(curr);
             var clock = {};
             clock[host] = num++;
@@ -82,18 +81,58 @@ BuilderGraph.prototype.toVectorTimestamps = function() {
             curr = curr.getNext();
         }
     }
-    
-    this.getNodesTopologicallySorted().forEach(function(node){
+
+    this.getNodesTopologicallySorted().forEach(function(node) {
         var nodeVT = nodeToVT[node.getId()];
         node.getChildren().forEach(function(child) {
             nodeToVT[child.getId()] = nodeToVT[child.getId()].update(nodeVT);
         });
-        if(!node.getNext().isTail()) {
+        if (!node.getNext().isTail()) {
             nodeToVT[node.getNext().getId()] = nodeToVT[node.getNext().getId()].update(nodeVT);
         }
     });
-    
+
     return orderedNodes.map(function(node) {
         return nodeToVT[node.getId()];
     });
-}
+};
+
+BuilderGraph.fromVectorTimestamps = function(vectorTimestamps) {
+    var logEvents = vectorTimestamps.map(function(vt) {
+        return new LogEvent("", vt, 0, {});
+    });
+
+    var modelGraph = null;
+
+    try {
+        modelGraph = new ModelGraph(logEvents);
+    }
+    catch (exception) {
+        if (exception.constructor != Exception) {
+            throw exception;
+        }
+        throw new Exception("The JSON describing the structure of the motif is invalid.", true);
+    }
+
+    var hosts = modelGraph.getHosts();
+    var newGraph = new BuilderGraph(hosts);
+
+    var oldToNewNode = {};
+
+    hosts.forEach(function(host) {
+        oldToNewNode[modelGraph.getHead(host).getId()] = this.getHead(host);
+    });
+
+    newGraph.getNodesTopologicallySorted().forEach(function(node) {
+        var newNode = new BuilderNode();
+        oldToNewNode[node.getPrev().getId()].insertNext(newNode);
+        oldToNewNode[node.getId()] = newNode;
+
+        node.getParents().forEach(function(parent) {
+            newNode.addParent(oldToNewNode[parent.getId()]);
+        });
+    });
+
+    return newGraph;
+
+};
