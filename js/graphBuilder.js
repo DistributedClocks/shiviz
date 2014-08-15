@@ -157,7 +157,6 @@ GraphBuilder.prototype.removeHost = function(host) {
     $(".add").removeAttr("disabled");
 
     this.convert();
-    this.searchbox.notify(this.getNodes().length);
 };
 
 GraphBuilder.prototype.getHostByX = function(x) {
@@ -255,7 +254,6 @@ GraphBuilder.prototype.bind = function() {
         if (!existing && !$hover.hidden) {
             var n = context.getHostByX(hx).addNode(hy, true);
             var $c = $(n.circle);
-            context.searchbox.notify(context.getNodes().length);
             context.convert();
             $c.mousedown();
         }
@@ -304,7 +302,6 @@ GraphBuilder.prototype.bind = function() {
 
             if (!existing && !$hover.hidden) {
                 var child = context.getHostByX(hx).addNode(hy, false);
-                context.searchbox.notify(context.getNodes().length);
 
                 if (parent.y < child.y)
                     parent.addChild(child, $line);
@@ -329,7 +326,6 @@ GraphBuilder.prototype.bind = function() {
                 return;
             $line.remove();
             context.getHostByNode(parent).removeNode(parent);
-            context.searchbox.notify(context.getNodes().length);
             context.convert();
             context.bind();
         });
