@@ -111,7 +111,7 @@ BuilderGraph.fromVectorTimestamps = function(vectorTimestamps) {
         if (exception.constructor != Exception) {
             throw exception;
         }
-        throw new Exception("The JSON describing the structure of the motif was invalid.", true);
+        throw new Exception("The JSON describing the structure of the motif is invalid.", true);
     }
 
     var hosts = modelGraph.getHosts();
