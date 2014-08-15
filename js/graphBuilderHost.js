@@ -40,6 +40,12 @@ GraphBuilderHost.prototype.getNodes = function() {
     return this.nodes.slice();
 };
 
+GraphBuilderHost.prototype.getNodesSorted = function() {
+    return this.getNodes().sort(function(a, b) {
+        return a.y - b.y;
+    });
+};
+
 GraphBuilderHost.prototype.addNode = function(y, tmp) {
 
     var node = new GraphBuilderNode(this.graphBuilder, this.x, y, tmp, this.color);

@@ -384,32 +384,34 @@ GraphBuilder.prototype.convert = function() {
 };
 
 GraphBuilder.prototype.convertToBG = function() {
-    var bg = new BuilderGraph(this.hosts.map(function(h) {
-        return h.getName();
-    }));
-
-    this.hosts.forEach(function(h) {
-        var head = bg.getHead(h.getName());
-        var curr = head;
-        h.nodes.sort(function(a, b) {
-            return a.y - b.y;
-        }).forEach(function(n) {
-            var bn = new BuilderNode();
-            n.bn = bn;
-            curr.insertNext(bn);
-            curr = n.bn;
+    
+    var hosts = this.hosts.map(function(gbHost) {
+        return gbHost.getName();
+    });
+    
+    var builderGraph = new BuilderGraph(hosts);
+    var gbNodeToBuilderNode = {};
+    
+    this.hosts.forEach(function(gbHost) {
+        var tail = builderGraph.getTail(gbHost.getName());
+        
+        gbHost.getNodesSorted().forEach(function(gbNode) {
+           var builderNode = new BuilderNode();
+           gbNodeToBuilderNode[gbNode.getId()] = builderNode;
+           tail.insertPrev(builderNode);
         });
     });
-
-    this.getNodes().forEach(function(n) {
-        n.children.sort(function(a, b) {
-            return a.y - b.y;
-        }).forEach(function(m) {
-            n.bn.addChild(m.bn);
-        });
+    
+    this.getNodes().forEach(function(gbNode) {
+        var builderNode = gbNodeToBuilderNode[gbNode.getId()];
+       gbNode.getChildren().sort(function(a, b){
+           return a.y - b.y;
+       }).forEach(function(child) {
+           builderNode.addChild(gbNodeToBuilderNode[child.getId()]);
+       });
     });
-
-    return bg;
+    
+    return builderGraph;
 };
 
 function SVGElement(tag) {
