@@ -62,3 +62,38 @@ BuilderGraph.prototype.addHost = function(host) {
     this.hostToHead[host] = head;
     this.hostToTail[host] = tail;
 };
+
+
+BuilderGraph.prototype.toVectorTimestamps = function() {
+    
+    var nodeToVT = {};
+    var orderedNodes = [];
+    
+    for(var i = 0; i < this.hosts.length; i++) {
+        var host = this.hosts[i];
+        var curr = this.getHead(host).getNext();
+        var num = 1;
+        
+        while(!curr.isTail()) {
+            orderedNodes.push(curr);
+            var clock = {};
+            clock[host] = num++;
+            nodeToVT[curr.getId()] = new VectorTimestamp(clock, host);
+            curr = curr.getNext();
+        }
+    }
+    
+    this.getNodesTopologicallySorted().forEach(function(node){
+        var nodeVT = nodeToVT[node.getId()];
+        node.getChildren().forEach(function(child) {
+            nodeToVT[child.getId()] = nodeToVT[child.getId()].update(nodeVT);
+        });
+        if(!node.getNext().isTail()) {
+            nodeToVT[node.getNext().getId()] = nodeToVT[node.getNext().getId()].update(nodeVT);
+        }
+    });
+    
+    return orderedNodes.map(function(node) {
+        return nodeToVT[node.getId()];
+    });
+}
