@@ -207,21 +207,26 @@ Shiviz.prototype.visualize = function() {
  * @param {Boolean} force Whether or not to force redrawing of graph
  */
 Shiviz.prototype.go = function(index, store, force) {
-    $("section").hide();
-    $(window).scrollTop();
     switch (index) {
         case 0:
+            $("section").hide();
+            $(window).scrollTop();
             $(".home").show();
             break;
         case 1:
+            $("section").hide();
+            $(window).scrollTop();
             $(".input").show();
             inputHeight();
             $(window).on("load resize", inputHeight);
             break;
         case 2:
-            $(".visualization").show();
             if (!$("#vizContainer svg").length || force)
                 this.visualize();
+
+            $("section").hide();
+            $(window).scrollTop();
+            $(".visualization").show();
             break;
     }
 
@@ -280,7 +285,7 @@ Shiviz.prototype.handleException = function(err) {
         }
     });
 
-    this.go(1);
+    throw new Error(err.getMessage());
 };
 
 $(document).ready(function() {
