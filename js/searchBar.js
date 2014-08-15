@@ -17,7 +17,7 @@ function SearchBar(global) {
             Shiviz.getInstance().handleException(exception);
         }
     }).on("input", function() {
-        if (this.value.length)
+        if (this.value.length || context.searchMotif)
             $("#bar button").prop("disabled", false);
         else
             $("#bar button").prop("disabled", true);
