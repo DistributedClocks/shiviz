@@ -183,6 +183,7 @@ GraphBuilder.prototype.bind = function() {
             var n = context.getHostByX(hx).addNode(hy, true);
             var $c = $(n.circle);
             context.searchbox.notify(context.getNodes().length);
+            context.convert();
             $c.mousedown();
         }
     }).on("mouseout", function (e) {
@@ -256,6 +257,7 @@ GraphBuilder.prototype.bind = function() {
             $line.remove();
             context.getHostByNode(parent).removeNode(parent);
             context.searchbox.notify(context.getNodes().length);
+            context.convert();
             context.bind();
         });
     });
@@ -305,12 +307,9 @@ Array.remove = function (arr, arg) {
 };
 
 GraphBuilder.prototype.convert = function() {
-
     var vts = new VectorTimestampSerializer("{\"host\":\"`HOST`\",\"clock\":`CLOCK`}", ",", "#motif=[", "]");
     var builderGraph = this.convertToBG();
     $("#searchbar #bar input").val(vts.serialize(builderGraph.toVectorTimestamps()));
-    
-
 };
 
 GraphBuilder.prototype.convertToBG = function() {
