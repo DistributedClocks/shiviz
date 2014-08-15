@@ -238,10 +238,11 @@ section.input .left {
 .visualization .left #tabs {
     height: 2em;
     background: #fff;
-    width: 264pt;
+    width: 288pt;
     top: 6em;
     position: fixed;
     z-index: 4;
+    left: 0;
 }
 
 .visualization .log {
