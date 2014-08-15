@@ -125,8 +125,11 @@ GraphBuilder.prototype.getNodeByCoord = function(x, y) {
 };
 
 GraphBuilder.prototype.clear = function() {
-    for (var i = this.hosts.length - 1; i > 1; i--)
-        this.removeHost(hosts[i]);
+    while (this.hosts.length > 0)
+        this.removeHost(this.hosts[this.hosts.length - 1]);
+
+    this.addHost();
+    this.addHost();
 };
 
 GraphBuilder.prototype.bind = function() {
