@@ -84,6 +84,12 @@ function SearchBar(global) {
         }
     });
 
+    $("#searchbar #bar .clear").on("click", function() {
+        context.graphBuilder.lockConversion();
+        context.clear();
+        $("#searchbar #bar input").focus();
+        context.graphBuilder.unlockConversion();
+    });
 }
 
 SearchBar.prototype.hide = function() {

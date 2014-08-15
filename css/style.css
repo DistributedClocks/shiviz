@@ -352,6 +352,29 @@ section.input .left {
     width: calc(100% - 24pt);
     border-right: none;
 }
+#searchbar #bar .clear {
+    height: 22pt;
+    width: 22pt;
+    position: absolute;
+    margin-top: 1px;
+    left: calc(100% - 59pt);
+    background: white;
+}
+#searchbar #bar .clear div {
+    width: 1px;
+    height: 14pt;
+    background: black;
+    position: absolute;
+    overflow: hidden;
+    margin-left: 12pt;
+    margin-top: 4pt;
+}
+#searchbar #bar .clear .one {
+    transform: rotate(45deg);
+}
+#searchbar #bar .clear .two {
+    transform: rotate(-45deg);
+}
 #searchbar #bar button {
     float: left;
     margin: 0;
@@ -359,8 +382,8 @@ section.input .left {
     height: 24pt;
     padding: 0;
 }
-#searchbar #bar input:focus + button,
-#searchbar #bar input.focus + button {
+#searchbar #bar input:focus ~ button,
+#searchbar #bar input.focus ~ button {
     border: 1px solid #000;
 }
 #searchbar #panel {
