@@ -20,13 +20,35 @@ function SearchBar(global) {
         }
     }).on("input", function() {
         
+        var match = null;
+        
         if(this.value.indexOf("#") < 0) {
             var v = this.value;
             context.clearMotif();
             this.value = v;
         }
+        else if(match = this.value.trim().match(/^#(motif\s*=\s*)?(.*)/i)){
+            var json = match[2];
+            try {
+                JSON.parse(json);
+            }
+            catch(exception) {
+                throw new Exception("ASDF", true);
+            }
+            
+            var parsingRegex = new NamedRegExp("(?<event>)\\{\\\"host\\\":\\\"(?<host>[^\\}]+)\\\",\\\"clock\\\":(?<clock>\\{[^\\}]*\\})\\}", "i");
+            var parser = new LogParser(json, null, parsingRegex);
+            var logEvents = parser.getLogEvents(parser.getLabels()[0]);
+            var vectorTimestamps = logEvents.map(function(logEvent){
+                return logEvent.getVectorTimestamp();
+            });
+            var builderGraph = BuilderGraph.fromVectorTimestamps(vectorTimestamps);
+            context.graphBuilder.convertFromBG(builderGraph);
+
+        }
         else {
-            //TODO: reverse serialize
+            //TODO
+            console.log("OMFG");
         }
 
         if (this.value.length || context.searchMotif)

@@ -98,6 +98,7 @@ BuilderGraph.prototype.toVectorTimestamps = function() {
 };
 
 BuilderGraph.fromVectorTimestamps = function(vectorTimestamps) {
+    
     var logEvents = vectorTimestamps.map(function(vt) {
         return new LogEvent("", vt, 0, {});
     });
@@ -120,10 +121,10 @@ BuilderGraph.fromVectorTimestamps = function(vectorTimestamps) {
     var oldToNewNode = {};
 
     hosts.forEach(function(host) {
-        oldToNewNode[modelGraph.getHead(host).getId()] = this.getHead(host);
+        oldToNewNode[modelGraph.getHead(host).getId()] = newGraph.getHead(host);
     });
 
-    newGraph.getNodesTopologicallySorted().forEach(function(node) {
+    modelGraph.getNodesTopologicallySorted().forEach(function(node) {
         var newNode = new BuilderNode();
         oldToNewNode[node.getPrev().getId()].insertNext(newNode);
         oldToNewNode[node.getId()] = newNode;
