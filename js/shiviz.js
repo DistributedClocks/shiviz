@@ -221,12 +221,17 @@ Shiviz.prototype.go = function(index, store, force) {
             $(window).on("load resize", inputHeight);
             break;
         case 2:
-            if (!$("#vizContainer svg").length || force)
-                this.visualize();
-
-            $("section").hide();
-            $(window).scrollTop();
             $(".visualization").show();
+            try {
+                if (!$("#vizContainer svg").length || force)
+                    this.visualize();
+            } catch(e) {
+                $(".visualization").hide();
+                throw e;
+            }
+
+            $("section:not(.visualization)").hide();
+            $(window).scrollTop();
             break;
     }
 

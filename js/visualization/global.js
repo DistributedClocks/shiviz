@@ -83,7 +83,7 @@ Global.prototype.drawAll = function() {
         v.getVisualModel().update();
         return v.getVisualModel().getHeight();
     }));
-
+    
     this.$vizContainer.height(maxHeight);
 
     var hostMargin = this.resize();
