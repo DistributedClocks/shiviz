@@ -101,7 +101,7 @@ Shiviz.prototype.resetView = function() {
         $(".icon .tabs li:last-child").removeClass("disabled");
     }
 
-    $(".event").text("(click to view)");
+    $(".event").text("");
     $(".fields").html("");
 
     d3.selectAll("#vizContainer svg").remove();
@@ -160,7 +160,11 @@ Shiviz.prototype.visualize = function() {
         });
 
         var global = new Global($("#vizContainer"), $("#sidebar"));
-        new SearchBar(global); // TODO
+        var searchbar = SearchBar.getInstance();
+        searchbar.setGlobal(global);
+        searchbar.clearMotif();
+        searchbar.clearText();
+        searchbar.update();
 
         hostPermutation.update();
         global.setHostPermutation(hostPermutation);
@@ -169,7 +173,6 @@ Shiviz.prototype.visualize = function() {
 
         
         $("table.log").empty(); //TODO: check
-//        $("#sidebar").empty();
         d3.select("#hostBar").selectAll("*").remove();
         d3.select("#vizContainer").selectAll("*").remove();
         

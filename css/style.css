@@ -349,7 +349,8 @@ section.input .left {
     font-size: 12pt;
     margin: 0;
     float: left;
-    width: calc(100% - 24pt);
+    width: calc(100% - 52pt);
+    padding-right: 24pt;
     border-right: none;
 }
 #searchbar #bar .clear {
@@ -357,16 +358,19 @@ section.input .left {
     width: 22pt;
     position: absolute;
     margin-top: 1px;
-    left: calc(100% - 59pt);
+    left: calc(100% - 86pt);
     background: white;
     cursor: pointer;
 }
+#searchbar #bar input.empty + .clear {
+    display: none;
+}
 #searchbar #bar .clear div {
-    width: 1px;
+    width: 2px;
     height: 14pt;
-    background: black;
+    background: #04a;
     position: absolute;
-    overflow: hidden;
+    overflow: hidden; 
     margin-left: 12pt;
     margin-top: 4pt;
 }
@@ -379,7 +383,7 @@ section.input .left {
 #searchbar #bar button {
     float: left;
     margin: 0;
-    width: 24pt;
+    width: 52pt;
     height: 24pt;
     padding: 0;
 }
@@ -389,7 +393,7 @@ section.input .left {
 }
 #searchbar #panel {
     display: none;
-    width: calc(100% - 9px - 24pt);
+    width: calc(100% - 9px - 52pt);
     border: 1px solid black;
     border-top: none;
     box-sizing: border-box;
