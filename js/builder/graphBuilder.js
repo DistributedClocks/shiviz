@@ -391,7 +391,7 @@ GraphBuilder.prototype.convert = function() {
     var vts = new VectorTimestampSerializer("{\"host\":\"`HOST`\",\"clock\":`CLOCK`}", ",", "#motif=[", "]");
     var builderGraph = this.convertToBG();
     this.searchbox.setValue(vts.serialize(builderGraph.toVectorTimestamps()));
-    this.searchbox.query(true);
+    this.searchbox.update(true);
 };
 
 GraphBuilder.prototype.convertToBG = function() {

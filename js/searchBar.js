@@ -1,19 +1,37 @@
-function SearchBar(global) {
+function SearchBar() {
 
-    this.global = global;
+    if (SearchBar.instance)
+        throw new Exception("Cannot instantiate SearchBar, instance already exists");
+
+    SearchBar.instance = this;
+
+    this.global = null;
     this.graphBuilder = new GraphBuilder(this);
     this.mode = SearchBar.MODE_EMPTY;
 
     var context = this;
 
-    $("#searchbar #bar input").on("keydown", function(e) {
-        if (e.which == 13) {
+    $(window).unbind("keydown").on("keydown", function(e) {
+        // Only act when panel is expanded
+        if (!context.isPanelShown())
+            return;
+
+        switch (e.which) {
+            // Return
+            case 13:
             context.query();
             context.hidePanel();
+            break;
+
+            // Escape
+            case 27:
+            context.hidePanel();
+            break;
         }
-    }).on("input", function() {
+    });
+
+    $("#searchbar #bar input").on("input", function() {
         context.update();
-        context.query(true);
     }).on("focus", function() {
         context.showPanel();
     });
@@ -26,10 +44,9 @@ function SearchBar(global) {
     $("#searchbar #bar .clear").on("click", function() {
         context.graphBuilder.lockConversion();
         context.clear();
+        context.hidePanel();
         context.update();
         context.graphBuilder.unlockConversion();
-
-        $("#searchbar #bar input").focus();
     });
 
     this.update();
@@ -39,6 +56,16 @@ SearchBar.MODE_EMPTY = 0;
 SearchBar.MODE_TEXT = 1;
 SearchBar.MODE_STRUCTURAL = 2;
 SearchBar.MODE_PREDEFINED = 3;
+
+SearchBar.instance = null;
+
+SearchBar.getInstance = function() {
+    return SearchBar.instance || new SearchBar();
+};
+
+SearchBar.prototype.setGlobal = function(global) {
+    this.global = global;
+};
 
 SearchBar.prototype.updateMode = function() {
     var value = this.getValue();
@@ -57,7 +84,7 @@ SearchBar.prototype.updateMode = function() {
     }
 };
 
-SearchBar.prototype.update = function() {
+SearchBar.prototype.update = function(skipRegen) {
     var value = this.getValue();
 
     this.graphBuilder.lockConversion();
@@ -70,13 +97,8 @@ SearchBar.prototype.update = function() {
         this.clearMotif();
 
         $("#bar button").prop("disabled", true);
-        $("#searchbar .clear").hide();
+        $("#searchbar input").addClass("empty");
         break;
-
-        // Not empty
-        case this.mode:
-        $("#bar button").prop("disabled", false);
-        $("#searchbar .clear").show();
 
         // Text
         case SearchBar.MODE_TEXT:
@@ -85,6 +107,7 @@ SearchBar.prototype.update = function() {
 
         // Motif (custom)
         case SearchBar.MODE_STRUCTURAL:
+        if (!skipRegen) {
             var json = value.trim().match(/^#(?:motif\s*=\s*)?(\[.*\])/i)[1];
             var rawRegExp = '(?<event>){"host":"(?<host>[^}]+)","clock":(?<clock>{[^}]*})}';
             var parsingRegex = new NamedRegExp(rawRegExp, "i");
@@ -95,10 +118,16 @@ SearchBar.prototype.update = function() {
             });
             var builderGraph = BuilderGraph.fromVectorTimestamps(vectorTimestamps);
             this.graphBuilder.convertFromBG(builderGraph);
+        }
         break;
 
         default:
         break;
+    }
+
+    if (this.mode != SearchBar.MODE_EMPTY) {
+        $("#bar button").prop("disabled", false);
+        $("#searchbar input").removeClass("empty");
     }
 
     this.graphBuilder.unlockConversion();
@@ -112,7 +141,11 @@ SearchBar.prototype.setValue = function(val) {
     $("#searchbar #bar input").val(val);
 
     if (this.mode != SearchBar.MODE_EMPTY)
-        $("#searchbar .clear").show();
+        $("#searchbar input").removeClass("empty");
+};
+
+SearchBar.prototype.isPanelShown = function() {
+    return $("#searchbar #panel:visible").length;
 };
 
 SearchBar.prototype.showPanel = function() {
@@ -154,7 +187,7 @@ SearchBar.prototype.clearResults = function() {
     this.global.drawAll();
 };
 
-SearchBar.prototype.query = function(safe) {
+SearchBar.prototype.query = function() {
     this.updateMode();
 
     try {
@@ -179,8 +212,7 @@ SearchBar.prototype.query = function(safe) {
             break;
         }
     } catch (e) {
-        if (safe) return;
-        else Shiviz.getInstance().handleException(e);
+        Shiviz.getInstance().handleException(e);
     }
 };
 
