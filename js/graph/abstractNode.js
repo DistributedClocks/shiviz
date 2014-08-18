@@ -182,6 +182,15 @@ AbstractNode.prototype.isTail = function() {
 };
 
 /**
+ * Determines whether the node is a dummy head or tail node
+ * 
+ * @returns {Boolean} True if node is dummy
+ */
+AbstractNode.prototype.isDummy = function() {
+    return this.isHead() || this.isTail();
+};
+
+/**
  * Gets the next node. The next node is the node having the same host as the
  * current one that comes directly after the current node.
  * 
