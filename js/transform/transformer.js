@@ -20,23 +20,8 @@ function Transformer(visualModel) {
 
     /** @private */
     this.defaultTransformations = [];
+ 
     
-    // ---------- TEMPORARY ------------
-    var bg = new BuilderGraph(["a", "b", "c"]);
-    var n1 = new BuilderNode();
-    var n2 = new BuilderNode();
-    var n3 = new BuilderNode();
-    var n4 = new BuilderNode();
-    bg.getHead("a").insertNext(n1);
-    bg.getHead("b").insertNext(n2);
-    bg.getHead("c").insertNext(n4);
-    n1.addChild(n2);
-    n2.insertNext(n3);
-    n3.addChild(n4);
-    
-    var cmf = new CustomMotifFinder(bg);
-    var hmt = new HighlightMotifTransformation(cmf, false);
-    this.defaultTransformations = [hmt];
 }
 
 /**
