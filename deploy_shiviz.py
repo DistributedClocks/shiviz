@@ -58,7 +58,7 @@ def runcmd(s):
     return os.system(s)
 
 
-def minify(info):
+def minify(branch, info):
     '''
     Minifies all of the js code under js/ using Google's API and
     returns the minified resulting js code.
@@ -71,7 +71,7 @@ def minify(info):
     ('output_info', info)
     ]
 
-    url = 'https://bitbucket.org/bestchai/shiviz/raw/tip/'
+    url = 'https://bitbucket.org/bestchai/shiviz/raw/' + branch + '/'
     # Traverse all of the files underneath the js/ dir
     for root, dirs, files in os.walk('js'):
         for file in files:
@@ -144,12 +144,12 @@ def main():
 
     # Minify the code
     print "Minifying... please wait"
-    data = minify('compiled_code')
+    data = minify(branch, 'compiled_code')
     print "Minified size: %i" % len(data)
 
     if len(data) < 500:
         print "Minification failed!"
-        print minify('errors')
+        print minify(branch, 'errors')
         return
 
     print "Minification successful!"
