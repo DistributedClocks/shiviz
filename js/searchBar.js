@@ -7,8 +7,10 @@ function SearchBar(global) {
     var context = this;
 
     $("#searchbar #bar input").on("keydown", function(e) {
-        if (e.which == 13)
+        if (e.which == 13) {
             context.query();
+            context.hidePanel();
+        }
     }).on("input", function() {
         context.update();
         context.query(true);
@@ -18,6 +20,7 @@ function SearchBar(global) {
 
     $("#searchbar #bar button").on("click", function() {
         context.query();
+        context.hidePanel();
     });
 
     $("#searchbar #bar .clear").on("click", function() {
@@ -107,6 +110,9 @@ SearchBar.prototype.getValue = function() {
 
 SearchBar.prototype.setValue = function(val) {
     $("#searchbar #bar input").val(val);
+
+    if (this.mode != SearchBar.MODE_EMPTY)
+        $("#searchbar .clear").show();
 };
 
 SearchBar.prototype.showPanel = function() {
@@ -132,7 +138,7 @@ SearchBar.prototype.clearMotif = function() {
 };
 
 SearchBar.prototype.clearText = function() {
-    $("#bar input").val("");
+    this.setValue("");
 };
 
 SearchBar.prototype.clear = function() {
@@ -174,7 +180,7 @@ SearchBar.prototype.query = function(safe) {
         }
     } catch (e) {
         if (safe) return;
-        else throw e;
+        else Shiviz.getInstance().handleException(e);
     }
 };
 
