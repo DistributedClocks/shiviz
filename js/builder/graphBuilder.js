@@ -385,14 +385,13 @@ GraphBuilder.prototype.unlockConversion = function() {
 
 GraphBuilder.prototype.convert = function() {
     
-    if(this.conversionLocked) {
+    if (this.conversionLocked)
         return;
-    }
     
     var vts = new VectorTimestampSerializer("{\"host\":\"`HOST`\",\"clock\":`CLOCK`}", ",", "#motif=[", "]");
     var builderGraph = this.convertToBG();
-    $("#searchbar #bar input").val(vts.serialize(builderGraph.toVectorTimestamps()));
-    this.searchbox.notify();
+    this.searchbox.setValue(vts.serialize(builderGraph.toVectorTimestamps()));
+    this.searchbox.query(true);
 };
 
 GraphBuilder.prototype.convertToBG = function() {
