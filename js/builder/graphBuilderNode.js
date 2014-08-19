@@ -1,21 +1,49 @@
-
-
+/**
+ * Constructs a node with the provided x and y coordinates and color and is associated with the provided {@link GraphBuilder}
+ * 
+ * @classdesc
+ * 
+ * A GraphBuilderNode is a node that is a component of a {@link GraphBuilder}.
+ * 
+ * @constructor
+ * @param graphBuilder
+ * @param x
+ * @param y
+ * @param {Boolean} tmp This does something albert should explain
+ * @param color
+ */
 function GraphBuilderNode(graphBuilder, x, y, tmp, color) {
     
+    /** @private */
     this.id = GraphBuilderNode.id++;
     
+    /** @private */
     this.graphBuilder = graphBuilder;
     
+    /** @private */
     this.x = parseFloat(x);
+    
+    /** @private */
     this.y = parseFloat(y);
+    
+    /** @private */
     this.state = tmp ? "tmp" : false;
+    
+    /** @private */
     this.parents = [];
+    
+    /** @private */
     this.children = [];
+    
+    /** @private */
     this.lines = [];
     
+    /** @private */
     this.color = color;
 
     var context = this;
+    
+    /** @private */
     this.circle = $(Util.svgElement("circle")).attr({
         "r": 5,
         "cx": x,
