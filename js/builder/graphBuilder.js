@@ -1,13 +1,28 @@
+/**
+ * 
+ * @classdesc
+ * 
+ * @constructor
+ * @param searchbox
+ */
 function GraphBuilder(searchbox) {
 
+    /** @private */
     this.searchbox = searchbox;
     
+    /** @private */
     this.conversionLocked = false;
     
+    /** @private */
     this.$svg = $("#panel svg");
+    
+    /** @private */
     this.$hover = this.$svg.find(".hover");
     
+    /** @private */
     this.hosts = [];
+    
+    /** @private */
     this.colors = [
         "rgb(122,155,204)",
         "rgb(122,204,155)",
@@ -22,12 +37,39 @@ function GraphBuilder(searchbox) {
     this.addHost();
 }
 
-GraphBuilder.MAX_HOSTS = 7;
+/**
+ * @static
+ * @const
+ */
+GraphBuilder.MAX_HOSTS = 6;
+
+/**
+ * @static
+ * @const
+ */
 GraphBuilder.START_OFFSET = 62.5;
+
+/**
+ * @static
+ * @const
+ */
 GraphBuilder.Y_SPACING = 50;
+
+/**
+ * @static
+ * @const
+ */
 GraphBuilder.BOX = 25;
+
+/**
+ * @static
+ * @const
+ */
 GraphBuilder.HALF_BOX = GraphBuilder.BOX / 2;
 
+/**
+ * 
+ */
 GraphBuilder.prototype.convertFromBG = function(bg) {
     var context = this;
 

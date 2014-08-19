@@ -173,7 +173,7 @@ SearchBar.prototype.getMode = function() {
  * Updates the search bar to reflect any changes made to either the text or the
  * drawn graph.
  * 
- * @param {Boolean} skipRegen
+ * @param {Boolean} skipRegen This does something albert should explain
  */
 SearchBar.prototype.update = function(skipRegen) {
     var value = this.getValue();
