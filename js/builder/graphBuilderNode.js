@@ -16,7 +16,7 @@ function GraphBuilderNode(graphBuilder, x, y, tmp, color) {
     this.color = color;
 
     var context = this;
-    this.circle = $(SVGElement("circle")).attr({
+    this.circle = $(Util.svgElement("circle")).attr({
         "r": 5,
         "cx": x,
         "cy": y,

@@ -22,7 +22,7 @@ function GraphBuilder(searchbox) {
     this.addHost();
 }
 
-GraphBuilder.MAX_HOSTS = 5;
+GraphBuilder.MAX_HOSTS = 7;
 GraphBuilder.START_OFFSET = 62.5;
 GraphBuilder.Y_SPACING = 50;
 GraphBuilder.BOX = 25;
@@ -36,7 +36,6 @@ GraphBuilder.prototype.convertFromBG = function(bg) {
 
     var hostMap = {};
 
-    var hosts = bg.getHosts();
     bg.getHosts().forEach(function(h) {
         var host = context.addHost();
         hostMap[h] = host;
@@ -85,7 +84,7 @@ GraphBuilder.prototype.convertFromBG = function(bg) {
             var c1 = gbn.getCoords();
             var c2 = gbc.getCoords();
 
-            var $line = SVGElement("line").attr({
+            var $line = Util.svgElement("line").attr({
                 "x1": c1[0],
                 "x2": c2[0],
                 "y1": c1[1],
@@ -95,7 +94,7 @@ GraphBuilder.prototype.convertFromBG = function(bg) {
             gbn.addChild(gbc, $line);
         });
     });
-}
+};
 
 GraphBuilder.prototype.getSVG = function() {
     return this.$svg;
@@ -266,7 +265,7 @@ GraphBuilder.prototype.bind = function() {
 
     $("circle:not(.hover)").unbind().on("mousedown", function () {
         var parent = this.node;
-        var $line = SVGElement("line").attr({
+        var $line = Util.svgElement("line").attr({
             "x1": $(this).attr("cx"),
             "y1": $(this).attr("cy"),
             "x2": $(this).attr("cx"),
@@ -424,7 +423,3 @@ GraphBuilder.prototype.convertToBG = function() {
     
     return builderGraph;
 };
-
-function SVGElement(tag) {
-    return $(document.createElementNS("http://www.w3.org/2000/svg", tag));
-}

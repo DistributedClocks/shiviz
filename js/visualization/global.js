@@ -10,7 +10,6 @@
  * Views such as the list of hidden hosts
  * 
  * @constructor
- * @private
  */
 function Global($vizContainer, $sidebar) {
 
