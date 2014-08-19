@@ -12,7 +12,7 @@ function GraphBuilderHost(graphBuilder, hostNum) {
     this.color = graphBuilder.colors.pop();
     this.nodes = [];
 
-    this.rect = SVGElement("rect").attr({
+    this.rect = Util.svgElement("rect").attr({
         "width": 25,
         "height": 25,
         "fill": this.color,
@@ -22,7 +22,7 @@ function GraphBuilderHost(graphBuilder, hostNum) {
         graphBuilder.removeHost(host);
     }).prependTo(graphBuilder.getSVG());
 
-    this.line = SVGElement("line").attr({
+    this.line = Util.svgElement("line").attr({
         "x1": this.x,
         "y1": 30,
         "x2": this.x,

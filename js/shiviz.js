@@ -9,7 +9,6 @@
  * software. For example, this class is responsible for binding handlers to
  * shiviz's various global UI elements. Shiviz is a singleton
  * 
- * @private
  * @constructor
  */
 function Shiviz() {
