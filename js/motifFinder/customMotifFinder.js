@@ -114,11 +114,8 @@ CustomMotifFinder.prototype.find = function(graph) {
                 }
             }
         }
-
-        nodeMatch = {};
-        bNodeMatch = {};
-        hostMatch = {};
-        hostNumBound = {};
+        
+        clearSearchState();
     }
 
     /*
@@ -130,10 +127,18 @@ CustomMotifFinder.prototype.find = function(graph) {
     function searchNode(bNode) {
         var node = bNodeMatch[bNode.getId()];
 
-        return tryMatchAdjacent(bNode.getNext(), node.getNext()) //
+        var state = saveSearchState();
+        
+        var pass = tryMatchAdjacent(bNode.getNext(), node.getNext()) //
                 && tryMatchAdjacent(bNode.getPrev(), node.getPrev()) //
                 && tryMatch(bNode.getChildren(), node.getChildren()) //
                 && tryMatch(bNode.getParents(), node.getParents()); //
+        
+        if(!pass) {
+            loadSearchState(state);
+        }
+        
+        return pass;
     }
 
     /*
@@ -314,6 +319,30 @@ CustomMotifFinder.prototype.find = function(graph) {
         if (hostNumBound[node.getHost()] == 0) {
             delete hostMatch[node.getHost()];
         }
+    }
+    
+    
+    function saveSearchState() {
+        return {
+            nodeMatch: Util.objectShallowCopy(nodeMatch),
+            bNodeMatch: Util.objectShallowCopy(bNodeMatch),
+            hostMatch: Util.objectShallowCopy(hostMatch),
+            hostNumBound: Util.objectShallowCopy(hostNumBound)
+        };
+    }
+    
+    function loadSearchState(state) {
+        nodeMatch = state.nodeMatch;
+        bNodeMatch = state.bNodeMatch;
+        hostMatch = state.hostMatch;
+        hostNumBound = state.hostNumBound;
+    }
+    
+    function clearSearchState() {
+        nodeMatch = {};
+        bNodeMatch = {};
+        hostMatch = {};
+        hostNumBound = {};
     }
 
 };

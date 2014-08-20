@@ -71,7 +71,6 @@ Token.prototype.getText = function() {
  * </p>
  * 
  * @constructor
- * @private
  * @param {String} text The texual representation of the token
  * @param {?Boolean} [isText]
  * @param {?String} [prettyName]

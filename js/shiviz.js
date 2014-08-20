@@ -9,7 +9,6 @@
  * software. For example, this class is responsible for binding handlers to
  * shiviz's various global UI elements. Shiviz is a singleton
  * 
- * @private
  * @constructor
  */
 function Shiviz() {
@@ -101,10 +100,10 @@ Shiviz.prototype.resetView = function() {
         $(".icon .tabs li:last-child").removeClass("disabled");
     }
 
-    $(".event").text("(click to view)");
+    $(".event").text("");
     $(".fields").html("");
 
-    d3.selectAll("#graph svg").remove();
+    d3.selectAll("#vizContainer svg").remove();
 
     // Reset the color of all of the log-links.
     $(".log-link").css({
@@ -117,15 +116,13 @@ Shiviz.prototype.resetView = function() {
  * This method creates the visualization. The user's input to UI elements are
  * retrieved and used to construct the visualization accordingly.
  */
-Shiviz.prototype.visualize = function() {
+Shiviz.prototype.visualize = function(log, regexpString, delimiterString, sortType, descending) {
     try {
+        d3.selectAll("#vizContainer svg").remove();
 
-        d3.selectAll("#graph svg").remove();
-
-        var log = $("#input").val();
-        var delimiterString = $("#delimiter").val().trim();
+        delimiterString = delimiterString.trim();
         var delimiter = delimiterString == "" ? null : new NamedRegExp(delimiterString, "m");
-        var regexpString = $("#parser").val().trim();
+        regexpString = regexpString.trim();
 
         if (regexpString == "")
             throw new Exception("The parser regexp field must not be empty.", true);
@@ -133,8 +130,6 @@ Shiviz.prototype.visualize = function() {
         var regexp = new NamedRegExp(regexpString, "m");
         var parser = new LogParser(log, delimiter, regexp);
 
-        var sortType = $("input[name=host_sort]:checked").val().trim();
-        var descending = $("#ordering option:selected").val().trim() == "descending";
         var hostPermutation = null;
 
         if (sortType == "length") {
@@ -148,8 +143,8 @@ Shiviz.prototype.visualize = function() {
         }
 
         var labelGraph = {};
-        var labels = parser.getLabels();
 
+        var labels = parser.getLabels();
         labels.forEach(function(label) {
             var graph = new ModelGraph(parser.getLogEvents(label));
             labelGraph[label] = graph;
@@ -160,18 +155,41 @@ Shiviz.prototype.visualize = function() {
             }
         });
 
-        Global.getInstance().revert();
+        var global = new Global($("#vizContainer"), $("#sidebar"));
+        var searchbar = SearchBar.getInstance();
+        searchbar.setGlobal(global);
+        searchbar.clearText();
+        searchbar.clearText();
+        searchbar.update();
 
         hostPermutation.update();
-        Global.getInstance().setHostPermutation(hostPermutation);
+        global.setHostPermutation(hostPermutation);
+        
+        var logColWidth = (240 - 12 * (labels.length - 1)) / labels.length;
 
-        labels.forEach(function(label) {
+        
+        $("table.log").empty(); //TODO: check
+        d3.select("#hostBar").selectAll("*").remove();
+        d3.select("#vizContainer").selectAll("*").remove();
+        
+        for(var i = 0; i < labels.length; i++) {
+            var label = labels[i];
+            var logTable = $("<td></td>");
+            $("table.log").append(logTable.width(logColWidth + "pt"));
+            
+            // Add the spacer after log column
+            if(i != labels.length - 1) {
+                $("table.log").append($("<td></td>").addClass("spacer"));
+            }
+            
             var graph = labelGraph[label];
-            var view = new View(graph, hostPermutation, label);
-            Global.getInstance().addView(view);
-        });
+            var mainSVG = d3.select("#vizContainer").append("svg");
+            var hostSVG = d3.select("#hostBar").append("svg");
+            var view = new View(mainSVG, hostSVG, logTable, graph, hostPermutation, label, global.controller); //TODO
+            global.addView(view);
+        }
 
-        Global.getInstance().drawAll();
+        global.drawAll();
     }
     catch (err) {
         this.handleException(err);
@@ -188,21 +206,31 @@ Shiviz.prototype.visualize = function() {
  * @param {Boolean} force Whether or not to force redrawing of graph
  */
 Shiviz.prototype.go = function(index, store, force) {
-    $("section").hide();
-    $(window).scrollTop();
     switch (index) {
         case 0:
+            $("section").hide();
+            $(window).scrollTop();
             $(".home").show();
             break;
         case 1:
+            $("section").hide();
+            $(window).scrollTop();
             $(".input").show();
             inputHeight();
             $(window).on("load resize", inputHeight);
             break;
         case 2:
             $(".visualization").show();
-            if (!$("#graph svg").length || force)
-                this.visualize();
+            try {
+                if (!$("#vizContainer svg").length || force)
+                    this.visualize($("#input").val(), $("#parser").val(),  $("#delimiter").val(), $("input[name=host_sort]:checked").val().trim(), $("#ordering option:selected").val().trim() == "descending");
+            } catch(e) {
+                $(".visualization").hide();
+                throw e;
+            }
+
+            $("section:not(.visualization)").hide();
+            $(window).scrollTop();
             break;
     }
 
@@ -261,7 +289,7 @@ Shiviz.prototype.handleException = function(err) {
         }
     });
 
-    this.go(1);
+    throw new Error(err.getMessage());
 };
 
 $(document).ready(function() {
