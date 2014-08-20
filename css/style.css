@@ -88,7 +88,7 @@ textarea:focus {
 button {
     background: #04a;
     border: none;
-    color: #eee;
+    color: rgba(255,255,255,.9);
     padding: 1em;
     outline: none;
     text-transform: uppercase;
@@ -100,7 +100,7 @@ button:hover {
 }
 button:active {
     background: #048;
-    color: #aaa;
+    color: rgba(255,255,255,.6);
 }
 button:disabled {
     background: #aaa;
@@ -216,16 +216,6 @@ section.input .left {
 
 
 /* Visualization */
-.visualization .bg {
-    position: fixed;
-    background: #fff;
-    width: 240pt;
-    height: 100%;
-    padding: 24pt;
-    top: 0;
-    left: 0;
-}
-
 .visualization header {
     position: fixed;
     background: #fff;
@@ -233,6 +223,16 @@ section.input .left {
     top: 0;
     left: 0;
     z-index: 4;
+}
+
+.visualization .left .bg {
+    position: fixed;
+    background: #fff;
+    width: 240pt;
+    height: 100%;
+    padding: 24pt;
+    top: 0;
+    left: 0;
 }
 
 .visualization .left #tabs {
@@ -328,7 +328,7 @@ section.input .left {
 
 .visualization #graph {
     margin-left: 264pt;
-    padding-right: 240px;
+    padding-right: calc(240px - 2em);
 }
 
 #searchbar {
@@ -452,6 +452,9 @@ svg {
 #vizContainer svg {
     vertical-align: top;
 }
+#vizContainer svg:last-child {
+    padding-right: 240px;
+}
 
 #vizContainer svg line,
 #panel line {
@@ -510,19 +513,23 @@ svg {
     margin-bottom: 1em;
 }
 
-#sidebar .fields {
-    width: 100%;
+#sidebar .fields,
+.dialog .info {
     font-size: 10pt;
     border-spacing: 0;
     border-collapse: collapse;
-    table-layout: fixed;
+    display: block;
+    overflow: hidden;
 }
-#sidebar .fields .title {
+#sidebar .fields .title,
+.dialog .info .title {
     text-align: left;
     vertical-align: top;
     padding-right: 1em;
+    white-space: nowrap;
 }
-#sidebar .fields .value {
+#sidebar .fields .value,
+.dialog .info .value {
     /*word-break: break-all;*/
     overflow: hidden;
     text-overflow: ellipsis;
@@ -545,12 +552,14 @@ svg#defs {
 /* Popup dialog */
 .dialog {
     width: 200px;
-    height: 300px;
     background: #eee;
     font-family: sans-serif;
     position: absolute;
     z-index: 3;
     display: none;
+}
+.dialog.host {
+    position: fixed;
 }
 
 .dialog .triangle {
@@ -572,10 +581,29 @@ svg#defs {
     left: -20px;
     top: 0;
 }
-.dialog .name {
+.dialog .name,
+.dialog .info {
     margin: 1em;
     color: white;
     word-break: break-all;
+}
+.dialog button {
+    margin: 0;
+    background: rgba(0,0,0,.1);
+}
+.dialog button:hover {
+    margin: 0;
+    background: rgba(0,0,0,.05);
+}
+.dialog button:active {
+    margin: 0;
+    background: rgba(0,0,0,.2);
+}
+.dialog:not(.host) button.hb {
+    display: none;
+}
+.dialog.host button:not(.hb) {
+    display: none;
 }
 
 /* Error box */
@@ -613,66 +641,4 @@ svg#defs {
     left: 0;
     z-index: 98;
     background: rgba(255,255,255,.8);
-}
-
-.dialog {
-	width: 200px;
-	height: 300px;
-	background: #eee;
-	font-family: sans-serif;
-	position: absolute;
-	display: none;
-}
-.dialog.host {
-    position: fixed;
-}
-
-.dialog .triangle {
-	position: absolute;
-	width: 0;
-	height: 0;
-	border-style: solid;
-	border-width: 10px;
-	border-color: inherit;
-	border-bottom-color: transparent;
-}
-.dialog.right .triangle {
-	border-right-color: transparent;
-	right: -20px;
-	top: 0;
-}
-.dialog.left .triangle {
-	border-left-color: transparent;
-	left: -20px;
-	top: 0;
-}
-/*.dialog .triangle:before {
-	content: "";
-	display: block;
-	position: absolute;
-	width: 0;
-	height: 0;
-	border-style: solid;
-	border-width: 10px;
-	border-color: inherit;
-	border-bottom-color: transparent;
-}
-*/
-/*.dialog .triangle.right:before {
-	border-left-color: #aaa;
-	border-top-color: #aaa;
-	right: -8px;
-	top: -9px;
-}
-*/
-/*.dialog .triangle.left:before {
-	border-right-color: #aaa;
-	border-top-color: #aaa;
-	left: -8px;
-	top: -9px;
-}*/
-
-.dialog .name {
-	margin: 1em;
-	color: white;
 }
