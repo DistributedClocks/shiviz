@@ -51,6 +51,9 @@ function VisualNode(node) {
 
     /** @private */
     this._isHighlighted = false;
+
+    /** @private */
+    this._isSelected = false;
 }
 
 /**
@@ -335,4 +338,12 @@ VisualNode.prototype.isHighlighted = function() {
  */
 VisualNode.prototype.setHighlight = function(val) {
     this._isHighlighted = val;
+};
+
+VisualNode.prototype.isSelected = function() {
+    return this._isSelected;
+};
+
+VisualNode.prototype.setSelected = function(val) {
+    this._isSelected = val;
 };

@@ -175,6 +175,20 @@ Global.prototype.resize = function() {
         view.setWidth(hosts.length * widthPerHost - hostMargin);
     });
 
+    var sel = d3.select("circle.sel").data()[0];
+    if (sel) {
+        var $svg = $(d3.select("circle.sel").node()).parents("svg");
+        var $dialog = $(".dialog");
+        if (sel.getX() > $svg.width() / 2)
+            $dialog.css({
+                "left": sel.getX() + $svg.offset().left + 40
+            }).removeClass("right").addClass("left").show();
+        else
+            $dialog.css({
+                "left": sel.getX() + $svg.offset().left - $dialog.width() - 40
+            }).removeClass("left").addClass("right").show();
+    }
+
     return hostMargin;
 };
 
