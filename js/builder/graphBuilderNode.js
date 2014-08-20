@@ -71,7 +71,13 @@ GraphBuilderNode.prototype.getId = function() {
     return this.id;
 };
 
+GraphBuilderNode.prototype.getLines = function() {
+    return this.lines.slice();
+};
 
+GraphBuilderNode.prototype.getCircle = function() {
+    return this.circle;
+};
 
 GraphBuilderNode.prototype.getCoords = function() {
     return [this.x, this.y];
