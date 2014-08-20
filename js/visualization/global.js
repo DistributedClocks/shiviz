@@ -90,6 +90,8 @@ Global.prototype.drawAll = function() {
     for (var i = 0; i < this.views.length; i++) {
         this.views[i].draw();
     }
+    
+    $("#vizContainer").height("auto");
 
     // Add spacing between views
     $("#vizContainer > svg:not(:last-child), #hostBar > svg:not(:last-child)").css({
@@ -144,7 +146,12 @@ Global.prototype.getController = function() {
 Global.prototype.resize = function() {
     var hiddenHosts = this.getHiddenHosts();
     var numHidden = Object.keys(hiddenHosts).length;
-    var allHosts = this.hostPermutation.getHosts().length;   
+
+    var allHosts = 0;   
+    this.views.forEach(function(view) {
+        allHosts += view.getHosts().length;
+    });
+
     var visibleHosts = allHosts - numHidden;
 
     // TODO: rename to sidebarLeft sidebarRight middleWidth
