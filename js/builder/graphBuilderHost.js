@@ -87,8 +87,9 @@ GraphBuilderHost.prototype.getNodesSorted = function() {
 /**
  * Creates a GraphBuilderNode and adds it to this host.
  * 
- * @param y The y-coordinate of the node
- * @param tmp This does something albert should explain
+ * @param {Number} y The y-coordinate of the node
+ * @param {Boolean} tmp Whether the created node is temporary (i.e. user
+ *            has not yet completed drawing action)
  * @returns {GraphBuilderNode} the newly created and added node
  */
 GraphBuilderHost.prototype.addNode = function(y, tmp) {
@@ -111,7 +112,7 @@ GraphBuilderHost.prototype.removeNode = function(node) {
     node.getLines().forEach(function(l) {
         l.remove();
     });
-    Array.remove(this.nodes, node);
+    Util.removeFromArray(this.nodes, node);
     node.getCircle().remove();
     this.graphBuilder.invokeUpdateCallback();
 };

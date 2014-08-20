@@ -28,7 +28,30 @@ Util.objectShallowCopy = function(obj) {
     return result;
 };
 
+/**
+ * Removes elements from an array
+ * 
+ * @param  {Array} arr The array
+ * @param  {Function|any} arg A function that matches elements to be removed,
+ *             or the element to be removed
+ */
+Util.removeFromArray = function(arr, arg) {
+    if (arg.constructor == Function) {
+        var f;
+        while (f = arr.filter(arg)[0])
+            arr.splice(arr.indexOf(f), 1);
+    } else {
+    	arr.splice(arr.indexOf(arg), 1);
+    }
+};
 
+/**
+ * Creates an SVG element with the proper namespace, and returns
+ * a jQuery reference to the new element
+ * 
+ * @param  {String} tag The tag name for the element to create
+ * @return {jQuery.selection} A jQuery selection instance of the element
+ */
 Util.svgElement = function(tag) {
     return $(document.createElementNS("http://www.w3.org/2000/svg", tag));
 };

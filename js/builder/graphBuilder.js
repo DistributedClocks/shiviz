@@ -178,7 +178,7 @@ GraphBuilder.prototype.addHost = function() {
  */
 GraphBuilder.prototype.removeHost = function(host) {
 
-    Array.remove(this.hosts, host);
+    Util.removeFromArray(this.hosts, host);
 
     this.hosts.forEach(function(h, i) {
         h.rx = i * 65;
@@ -287,7 +287,15 @@ GraphBuilder.prototype.clear = function() {
 };
 
 /**
- * This does something albert should explain
+ * Handles all user interaction with the graph builder, including bindings for:
+ *  
+ * <ul>
+ * <li>Add node on click</li>
+ * <li>Drag to add two connected nodes</li>
+ * <li>Drag from existing node to new connected node</li>
+ * <li>Drag from existing node to existing node to add connection</li>
+ * <li>Drag existing node out of drawing area to remove</li>
+ * </ul>
  */
 GraphBuilder.prototype.bind = function() {
 
@@ -422,11 +430,11 @@ GraphBuilder.prototype.bind = function() {
     });
 
     function isValid(c) {
-        var n = Array.find(context.getNodes(), function(n) {
+        var n = context.getNodes().filter(function(n) {
             return n.state && (!(n.x == c[0]) != !(n.y == c[1]));
         });
 
-        return n === undefined;
+        return n.length == 0;
     }
 
     function closest(array, x, y, d) {
@@ -445,30 +453,6 @@ GraphBuilder.prototype.bind = function() {
 
         return r;
     }
-};
-
-/**
- * Albert should remove this method
- */
-Array.find = function(arr, arg) {
-    if (arg.constructor == Function)
-        return arr.filter(arg)[0];
-    else
-        return arr[arr.indexOf(arg)];
-};
-
-/**
- * Albert should remove this method
- */
-Array.remove = function(arr, arg) {
-    if (arg.constructor == Function) {
-        var f;
-        while (f = arr.find(arg))
-            Array.remove(arr, f);
-        return;
-    }
-
-    arr.splice(arr.indexOf(arg), 1);
 };
 
 /**
