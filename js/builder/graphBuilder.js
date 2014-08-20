@@ -295,6 +295,7 @@ GraphBuilder.prototype.clear = function() {
  * <li>Drag from existing node to new connected node</li>
  * <li>Drag from existing node to existing node to add connection</li>
  * <li>Drag existing node out of drawing area to remove</li>
+ * <li>Double click existing node to remove</li>
  * </ul>
  */
 GraphBuilder.prototype.bind = function() {
@@ -427,6 +428,8 @@ GraphBuilder.prototype.bind = function() {
             context.invokeUpdateCallback();
             context.bind();
         });
+    }).on("dblclick", function() {
+        context.getHostByNode(this.node).removeNode(this.node);
     });
 
     function isValid(c) {
