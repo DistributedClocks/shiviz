@@ -55,7 +55,6 @@ function SearchBar() {
         var vts = new VectorTimestampSerializer("{\"host\":\"`HOST`\",\"clock\":`CLOCK`}", ",", "#motif=[", "]");
         var builderGraph = this.convertToBG();
         context.setValue(vts.serialize(builderGraph.toVectorTimestamps()));
-        context.update(true);
     });
 
     $(window).unbind("keydown").on("keydown", function(e) {
@@ -84,21 +83,21 @@ function SearchBar() {
     });
 
     $("#searchbar #bar button").on("click", function(e) {
-        if(e.ctrlKey && e.altKey) {
-            Shiviz.getInstance().visualize(context.getValue(), '(?<event>){"host":"(?<host>[^}]+)","clock":(?<clock>{[^}]*})}', "", "order", false);
-        }
-        else {
+        if (e.ctrlKey && e.altKey) {
+            var regexp = '(?<event>){"host":"(?<host>[^}]+)","clock":(?<clock>{[^}]*})}';
+            Shiviz.getInstance().visualize(context.getValue(), regexp, "", "order", false);
+        } else {
             context.query();
         }
         context.hidePanel();
     });
 
     $("#searchbar #bar .clear").on("click", function() {
-        this.updateLocked = true;
+        context.updateLocked = true;
         context.clear();
         context.hidePanel();
         context.update();
-        this.updateLocked = false;
+        context.updateLocked = false;
     });
 
     this.update();
@@ -166,16 +165,20 @@ SearchBar.prototype.updateMode = function() {
 
     if (value.trim().length == 0) {
         this.mode = SearchBar.MODE_EMPTY;
+        $("#bar button").prop("disabled", true);
+        $("#searchbar input").addClass("empty");
+        return;
+    } else {
+        $("#bar button").prop("disabled", false);
+        $("#searchbar input").removeClass("empty");
     }
-    else if (value.indexOf("#") < 0) {
+    
+    if (value.indexOf("#") < 0)
         this.mode = SearchBar.MODE_TEXT;
-    }
-    else if (value.trim().match(/^#(motif\s*=\s*)?(\[.*\])/i) != null) {
+    else if (value.trim().match(/^#(motif\s*=\s*)?(\[.*\])/i) != null)
         this.mode = SearchBar.MODE_STRUCTURAL;
-    }
-    else {
+    else
         this.mode = SearchBar.MODE_PREDEFINED;
-    }
 };
 
 /**
@@ -192,10 +195,8 @@ SearchBar.prototype.getMode = function() {
 /**
  * Updates the search bar to reflect any changes made to either the text or the
  * drawn graph.
- * 
- * @param {Boolean} skipRegen This does something albert should explain
  */
-SearchBar.prototype.update = function(skipRegen) {
+SearchBar.prototype.update = function() {
     var value = this.getValue();
 
     this.updateLocked = true;
@@ -207,8 +208,6 @@ SearchBar.prototype.update = function(skipRegen) {
         case SearchBar.MODE_EMPTY:
             this.clearMotif();
 
-            $("#bar button").prop("disabled", true);
-            $("#searchbar input").addClass("empty");
             break;
 
         // Text
@@ -218,28 +217,21 @@ SearchBar.prototype.update = function(skipRegen) {
 
         // Motif (custom)
         case SearchBar.MODE_STRUCTURAL:
-            if (!skipRegen) {
-                var json = value.trim().match(/^#(?:motif\s*=\s*)?(\[.*\])/i)[1];
-                var rawRegExp = '(?<event>){"host":"(?<host>[^}]+)","clock":(?<clock>{[^}]*})}';
-                var parsingRegex = new NamedRegExp(rawRegExp, "i");
-                var parser = new LogParser(json, null, parsingRegex);
-                var logEvents = parser.getLogEvents(parser.getLabels()[0]);
-                var vectorTimestamps = logEvents.map(function(logEvent) {
-                    return logEvent.getVectorTimestamp();
-                });
-                var builderGraph = BuilderGraph.fromVectorTimestamps(vectorTimestamps);
-                this.graphBuilder.convertFromBG(builderGraph);
-            }
+            var json = value.trim().match(/^#(?:motif\s*=\s*)?(\[.*\])/i)[1];
+            var rawRegExp = '(?<event>){"host":"(?<host>[^}]+)","clock":(?<clock>{[^}]*})}';
+            var parsingRegex = new NamedRegExp(rawRegExp, "i");
+            var parser = new LogParser(json, null, parsingRegex);
+            var logEvents = parser.getLogEvents(parser.getLabels()[0]);
+            var vectorTimestamps = logEvents.map(function(logEvent) {
+                return logEvent.getVectorTimestamp();
+            });
+            var builderGraph = BuilderGraph.fromVectorTimestamps(vectorTimestamps);
+            this.graphBuilder.convertFromBG(builderGraph);
             break;
 
         default:
             throw new Exception("Invalid mode in SearchBar");
             break;
-    }
-
-    if (this.mode != SearchBar.MODE_EMPTY) {
-        $("#bar button").prop("disabled", false);
-        $("#searchbar input").removeClass("empty");
     }
 
     this.updateLocked = false;
@@ -261,9 +253,7 @@ SearchBar.prototype.getValue = function() {
  */
 SearchBar.prototype.setValue = function(val) {
     $("#searchbar #bar input").val(val);
-
-    if (this.mode != SearchBar.MODE_EMPTY)
-        $("#searchbar input").removeClass("empty");
+    this.updateMode();
 };
 
 /**
@@ -331,8 +321,8 @@ SearchBar.prototype.clearResults = function() {
  * @see {@link SearchBar#clearResults}
  */
 SearchBar.prototype.clear = function() {
-    this.clearText();
     this.clearMotif();
+    this.clearText();
     this.clearResults();
 };
 
