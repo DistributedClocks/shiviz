@@ -127,6 +127,8 @@ Global.prototype.drawAll = function() {
         // Add the spacer after log column
         $("table.log").append($("<td></td>").addClass("spacer"));
     }
+    
+    $("#vizContainer").height("auto");
 
     // Add spacing between views
     $("#vizContainer > svg:not(:last-child), #hostBar > svg:not(:last-child)").css({
