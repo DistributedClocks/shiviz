@@ -96,7 +96,7 @@ GraphBuilderHost.prototype.addNode = function(y, tmp) {
     var node = new GraphBuilderNode(this.graphBuilder, this.x, y, tmp, this.color);
 
     this.nodes.push(node);
-    this.graphBuilder.convert();
+    this.graphBuilder.invokeUpdateCallback();
     this.graphBuilder.bind();
 
     return node;
@@ -113,7 +113,7 @@ GraphBuilderHost.prototype.removeNode = function(node) {
     });
     Array.remove(this.nodes, node);
     node.getCircle().remove();
-    this.graphBuilder.convert();
+    this.graphBuilder.invokeUpdateCallback();
 };
 
 /**
