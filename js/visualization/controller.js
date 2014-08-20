@@ -312,6 +312,7 @@ Controller.prototype.showDialog = function(e, type, elem) {
         $dialog.find(".collapse").text("Collapse");
     } else if (!type) {
         $dialog.find(".collapse").text("Uncollapse");
+        $dialog.find(".filter").hide();
     } else {
         if (type == 2 || this.global.getViews().length > 1)
             $dialog.find(".filter").hide();
