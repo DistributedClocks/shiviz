@@ -3,9 +3,9 @@
  * @classdesc
  * 
  * @constructor
- * @param searchbox
+ * @param $svg
  */
-function GraphBuilder(searchbox) {
+function GraphBuilder($svg, $addButton) {
 
     /** @private */
     this.updateCallback = null;
@@ -14,9 +14,9 @@ function GraphBuilder(searchbox) {
     this.conversionLocked = false;
 
     /** @private */
-    this.$svg = $("#panel svg");
+    this.$svg = $svg;
 
-    this.$addButton = $("#panel add");
+    this.$addButton = $addButton;
 
     /** @private */
     this.$hover = this.$svg.find(".hover");

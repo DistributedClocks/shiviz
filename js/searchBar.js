@@ -36,7 +36,7 @@ function SearchBar() {
     this.global = null;
 
     /** @private */
-    this.graphBuilder = new GraphBuilder(this);
+    this.graphBuilder = new GraphBuilder($("#panel svg"), $("#panel add"));
 
     /** @private */
     this.mode = SearchBar.MODE_EMPTY;
