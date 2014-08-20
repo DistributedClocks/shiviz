@@ -55,19 +55,23 @@ function GraphBuilderNode(graphBuilder, x, y, tmp, color) {
 
 }
 
+/** 
+ * @private
+ * @static
+ */
 GraphBuilderNode.id = 0;
 
+
+/**
+ * Returns the globally unique ID of this node
+ * 
+ * @returns {Number} this node's globally unique ID
+ */
 GraphBuilderNode.prototype.getId = function() {
     return this.id;
 };
 
-GraphBuilderNode.prototype.getLines = function() {
-    return this.lines.slice();
-};
 
-GraphBuilderNode.prototype.getCircle = function() {
-    return this.circle;
-};
 
 GraphBuilderNode.prototype.getCoords = function() {
     return [this.x, this.y];
@@ -79,7 +83,7 @@ GraphBuilderNode.prototype.addChild = function(n, l) {
     this.lines.push(line);
     n.parents.push(this);
     n.lines.push(line);
-    this.graphBuilder.convert();
+    this.graphBuilder.invokeUpdateCallback();
 };
 
 GraphBuilderNode.prototype.removeChild = function(n) {

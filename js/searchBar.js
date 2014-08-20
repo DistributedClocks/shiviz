@@ -41,7 +41,22 @@ function SearchBar() {
     /** @private */
     this.mode = SearchBar.MODE_EMPTY;
 
+    /** @private */
+    this.updateLocked = false;
+
     var context = this;
+
+    this.graphBuilder.setUpdateCallback(function() {
+
+        if (context.updateLocked) {
+            return;
+        }
+
+        var vts = new VectorTimestampSerializer("{\"host\":\"`HOST`\",\"clock\":`CLOCK`}", ",", "#motif=[", "]");
+        var builderGraph = this.convertToBG();
+        context.setValue(vts.serialize(builderGraph.toVectorTimestamps()));
+        context.update(true);
+    });
 
     $(window).unbind("keydown").on("keydown", function(e) {
         // Only act when panel is expanded
@@ -74,11 +89,11 @@ function SearchBar() {
     });
 
     $("#searchbar #bar .clear").on("click", function() {
-        context.graphBuilder.lockConversion();
+        this.updateLocked = true;
         context.clear();
         context.hidePanel();
         context.update();
-        context.graphBuilder.unlockConversion();
+        this.updateLocked = false;
     });
 
     this.update();
@@ -178,7 +193,7 @@ SearchBar.prototype.getMode = function() {
 SearchBar.prototype.update = function(skipRegen) {
     var value = this.getValue();
 
-    this.graphBuilder.lockConversion();
+    this.updateLocked = true;
     this.updateMode();
 
     switch (this.mode) {
@@ -222,7 +237,7 @@ SearchBar.prototype.update = function(skipRegen) {
         $("#searchbar input").removeClass("empty");
     }
 
-    this.graphBuilder.unlockConversion();
+    this.updateLocked = false;
 };
 
 /**
