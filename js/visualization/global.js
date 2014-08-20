@@ -177,7 +177,12 @@ Global.prototype.resize = function() {
     var global = this;
     var hiddenHosts = this.getHiddenHosts();
     var numHidden = Object.keys(hiddenHosts).length;
-    var allHosts = this.hostPermutation.getHosts().length;   
+
+    var allHosts = 0;   
+    this.views.forEach(function(view) {
+        allHosts += view.getHosts().length;
+    });
+
     var visibleHosts = allHosts - numHidden;
 
     var sidebarLeft = $(".visualization header").outerWidth();
