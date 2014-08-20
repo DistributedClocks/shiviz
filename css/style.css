@@ -111,29 +111,6 @@ button:disabled {
     position: absolute;
 }
 
-/* Home */
-section.home .content {
-    width: calc(100% - 720px);
-}
-section.home .content li {
-    margin: 1em 0;
-}
-section.home .content pre {
-    padding: .2em 0;
-    overflow: auto;
-}
-
-#versionContainer {
-    position: absolute;
-    top: 24pt;
-    right: 24pt;
-    height: 30px;
-    text-align: right;
-    color: grey;
-    font-size: 8pt;
-    font-family: monospace;
-}
-
 /* Icon nav */
 header.icon {
     width: 10.1em;
@@ -175,6 +152,30 @@ header.icon ul.links li a {
 header.icon ul.links li a:hover {
     color: #04a;
     text-decoration: none;
+}
+
+/* Home */
+section.home .content {
+    width: calc(100% - 720px);
+    min-width: 480px;
+}
+section.home .content li {
+    margin: 1em 0;
+}
+section.home .content pre {
+    padding: .2em 0;
+    overflow: auto;
+}
+
+#versionContainer {
+    position: absolute;
+    top: 24pt;
+    right: 24pt;
+    height: 30px;
+    text-align: right;
+    color: grey;
+    font-size: 8pt;
+    font-family: monospace;
 }
 
 /* Input */
