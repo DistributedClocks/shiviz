@@ -37,6 +37,13 @@ function Controller(global) {
             });
         }
     });
+
+    $(".dialog button").unbind().click(function() {
+        var type = this.name;
+        var e = $(".dialog").data("element");
+
+        self.action(type, e);
+    });
 }
 
 
@@ -55,51 +62,9 @@ Controller.prototype.bindNodes = function(nodes) {
     nodes.on("click", function(e) {
         if (d3.event.shiftKey) {
             // Toggle node collapsing
-            var views = controller.global.getViews();
-            views.forEach(function(view) {
-                view.getTransformer().toggleCollapseNode(e.getNode());
-            });
-
-            controller.global.drawAll();
+            controller.action("collapse", e.getNode());
         } else {
-            d3.select("circle.sel").each(function(d) {
-                $(this).remove();
-                d.setSelected(false);
-            });
-
-            e.setSelected(true);
-
-            var selcirc = d3.select("#node" + e.getId()).insert("circle", "circle");
-            selcirc.style({
-                "fill": function(d) {
-                    return d.getFillColor();
-                }
-            });
-            selcirc.attr({
-                "class": "sel",
-                "r": function(d) {
-                    return d.getRadius() + 6;
-                }
-            });
-
-            var $dialog = $(".dialog");
-            var $svg = $(this).parents("svg");
-            if (e.getX() > $svg.width() / 2)
-                $dialog.css({
-                    "left": e.getX() + $svg.offset().left + 40
-                }).removeClass("right").addClass("left").show();
-            else
-                $dialog.css({
-                    "left": e.getX() + $svg.offset().left - $dialog.width() - 40
-                }).removeClass("left").addClass("right").show();
-
-            $dialog.css({
-                "top": e.getY() + $svg.offset().top,
-                "background": e.getFillColor(),
-                "border-color": e.getFillColor()
-            }).removeClass("host");
-
-            $dialog.find(".name").text(e.getText());
+            controller.showDialog(e, 0, this);
         }
     }).on("mouseover", function(e) {
         d3.selectAll("g.focus .sel").transition().duration(100).attr({
@@ -203,48 +168,17 @@ Controller.prototype.bindHosts = function(hosts) {
         
         if (d3.event.shiftKey) {
             // Filtering by host
-           
             // If more than one view / execution then return
             if (views.length != 1)
                 return;
             
-            views.forEach(function(view) {
-               view.getTransformer().toggleHighlightHost(e.getHost()); 
-            });
-
+            controller.action("filter", e.getHost());
         } else {
             // Hide host
-            views.forEach(function(view) {
-                view.getTransformer().hideHost(e.getHost());
-             });
+            controller.action("hide", e.getHost());
         }
-
-        controller.global.drawAll();
     }).on("click", function(e) {
-        var $dialog = $(".dialog");
-        var $svg = $(this).parents("svg");
-
-        d3.select("circle.sel").each(function(d) {
-            $(this).remove();
-            d.setSelected(false);
-        });
-
-        if (e.getX() > $svg.width() / 2)
-            $dialog.css({
-                "left": e.getX() + $svg.offset().left + 40
-            }).removeClass("right").addClass("left").show();
-        else
-            $dialog.css({
-                "left": e.getX() + $svg.offset().left - $dialog.width() - 40
-            }).removeClass("left").addClass("right").show();
-
-        $dialog.css({
-            "top": $svg.offset().top + Global.HOST_SQUARE_SIZE / 2 - $(window).scrollTop(),
-            "background": e.getFillColor(),
-            "border-color": e.getFillColor()
-        }).addClass("host");
-
-        $dialog.find(".name").text(e.getText());
+        controller.showDialog(e, 1, this);
     });
 };
 
@@ -278,6 +212,8 @@ Controller.prototype.bindHiddenHosts = function(hh) {
     }).on("mouseover", function(e) {
         $(".event").text(e);
         $(".fields").children().remove();
+    }).on("click", function(e) {
+        controller.showDialog(e, 2, this);
     });
 };
 
@@ -296,4 +232,131 @@ Controller.prototype.onScroll = function(e) {
         $(".highlight").css({
             "left": $(".line.focus").offset().left - parseFloat($(".line.focus").css("margin-left"))
         });
+};
+
+Controller.prototype.showDialog = function(e, type, elem) {
+    d3.select("circle.sel").each(function(d) {
+        $(this).remove();
+        d.setSelected(false);
+    });
+    if (!type) {
+
+        e.setSelected(true);
+
+        var selcirc = d3.select("#node" + e.getId()).insert("circle", "circle");
+        selcirc.style({
+            "fill": function(d) {
+                return d.getFillColor();
+            }
+        });
+        selcirc.attr({
+            "class": "sel",
+            "r": function(d) {
+                return d.getRadius() + 6;
+            }
+        });
+    }
+
+    var $dialog = $(".dialog");
+    var $svg = $(elem).parents("svg");
+    var $graph = $("#graph");
+    if (type == 2)
+        $dialog.css({
+            "left": $(elem).offset().left - $dialog.width() - 40
+        }).removeClass("left").addClass("right").show();
+    else if (e.getX() - $(window).scrollLeft() > $graph.width() / 2 ? !type : type)
+        $dialog.css({
+            "left": e.getX() + $svg.offset().left - $dialog.width() - 40
+        }).removeClass("left").addClass("right").show();
+    else
+        $dialog.css({
+            "left": e.getX() + $svg.offset().left + 40
+        }).removeClass("right").addClass("left").show();
+
+    if (type)
+        $dialog.css({
+            "top": $(elem).offset().top + Global.HOST_SQUARE_SIZE / 2,
+            "background": type == 2 ? $(elem).css("fill") : e.getFillColor(),
+            "border-color": type == 2 ? $(elem).css("fill") : e.getFillColor()
+        }).data("element", type == 2 ? e : e.getHost());
+    else
+        $dialog.css({
+            "top": e.getY() + $svg.offset().top,
+            "background": e.getFillColor(),
+            "border-color": e.getFillColor()
+        }).data("element", e.getNode());
+
+    if (type) $dialog.addClass("host");
+    else $dialog.removeClass("host");
+
+    $dialog.find(".name").text(type == 2 ? e : e.getText());
+    $dialog.find(".info").children().remove();
+
+    if (!type && !e.isCollapsed()) {
+        var fields = e.getNode().getLogEvents()[0].getFields();
+        for (var i in fields) {
+            var $f = $("<tr>", {
+                "class": "field"
+            });
+            var $t = $("<th>", {
+                "class": "title"
+            }).text(i + ":");
+            var $v = $("<td>", {
+                "class": "value"
+            }).text(fields[i]);
+
+            $f.append($t).append($v);
+            $dialog.find(".info").append($f);
+        }
+
+        $dialog.find(".collapse").text("Collapse");
+    } else if (!type) {
+        $dialog.find(".collapse").text("Uncollapse");
+    } else {
+        if (type == 2 || this.global.getViews().length > 1)
+            $dialog.find(".filter").hide();
+        else
+            $dialog.find(".filter").show();
+
+        if (type != 2 && e.isHighlighted())
+            $dialog.find(".filter").text("Unhighlight");
+        else
+            $dialog.find(".filter").text("Highlight");
+
+        if (type == 2)
+            $dialog.find(".hide").attr("name", "unhide").text("Unhide");
+        else
+            $dialog.find(".hide").attr("name", "hide").text("Hide");
+    }
+}
+
+Controller.prototype.action = function(type, e) {
+    var views = this.global.getViews();
+    switch (type) {
+        case "hide":
+            views.forEach(function(view) {
+                view.getTransformer().hideHost(e);
+            });
+            break;
+
+        case "unhide":
+            views.forEach(function(view) {
+                view.getTransformer().unhideHost(e);
+            });
+            break;
+
+        case "filter":
+            views.forEach(function(view) {
+               view.getTransformer().toggleHighlightHost(e); 
+            });
+            break;
+
+        case "collapse":
+            views.forEach(function(view) {
+                view.getTransformer().toggleCollapseNode(e);
+            });
+            break;
+    }
+
+    this.global.drawAll();
 };
