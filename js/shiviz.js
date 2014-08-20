@@ -116,14 +116,13 @@ Shiviz.prototype.resetView = function() {
  * This method creates the visualization. The user's input to UI elements are
  * retrieved and used to construct the visualization accordingly.
  */
-Shiviz.prototype.visualize = function() {
+Shiviz.prototype.visualize = function(log, regexpString, delimiterString, sortType, descending) {
     try {
         d3.selectAll("#vizContainer svg").remove();
 
-        var log = $("#input").val();
-        var delimiterString = $("#delimiter").val().trim();
+        delimiterString = delimiterString.trim();
         var delimiter = delimiterString == "" ? null : new NamedRegExp(delimiterString, "m");
-        var regexpString = $("#parser").val().trim();
+        regexpString = regexpString.trim();
 
         if (regexpString == "")
             throw new Exception("The parser regexp field must not be empty.", true);
@@ -131,8 +130,6 @@ Shiviz.prototype.visualize = function() {
         var regexp = new NamedRegExp(regexpString, "m");
         var parser = new LogParser(log, delimiter, regexp);
 
-        var sortType = $("input[name=host_sort]:checked").val().trim();
-        var descending = $("#ordering option:selected").val().trim() == "descending";
         var hostPermutation = null;
 
         if (sortType == "length") {
@@ -161,7 +158,7 @@ Shiviz.prototype.visualize = function() {
         var global = new Global($("#vizContainer"), $("#sidebar"));
         var searchbar = SearchBar.getInstance();
         searchbar.setGlobal(global);
-        searchbar.clearMotif();
+        searchbar.clearText();
         searchbar.clearText();
         searchbar.update();
 
@@ -226,7 +223,7 @@ Shiviz.prototype.go = function(index, store, force) {
             $(".visualization").show();
             try {
                 if (!$("#vizContainer svg").length || force)
-                    this.visualize();
+                    this.visualize($("#input").val(), $("#parser").val(),  $("#delimiter").val(), $("input[name=host_sort]:checked").val().trim(), $("#ordering option:selected").val().trim() == "descending");
             } catch(e) {
                 $(".visualization").hide();
                 throw e;
