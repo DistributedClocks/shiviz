@@ -58,7 +58,7 @@ function SearchBar() {
         context.update(true);
     });
 
-    $(window).unbind("keydown").on("keydown", function(e) {
+    $(window).on("keydown", function(e) {
         // Only act when panel is expanded
         if (!context.isPanelShown())
             return;
