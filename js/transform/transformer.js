@@ -97,6 +97,8 @@ Transformer.prototype.unhideHost = function(host) {
  * Sets this transformer to highlight the specified host.
  * 
  * @param {String} host The host to be highlighted
+ * @param {Boolean} def Whether the transformation to remove is a default
+ *            transformation.
  */
 Transformer.prototype.highlightHost = function(host) {
     this.highlightHostTransformation.addHost(host);

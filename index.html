@@ -218,12 +218,30 @@
                     <li><a title="Source" href="//bitbucket.org/bestchai/shiviz/src">s</a></li>
                 </ul>
             </header>
+            <div id="tabs"></div>
             <table class="log">
                 <tr></tr>
             </table>
             <div class="highlight"></div>
         </div>
         <div id="graph">
+            <div id="searchbar">
+                <div id="bar">
+                    <input type="text" class="mono" placeholder="Search the visualization">
+                    <div class="clear">
+                        <div class="one"></div>
+                        <div class="two"></div>
+                    </div>
+                    <button disabled>Search</button>
+                </div>
+                <div id="panel">
+                    <svg>
+                        <circle r="5" class="hover"></circle>
+                    </svg>
+                    <button id="addButton" class="add">+</button>
+                    <div class="out">gibberish</div>
+                </div>
+            </div>
             <div id="hostBar"></div>
             <div id="vizContainer"></div>
         </div>
@@ -253,6 +271,8 @@
     <script type="text/javascript" src="js/dev.js"></script>
     <!-- -->
     
+    <script type="text/javascript" src="js/searchBar.js"></script>
+    
     <script type="text/javascript" src="js/graph/graphEvent.js"></script>
     <script type="text/javascript" src="js/graph/abstractGraph.js"></script>
     <script type="text/javascript" src="js/graph/abstractNode.js"></script>
@@ -262,6 +282,9 @@
 
     <script type="text/javascript" src="js/builder/builderGraph.js"></script>
     <script type="text/javascript" src="js/builder/builderNode.js"></script>
+    <script type="text/javascript" src="js/builder/graphBuilder.js"></script>
+    <script type="text/javascript" src="js/builder/graphBuilderHost.js"></script>
+    <script type="text/javascript" src="js/builder/graphBuilderNode.js"></script>
     <script type="text/javascript" src="js/graph/dfsGraphTraversal.js"></script>
     <script type="text/javascript" src="js/logEventMatcher/lemAST.js"></script>
     <script type="text/javascript" src="js/logEventMatcher/lemInterpreter.js"></script>
@@ -274,10 +297,12 @@
     <script type="text/javascript" src="js/model/modelNode.js"></script>
     <script type="text/javascript" src="js/model/parser.js"></script>
     <script type="text/javascript" src="js/model/vectorTimestamp.js"></script>
+    <script type="text/javascript" src="js/model/vectorTimestampSerializer.js"></script>
     <script type="text/javascript" src="js/motifFinder/broadcastGather.js"></script>
     <script type="text/javascript" src="js/motifFinder/customMotifFinder.js"></script>
     <script type="text/javascript" src="js/motifFinder/motif.js"></script>
     <script type="text/javascript" src="js/motifFinder/requestResponseFinder.js"></script>
+    <script type="text/javascript" src="js/motifFinder/textQueryMotifFinder.js"></script>
     <script type="text/javascript" src="js/shiviz.js"></script>
     <script type="text/javascript" src="js/transform/collapseSequentialNodesTransformation.js"></script>
     <script type="text/javascript" src="js/transform/hideHostTransformation.js"></script>
@@ -286,6 +311,7 @@
     <script type="text/javascript" src="js/transform/transformer.js"></script>
     <script type="text/javascript" src="js/util/exception.js"></script>
     <script type="text/javascript" src="js/util/regexp.js"></script>
+    <script type="text/javascript" src="js/util/util.js"></script>
     <script type="text/javascript" src="js/visualization/controller.js"></script>
     <script type="text/javascript" src="js/visualization/global.js"></script>
     <script type="text/javascript" src="js/visualization/hostPermutation.js"></script>
@@ -294,6 +320,8 @@
     <script type="text/javascript" src="js/visualization/visualEdge.js"></script>
     <script type="text/javascript" src="js/visualization/visualGraph.js"></script>
     <script type="text/javascript" src="js/visualization/visualNode.js"></script>
+    
+    
 
 
 </body>
