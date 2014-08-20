@@ -241,7 +241,7 @@ section.input .left {
     width: 288pt;
     top: 6em;
     position: fixed;
-    z-index: 4;
+    z-index: 3;
     left: 0;
 }
 
@@ -549,7 +549,7 @@ svg#defs {
     background: #eee;
     font-family: sans-serif;
     position: absolute;
-    z-index: 99;
+    z-index: 3;
     display: none;
 }
 
@@ -622,6 +622,9 @@ svg#defs {
 	font-family: sans-serif;
 	position: absolute;
 	display: none;
+}
+.dialog.host {
+    position: fixed;
 }
 
 .dialog .triangle {

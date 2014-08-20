@@ -57,7 +57,7 @@ function SearchBar() {
         context.setValue(vts.serialize(builderGraph.toVectorTimestamps()));
     });
 
-    $(window).unbind("keydown").on("keydown", function(e) {
+    $(window).unbind("keydown.search").on("keydown.search", function(e) {
         // Only act when panel is expanded
         if (!context.isPanelShown())
             return;

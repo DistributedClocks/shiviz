@@ -96,6 +96,8 @@ Global.prototype.drawAll = function() {
         "margin-right": hostMargin * 2 + "px"
     });
 
+    $(".dialog").hide();
+
     this.drawSideBar();
 };
 

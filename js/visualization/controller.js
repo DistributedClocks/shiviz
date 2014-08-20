@@ -27,7 +27,16 @@ function Controller(global) {
             Shiviz.getInstance().handleException(exception);
         }
     });
-   
+
+    $(window).unbind("keydown.dialog").on("keydown.dialog", function(e) {
+        if (e.which == 27) {
+            $(".dialog").hide();
+            d3.select("circle.sel").each(function(d) {
+                $(this).remove();
+                d.setSelected(false);
+            });
+        }
+    });
 }
 
 
@@ -88,7 +97,7 @@ Controller.prototype.bindNodes = function(nodes) {
                 "top": e.getY() + $svg.offset().top,
                 "background": e.getFillColor(),
                 "border-color": e.getFillColor()
-            });
+            }).removeClass("host");
 
             $dialog.find(".name").text(e.getText());
         }
@@ -190,7 +199,6 @@ Controller.prototype.bindHosts = function(hosts) {
         $(".event").text(e.getText());
         $(".fields").children().remove();
     }).on("dblclick", function(e) {
-        
         var views = controller.global.getViews();
         
         if (d3.event.shiftKey) {
@@ -212,6 +220,31 @@ Controller.prototype.bindHosts = function(hosts) {
         }
 
         controller.global.drawAll();
+    }).on("click", function(e) {
+        var $dialog = $(".dialog");
+        var $svg = $(this).parents("svg");
+
+        d3.select("circle.sel").each(function(d) {
+            $(this).remove();
+            d.setSelected(false);
+        });
+
+        if (e.getX() > $svg.width() / 2)
+            $dialog.css({
+                "left": e.getX() + $svg.offset().left + 40
+            }).removeClass("right").addClass("left").show();
+        else
+            $dialog.css({
+                "left": e.getX() + $svg.offset().left - $dialog.width() - 40
+            }).removeClass("left").addClass("right").show();
+
+        $dialog.css({
+            "top": $svg.offset().top + Global.HOST_SQUARE_SIZE / 2 - $(window).scrollTop(),
+            "background": e.getFillColor(),
+            "border-color": e.getFillColor()
+        }).addClass("host");
+
+        $dialog.find(".name").text(e.getText());
     });
 };
 
@@ -256,7 +289,7 @@ Controller.prototype.bindHiddenHosts = function(hh) {
  */
 Controller.prototype.onScroll = function(e) {
     var x = window.pageXOffset;
-    $("#hostBar").css("margin-left", -x);
+    $("#hostBar, .dialog.host").css("margin-left", -x);
     $(".log").css("margin-left", x);
 
     if ($(".line.focus").length)
