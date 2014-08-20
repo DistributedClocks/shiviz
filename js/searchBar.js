@@ -36,7 +36,7 @@ function SearchBar() {
     this.global = null;
 
     /** @private */
-    this.graphBuilder = new GraphBuilder($("#panel svg"), $("#panel add"));
+    this.graphBuilder = new GraphBuilder($("#panel svg"), $("#addButton"));
 
     /** @private */
     this.mode = SearchBar.MODE_EMPTY;
@@ -83,8 +83,13 @@ function SearchBar() {
         context.showPanel();
     });
 
-    $("#searchbar #bar button").on("click", function() {
-        context.query();
+    $("#searchbar #bar button").on("click", function(e) {
+        if(e.ctrlKey && e.altKey) {
+            Shiviz.getInstance().visualize(context.getValue(), '(?<event>){"host":"(?<host>[^}]+)","clock":(?<clock>{[^}]*})}', "", "order", false);
+        }
+        else {
+            context.query();
+        }
         context.hidePanel();
     });
 
