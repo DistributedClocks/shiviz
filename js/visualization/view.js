@@ -207,6 +207,21 @@ View.prototype.draw = function() {
             }
         });
 
+        var selcirc = nodes.filter(function(n) {
+            return n.isSelected();
+        }).append("circle");
+        selcirc.style({
+            "fill": function(d) {
+                return d.getFillColor();
+            }
+        });
+        selcirc.attr({
+            "class": "sel",
+            "r": function(d) {
+                return d.getRadius() + 4;
+            }
+        });
+
         var circle = nodes.append("circle");
         circle.style({
             "fill": function(d) {
