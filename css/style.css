@@ -387,6 +387,11 @@ svg {
     z-index: 1;
 }
 
+#sidebar .info {
+    height: 12em;
+    overflow: auto;
+}
+
 #sidebar .event {
     word-break: break-all;
     margin-bottom: 1em;
