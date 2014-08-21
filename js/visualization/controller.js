@@ -345,6 +345,9 @@ Controller.prototype.showDialog = function(e, type, elem) {
             $dialog.find(".info").append($f);
         }
 
+        // Hide highlight button
+        $dialog.find(".filter").hide();
+
         // If node is collapsible then show collapse button
         // Else don't show button
         if (!CollapseSequentialNodesTransformation.isCollapseable(e.getNode(), 2))
