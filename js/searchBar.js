@@ -55,6 +55,8 @@ function SearchBar() {
         var vts = new VectorTimestampSerializer("{\"host\":\"`HOST`\",\"clock\":`CLOCK`}", ",", "#motif=[", "]");
         var builderGraph = this.convertToBG();
         context.setValue(vts.serialize(builderGraph.toVectorTimestamps()));
+
+        context.updateMode();
     });
 
     $(window).unbind("keydown").on("keydown", function(e) {
@@ -162,6 +164,8 @@ SearchBar.prototype.setGlobal = function(global) {
  */
 SearchBar.prototype.updateMode = function() {
     var value = this.getValue();
+    
+    $("#searchbar #bar input").css("color", "initial");
 
     if (value.trim().length == 0) {
         this.mode = SearchBar.MODE_EMPTY;
@@ -172,6 +176,8 @@ SearchBar.prototype.updateMode = function() {
         $("#bar button").prop("disabled", false);
         $("#searchbar input").removeClass("empty");
     }
+
+    this.clearResults();
     
     if (value.indexOf("#") < 0)
         this.mode = SearchBar.MODE_TEXT;
@@ -201,8 +207,6 @@ SearchBar.prototype.update = function() {
 
     this.updateLocked = true;
     this.updateMode();
-    
-    $("#searchbar #bar input").css("color", "initial");
 
     switch (this.mode) {
 
