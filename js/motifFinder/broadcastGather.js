@@ -59,8 +59,14 @@
  *            find gathers
  */
 function BroadcastGatherFinder(minBroadcastGather, maxInBetween, broadcast) {
+    
+    /** @private */
     this.minBroadcastGather = minBroadcastGather;
+    
+    /** @private */
     this.maxInBetween = maxInBetween;
+    
+    /** @private */
     this.broadcast = broadcast;
 };
 
@@ -82,7 +88,7 @@ BroadcastGatherFinder.prototype.find = function(graph) {
 
     var context = this; // Used by inner functions
 
-    var finalMotif = new Motif();
+    var motifGroup = new MotifGroup();
     var disjoints = findDisjoint();
 
     for (var d = 0; d < disjoints.length; d++) {
@@ -91,14 +97,14 @@ BroadcastGatherFinder.prototype.find = function(graph) {
         if (disjoint.length <= BroadcastGatherFinder.GREEDY_THRESHOLD) {
             var score = findAll(disjoint);
             var groups = findBestGroups(disjoint, score);
-            addToMotif(groups, finalMotif);
+            motifGroup.addMotif(toMotif(groups, finalMotif));
         }
         else {
             findGreedy(disjoint, finalMotif);
         }
     }
 
-    return finalMotif;
+    return motifGroup;
 
     // Finds disjoint groups of potential broadcasts/gathers
     function findDisjoint() {
@@ -249,8 +255,10 @@ BroadcastGatherFinder.prototype.find = function(graph) {
         return groups;
     }
 
-    // Adds the groups to the motif
-    function addToMotif(groups, motif) {
+    // Creates a motif out of the groups
+    function toMotif(groups) {
+        var motif = new Motif();
+        
         for (var j = 0; j < groups.length; j++) {
             var curr = groups[j][0];
             var groupEnd = groups[j][1].getNext();
@@ -277,6 +285,8 @@ BroadcastGatherFinder.prototype.find = function(graph) {
                 curr = curr.getNext();
             }
         }
+        
+        return motif;
     }
 
     // Alternate greedy solution. Used when O(n^2) dp is too slow
