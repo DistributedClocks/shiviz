@@ -229,6 +229,11 @@ SearchBar.prototype.update = function() {
             this.graphBuilder.convertFromBG(builderGraph);
             break;
 
+        // Predefined Motif
+        case SearchBar.MODE_PREDEFINED:
+            this.clearMotif();
+            break;
+
         default:
             throw new Exception("Invalid mode in SearchBar");
             break;
@@ -343,11 +348,34 @@ SearchBar.prototype.query = function() {
                 break;
 
             case SearchBar.MODE_STRUCTURAL:
-                this.queryMotif(this.graphBuilder.convertToBG());
+                var finder = new CustomMotifFinder(this.graphBuilder.convertToBG());
+                this.queryMotif(finder);
                 break;
 
             case SearchBar.MODE_PREDEFINED:
-                // TODO: Predefined motifs
+                var value = this.getValue();
+                var type = value.trim().match(/^#(?:motif\s*=\s*)?(.*)/i)[1];
+                var finder;
+
+                switch (type) {
+                    case "request-response":
+                        finder = new RequestResponseFinder(2, 2);
+                        break;
+
+                    case "broadcast":
+                        finder = new BroadcastGatherFinder(2, 1, true);
+                        break;
+
+                    case "gather":
+                        finder = new BroadcastGatherFinder(2, 1, false);
+                        break;
+
+                    default:
+                        throw new Exception(value + " is not a built-in motif type", true);
+                }
+
+                this.queryMotif(finder);
+
                 break;
 
             default:
@@ -376,10 +404,9 @@ SearchBar.prototype.queryText = function(query) {
 /**
  * Performs a query for a motif
  * 
- * @param {BuilderGraph} builderGraph The motif structure
+ * @param {MotifFinder} finder A motif finder
  */
-SearchBar.prototype.queryMotif = function(builderGraph) {
-    var finder = new CustomMotifFinder(builderGraph);
+SearchBar.prototype.queryMotif = function(finder) {
     this.global.getViews().forEach(function(view) {
         view.getTransformer().highlightMotif(finder, false);
     });

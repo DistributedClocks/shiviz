@@ -73,6 +73,7 @@ DFSGraphTraversal.prototype.addAllNodes = function(nodes, state, data) {
 DFSGraphTraversal.prototype.step = function() {
 
     if (this.stack.length == 0 || this.hasEnded) {
+        this.end();
         return null;
     }
 
