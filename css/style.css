@@ -329,7 +329,6 @@ section.input .left {
 
 .visualization #graph {
     margin-left: 264pt;
-    padding-right: 240px;
 }
 
 #searchbar {
@@ -462,6 +461,9 @@ svg {
 
 #vizContainer svg {
     vertical-align: top;
+}
+#vizContainer svg:last-child {
+    padding-right: 240px;
 }
 
 #vizContainer svg line,
