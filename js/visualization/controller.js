@@ -254,13 +254,23 @@ Controller.prototype.onScroll = function(e) {
         });
 };
 
+/**
+ * Shows the node selection popup dialog
+ * 
+ * @param  {VisualNode} e The VisualNode that is selected
+ * @param  {Number} type The type of node: 0 for regular, 1 for host, 2 for hidden host
+ * @param  {DOMElement} elem The SVG node element
+ */
 Controller.prototype.showDialog = function(e, type, elem) {
+
+    // Remove existing selection highlights
     d3.select("circle.sel").each(function(d) {
         $(this).remove();
         d.setSelected(false);
     });
-    if (!type) {
 
+    // Highlight the node with circular outline
+    if (!type) {
         e.setSelected(true);
 
         var selcirc = d3.select("#node" + e.getId()).insert("circle", "circle");
@@ -280,6 +290,8 @@ Controller.prototype.showDialog = function(e, type, elem) {
     var $dialog = $(".dialog");
     var $svg = $(elem).parents("svg");
     var $graph = $("#graph");
+
+    // Set properties for dialog, and show
     if (type == 2)
         $dialog.css({
             "left": $(elem).offset().left - $dialog.width() - 40
@@ -293,6 +305,7 @@ Controller.prototype.showDialog = function(e, type, elem) {
             "left": e.getX() + $svg.offset().left + 40
         }).removeClass("right").addClass("left").show();
 
+    // Set fill color, etc.
     if (type)
         $dialog.css({
             "top": $(elem).offset().top + Global.HOST_SQUARE_SIZE / 2,
@@ -306,13 +319,16 @@ Controller.prototype.showDialog = function(e, type, elem) {
             "border-color": e.getFillColor()
         }).data("element", e.getNode());
 
+    // Set class "host" if host (hidden or not) is selected
     if (type) $dialog.addClass("host");
     else $dialog.removeClass("host");
 
+    // Add info to the dialog
     $dialog.find(".name").text(type == 2 ? e : e.getText());
     $dialog.find(".info").children().remove();
 
     if (!type && !e.isCollapsed()) {
+        // Add fields, if normal node
         var fields = e.getNode().getLogEvents()[0].getFields();
         for (var i in fields) {
             var $f = $("<tr>", {
@@ -329,25 +345,31 @@ Controller.prototype.showDialog = function(e, type, elem) {
             $dialog.find(".info").append($f);
         }
 
+        // If node is collapsible then show collapse button
+        // Else don't show button
         if (!e.isCollapsible())
             $dialog.find(".collapse").hide();
         else
             $dialog.find(".collapse").show().text("Collapse");
 
     } else if (!type) {
+        // Show uncollapse button for collapsed nodes
         $dialog.find(".collapse").show().text("Uncollapse");
         $dialog.find(".filter").hide();
     } else {
+        // Show highlight button if only one execution
         if (type == 2 || this.global.getViews().length > 1)
             $dialog.find(".filter").hide();
         else
             $dialog.find(".filter").show();
 
+        // Set highlight/unhighlight based on current state
         if (type != 2 && e.isHighlighted())
             $dialog.find(".filter").text("Unhighlight");
         else
             $dialog.find(".filter").text("Highlight");
 
+        // Set hide/unhide based on state
         if (type == 2)
             $dialog.find(".hide").attr("name", "unhide").text("Unhide");
         else
@@ -355,27 +377,39 @@ Controller.prototype.showDialog = function(e, type, elem) {
     }
 }
 
+/**
+ * Performs a transformation / action based on the type of action 
+ * provided
+ * 
+ * @param  {String} type The action to perform
+ * @param  {any} e Data associated with the action
+ */
 Controller.prototype.action = function(type, e) {
     var views = this.global.getViews();
     switch (type) {
+
+        // Hide host
         case "hide":
             views.forEach(function(view) {
                 view.getTransformer().hideHost(e);
             });
             break;
 
+        // Unhide host
         case "unhide":
             views.forEach(function(view) {
                 view.getTransformer().unhideHost(e);
             });
             break;
 
+        // Highlight host
         case "filter":
             views.forEach(function(view) {
                view.getTransformer().toggleHighlightHost(e); 
             });
             break;
 
+        // Toggle collapse
         case "collapse":
             views.forEach(function(view) {
                 view.getTransformer().toggleCollapseNode(e);

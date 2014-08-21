@@ -361,10 +361,20 @@ VisualNode.prototype.setHighlight = function(val) {
     this._isHighlighted = val;
 };
 
+/**
+ * Returns whether the node is selected
+ * 
+ * @returns {Boolean} True if the node is selected
+ */
 VisualNode.prototype.isSelected = function() {
     return this._isSelected;
 };
 
+/**
+ * Sets if the node is selected
+ * 
+ * @param {Boolean} val True if the node is selected
+ */
 VisualNode.prototype.setSelected = function(val) {
     this._isSelected = val;
 };
