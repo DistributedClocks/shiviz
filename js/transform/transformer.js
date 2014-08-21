@@ -180,6 +180,15 @@ Transformer.prototype.unhighlightMotif = function() {
     this.highlightMotifTransformation = null;
 };
 
+
+Transformer.prototype.getHighlightedMotif = function() {
+    if(this.highlightMotifTransformation == null) {
+        return null;
+    }
+    
+    return this.highlightMotifTransformation.getHighlighted();
+};
+
 /**
  * Get all of the hosts hidden by this transformer by the last invocation of
  * {@link Transformer#transform}. If the transform method has never been
