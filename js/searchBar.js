@@ -355,26 +355,30 @@ SearchBar.prototype.query = function() {
             case SearchBar.MODE_PREDEFINED:
                 var value = this.getValue();
                 var type = value.trim().match(/^#(?:motif\s*=\s*)?(.*)/i)[1];
-                var finder;
 
-                switch (type) {
-                    case "request-response":
-                        finder = new RequestResponseFinder(2, 2);
-                        break;
+                if (type == "request-response") {
+                    this.queryMotif(new RequestResponseFinder(999, 4));
+                    return;
+                } else if (type == "broadcast" || type == "gather") {
+                    var broadcast;
+                    if (type == "broadcast") broadcast = true;
+                    else broadcast = false;
 
-                    case "broadcast":
-                        finder = new BroadcastGatherFinder(3, 1, true);
-                        break;
+                    var hiddenHosts = this.global.getHiddenHosts();
 
-                    case "gather":
-                        finder = new BroadcastGatherFinder(3, 1, false);
-                        break;
+                    this.global.getViews().forEach(function(view) {
+                        var hosts = view.getHosts().filter(function(h) {
+                            return !hiddenHosts[h];
+                        }).length;
+                        var finder = new BroadcastGatherFinder(hosts - 1, 4, broadcast);
 
-                    default:
-                        throw new Exception(type + " is not a built-in motif type", true);
+                        view.getTransformer().highlightMotif(finder, false);
+                    });
+
+                    this.global.drawAll();
+                } else {
+                    throw new Exception(type + " is not a built-in motif type", true);
                 }
-
-                this.queryMotif(finder);
 
                 break;
 
