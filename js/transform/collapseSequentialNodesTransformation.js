@@ -201,11 +201,15 @@ CollapseSequentialNodesTransformation.prototype.transform = function(model) {
         var groupCount = 0;
         var curr = graph.getHead(host).getNext();
         while (curr != null) {
-            if (curr.hasChildren() || curr.hasParents() || curr.isTail() || this.isExempt(curr)) {
+            var isExempt = this.isExempt(curr);
+            if (curr.hasChildren() || curr.hasParents() || curr.isTail() || isExempt) {
                 if (groupCount >= this.threshold) {
                     collapse(curr, groupCount);
                 }
                 groupCount = -1;
+
+                if (isExempt)
+                    model.getVisualNodeByNode(curr).setCollapsible(true);
             }
 
             groupCount++;
