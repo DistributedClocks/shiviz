@@ -1,4 +1,6 @@
-function MotifNavigator() {
+function MotifNavigator(global) {
+
+    this.global = global;
 
     /** @private */
     this.motifDatas = [];
@@ -37,7 +39,7 @@ MotifNavigator.prototype.addMotif = function(visualGraph, motifGroup) {
             top = Math.min(top, visualNode.getY());
             bottom = Math.max(bottom, visualNode.getY());
             left = Math.min(left, visualNode.getX());
-            right = Math.min(right, visualNode.getX());
+            right = Math.max(right, visualNode.getX());
         }
         
         this.motifDatas.push({
@@ -102,6 +104,8 @@ MotifNavigator.prototype.handleCurrent = function() {
     var position = motifData.top - MotifNavigator.TOP_SPACING;
     position = Math.max(0, position);
     $(window).scrollTop(position);
+
+    this.global.drawBox(motifData);
     
 //    var motif = motifData.motif;
 //    var visualGraph = motifData.visualGraph;
