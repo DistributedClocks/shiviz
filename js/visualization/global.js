@@ -11,14 +11,14 @@
  * 
  * @constructor
  */
-function Global($vizContainer, $sidebar) {
+function Global($vizContainer, $sidebar, views) {
 
     if (!!Global.instance) {
         throw new Exception("Global is a singleton - use getInstance() instead.");
     }
 
     /** @private */
-    this.views = [];
+    this.views = views;
 
     /** @private */
     this.hostPermutation = null;
@@ -33,6 +33,14 @@ function Global($vizContainer, $sidebar) {
     this.$sidebar.css({
         width: Global.SIDE_BAR_WIDTH + "px"
     });
+    
+    var context = this;
+    views.forEach(function(view) {
+        view.controller = context.controller; //TODO
+    });
+    
+    this.resize();
+    
 }
 
 /**
@@ -101,16 +109,6 @@ Global.prototype.drawAll = function() {
     this.drawSideBar();
 };
 
-/**
- * Adds a View to this global.
- * 
- * @param {View} view The view to add
- */
-Global.prototype.addView = function(view) {
-    this.views.push(view);
-//    view.controller = this.controller; //TODO
-    this.resize();
-};
 
 /**
  * Gets the list of Views

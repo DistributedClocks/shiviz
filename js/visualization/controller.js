@@ -30,6 +30,16 @@ function Controller(global) {
    
 }
 
+Controller.prototype.highlightMotif = function(motifFinder) {
+    
+    var motifNavigator = new motifNavigator();
+    
+    this.global.getViews().forEach(function(view) {
+        view.getTransformer().highlightMotif(motifFinder, false);
+    });
+    
+};
+
 
 /**
  * Binds events to the nodes.
