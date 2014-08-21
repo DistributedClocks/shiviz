@@ -73,7 +73,7 @@ function GraphTraversal() {
     this.currentData = null;
 
     /** @private */
-    this.hasEnded = false;
+    this._hasEnded = false;
 
     this.reset();
 }
@@ -90,7 +90,7 @@ GraphTraversal.prototype.reset = function() {
 
     this.parent = {};
 
-    this.hasEnded = false;
+    this._hasEnded = false;
 };
 
 /**
@@ -163,7 +163,16 @@ GraphTraversal.prototype.setCurrentData = function(data) {
  * visited.
  */
 GraphTraversal.prototype.end = function() {
-    this.hasEnded = true;
+    this._hasEnded = true;
+};
+
+/**
+ * Determines if this traversal has ended
+ * 
+ * @returns {Boolean} true is this traversal has ended
+ */
+GraphTraversal.prototype.hasEnded = function() {
+    return this._hasEnded;
 };
 
 /**
@@ -188,10 +197,26 @@ GraphTraversal.prototype.end = function() {
  * @see {@link GraphTraversal#setDefaultVisitFunction}
  */
 GraphTraversal.prototype.step = function() {
-    if (this.hasEnded) {
+    if (this.hasEnded()) {
         return null;
     }
 
+    return this.stepInner();
+};
+
+/**
+ * This protected function is what actually executes the step.
+ * {@link GraphTraversal#step} performs some validation and then calls this
+ * function. Typically, classes extending this class will override this method
+ * to specify what happens during each "step"
+ * 
+ * @protected
+ * @returns {*} The return value of the VisitFunction if one was executed, or
+ *          null otherwise
+ * @see {@link GraphTraversal#setVisitFunction}
+ * @see {@link GraphTraversal#setDefaultVisitFunction}
+ */
+GraphTraversal.prototype.stepInner = function() {
     if (this.state == null || !this.visitFunctions[this.state]) {
         if (this.defaultVisitFunction == null) {
             throw new Exception("GraphTraversal.prototype.step: no valid visit function");
@@ -212,9 +237,8 @@ GraphTraversal.prototype.step = function() {
  *          never invoked.
  */
 GraphTraversal.prototype.run = function() {
-
     var ret = null;
-    while (!this.hasEnded) {
+    while (!this.hasEnded()) {
         ret = this.step();
     }
     return ret;

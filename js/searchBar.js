@@ -363,11 +363,11 @@ SearchBar.prototype.query = function() {
                         break;
 
                     case "broadcast":
-                        finder = new BroadcastGatherFinder(2, 1, true);
+                        finder = new BroadcastGatherFinder(3, 1, true);
                         break;
 
                     case "gather":
-                        finder = new BroadcastGatherFinder(2, 1, false);
+                        finder = new BroadcastGatherFinder(3, 1, false);
                         break;
 
                     default:
