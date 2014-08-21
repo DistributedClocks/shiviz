@@ -25,17 +25,26 @@ MotifNavigator.prototype.addMotif = function(visualGraph, motifGroup) {
     var motifs = motifGroup.getMotifs();
     for(var m = 0; m < motifs.length; m++) {
         var motif = motifs[m];
-        var minValue = Number.POSITIVE_INFINITY;
+        var top = Number.POSITIVE_INFINITY;
+        var bottom = Number.NEGATIVE_INFINITY;
+        var left = Number.POSITIVE_INFINITY;
+        var right = Number.NEGATIVE_INFINITY;
 
         var nodes = motif.getNodes();
         for (var i = 0; i < nodes.length; i++) {
             var node = nodes[i];
             var visualNode = visualGraph.getVisualNodeByNode(node);
-            minValue = Math.min(minValue, visualNode.getY());
+            top = Math.min(top, visualNode.getY());
+            bottom = Math.max(bottom, visualNode.getY());
+            left = Math.min(left, visualNode.getX());
+            right = Math.min(right, visualNode.getX());
         }
         
         this.motifDatas.push({
-            y: minValue,
+            top: top,
+            bottom: bottom,
+            left: left,
+            right: right,
             motif: motif,
             visualGraph: visualGraph
         });
@@ -49,7 +58,7 @@ MotifNavigator.prototype.setWrap = function(wrap) {
 
 MotifNavigator.prototype.start = function() {
     this.motifDatas.sort(function(a, b) {
-        return a.y - b.y;
+        return a.top - b.top;
     });
     
     this.hasStarted = true;
@@ -90,7 +99,7 @@ MotifNavigator.prototype.handleCurrent = function() {
     
     var motifData = this.motifDatas[this.index];
     
-    var position = motifData.y - MotifNavigator.TOP_SPACING;
+    var position = motifData.top - MotifNavigator.TOP_SPACING;
     position = Math.max(0, position);
     $(window).scrollTop(position);
     
