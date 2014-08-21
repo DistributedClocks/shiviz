@@ -82,7 +82,7 @@ CollapseSequentialNodesTransformation.prototype.setThreshold = function(threshol
  */
 CollapseSequentialNodesTransformation.prototype.addExemption = function(node) {
     var logEvents = node.getLogEvents();
-    for (var i = 0; i < logEvents.length; i++) {
+    for ( var i = 0; i < logEvents.length; i++) {
         this.exemptLogEvents[logEvents[i].getId()] = true;
     }
 };
@@ -104,28 +104,28 @@ CollapseSequentialNodesTransformation.prototype.addExemption = function(node) {
  *            node in its group will be removed as exemptions
  */
 CollapseSequentialNodesTransformation.prototype.removeExemption = function(node) {
-    if (node.hasChildren() || node.hasParents()) {
+    if (node.hasFamily()) {
         var logEvents = node.getLogEvents();
-        for (var i = 0; i < logEvents.length; i++) {
+        for ( var i = 0; i < logEvents.length; i++) {
             delete this.exemptLogEvents[logEvents[i].getId()];
         }
         return;
     }
 
     var head = node;
-    while (!head.isHead() && !head.hasChildren() && !head.hasParents()) {
+    while (!head.isHead() && !head.hasFamily()) {
         head = head.getPrev();
     }
 
     var tail = node;
-    while (!tail.isTail() && !tail.hasChildren() && !tail.hasParents()) {
+    while (!tail.isTail() && !tail.hasFamily()) {
         tail = tail.getNext();
     }
 
     var curr = head.getNext();
     while (curr != tail) {
         var logEvents = curr.getLogEvents();
-        for (var i = 0; i < logEvents.length; i++) {
+        for ( var i = 0; i < logEvents.length; i++) {
             delete this.exemptLogEvents[logEvents[i].getId()];
         }
         curr = curr.getNext();
@@ -157,12 +157,47 @@ CollapseSequentialNodesTransformation.prototype.toggleExemption = function(node)
  */
 CollapseSequentialNodesTransformation.prototype.isExempt = function(node) {
     var logEvents = node.getLogEvents();
-    for (var i = 0; i < logEvents.length; i++) {
+    for ( var i = 0; i < logEvents.length; i++) {
         if (this.exemptLogEvents[logEvents[i].getId()]) {
             return true;
         }
     }
     return false;
+};
+
+/**
+ * Determines if the provided node can be collapsed based on the given threshold
+ * 
+ * @static
+ * @param {ModelNode} node This method determines if this node can be collapsed
+ * @param {Integer} threshold The collapsing threshold (see
+ *            {@link CollapseSequentialNodesTransformation#setThreshold}). Must
+ *            be greater than or equal to 2
+ * @returns {Boolean} true if the node can be collapsed
+ */
+CollapseSequentialNodesTransformation.isCollapseable = function(node, threshold) {
+    if (threshold < 2) {
+        throw new Exception("CollapseSequentialNodesTransformation.isCollapseable: Invalid threshold. Threshold must be greater than or equal to 2");
+    }
+
+    if (node.hasFamily() || node.isHead() || node.isTail()) {
+        return false;
+    }
+
+    var count = 1;
+    var curr = node.getNext();
+    while (!curr.isTail() && !curr.hasFamily()) {
+        curr = curr.getNext();
+        count++;
+    }
+
+    curr = node.getPrev();
+    while (!curr.isHead() && !curr.hasFamily()) {
+        curr = curr.getPrev();
+        count++;
+    }
+
+    return count >= threshold;
 };
 
 /**
@@ -195,21 +230,18 @@ CollapseSequentialNodesTransformation.prototype.transform = function(model) {
     }
 
     var hosts = graph.getHosts();
-    for (var i = 0; i < hosts.length; i++) {
+    for ( var i = 0; i < hosts.length; i++) {
         var host = hosts[i];
 
         var groupCount = 0;
         var curr = graph.getHead(host).getNext();
         while (curr != null) {
-            var isExempt = this.isExempt(curr);
-            if (curr.hasChildren() || curr.hasParents() || curr.isTail() || isExempt) {
+            if (curr.hasFamily() || curr.isTail() || this.isExempt(curr)) {
                 if (groupCount >= this.threshold) {
                     collapse(curr, groupCount);
                 }
                 groupCount = -1;
 
-                if (isExempt)
-                    model.getVisualNodeByNode(curr).setCollapsible(true);
             }
 
             groupCount++;

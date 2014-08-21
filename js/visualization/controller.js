@@ -347,7 +347,7 @@ Controller.prototype.showDialog = function(e, type, elem) {
 
         // If node is collapsible then show collapse button
         // Else don't show button
-        if (!e.isCollapsible())
+        if (!CollapseSequentialNodesTransformation.isCollapseable(e.getNode(), 2))
             $dialog.find(".collapse").hide();
         else
             $dialog.find(".collapse").show().text("Collapse");
