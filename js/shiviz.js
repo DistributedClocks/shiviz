@@ -154,16 +154,9 @@ Shiviz.prototype.visualize = function(log, regexpString, delimiterString, sortTy
                 hostPermutation.addLogs(parser.getLogEvents(label));
             }
         });
-
-        var global = new Global($("#vizContainer"), $("#sidebar"));
-        var searchbar = SearchBar.getInstance();
-        searchbar.setGlobal(global);
-        searchbar.clearText();
-        searchbar.clearText();
-        searchbar.update();
-
+        
         hostPermutation.update();
-        global.setHostPermutation(hostPermutation);
+
         
         var logColWidth = (240 - 12 * (labels.length - 1)) / labels.length;
 
@@ -171,6 +164,8 @@ Shiviz.prototype.visualize = function(log, regexpString, delimiterString, sortTy
         $("table.log").empty(); //TODO: check
         d3.select("#hostBar").selectAll("*").remove();
         d3.select("#vizContainer").selectAll("*").remove();
+        
+        var views = [];
         
         for(var i = 0; i < labels.length; i++) {
             var label = labels[i];
@@ -185,10 +180,20 @@ Shiviz.prototype.visualize = function(log, regexpString, delimiterString, sortTy
             var graph = labelGraph[label];
             var mainSVG = d3.select("#vizContainer").append("svg");
             var hostSVG = d3.select("#hostBar").append("svg");
-            var view = new View(mainSVG, hostSVG, logTable, graph, hostPermutation, label, global.controller); //TODO
-            global.addView(view);
+            var view = new View(mainSVG, hostSVG, logTable, graph, hostPermutation, label);
+            views.push(view);
+//            global.addView(view);
         }
 
+        
+        var global = new Global($("#vizContainer"), $("#sidebar"), views);
+        var searchbar = SearchBar.getInstance();
+        searchbar.setGlobal(global);
+        searchbar.clearText();
+        searchbar.clearText();
+        searchbar.update();
+
+        global.setHostPermutation(hostPermutation);
         global.drawAll();
     }
     catch (err) {

@@ -1,6 +1,6 @@
 function MotifGroup(motifs) {
     
-    this.motifs = motifs || [];
+    this.motifs = motifs || []; //TODO: shallow copy (change other cases too)
     
 }
 

@@ -1,8 +1,25 @@
-function MotifNavigator(visualGraph, motifGroup) {
+function MotifNavigator() {
 
-    this.visualGraph = visualGraph;
 
-    this.motifDatas = motifGroup.getMotifs().map(function(motif) {
+    this.motifDatas = [];
+
+    this.index = -1;
+    
+    this.wrap = true;
+    
+    this.hasStarted = false;
+
+};
+
+MotifNavigator.prototype.addMotif = function(visualGraph, motifGroup) {
+    
+    if(this.hasStarted) {
+        throw new Exception(); //TODO
+    }
+    
+    var motifs = motifGroup.getMotifs();
+    for(var m = 0; m < motifs.length; m++) {
+        var motif = motifs[m];
         var minValue = Number.POSITIVE_INFINITY;
 
         var nodes = motif.getNodes();
@@ -11,18 +28,20 @@ function MotifNavigator(visualGraph, motifGroup) {
             var visualNode = this.visualGraph.getVisualNodeByNode(node);
             minValue = Math.min(minValue, visualNode.getY());
         }
-
-        return {
+        
+        this.motifDatas.push({
             y: minValue
-        };
-    }).sort(function(a, b) {
+        });
+    }
+
+};
+
+MotifNavigator.prototype.start = function() {
+    this.motifDatas.sort(function(a, b) {
         return a.y - b.y;
     });
-
-    this.index = -1;
     
-    this.wrap = true;
-
+    this.hasStarted = true;
 };
 
 MotifNavigator.prototype.getNumMotifs = function() {
