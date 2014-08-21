@@ -239,7 +239,17 @@
                         <circle r="5" class="hover"></circle>
                     </svg>
                     <button id="addButton" class="add">+</button>
-                    <div class="out">gibberish</div>
+                    <div class="out">
+                        Draw something here to search the visualization for that pattern. Alternately, enter a text query above. 
+                        </br></br>
+                        Example text queries:
+                        <ul>
+                            <li><code>albert</code> - searches for all node containing the text "albert"</li>
+                            <li><code>priority=CRITICAL && text=/p?liu.*shiviz/</code> - searches for all nodes whose "priority" field is "CRITICAL" AND whose "text" field matches the specified regex. Permissible logical operators are: &&, ||, ^</li>
+                            <li><code>ip="24.22.130.14"</code> - String literals containing non-alphanumeric symbols must be surrounded by quotes</li>
+                            <li><code>text="vancouver" || (ubc && priority=INFO)</code> - Parenthesis can be inserted to specify order of operations</li>
+                        </ul>
+                    </div>
                 </div>
             </div>
             <div id="hostBar"></div>
