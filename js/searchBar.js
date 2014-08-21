@@ -201,6 +201,8 @@ SearchBar.prototype.update = function() {
 
     this.updateLocked = true;
     this.updateMode();
+    
+    $("#searchbar #bar input").css("color", "initial");
 
     switch (this.mode) {
 
@@ -217,16 +219,21 @@ SearchBar.prototype.update = function() {
 
         // Motif (custom)
         case SearchBar.MODE_STRUCTURAL:
-            var json = value.trim().match(/^#(?:motif\s*=\s*)?(\[.*\])/i)[1];
-            var rawRegExp = '(?<event>){"host":"(?<host>[^}]+)","clock":(?<clock>{[^}]*})}';
-            var parsingRegex = new NamedRegExp(rawRegExp, "i");
-            var parser = new LogParser(json, null, parsingRegex);
-            var logEvents = parser.getLogEvents(parser.getLabels()[0]);
-            var vectorTimestamps = logEvents.map(function(logEvent) {
-                return logEvent.getVectorTimestamp();
-            });
-            var builderGraph = BuilderGraph.fromVectorTimestamps(vectorTimestamps);
-            this.graphBuilder.convertFromBG(builderGraph);
+            try {
+                var json = value.trim().match(/^#(?:motif\s*=\s*)?(\[.*\])/i)[1];
+                var rawRegExp = '(?<event>){"host":"(?<host>[^}]+)","clock":(?<clock>{[^}]*})}';
+                var parsingRegex = new NamedRegExp(rawRegExp, "i");
+                var parser = new LogParser(json, null, parsingRegex);
+                var logEvents = parser.getLogEvents(parser.getLabels()[0]);
+                var vectorTimestamps = logEvents.map(function(logEvent) {
+                    return logEvent.getVectorTimestamp();
+                });
+                var builderGraph = BuilderGraph.fromVectorTimestamps(vectorTimestamps);
+                this.graphBuilder.convertFromBG(builderGraph);
+            }
+            catch(exception) {
+                $("#searchbar #bar input").css("color", "red");
+            }
             break;
 
         default:
