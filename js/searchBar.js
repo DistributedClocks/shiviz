@@ -371,7 +371,7 @@ SearchBar.prototype.query = function() {
                         break;
 
                     default:
-                        throw new Exception(value + " is not a built-in motif type", true);
+                        throw new Exception(type + " is not a built-in motif type", true);
                 }
 
                 this.queryMotif(finder);
