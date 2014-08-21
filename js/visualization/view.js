@@ -10,8 +10,14 @@
  * @param {HostPermutation} hostPermutation
  * @param {String} label
  */
-function View(model, hostPermutation, label) {
+function View(svg, hostSVG, logTable, model, hostPermutation, label, controller) {
 
+    this.svg = svg;
+    
+    this.hostSVG = hostSVG;
+    
+    this.logTable = logTable;
+    
     /** @private */
     this.hostPermutation = hostPermutation;
 
@@ -29,6 +35,8 @@ function View(model, hostPermutation, label) {
 
     /** @private */
     this.transformer = new Transformer();
+    
+    this.controller = controller;
 }
 
 /**
@@ -98,9 +106,9 @@ View.prototype.draw = function() {
     // Define locally so that we can use in lambdas below
     var view = this;
 
-    var svg = d3.select("#vizContainer").append("svg");
+    this.svg.selectAll("*").remove();
 
-    svg.attr({
+    this.svg.attr({
         "height": this.visualGraph.getHeight(),
         "width": this.visualGraph.getWidth(),
         "class": this.id
@@ -116,7 +124,7 @@ View.prototype.draw = function() {
 
     function drawLinks() {
         var vedg = view.visualGraph.getVisualEdges();
-        var links = svg.selectAll().data(vedg).enter().append("line");
+        var links = view.svg.selectAll().data(vedg).enter().append("line");
         links.style({
             "stroke-width": function(d) {
                 return d.getWidth() + "px";
@@ -149,7 +157,7 @@ View.prototype.draw = function() {
 
     function drawNodes() {
         var vn = view.visualGraph.getNonStartVisualNodes();
-        var nodes = svg.selectAll().data(vn).enter().append("g");
+        var nodes = view.svg.selectAll().data(vn).enter().append("g");
         nodes.attr({
             "transform": function(d) {
                 return "translate(" + d.getX() + "," + d.getY() + ")";
@@ -158,6 +166,7 @@ View.prototype.draw = function() {
                 return "node" + d.getId();
             }
         });
+
         nodes.append("title").text(function(d) {
             return d.getText();
         });
@@ -208,6 +217,9 @@ View.prototype.draw = function() {
             },
             "stroke-width": function(d) {
                 return d.getStrokeWidth() + "px";
+            },
+            "opacity": function(d) {
+                return d.getOpacity();
             }
         });
         circle.attr({
@@ -228,19 +240,20 @@ View.prototype.draw = function() {
         });
 
         // Bind the nodes
-        Global.getInstance().controller.bindNodes(nodes); // TODO
+        view.controller.bindNodes(nodes); // TODO
     }
 
     function drawHosts() {
         // Draw the host bar
-        var hostSvg = d3.select("#hostBar").append("svg");
-        hostSvg.attr({
+        view.hostSVG.selectAll("*").remove();
+        
+        view.hostSVG.attr({
             "width": view.visualGraph.getWidth(),
             "height": Global.HOST_SQUARE_SIZE,
             "class": view.id
         });
 
-        var bar = hostSvg.append("rect");
+        var bar = view.hostSVG.append("rect");
         bar.attr({
             "width": view.visualGraph.getWidth(),
             "height": Global.HOST_SQUARE_SIZE,
@@ -249,7 +262,7 @@ View.prototype.draw = function() {
 
         // Draw the hosts
         var svn = view.visualGraph.getStartVisualNodes();
-        var hosts = hostSvg.selectAll().data(svn).enter().append("rect");
+        var hosts = view.hostSVG.selectAll().data(svn).enter().append("rect");
         hosts.attr({
             "width": Global.HOST_SQUARE_SIZE,
             "height": Global.HOST_SQUARE_SIZE,
@@ -294,10 +307,12 @@ View.prototype.draw = function() {
         });
 
         // Bind the hosts
-        Global.getInstance().controller.bindHosts(hosts); // TODO
+        view.controller.bindHosts(hosts); // TODO
     }
 
     function drawLogLines() {
+        view.logTable.empty();
+        
         var lines = {};
         var visualNodes = view.getVisualModel().getVisualNodes();
         for (var i in visualNodes) {
@@ -328,9 +343,10 @@ View.prototype.draw = function() {
                 }).addClass("line").css({
                     "top": y + "px",
                     "margin-top": startMargin + "em",
-                    "color": vn[i].getFillColor()
+                    "color": vn[i].getFillColor(),
+                    "opacity": vn[i].getOpacity()
                 }).text(text);
-                $(".log td:last-child").append($div);
+                view.logTable.append($div);
                 startMargin++;
             }
 
@@ -349,16 +365,17 @@ View.prototype.draw = function() {
                         "id": overflow[o].getId()
                     }).addClass("line").css({
                         "margin-top": o + "em",
-                        "color": overflow[o].getFillColor()
+                        "color": overflow[o].getFillColor(),
+                        "opacity": vn[i].getOpacity()
                     }).text(text));
                     startMargin++;
                 }
 
-                $(".log td:last-child").append($div);
+                view.logTable.append($div);
             }
         }
 
         // Bind the log lines
-        Global.getInstance().controller.bindLines($(".log .line:not(.more)")); // TODO
+        view.controller.bindLines($(".log .line:not(.more)")); // TODO
     }
 };

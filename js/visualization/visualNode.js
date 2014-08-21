@@ -38,6 +38,9 @@ function VisualNode(node) {
     this.strokeWidth = 2;
 
     /** @private */
+    this.opacity = 1;
+
+    /** @private */
     this.label = "";
 
     /** @private */
@@ -189,6 +192,24 @@ VisualNode.prototype.setStrokeWidth = function(newStrokeWidth) {
 VisualNode.prototype.getStrokeWidth = function() {
     return this.strokeWidth;
 };
+
+/**
+ * Gets the opacity of the node
+ * 
+ * @returns {Number} The opacity
+ */
+VisualNode.prototype.getOpacity = function() {
+    return this.opacity;
+}
+
+/**
+ * Sets the opacity
+ * 
+ * @param {Number} opacity The opacity
+ */
+VisualNode.prototype.setOpacity = function(opacity) {
+    this.opacity = opacity;
+}
 
 /**
  * Gets the texual description of the VisualNode.

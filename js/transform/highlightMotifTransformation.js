@@ -36,11 +36,19 @@ HighlightMotifTransformation.prototype.setIgnoreEdges = function(val) {
 HighlightMotifTransformation.prototype.transform = function(model) {
     var motif = this.finder.find(model.getGraph());
 
+    model.getVisualNodes().forEach(function(node) {
+        node.setOpacity(0.2);
+    });
+    model.getVisualEdges().forEach(function(edge) {
+        edge.setOpacity(0.2);
+    });
+
     var nodes = motif.getNodes();
     for (var i = 0; i < nodes.length; i++) {
         var node = nodes[i];
         var visualNode = model.getVisualNodeByNode(node);
-        visualNode.setRadius(visualNode.getRadius() * 1.5);
+        visualNode.setRadius(visualNode.getRadius() * 1.2);
+        visualNode.setOpacity(1);
     }
 
     var edges = motif.getEdges();
@@ -48,6 +56,7 @@ HighlightMotifTransformation.prototype.transform = function(model) {
         var edge = edges[i];
         var visualEdge = model.getVisualEdgeByNodes(edge[0], edge[1]);
         visualEdge.setColor("#333");
+        visualEdge.setOpacity(1);
         // visualEdge.setWidth(visualEdge.getWidth() * 1.5);
     }
 };
