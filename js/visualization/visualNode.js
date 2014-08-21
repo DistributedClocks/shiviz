@@ -54,9 +54,6 @@ function VisualNode(node) {
 
     /** @private */
     this._isSelected = false;
-
-    /** @private */
-    this.collapsible = false;
 }
 
 /**

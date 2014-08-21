@@ -236,8 +236,7 @@ CollapseSequentialNodesTransformation.prototype.transform = function(model) {
         var groupCount = 0;
         var curr = graph.getHead(host).getNext();
         while (curr != null) {
-            var isExempt = this.isExempt(curr);
-            if (curr.hasChildren() || curr.hasParents() || curr.isTail() || isExempt) {
+            if (curr.hasFamily() || curr.isTail() || this.isExempt(curr)) {
                 if (groupCount >= this.threshold) {
                     collapse(curr, groupCount);
                 }
