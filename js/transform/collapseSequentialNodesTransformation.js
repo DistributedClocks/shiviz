@@ -104,7 +104,7 @@ CollapseSequentialNodesTransformation.prototype.addExemption = function(node) {
  *            node in its group will be removed as exemptions
  */
 CollapseSequentialNodesTransformation.prototype.removeExemption = function(node) {
-    if (node.hasChildren() || node.hasParents()) {
+    if (node.hasFamily()) {
         var logEvents = node.getLogEvents();
         for (var i = 0; i < logEvents.length; i++) {
             delete this.exemptLogEvents[logEvents[i].getId()];
@@ -113,12 +113,12 @@ CollapseSequentialNodesTransformation.prototype.removeExemption = function(node)
     }
 
     var head = node;
-    while (!head.isHead() && !head.hasChildren() && !head.hasParents()) {
+    while (!head.isHead() && !head.hasFamily()) {
         head = head.getPrev();
     }
 
     var tail = node;
-    while (!tail.isTail() && !tail.hasChildren() && !tail.hasParents()) {
+    while (!tail.isTail() && !tail.hasFamily()) {
         tail = tail.getNext();
     }
 
@@ -165,6 +165,31 @@ CollapseSequentialNodesTransformation.prototype.isExempt = function(node) {
     return false;
 };
 
+CollapseSequentialNodesTransformation.isCollapseable = function(node, threshold) {
+    if (threshold < 2) {
+        throw new Exception("CollapseSequentialNodesTransformation.isCollapseable: Invalid threshold. Threshold must be greater than or equal to 2");
+    }
+    
+    if(node.hasFamily() || node.isHead() || node.isTail()) {
+        return false;
+    }
+    
+    var count = 1;
+    var curr = node.getNext();
+    while(!curr.isTail() && !curr.hasFamily()) {
+        curr = curr.getNext();
+        count++;
+    }
+    
+    curr = node.getPrev();
+    while(!curr.isHead() && !curr.hasFamily()) {
+        curr = curr.getPrev();
+        count++;
+    }
+    
+    return count >= threshold;
+};
+
 /**
  * Overrides {@link Transformation#transform}
  */
@@ -208,8 +233,6 @@ CollapseSequentialNodesTransformation.prototype.transform = function(model) {
                 }
                 groupCount = -1;
 
-                if (isExempt)
-                    model.getVisualNodeByNode(curr).setCollapsible(true);
             }
 
             groupCount++;

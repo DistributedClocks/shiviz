@@ -329,7 +329,7 @@ Controller.prototype.showDialog = function(e, type, elem) {
             $dialog.find(".info").append($f);
         }
 
-        if (!e.isCollapsible())
+        if (!CollapseSequentialNodesTransformation.isCollapseable(e.getNode(), 2))
             $dialog.find(".collapse").hide();
         else
             $dialog.find(".collapse").show().text("Collapse");

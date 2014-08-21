@@ -334,23 +334,6 @@ VisualNode.prototype.isHighlighted = function() {
     return this._isHighlighted;
 };
 
-/**
- * Determines if this VisualNode can be collapsed
- * 
- * @returns {Boolean} True if collapsible
- */
-VisualNode.prototype.isCollapsible = function() {
-    return this.collapsible;
-};
-
-/**
- * Sets if this node is collapsible
- * 
- * @param {Boolean} val True if this node can be collapsed
- */
-VisualNode.prototype.setCollapsible = function(val) {
-    this.collapsible = val;
-};
 
 /**
  * Sets if this VisualNode is highlighted.
