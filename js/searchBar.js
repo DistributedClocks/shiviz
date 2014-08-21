@@ -100,6 +100,12 @@ function SearchBar() {
         context.updateLocked = false;
     });
 
+    $("#searchbar .predefined button").on("click", function() {
+        context.setValue("#" + this.name);
+        context.hidePanel();
+        context.query();
+    });
+
     this.update();
 }
 
