@@ -38,6 +38,26 @@ function Controller(global) {
         }
     });
 
+    $(window).unbind("click.dialog").on("click.dialog", function(e) {
+        var $target = $(e.target);
+        var tn = $target.prop("tagName");
+
+        // Test for click inside dialog
+        if ($target.is(".dialog") || $target.parents(".dialog").length) return;
+        // Test for node or host click
+        if (tn == "g" || $target.parents("g").length || tn == "rect") return;
+        // Test for clickable
+        if (tn.match(/input/i) || tn.match(/button/i)) return;
+        // Test for panel visibility
+        if ($("#searchbar #panel:visible").length) return;
+
+        $(".dialog").hide();
+        d3.select("circle.sel").each(function(d) {
+            $(this).remove();
+            d.setSelected(false);
+        });
+    });
+
     $(".dialog button").unbind().click(function() {
         var type = this.name;
         var e = $(".dialog").data("element");
