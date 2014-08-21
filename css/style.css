@@ -478,6 +478,10 @@ svg {
     fill: transparent;
 }
 
+#vizContainer svg rect.box {
+    fill: #ddd;
+}
+
 #hostBar {
 	position: fixed;
     background: white;
