@@ -10,6 +10,7 @@
  */
 function Controller(global) {
 
+    /** @private */
     this.global = global;
     
     var self = this;
@@ -31,8 +32,6 @@ function Controller(global) {
 }
 
 Controller.prototype.highlightMotif = function(motifFinder) {
-    
-    var motifNavigator = new motifNavigator();
     
     this.global.getViews().forEach(function(view) {
         view.getTransformer().highlightMotif(motifFinder, false);

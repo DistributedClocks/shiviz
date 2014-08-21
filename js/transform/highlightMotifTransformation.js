@@ -13,6 +13,8 @@ function HighlightMotifTransformation(finder, ignoreEdges) {
 
     /** @private */
     this.finder = finder;
+    
+    this.highlighted = null;
 
     this.setIgnoreEdges(ignoreEdges);
 }
@@ -28,6 +30,10 @@ HighlightMotifTransformation.prototype.constructor = HighlightMotifTransformatio
  */
 HighlightMotifTransformation.prototype.setIgnoreEdges = function(val) {
     this.ignoreEdges = !!val;
+};
+
+HighlightMotifTransformation.prototype.getHighlighted = function() {
+    return this.highlighted;
 };
 
 /**
@@ -59,4 +65,6 @@ HighlightMotifTransformation.prototype.transform = function(model) {
         visualEdge.setOpacity(1);
         // visualEdge.setWidth(visualEdge.getWidth() * 1.5);
     }
+    
+    this.highlighted = motifGroup;
 };

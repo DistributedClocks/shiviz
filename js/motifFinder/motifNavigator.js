@@ -1,15 +1,20 @@
 function MotifNavigator() {
 
-
+    /** @private */
     this.motifDatas = [];
 
+    /** @private */
     this.index = -1;
     
+    /** @private */
     this.wrap = true;
     
+    /** @private */
     this.hasStarted = false;
 
 };
+
+MotifNavigator.TOP_SPACING = 100;
 
 MotifNavigator.prototype.addMotif = function(visualGraph, motifGroup) {
     
@@ -25,15 +30,21 @@ MotifNavigator.prototype.addMotif = function(visualGraph, motifGroup) {
         var nodes = motif.getNodes();
         for (var i = 0; i < nodes.length; i++) {
             var node = nodes[i];
-            var visualNode = this.visualGraph.getVisualNodeByNode(node);
+            var visualNode = visualGraph.getVisualNodeByNode(node);
             minValue = Math.min(minValue, visualNode.getY());
         }
         
         this.motifDatas.push({
-            y: minValue
+            y: minValue,
+            motif: motif,
+            visualGraph: visualGraph
         });
     }
 
+};
+
+MotifNavigator.prototype.setWrap = function(wrap) {
+    this.wrap = wrap;
 };
 
 MotifNavigator.prototype.start = function() {
@@ -51,10 +62,11 @@ MotifNavigator.prototype.getNumMotifs = function() {
 MotifNavigator.prototype.next = function() {
 
     this.index++;
-
-    if(this.index > this.getNumMotifs()) {
+    if(this.index >= this.getNumMotifs()) {
         this.index = this.wrap ? 0 : this.getNumMotifs();
     }
+    
+    this.handleCurrent();
 };
 
 MotifNavigator.prototype.prev = function() {
@@ -64,4 +76,28 @@ MotifNavigator.prototype.prev = function() {
     if(this.index < 0) {
         this.index = this.wrap ? this.getNumMotifs() - 1 : -1;
     }
+    
+    this.handleCurrent();
+};
+
+/**
+ * @private
+ */
+MotifNavigator.prototype.handleCurrent = function() {
+    if(this.index >= this.getNumMotifs() || this.index < 0) {
+        return;
+    }
+    
+    var motifData = this.motifDatas[this.index];
+    
+    var position = motifData.y - MotifNavigator.TOP_SPACING;
+    position = Math.max(0, position);
+    $(window).scrollTop(position);
+    
+//    var motif = motifData.motif;
+//    var visualGraph = motifData.visualGraph;
+//    
+//    motif.getNodes().forEach(function(node) {
+//       visualGraph.getVisualNodeByNode(node).setRadius(20);
+//    });
 };
