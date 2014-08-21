@@ -59,7 +59,11 @@ Shiviz will run fine no matter where you put that code snippet, but for consiste
 
     ParentClass.call(this, param1, param2, param3);
 
-For an example of all of this, see [the source code for BuilderNode](./builderNode.js.html).
+To call the overriden method `foo` in the super-class (the equivalent of `super.foo(param1, param2, param3)` in other languages), use:
+
+    ParentClass.prototype.foo.call(this, param1, param2, param3);
+
+For an example of some of this, see [the source code for BuilderNode](./builderNode.js.html).
 
 #### Abstract Classes
 There is no language-level support for abstract classes. The convention is to manually prevent instantiation of abstract classes with the following piece of code in the constructor of an abstract class:
