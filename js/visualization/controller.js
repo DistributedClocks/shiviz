@@ -387,6 +387,9 @@ Controller.prototype.showDialog = function(e, type, elem) {
             $dialog.find(".hide").attr("name", "unhide").text("Unhide");
         else
             $dialog.find(".hide").attr("name", "hide").text("Hide");
+
+        // Hide collapse button       
+        $dialog.find(".collapse").hide();
     }
 }
 
