@@ -282,10 +282,10 @@ Shiviz.prototype.handleException = function(err) {
     $(".error").show();
 
     // Let users close errors with esc
-    $(window).on('keydown', function(e) {
+    $(window).on('keydown.error', function(e) {
         if (e.keyCode == 27) {
             $(".error").hide();
-            $(window).unbind('keydown');
+            $(window).unbind('keydown.error');
         }
     });
 

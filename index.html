@@ -137,7 +137,7 @@
             </p>
             <p>
                 For example, for a log entry like:
-                <pre>28/07/14 01:15 PM Event excecuted<br>localProcessId {"process1" : time1, "process2" : time2, ..., "processN" : timeN}</pre>
+                <pre>28/07/14 01:15 PM Event excecuted<br>process2 {"process1" : time1, "process2" : time2, ..., "processN" : timeN}</pre>
 
                 We might have a parser RegExp like:
                 <pre>(?&lt;date&gt;\d\d/\d\d/\d\d \d\d:\d\d (AM|PM)) (?&lt;event&gt;.*)\n(?&lt;host&gt;\w+) (?&lt;clock&gt;\{.*\})</pre>
@@ -149,6 +149,9 @@
             </p>
                 If you are looking for such a program, try <a href="http://bitbucket.org/bestchai/shivector/wiki/Home">ShiVector</a>. ShiVector intercepts network messages and wraps those messages to include a vector timestamp. ShiVector also intercepts logging statements to add the current vector timestamp to each existing logged message.
             </p>
+        </div>
+        <div class="shivizexample">
+	  <img src="shiviz-example.png"/>
         </div>
     </section>
 
@@ -235,11 +238,45 @@
                     <button disabled>Search</button>
                 </div>
                 <div id="panel">
-                    <svg>
-                        <circle r="5" class="hover"></circle>
-                    </svg>
-                    <button id="addButton" class="add">+</button>
-                    <div class="out">gibberish</div>
+                    <table>
+                        <tr>
+                            <td>
+                                <svg>
+                                    <circle r="5" class="hover"></circle>
+                                </svg>
+                            </td>
+                            <td>
+                                <button id="addButton" class="add">+</button>
+                            </td>
+                            <td>
+                                <p>Predefiend Motifs:</p>
+                                <div class="predefined">
+                                    <button name="request-response">Request-response</button>
+                                    <button name="broadcast">Broadcast</button>
+                                    <button name="gather">Gather</button>
+                                </div>
+                                <p>Help:</p>
+                                <div class="out">
+                                    <p>
+                                        Draw something here to search the visualization for that pattern. Alternately, enter a text query above. 
+                                    </p>
+                                    <p>
+                                        Example text queries:
+                                        <dl>
+                                            <dt><code>sync</code></dt>
+                                            <dd>searches for all node containing the text "sync"</dd>
+                                            <dt><code>priority=CRITICAL &amp;&amp; text=/p?liu.*shiviz/</code></dt>
+                                            <dd>searches for all nodes whose "priority" field is "CRITICAL" AND whose "text" field matches the specified regex. Permissible logical operators are: <code>&amp;&amp;</code>, <code>||</code>, <code>^</code></dd>
+                                            <dt><code>ip="24.22.130.14"</code></dt>
+                                            <dd>String literals containing non-alphanumeric symbols must be surrounded by quotes</dd>
+                                            <dt><code>text="vancouver" || (ubc &amp;&amp; priority=INFO)</code></dt>
+                                            <dd>Parenthesis can be inserted to specify order of operations</dd>
+                                        </dl>
+                                    </p>
+                                </div>
+                            </td>
+                        </tr>
+                    </table>
                 </div>
             </div>
             <div id="hostBar"></div>
