@@ -248,23 +248,32 @@
                             <td>
                                 <button id="addButton" class="add">+</button>
                             </td>
-                            <td class="out">
-                                <p>
-                                    Draw something here to search the visualization for that pattern. Alternately, enter a text query above. 
-                                </p>
-                                <p>
-                                    Example text queries:
-                                    <dl>
-                                        <dt><code>sync</code></dt>
-                                        <dd>searches for all node containing the text "sync"</dd>
-                                        <dt><code>priority=CRITICAL &amp;&amp; text=/p?liu.*shiviz/</code></dt>
-                                        <dd>searches for all nodes whose "priority" field is "CRITICAL" AND whose "text" field matches the specified regex. Permissible logical operators are: <code>&amp;&amp;</code>, <code>||</code>, <code>^</code></dd>
-                                        <dt><code>ip="24.22.130.14"</code></dt>
-                                        <dd>String literals containing non-alphanumeric symbols must be surrounded by quotes</dd>
-                                        <dt><code>text="vancouver" || (ubc &amp;&amp; priority=INFO)</code></dt>
-                                        <dd>Parenthesis can be inserted to specify order of operations</dd>
-                                    </dl>
-                                </p>
+                            <td>
+                                <p>Predefiend Motifs:</p>
+                                <div class="predefined">
+                                    <button name="request-response">Request-response</button>
+                                    <button name="broadcast">Broadcast</button>
+                                    <button name="gather">Gather</button>
+                                </div>
+                                <p>Help:</p>
+                                <div class="out">
+                                    <p>
+                                        Draw something here to search the visualization for that pattern. Alternately, enter a text query above. 
+                                    </p>
+                                    <p>
+                                        Example text queries:
+                                        <dl>
+                                            <dt><code>sync</code></dt>
+                                            <dd>searches for all node containing the text "sync"</dd>
+                                            <dt><code>priority=CRITICAL &amp;&amp; text=/p?liu.*shiviz/</code></dt>
+                                            <dd>searches for all nodes whose "priority" field is "CRITICAL" AND whose "text" field matches the specified regex. Permissible logical operators are: <code>&amp;&amp;</code>, <code>||</code>, <code>^</code></dd>
+                                            <dt><code>ip="24.22.130.14"</code></dt>
+                                            <dd>String literals containing non-alphanumeric symbols must be surrounded by quotes</dd>
+                                            <dt><code>text="vancouver" || (ubc &amp;&amp; priority=INFO)</code></dt>
+                                            <dd>Parenthesis can be inserted to specify order of operations</dd>
+                                        </dl>
+                                    </p>
+                                </div>
                             </td>
                         </tr>
                     </table>
