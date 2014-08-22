@@ -158,8 +158,9 @@ header.icon ul.links li a:hover {
 
 /* Home */
 section.home .content {
-    width: calc(100% - 720px);
+    width: calc((100% / 2) - 100px);
     min-width: 480px;
+    float: left;
 }
 section.home .content li {
     margin: 1em 0;
@@ -167,6 +168,13 @@ section.home .content li {
 section.home .content pre {
     padding: .2em 0;
     overflow: auto;
+}
+section.home .shivizexample {
+    float: left;
+    padding-left: 50px;
+    padding-top: 300px;
+    width: calc((100% / 2) - 100px);
+/*    border: 1px solid #aaa; */
 }
 
 #versionContainer {
