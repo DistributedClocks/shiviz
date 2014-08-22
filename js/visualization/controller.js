@@ -46,6 +46,8 @@ function Controller(global) {
         if ($target.is(".dialog") || $target.parents(".dialog").length) return;
         // Test for node or host click
         if (tn == "g" || $target.parents("g").length || tn == "rect") return;
+        // Test for line click
+        if ($target.parents(".log").length || $target.is(".highlight")) return;
         // Test for clickable
         if (tn.match(/input/i) || tn.match(/button/i)) return;
         // Test for panel visibility
@@ -164,6 +166,8 @@ Controller.prototype.bindNodes = function(nodes) {
             "left": $line.offset().left - parseFloat($line.css("margin-left"))
         }).attr({
             "data-ln": e.getLineNumber()
+        }).data({
+            "id": e.getId()
         }).show();
     });
 };
@@ -211,6 +215,12 @@ Controller.prototype.bindLines = function(lines) {
     lines.unbind().on("mouseover", function() {
         var id = "#node" + $(this).data("id");
         $(id)[0].dispatchEvent(new MouseEvent("mouseover"));
+    })
+
+    lines.add(".highlight").on("click", function() {
+        var id = "#node" + $(this).data("id");
+        console.log(id);
+        $(id)[0].dispatchEvent(new MouseEvent("click"));
     });
 };
 

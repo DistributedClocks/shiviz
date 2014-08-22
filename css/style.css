@@ -267,6 +267,7 @@ section.input .left {
     white-space: nowrap;
     overflow: hidden;
     background: #fff;
+    cursor: pointer;
     transition: margin;
     transition-duration: .1s;
     transition-timing-function: ease-out;
@@ -308,6 +309,7 @@ section.input .left {
     padding: 1px;
     margin: -1px;
     margin-left: calc(20pt - 2px);
+    cursor: pointer;
 }
 
 .visualization .highlight:before {
