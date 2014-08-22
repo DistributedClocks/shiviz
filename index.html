@@ -249,30 +249,35 @@
                                 <button id="addButton" class="add">+</button>
                             </td>
                             <td>
-                                <p>Predefiend Motifs:</p>
+                                <p><b>&bull; Search for a pre-defined motif:</b></p>
                                 <div class="predefined">
                                     <button name="request-response">Request-response</button>
                                     <button name="broadcast">Broadcast</button>
                                     <button name="gather">Gather</button>
                                 </div>
-                                <p>Help:</p>
+                                <p><b>&bull; Search for a custom motif:</b> draw a
+                                   graph motif to the right (add
+                                   hosts, events, click and drag to
+                                   add inter-event edges).
+                                </p>
+                                <p>
+                                  <b>&bull; Text search</b>: search for
+                                  log lines/events that match a text
+                                  query.
+                                </p>
                                 <div class="out">
-                                    <p>
-                                        Draw something here to search the visualization for that pattern. Alternately, enter a text query above. 
-                                    </p>
-                                    <p>
-                                        Example text queries:
-                                        <dl>
-                                            <dt><code>sync</code></dt>
-                                            <dd>searches for all node containing the text "sync"</dd>
-                                            <dt><code>priority=CRITICAL &amp;&amp; text=/p?liu.*shiviz/</code></dt>
-                                            <dd>searches for all nodes whose "priority" field is "CRITICAL" AND whose "text" field matches the specified regex. Permissible logical operators are: <code>&amp;&amp;</code>, <code>||</code>, <code>^</code></dd>
-                                            <dt><code>ip="24.22.130.14"</code></dt>
-                                            <dd>String literals containing non-alphanumeric symbols must be surrounded by quotes</dd>
-                                            <dt><code>text="vancouver" || (ubc &amp;&amp; priority=INFO)</code></dt>
-                                            <dd>Parenthesis can be inserted to specify order of operations</dd>
-                                        </dl>
-                                    </p>
+                                  <p>
+                                    <dl>
+                                      <dt><code>sync</code></dt>
+                                      <dd>find events containing the text "sync"</dd>
+                                      <dt><code>priority=CRITICAL &amp;&amp; text=/p?liu.*shiviz/</code></dt>
+                                      <dd>find events with "priority" field set to "CRITICAL" and with "text" field matching the specified regex. Supported logical operators are: <code>&amp;&amp;</code>, <code>||</code>, <code>^</code></dd>
+                                      <dt><code>ip="24.22.130.14"</code></dt>
+                                      <dd>String literals containing non-alphanumeric symbols must be surrounded by quotes</dd>
+                                      <dt><code>text="vancouver" || (ubc &amp;&amp; priority=INFO)</code></dt>
+                                      <dd>Use parenthesis to specify order of operations</dd>
+                                    </dl>
+                                  </p>
                                 </div>
                             </td>
                         </tr>
