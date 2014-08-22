@@ -55,6 +55,8 @@ function SearchBar() {
         var vts = new VectorTimestampSerializer("{\"host\":\"`HOST`\",\"clock\":`CLOCK`}", ",", "#motif=[", "]");
         var builderGraph = this.convertToBG();
         context.setValue(vts.serialize(builderGraph.toVectorTimestamps()));
+
+        context.updateMode();
     });
 
     $(window).unbind("keydown.search").on("keydown.search", function(e) {
@@ -98,6 +100,12 @@ function SearchBar() {
         context.hidePanel();
         context.update();
         context.updateLocked = false;
+    });
+
+    $("#searchbar .predefined button").on("click", function() {
+        context.setValue("#" + this.name);
+        context.hidePanel();
+        context.query();
     });
 
     this.update();
@@ -162,6 +170,8 @@ SearchBar.prototype.setGlobal = function(global) {
  */
 SearchBar.prototype.updateMode = function() {
     var value = this.getValue();
+    
+    $("#searchbar #bar input").css("color", "initial");
 
     if (value.trim().length == 0) {
         this.mode = SearchBar.MODE_EMPTY;
@@ -172,6 +182,8 @@ SearchBar.prototype.updateMode = function() {
         $("#bar button").prop("disabled", false);
         $("#searchbar input").removeClass("empty");
     }
+
+    this.clearResults();
     
     if (value.indexOf("#") < 0)
         this.mode = SearchBar.MODE_TEXT;
@@ -217,16 +229,26 @@ SearchBar.prototype.update = function() {
 
         // Motif (custom)
         case SearchBar.MODE_STRUCTURAL:
-            var json = value.trim().match(/^#(?:motif\s*=\s*)?(\[.*\])/i)[1];
-            var rawRegExp = '(?<event>){"host":"(?<host>[^}]+)","clock":(?<clock>{[^}]*})}';
-            var parsingRegex = new NamedRegExp(rawRegExp, "i");
-            var parser = new LogParser(json, null, parsingRegex);
-            var logEvents = parser.getLogEvents(parser.getLabels()[0]);
-            var vectorTimestamps = logEvents.map(function(logEvent) {
-                return logEvent.getVectorTimestamp();
-            });
-            var builderGraph = BuilderGraph.fromVectorTimestamps(vectorTimestamps);
-            this.graphBuilder.convertFromBG(builderGraph);
+            try {
+                var json = value.trim().match(/^#(?:motif\s*=\s*)?(\[.*\])/i)[1];
+                var rawRegExp = '(?<event>){"host":"(?<host>[^}]+)","clock":(?<clock>{[^}]*})}';
+                var parsingRegex = new NamedRegExp(rawRegExp, "i");
+                var parser = new LogParser(json, null, parsingRegex);
+                var logEvents = parser.getLogEvents(parser.getLabels()[0]);
+                var vectorTimestamps = logEvents.map(function(logEvent) {
+                    return logEvent.getVectorTimestamp();
+                });
+                var builderGraph = BuilderGraph.fromVectorTimestamps(vectorTimestamps);
+                this.graphBuilder.convertFromBG(builderGraph);
+            }
+            catch(exception) {
+                $("#searchbar #bar input").css("color", "red");
+            }
+            break;
+
+        // Predefined Motif
+        case SearchBar.MODE_PREDEFINED:
+            this.clearMotif();
             break;
 
         default:
@@ -343,11 +365,38 @@ SearchBar.prototype.query = function() {
                 break;
 
             case SearchBar.MODE_STRUCTURAL:
-                this.queryMotif(this.graphBuilder.convertToBG());
+                var finder = new CustomMotifFinder(this.graphBuilder.convertToBG());
+                this.queryMotif(finder);
                 break;
 
             case SearchBar.MODE_PREDEFINED:
-                // TODO: Predefined motifs
+                var value = this.getValue();
+                var type = value.trim().match(/^#(?:motif\s*=\s*)?(.*)/i)[1];
+
+                if (type == "request-response") {
+                    this.queryMotif(new RequestResponseFinder(999, 4));
+                    return;
+                } else if (type == "broadcast" || type == "gather") {
+                    var broadcast;
+                    if (type == "broadcast") broadcast = true;
+                    else broadcast = false;
+
+                    var hiddenHosts = this.global.getHiddenHosts();
+
+                    this.global.getViews().forEach(function(view) {
+                        var hosts = view.getHosts().filter(function(h) {
+                            return !hiddenHosts[h];
+                        }).length;
+                        var finder = new BroadcastGatherFinder(hosts - 1, 4, broadcast);
+
+                        view.getTransformer().highlightMotif(finder, false);
+                    });
+
+                    this.global.drawAll();
+                } else {
+                    throw new Exception(type + " is not a built-in motif type", true);
+                }
+
                 break;
 
             default:
@@ -376,10 +425,9 @@ SearchBar.prototype.queryText = function(query) {
 /**
  * Performs a query for a motif
  * 
- * @param {BuilderGraph} builderGraph The motif structure
+ * @param {MotifFinder} finder A motif finder
  */
-SearchBar.prototype.queryMotif = function(builderGraph) {
-    var finder = new CustomMotifFinder(builderGraph);
+SearchBar.prototype.queryMotif = function(finder) {
     this.global.getViews().forEach(function(view) {
         view.getTransformer().highlightMotif(finder, false);
     });

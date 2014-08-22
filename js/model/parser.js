@@ -159,7 +159,6 @@ function ExecutionParser(rawString, label, regexp) {
             clock = JSON.parse(clockString);
         }
         catch (err) {
-            console.log(clockString);
             var exception = new Exception("An error occured while trying to parse the vector timestamp on line " + (line + 1) + ":");
             exception.append(clockString, "code");
             exception.append("The error message from the JSON parser reads:\n");
