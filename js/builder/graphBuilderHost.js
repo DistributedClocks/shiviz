@@ -50,7 +50,7 @@ function GraphBuilderHost(graphBuilder, hostNum) {
         "x1": this.x,
         "y1": 30,
         "x2": this.x,
-        "y2": 500
+        "y2": 1000
     }).prependTo(graphBuilder.getSVG());
 }
 

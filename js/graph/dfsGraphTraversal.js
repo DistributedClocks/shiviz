@@ -68,21 +68,24 @@ DFSGraphTraversal.prototype.addAllNodes = function(nodes, state, data) {
 };
 
 /**
- * 
+ * Overrides {@link GraphTraversal#hasEnded}
  */
-DFSGraphTraversal.prototype.step = function() {
+DFSGraphTraversal.prototype.hasEnded = function() {
+    return this.stack.length == 0 || GraphTraversal.prototype.hasEnded.call(this);
+};
 
-    if (this.stack.length == 0 || this.hasEnded) {
-        return null;
-    }
+/**
+ * Overrides {@link GraphTraversal#stepInner}
+ */
+DFSGraphTraversal.prototype.stepInner = function() {
 
     var curr = this.stack.pop();
-
+    
     this.currentNode = curr.node;
     this.state = curr.state;
     this.currentData = curr.data;
 
-    return GraphTraversal.prototype.step.call(this);
+    return GraphTraversal.prototype.stepInner.call(this);
 };
 
 /**
