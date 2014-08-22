@@ -89,8 +89,12 @@ RequestResponseFinder.prototype.find = function(graph) {
             return;
         }
 
-        gt.addAllNodes(node.getChildren(), "endNode", null);
-        gt.addNode(node.getNext(), "responderChain", chainLength + 1);
+        if(node.hasChildren()) {
+            gt.addAllNodes(node.getChildren(), "endNode", null);
+        }
+        else {
+            gt.addNode(node.getNext(), "responderChain", chainLength + node.getLogEventCount());
+        }
 
     });
 
@@ -110,8 +114,8 @@ RequestResponseFinder.prototype.find = function(graph) {
 
         var dist = 0;
         while (node != startNode) {
+            dist += node.getLogEventCount();
             node = node.getPrev();
-            dist++;
         }
 
         if (dist > context.maxLERequester) {

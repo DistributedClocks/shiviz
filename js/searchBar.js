@@ -102,6 +102,12 @@ function SearchBar() {
         context.updateLocked = false;
     });
 
+    $("#searchbar .predefined button").on("click", function() {
+        context.setValue("#" + this.name);
+        context.hidePanel();
+        context.query();
+    });
+
     this.update();
 }
 
@@ -240,6 +246,11 @@ SearchBar.prototype.update = function() {
             }
             break;
 
+        // Predefined Motif
+        case SearchBar.MODE_PREDEFINED:
+            this.clearMotif();
+            break;
+
         default:
             throw new Exception("Invalid mode in SearchBar");
             break;
@@ -354,11 +365,38 @@ SearchBar.prototype.query = function() {
                 break;
 
             case SearchBar.MODE_STRUCTURAL:
-                this.queryMotif(this.graphBuilder.convertToBG());
+                var finder = new CustomMotifFinder(this.graphBuilder.convertToBG());
+                this.queryMotif(finder);
                 break;
 
             case SearchBar.MODE_PREDEFINED:
-                // TODO: Predefined motifs
+                var value = this.getValue();
+                var type = value.trim().match(/^#(?:motif\s*=\s*)?(.*)/i)[1];
+
+                if (type == "request-response") {
+                    this.queryMotif(new RequestResponseFinder(999, 4));
+                    return;
+                } else if (type == "broadcast" || type == "gather") {
+                    var broadcast;
+                    if (type == "broadcast") broadcast = true;
+                    else broadcast = false;
+
+                    var hiddenHosts = this.global.getHiddenHosts();
+
+                    this.global.getViews().forEach(function(view) {
+                        var hosts = view.getHosts().filter(function(h) {
+                            return !hiddenHosts[h];
+                        }).length;
+                        var finder = new BroadcastGatherFinder(hosts - 1, 4, broadcast);
+
+                        view.getTransformer().highlightMotif(finder, false);
+                    });
+
+                    this.global.drawAll();
+                } else {
+                    throw new Exception(type + " is not a built-in motif type", true);
+                }
+
                 break;
 
             default:
@@ -387,10 +425,9 @@ SearchBar.prototype.queryText = function(query) {
 /**
  * Performs a query for a motif
  * 
- * @param {BuilderGraph} builderGraph The motif structure
+ * @param {MotifFinder} finder A motif finder
  */
-SearchBar.prototype.queryMotif = function(builderGraph) {
-    var finder = new CustomMotifFinder(builderGraph);
+SearchBar.prototype.queryMotif = function(finder) {
     this.global.getViews().forEach(function(view) {
         view.getTransformer().highlightMotif(finder, false);
     });

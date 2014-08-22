@@ -409,7 +409,8 @@ section.input .left {
     vertical-align: top;
 }
 #searchbar #panel svg {
-    height: 500px;
+    height: 100%;
+    min-height: 500px;
 }
 #searchbar #panel circle.hover {
     opacity: .6;
@@ -437,11 +438,19 @@ section.input .left {
 #searchbar #panel .add:disabled {
     display: none;
 }
+#searchbar #panel td > p:first-child {
+    margin-top: 0;
+}
+#searchbar #panel .predefined {
+    margin-bottom: 1em;
+}
+#searchbar #panel .predefined button {
+    display: table-cell;
+    width: auto;
+    margin: 0 0 .4em;
+}
 #searchbar #panel .out {
     font-size: 10pt;
-}
-#searchbar #panel .out p:first-child {
-    margin-top: 0;
 }
 #searchbar #panel .out dt {
     margin: 1em 0 .2em;
