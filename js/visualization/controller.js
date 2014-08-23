@@ -367,7 +367,7 @@ Controller.prototype.showDialog = function(e, type, elem) {
 
     } else if (!type) {
         // Show uncollapse button for collapsed nodes
-        $dialog.find(".collapse").show().text("Uncollapse");
+        $dialog.find(".collapse").show().text("Expand");
         $dialog.find(".filter").hide();
     } else {
         // Show highlight button if only one execution
@@ -378,9 +378,9 @@ Controller.prototype.showDialog = function(e, type, elem) {
 
         // Set highlight/unhighlight based on current state
         if (type != 2 && e.isHighlighted())
-            $dialog.find(".filter").text("Unhighlight");
+            $dialog.find(".filter").text("Unfilter");
         else
-            $dialog.find(".filter").text("Highlight");
+            $dialog.find(".filter").text("Filter");
 
         // Set hide/unhide based on state
         if (type == 2)
