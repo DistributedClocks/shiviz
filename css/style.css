@@ -172,9 +172,12 @@ section.home .content pre {
 section.home .shivizexample {
     float: left;
     padding-left: 50px;
-    padding-top: 300px;
+    padding-top: 50px;
     width: calc((100% / 2) - 100px);
 /*    border: 1px solid #aaa; */
+}
+section.home .shivizexample img {
+    padding-top: 75px;
 }
 
 #versionContainer {

@@ -77,25 +77,34 @@
             <p>
                 The visualization supports the following actions:
                 <ul>
+                  <li>
+                        <strong>Show process name or event info</strong>
+                        <br>
+                        Click on a process box or an event circle.
+                    </li>
                     <li>
                         <strong>Hide a process timeline</strong>
                         <br>
-                        double-click a process box. To show the process timeline, double-click on the process box in the "hidden processes" panel.
-                    </li>
-                    <li>
-                        <strong>Show event or process name</strong>
-                        <br>
-                        hover over an event circle or a process box. The corresponding text will appear in the top right corner. For events, the log entry for the event will be highlighted in the left panel.
-                    </li>
-                    <li>
-                        <strong>Expand/collapse non-communicating events</strong>
-                        <br>
-                        Events that are not incident on any communication edges are merged by ShiViz into larger-looking nodes. These nodes can be expanded/collapsed by holding SHIFT and clicking on them.
+                        Click a process box and select "hide". This
+                        will remove the process and its timeline from
+                        view. You can hide more than one process.
                     </li>
                     <li>
                         <strong>Filter by communication to process(es)</strong>
                         <br>
-                        hold SHIFT and double-click on a process box. The process box will be marked with a white square. This indicates that the graph is now filtered to show only events at the filtered process and only those processes and their events that communicated with this process. You can filter by more than one process. Undo the filter in the same way -- hold SHIFT and double-click the process box.
+                        Click a process box and select "filter". The
+                        graph will be filtered to show only those
+                        processes/events that communicate with the
+                        filtered process. You can filter by more than
+                        one process.
+                    </li>
+                    <li>
+                        <strong>Expand/collapse non-communicating events</strong>
+                        <br>
+                        ShiViz collapses adjacent process events not
+                        incident on any communication edges into
+                        larger circles. Click on one of these nodes
+                        and select "expand" to undo this collapsing.
                     </li>
                 </ul>
             </p>
@@ -128,7 +137,7 @@
                 You can specify the log format using a regular expression on the Input page. The regular expression must contain three named capture groups:
                 <ul>
                     <li><strong><code>event</code>:</strong> the description of the event</li>
-                    <li><strong><code>host</code>:</strong> the name of the host (process)</li>
+                    <li><strong><code>process</code>:</strong> the name of the process or host</li>
                     <li><strong><code>clock</code>:</strong> the vector clock associated with the event, in JSON format</li>
                 </ul>
             </p>
@@ -140,7 +149,7 @@
                 <pre>28/07/14 01:15 PM Event excecuted<br>process2 {"process1" : time1, "process2" : time2, ..., "processN" : timeN}</pre>
 
                 We might have a parser RegExp like:
-                <pre>(?&lt;date&gt;\d\d/\d\d/\d\d \d\d:\d\d (AM|PM)) (?&lt;event&gt;.*)\n(?&lt;host&gt;\w+) (?&lt;clock&gt;\{.*\})</pre>
+                <pre>(?&lt;date&gt;\d\d/\d\d/\d\d \d\d:\d\d (AM|PM)) (?&lt;event&gt;.*)\n(?&lt;process&gt;\w+) (?&lt;clock&gt;\{.*\})</pre>
             </p>
 
             <h3>How can I generate logs to use in ShiViz?</h3>
@@ -151,7 +160,10 @@
             </p>
         </div>
         <div class="shivizexample">
-	  <img src="shiviz-example.png"/>
+	  <img src="images/shiviz-example.png" style="padding-top: 0px;"/><br/>
+          <img src="images/event-selection.png"/><br/>
+          <img src="images/process-selection.png"/><br/>
+          <img src="images/event-expand-menu.png"/>
         </div>
     </section>
 
@@ -257,7 +269,7 @@
                                 </div>
                                 <p><b>&bull; Search for a custom motif:</b> draw a
                                    graph motif to the right (add
-                                   hosts, events, click and drag to
+                                   processes, events, click and drag to
                                    add inter-event edges).
                                 </p>
                                 <p>
@@ -292,7 +304,7 @@
                 <div class="event"></div>
                 <table class="fields"></table>
             </div>
-            <div class="hidden">Hidden hosts:</div>
+            <div class="hidden">Hidden processes:</div>
         </div>
 
         <div class="dialog">

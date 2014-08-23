@@ -225,7 +225,7 @@ VisualNode.prototype.getText = function() {
     else if (!this.isCollapsed())
         return this.node.getFirstLogEvent().getText();
     else
-        return this.node.getLogEvents().length + " collapsed nodes";
+        return this.node.getLogEvents().length + " collapsed events";
 };
 
 /**
