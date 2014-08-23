@@ -245,6 +245,7 @@ section.input .left {
     padding: 24pt;
     top: 0;
     left: 0;
+    z-index: 2;
 }
 
 .visualization .left #tabs {
@@ -279,6 +280,7 @@ section.input .left {
     overflow: hidden;
     background: #fff;
     cursor: pointer;
+    z-index: 2;
     transition: margin;
     transition-duration: .1s;
     transition-timing-function: ease-out;
@@ -293,7 +295,7 @@ section.input .left {
 
 .visualization .log .line.more:hover > .line,
 .visualization .log .line.more.reveal > .line {
-    z-index: 1;
+    z-index: 3;
     font-size: 10pt;
     line-height: 1em;
 }
@@ -515,6 +517,7 @@ svg {
 #hostBar {
 	position: fixed;
     background: white;
+    z-index: 1;
 }
 
 #hostBar svg rect.bg {
@@ -537,7 +540,7 @@ svg {
     right: 0;
     top: 0;
     background: #fff;
-    z-index: 1;
+    z-index: 2;
 }
 
 #sidebar .info {
@@ -592,11 +595,12 @@ svg#defs {
     background: #eee;
     font-family: sans-serif;
     position: absolute;
-    z-index: 3;
+    z-index: 0;
     display: none;
 }
 .dialog.host {
     position: fixed;
+    z-index: 1;
 }
 
 .dialog .triangle {

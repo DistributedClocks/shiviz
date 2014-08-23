@@ -306,19 +306,21 @@ Controller.prototype.showDialog = function(e, type, elem) {
         $dialog.css({
             "left": $(elem).offset().left - $dialog.width() - 40
         }).removeClass("left").addClass("right").show();
-    else if (e.getX() - $(window).scrollLeft() > $graph.width() / 2 ? !type : type)
+    else if (e.getX() - $(window).scrollLeft() > $graph.width() / 2)
         $dialog.css({
-            "left": e.getX() + $svg.offset().left - $dialog.width() - 40
+            "left": e.getX() + $svg.offset().left - $dialog.width() - 40,
+            "margin-left": type ? -$(window).scrollLeft() : 0
         }).removeClass("left").addClass("right").show();
     else
         $dialog.css({
-            "left": e.getX() + $svg.offset().left + 40
+            "left": e.getX() + $svg.offset().left + 40,
+            "margin-left": type ? -$(window).scrollLeft() : 0
         }).removeClass("right").addClass("left").show();
 
     // Set fill color, etc.
     if (type)
         $dialog.css({
-            "top": $(elem).offset().top + Global.HOST_SQUARE_SIZE / 2,
+            "top": $(elem).offset().top  - $(window).scrollTop() + Global.HOST_SQUARE_SIZE / 2,
             "background": type == 2 ? $(elem).css("fill") : e.getFillColor(),
             "border-color": type == 2 ? $(elem).css("fill") : e.getFillColor()
         }).data("element", type == 2 ? e : e.getHost());
