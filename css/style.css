@@ -350,7 +350,7 @@ section.input .left {
     font-size: 12pt;
     margin: 0;
     float: left;
-    width: calc(100% - 52pt);
+    width: calc(100% - 104pt);
     padding-right: 24pt;
     border-right: none;
 }
@@ -359,7 +359,7 @@ section.input .left {
     width: 22pt;
     position: absolute;
     margin-top: 1px;
-    left: calc(100% - 86pt);
+    left: calc(100% - 86pt - 54pt);
     background: white;
     cursor: pointer;
 }
@@ -381,20 +381,30 @@ section.input .left {
 #searchbar #bar .clear .two {
     transform: rotate(-45deg);
 }
+
+#prevButton, #nextButton {
+    width: 26pt;
+}
+
+#searchButton {
+    width: 52pt;
+}
+
 #searchbar #bar button {
     float: left;
     margin: 0;
-    width: 52pt;
     height: 24pt;
     padding: 0;
 }
+
+
 #searchbar #bar input:focus ~ button,
 #searchbar #bar input.focus ~ button {
     border: 1px solid #000;
 }
 #searchbar #panel {
     display: none;
-    width: calc(100% - 9px - 52pt);
+    width: calc(100% - 9px - 104pt);
     border: 1px solid black;
     border-top: none;
     box-sizing: border-box;
