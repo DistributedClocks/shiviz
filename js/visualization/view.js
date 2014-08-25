@@ -10,12 +10,15 @@
  * @param {HostPermutation} hostPermutation
  * @param {String} label
  */
-function View(svg, hostSVG, logTable, model, hostPermutation, label, controller) {
+function View(svg, hostSVG, logTable, model, hostPermutation, label) {
 
+    /** @private */
     this.svg = svg;
     
+    /** @private */
     this.hostSVG = hostSVG;
     
+    /** @private */
     this.logTable = logTable;
     
     /** @private */
@@ -36,7 +39,9 @@ function View(svg, hostSVG, logTable, model, hostPermutation, label, controller)
     /** @private */
     this.transformer = new Transformer();
     
-    this.controller = controller;
+    /** @private */
+    this.controller = null;
+    
 }
 
 /**

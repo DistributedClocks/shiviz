@@ -1,7 +1,7 @@
 /**
  * @class
  * 
- * This transformation visually highlights a motif.
+ * This transformation visually highlights a set of motifs.
  * 
  * @constructor
  * @extends Transformation
@@ -13,6 +13,8 @@ function HighlightMotifTransformation(finder, ignoreEdges) {
 
     /** @private */
     this.finder = finder;
+    
+    this.highlighted = null;
 
     this.setIgnoreEdges(ignoreEdges);
 }
@@ -30,11 +32,15 @@ HighlightMotifTransformation.prototype.setIgnoreEdges = function(val) {
     this.ignoreEdges = !!val;
 };
 
+HighlightMotifTransformation.prototype.getHighlighted = function() {
+    return this.highlighted;
+};
+
 /**
  * Overrides {@link Transformation#transform}
  */
 HighlightMotifTransformation.prototype.transform = function(model) {
-    var motif = this.finder.find(model.getGraph());
+    var motifGroup = this.finder.find(model.getGraph());
 
     model.getVisualNodes().forEach(function(node) {
         node.setOpacity(0.2);
@@ -43,7 +49,7 @@ HighlightMotifTransformation.prototype.transform = function(model) {
         edge.setOpacity(0.2);
     });
 
-    var nodes = motif.getNodes();
+    var nodes = motifGroup.getNodes();
     for (var i = 0; i < nodes.length; i++) {
         var node = nodes[i];
         var visualNode = model.getVisualNodeByNode(node);
@@ -51,7 +57,7 @@ HighlightMotifTransformation.prototype.transform = function(model) {
         visualNode.setOpacity(1);
     }
 
-    var edges = motif.getEdges();
+    var edges = motifGroup.getEdges();
     for (var i = 0; i < edges.length; i++) {
         var edge = edges[i];
         var visualEdge = model.getVisualEdgeByNodes(edge[0], edge[1]);
@@ -59,4 +65,6 @@ HighlightMotifTransformation.prototype.transform = function(model) {
         visualEdge.setOpacity(1);
         // visualEdge.setWidth(visualEdge.getWidth() * 1.5);
     }
+    
+    this.highlighted = motifGroup;
 };

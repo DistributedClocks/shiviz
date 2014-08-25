@@ -10,6 +10,7 @@
  */
 function Controller(global) {
 
+    /** @private */
     this.global = global;
     
     var self = this;
@@ -67,6 +68,14 @@ function Controller(global) {
         self.action(type, e);
     });
 }
+
+Controller.prototype.highlightMotif = function(motifFinder) {
+    
+    this.global.getViews().forEach(function(view) {
+        view.getTransformer().highlightMotif(motifFinder, false);
+    });
+    
+};
 
 
 /**

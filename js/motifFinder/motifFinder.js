@@ -3,9 +3,10 @@
  * 
  * @classdesc
  * 
- * MotifFinders define an algorithm for finding a specific {@link Motif}. In
- * the context of MotifFinders, {@link Motif}s are sub-graphs of a larger
- * {@link ModelGraph} that are of some importance.
+ * MotifFinders define an algorithm for finding a specific set of {@link Motif}s.
+ * In the context of MotifFinders, {@link Motif}s are sub-graphs of a larger
+ * {@link ModelGraph} that are of some importance. The found motifs are
+ * aggregated in a {@link MotifGroup}.
  * 
  * Every MotifFinder must implement the {@link MotifFinder#find} method, which
  * is solely responsible for performing the actual search for motifs
@@ -21,12 +22,13 @@ function MotifFinder() {
 }
 
 /**
- * The find method is solely responsible for performing the actual search for a
- * motif.
+ * The find method is solely responsible for performing the actual search for
+ * {@link Motif}s. This method returns a set of found motifs aggregated in a
+ * MotifGroup
  * 
  * @abstract
  * @param {ModelGraph} graph The graph on which the search should be performed
- * @returns {Motif} The motif found
+ * @returns {MotifGroup} The motif group found
  */
 MotifFinder.prototype.find = function(graph) {
 
