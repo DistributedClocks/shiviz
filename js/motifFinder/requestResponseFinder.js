@@ -43,7 +43,11 @@
  * @param {int} maxLEResponder See above for the purpose of this parameter
  */
 function RequestResponseFinder(maxLERequester, maxLEResponder) {
+    
+    /** @private */
     this.maxLERequester = maxLERequester;
+    
+    /** @private */
     this.maxLEResponder = maxLEResponder;
 }
 
@@ -56,7 +60,7 @@ RequestResponseFinder.prototype.constructor = RequestResponseFinder;
  */
 RequestResponseFinder.prototype.find = function(graph) {
     var nodes = graph.getNodes();
-    var motif = new Motif();
+    var motifGroup = new MotifGroup();
     var seen = {}; // Nodes already part of a motif
     var context = this;
 
@@ -122,7 +126,9 @@ RequestResponseFinder.prototype.find = function(graph) {
             return;
         }
 
+        var motif = new Motif();
         motif.addTrail(trail);
+        motifGroup.addMotif(motif);
 
         for ( var i = 0; i < trail.length; i++) {
             seen[trail[i].getId()] = true;
@@ -133,10 +139,11 @@ RequestResponseFinder.prototype.find = function(graph) {
     });
 
     for ( var i = 0; i < nodes.length; i++) {
+        
         traversal.reset();
         traversal.addNode(nodes[i], "startNode", null);
         traversal.run();
     }
 
-    return motif;
+    return motifGroup;
 };

@@ -41,8 +41,8 @@ CustomMotifFinder.prototype.find = function(graph) {
     var hostNumBound = {}; // graph host to number of nodes bound to that host
     var inOtherMotif = {}; // nodes already part of other motifs
 
-    var motif = new Motif();
-
+    var motifGroup = new MotifGroup();
+    
     var startBuilderNode = builderGraph.getNodes()[0];
     var nodes = graph.getNodes();
     for (var n = 0; n < nodes.length; n++) {
@@ -57,7 +57,7 @@ CustomMotifFinder.prototype.find = function(graph) {
         removeNodeMatch(cnode);
     }
 
-    return motif;
+    return motifGroup;
 
     /*
      * This method determines if a BuilderGraph is one contiguous graph.
@@ -99,6 +99,8 @@ CustomMotifFinder.prototype.find = function(graph) {
      */
     function handleFound() {
 
+        var motif = new Motif();
+        
         var bNodes = builderGraph.getNodes();
         for (var i = 0; i < bNodes.length; i++) {
             var currBNode = bNodes[i];
@@ -116,6 +118,7 @@ CustomMotifFinder.prototype.find = function(graph) {
         }
         
         clearSearchState();
+        motifGroup.addMotif(motif);
     }
 
     /*

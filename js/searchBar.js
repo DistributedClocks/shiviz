@@ -84,7 +84,7 @@ function SearchBar() {
         context.showPanel();
     });
 
-    $("#searchbar #bar button").on("click", function(e) {
+    $("#searchButton").on("click", function(e) {
         if (e.ctrlKey && e.altKey) {
             var regexp = '(?<event>){"host":"(?<host>[^}]+)","clock":(?<clock>{[^}]*})}';
             Shiviz.getInstance().visualize(context.getValue(), regexp, "", "order", false);
@@ -109,6 +109,7 @@ function SearchBar() {
     });
 
     this.update();
+
 }
 
 /**
@@ -175,11 +176,11 @@ SearchBar.prototype.updateMode = function() {
 
     if (value.trim().length == 0) {
         this.mode = SearchBar.MODE_EMPTY;
-        $("#bar button").prop("disabled", true);
+        $("#searchButton").prop("disabled", true);
         $("#searchbar input").addClass("empty");
         return;
     } else {
-        $("#bar button").prop("disabled", false);
+        $("#searchButton").prop("disabled", false);
         $("#searchbar input").removeClass("empty");
     }
 
