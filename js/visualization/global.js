@@ -110,7 +110,7 @@ Global.prototype.drawAll = function() {
 
     var hostMargin = this.resize();
     
-    this.motifNavigator = new MotifNavigator(this);
+    this.motifNavigator = new MotifNavigator();
     
     for (var i = 0; i < this.views.length; i++) {
         var view = this.views[i];
@@ -131,23 +131,6 @@ Global.prototype.drawAll = function() {
 
     this.drawSideBar();
 };
-
-Global.prototype.drawBox = function(motifData) {
-    $("svg rect.box").remove();
-
-    var visualGraph = motifData.visualGraph;
-    var firstNode = motifData.motif.getNodes()[0];
-    var id = visualGraph.getVisualNodeByNode(firstNode).getId();
-    var svg = d3.select($("#node" + id).parents("svg")[0]);
-
-    var box = svg.insert("rect", ":first-child");
-    box.attr({
-        "x": motifData.left - 10,
-        "y": motifData.top - 10,
-        "width": motifData.right - motifData.left + 20,
-        "height": motifData.bottom - motifData.top + 20
-    }).classed("box", true);
-}
 
 /**
  * Gets the list of Views

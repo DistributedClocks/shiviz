@@ -1,6 +1,4 @@
-function MotifNavigator(global) {
-
-    this.global = global;
+function MotifNavigator() {
 
     /** @private */
     this.motifDatas = [];
@@ -105,7 +103,6 @@ MotifNavigator.prototype.handleCurrent = function() {
     position = Math.max(0, position);
     $(window).scrollTop(position);
 
-    this.global.drawBox(motifData);
     
 //    var motif = motifData.motif;
 //    var visualGraph = motifData.visualGraph;
