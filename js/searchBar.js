@@ -37,7 +37,7 @@ function SearchBar() {
 
     /** @private */
     this.motifNavigator = null;
-    
+
     /** @private */
     this.graphBuilder = new GraphBuilder($("#panel svg"), $("#addButton"));
 
@@ -68,16 +68,16 @@ function SearchBar() {
             return;
 
         switch (e.which) {
-            // Return
-            case 13:
-                context.query();
-                context.hidePanel();
-                break;
+        // Return
+        case 13:
+            context.query();
+            context.hidePanel();
+            break;
 
-            // Escape
-            case 27:
-                context.hidePanel();
-                break;
+        // Escape
+        case 27:
+            context.hidePanel();
+            break;
         }
     });
 
@@ -92,7 +92,8 @@ function SearchBar() {
         if (e.ctrlKey && e.altKey) {
             var regexp = '(?<event>){"host":"(?<host>[^}]+)","clock":(?<clock>{[^}]*})}';
             Shiviz.getInstance().visualize(context.getValue(), regexp, "", "order", false);
-        } else {
+        }
+        else {
             context.query();
         }
         context.hidePanel();
@@ -107,28 +108,28 @@ function SearchBar() {
     });
 
     $("#searchbar .predefined button").on("click", function() {
+        context.clearMotif();
         context.setValue("#" + this.name);
         context.hidePanel();
         context.query();
     });
-    
+
     $("#nextButton").on("click", function() {
-        if(context.motifNavigator == null) {
+        if (context.motifNavigator == null) {
             return;
         }
         context.motifNavigator.next();
     });
-    
+
     $("#prevButton").on("click", function() {
-        if(context.motifNavigator == null) {
+        if (context.motifNavigator == null) {
             return;
         }
-        
+
         context.motifNavigator.prev();
     });
-    
 
-//    this.update();
+    // this.update();
 
 }
 
@@ -190,28 +191,31 @@ SearchBar.prototype.setGlobal = function(global) {
  * text field.
  */
 SearchBar.prototype.updateMode = function() {
-    var value = this.getValue();
-    
+    var value = this.getValue().trim();
+
     $("#searchbar #bar input").css("color", "initial");
 
-    if (value.trim().length == 0) {
+    if (value.length == 0) {
         this.mode = SearchBar.MODE_EMPTY;
         $("#searchButton").prop("disabled", true);
         $("#searchbar input").addClass("empty");
         return;
-    } else {
+    }
+    else {
         $("#searchButton").prop("disabled", false);
         $("#searchbar input").removeClass("empty");
     }
 
-//    this.clearResults(); //TODO
-    
-    if (value.indexOf("#") < 0)
+    if (value.charAt(0) != "#") {
         this.mode = SearchBar.MODE_TEXT;
-    else if (value.trim().match(/^#(motif\s*=\s*)?(\[.*\])/i) != null)
-        this.mode = SearchBar.MODE_STRUCTURAL;
-    else
+    }
+    else if (value.slice(0, 7) != "#motif=" && /[a-zA-Z0-9]/.test(value.charAt(1))) {
         this.mode = SearchBar.MODE_PREDEFINED;
+    }
+    else {
+        this.mode = SearchBar.MODE_STRUCTURAL;
+    }
+
 };
 
 /**
@@ -237,44 +241,45 @@ SearchBar.prototype.update = function() {
 
     switch (this.mode) {
 
-        // Empty
-        case SearchBar.MODE_EMPTY:
+    // Empty
+    case SearchBar.MODE_EMPTY:
+        this.clearMotif();
+
+        break;
+
+    // Text
+    case SearchBar.MODE_TEXT:
+        this.clearMotif();
+        break;
+
+    // Motif (custom)
+    case SearchBar.MODE_STRUCTURAL:
+        try {
+            var json = value.trim().match(/^#(?:motif=)?(\[.*\])/i)[1];
+            var rawRegExp = '(?<event>){"host":"(?<host>[^}]+)","clock":(?<clock>{[^}]*})}';
+            var parsingRegex = new NamedRegExp(rawRegExp, "i");
+            var parser = new LogParser(json, null, parsingRegex);
+            var logEvents = parser.getLogEvents(parser.getLabels()[0]);
+            var vectorTimestamps = logEvents.map(function(logEvent) {
+                return logEvent.getVectorTimestamp();
+            });
+            var builderGraph = BuilderGraph.fromVectorTimestamps(vectorTimestamps);
+            this.graphBuilder.convertFromBG(builderGraph);
+        }
+        catch (exception) {
             this.clearMotif();
+            $("#searchbar #bar input").css("color", "red");
+        }
+        break;
 
-            break;
+    // Predefined Motif
+    case SearchBar.MODE_PREDEFINED:
+        this.clearMotif();
+        break;
 
-        // Text
-        case SearchBar.MODE_TEXT:
-            this.clearMotif();
-            break;
-
-        // Motif (custom)
-        case SearchBar.MODE_STRUCTURAL:
-            try {
-                var json = value.trim().match(/^#(?:motif\s*=\s*)?(\[.*\])/i)[1];
-                var rawRegExp = '(?<event>){"host":"(?<host>[^}]+)","clock":(?<clock>{[^}]*})}';
-                var parsingRegex = new NamedRegExp(rawRegExp, "i");
-                var parser = new LogParser(json, null, parsingRegex);
-                var logEvents = parser.getLogEvents(parser.getLabels()[0]);
-                var vectorTimestamps = logEvents.map(function(logEvent) {
-                    return logEvent.getVectorTimestamp();
-                });
-                var builderGraph = BuilderGraph.fromVectorTimestamps(vectorTimestamps);
-                this.graphBuilder.convertFromBG(builderGraph);
-            }
-            catch(exception) {
-                $("#searchbar #bar input").css("color", "red");
-            }
-            break;
-
-        // Predefined Motif
-        case SearchBar.MODE_PREDEFINED:
-            this.clearMotif();
-            break;
-
-        default:
-            throw new Exception("Invalid mode in SearchBar");
-            break;
+    default:
+        throw new Exception("Invalid mode in SearchBar");
+        break;
     }
 
     this.updateLocked = false;
@@ -353,7 +358,7 @@ SearchBar.prototype.clearResults = function() {
     $("#prevButton").prop("disabled", true);
     $("#nextButton").prop("disabled", true);
     this.motifNavigator = null;
-    if(this.global.getController().hasHighlight()) {
+    if (this.global.getController().hasHighlight()) {
         this.global.getController().clearHighlight();
         this.global.drawAll();
     }
@@ -376,76 +381,93 @@ SearchBar.prototype.clear = function() {
  * Performs a query based on what is currently in the text field.
  */
 SearchBar.prototype.query = function() {
-    $("#prevButton").prop("disabled", false);
-    $("#nextButton").prop("disabled", false);
     this.updateMode();
 
     try {
         switch (this.mode) {
-            case SearchBar.MODE_EMPTY:
-                this.clearResults();
-                break;
+        case SearchBar.MODE_EMPTY:
+            this.clearResults();
+            break;
 
-            case SearchBar.MODE_TEXT:
-                var finder = new TextQueryMotifFinder(this.getValue());
+        case SearchBar.MODE_TEXT:
+            var finder = new TextQueryMotifFinder(this.getValue());
+            this.global.getController().highlightMotif(finder);
+            this.global.drawAll();
+            break;
+
+        case SearchBar.MODE_STRUCTURAL:
+            try {
+                var json = this.getValue().trim().match(/^#(?:motif=)?(\[.*\])/i)[1];
+                var rawRegExp = '(?<event>){"host":"(?<host>[^}]+)","clock":(?<clock>{[^}]*})}';
+                var parsingRegex = new NamedRegExp(rawRegExp, "i");
+                var parser = new LogParser(json, null, parsingRegex);
+                var logEvents = parser.getLogEvents(parser.getLabels()[0]);
+                var vectorTimestamps = logEvents.map(function(logEvent) {
+                    return logEvent.getVectorTimestamp();
+                });
+                var builderGraph = BuilderGraph.fromVectorTimestamps(vectorTimestamps);
+                var finder = new CustomMotifFinder(builderGraph);
+                this.global.getController().highlightMotif(finder);
+                this.global.drawAll();
+            }
+            catch (exception) {
+                $("#searchbar #bar input").css("color", "red");
+                return;
+            }
+            break;
+
+        case SearchBar.MODE_PREDEFINED:
+            var value = this.getValue();
+            var type = value.trim().match(/^#(?:motif=)?(.*)/i)[1];
+
+            if (type == "request-response") {
+                var finder = new RequestResponseFinder(999, 4);
                 this.global.getController().highlightMotif(finder);
                 this.global.drawAll();
                 break;
+            }
+            else if (type == "broadcast" || type == "gather") {
+                var broadcast;
+                if (type == "broadcast")
+                    broadcast = true;
+                else
+                    broadcast = false;
 
-            case SearchBar.MODE_STRUCTURAL:
-                var finder = new CustomMotifFinder(this.graphBuilder.convertToBG());
-                this.global.getController().highlightMotif(finder);
+                var hiddenHosts = this.global.getHiddenHosts();
+
+                this.global.getViews().forEach(function(view) {
+                    var hosts = view.getHosts().filter(function(h) {
+                        return !hiddenHosts[h];
+                    }).length;
+                    var finder = new BroadcastGatherFinder(hosts - 1, 4, broadcast);
+
+                    view.getTransformer().highlightMotif(finder, false);
+                });
+
                 this.global.drawAll();
-                break;
+            }
+            else {
+                throw new Exception(type + " is not a built-in motif type", true);
+            }
 
-            case SearchBar.MODE_PREDEFINED:
-                var value = this.getValue();
-                var type = value.trim().match(/^#(?:motif\s*=\s*)?(.*)/i)[1];
+            break;
 
-                if (type == "request-response") {
-                    var finder = new RequestResponseFinder(999, 4);
-                    this.global.getController().highlightMotif(finder);
-                    this.global.drawAll();
-                    return;
-                } else if (type == "broadcast" || type == "gather") {
-                    var broadcast;
-                    if (type == "broadcast") broadcast = true;
-                    else broadcast = false;
-
-                    var hiddenHosts = this.global.getHiddenHosts();
-
-                    this.global.getViews().forEach(function(view) {
-                        var hosts = view.getHosts().filter(function(h) {
-                            return !hiddenHosts[h];
-                        }).length;
-                        var finder = new BroadcastGatherFinder(hosts - 1, 4, broadcast);
-
-                        view.getTransformer().highlightMotif(finder, false);
-                    });
-
-                    this.global.drawAll();
-                } else {
-                    throw new Exception(type + " is not a built-in motif type", true);
-                }
-
-                break;
-
-            default:
-                throw new Exception("SearchBar.prototype.query: invalid mode");
-                break;
+        default:
+            throw new Exception("SearchBar.prototype.query: invalid mode");
+            break;
         }
     }
     catch (e) {
         Shiviz.getInstance().handleException(e);
     }
-    
+
+    $("#prevButton").prop("disabled", false);
+    $("#nextButton").prop("disabled", false);
     var views = this.global.getViews();
     this.motifNavigator = new MotifNavigator();
-    for(var i = 0; i < views.length; i++) {
+    for (var i = 0; i < views.length; i++) {
         this.motifNavigator.addMotif(views[i].getVisualModel(), views[i].getTransformer().getHighlightedMotif());
     }
     this.motifNavigator.start();
-    
-    
-};
 
+};
