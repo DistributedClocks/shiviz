@@ -180,6 +180,10 @@ Transformer.prototype.unhighlightMotif = function() {
     this.highlightMotifTransformation = null;
 };
 
+Transformer.prototype.hasHighlightedMotif = function() {
+    return this.highlightMotifTransformation != null;
+};
+
 
 Transformer.prototype.getHighlightedMotif = function() {
     if(this.highlightMotifTransformation == null) {

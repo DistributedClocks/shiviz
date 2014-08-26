@@ -77,6 +77,22 @@ Controller.prototype.highlightMotif = function(motifFinder) {
     
 };
 
+Controller.prototype.clearHighlight = function() {
+    this.global.getViews().forEach(function(view) {
+        view.getTransformer().unhighlightMotif();
+    });
+};
+
+Controller.prototype.hasHighlight = function() {
+    var views = this.global.getViews();
+    for(var i = 0; i < views.length; i++) {
+        if(views[i].getTransformer().hasHighlightedMotif()) {
+            return true;
+        }
+    }
+    return false;
+};
+
 
 /**
  * Binds events to the nodes.

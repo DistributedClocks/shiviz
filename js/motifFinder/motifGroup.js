@@ -10,6 +10,13 @@ MotifGroup.prototype.addMotif = function(motif) {
     this.motifs.push(motif);
 };
 
+MotifGroup.prototype.addMotifGroup = function(motifGroup) {
+    var motifs = motifGroup.getMotifs();
+    for(var i = 0; i < motifs.length; i++) {
+        this.addMotif(motifs[i]);
+    }
+};
+
 MotifGroup.prototype.getMotifs = function() {
     return this.motifs.slice();
 };

@@ -41,21 +41,6 @@ function Global($vizContainer, $sidebar, views) {
     
     this.resize();
     
-    this.motifNavigator = null;
-    
-    $(window).on("keydown", function(e) {
-        if(context.motifNavigator == null) {
-            return;
-        }
-        
-        if(e.ctrlKey && e.shiftKey && e.which == 40) {
-            context.motifNavigator.next();
-        }
-        if(e.ctrlKey && e.shiftKey && e.which == 38) {
-            context.motifNavigator.prev();
-        }
-    });
-    
 }
 
 /**
@@ -110,17 +95,10 @@ Global.prototype.drawAll = function() {
 
     var hostMargin = this.resize();
     
-    this.motifNavigator = new MotifNavigator();
-    
     for (var i = 0; i < this.views.length; i++) {
         var view = this.views[i];
         view.draw();
-        if(view.getTransformer().getHighlightedMotif() != null) {
-            this.motifNavigator.addMotif(view.getVisualModel(), view.getTransformer().getHighlightedMotif());
-        }
     }
-    
-    this.motifNavigator.start();
     
     this.$vizContainer.height("auto");
 

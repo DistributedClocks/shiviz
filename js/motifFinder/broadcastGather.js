@@ -97,7 +97,7 @@ BroadcastGatherFinder.prototype.find = function(graph) {
         if (disjoint.length <= BroadcastGatherFinder.GREEDY_THRESHOLD) {
             var score = findAll(disjoint);
             var groups = findBestGroups(disjoint, score);
-            motifGroup.addMotif(toMotif(groups, finalMotif));
+            motifGroup.addMotif(toMotif(groups));
         }
         else {
             findGreedy(disjoint, finalMotif);

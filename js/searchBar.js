@@ -36,6 +36,9 @@ function SearchBar() {
     this.global = null;
 
     /** @private */
+    this.motifNavigator = null;
+    
+    /** @private */
     this.graphBuilder = new GraphBuilder($("#panel svg"), $("#addButton"));
 
     /** @private */
@@ -79,6 +82,7 @@ function SearchBar() {
     });
 
     $("#searchbar #bar input").on("input", function() {
+        context.clearResults();
         context.update();
     }).on("focus", function() {
         context.showPanel();
@@ -107,8 +111,24 @@ function SearchBar() {
         context.hidePanel();
         context.query();
     });
+    
+    $("#nextButton").on("click", function() {
+        if(context.motifNavigator == null) {
+            return;
+        }
+        context.motifNavigator.next();
+    });
+    
+    $("#prevButton").on("click", function() {
+        if(context.motifNavigator == null) {
+            return;
+        }
+        
+        context.motifNavigator.prev();
+    });
+    
 
-    this.update();
+//    this.update();
 
 }
 
@@ -184,7 +204,7 @@ SearchBar.prototype.updateMode = function() {
         $("#searchbar input").removeClass("empty");
     }
 
-    this.clearResults();
+//    this.clearResults(); //TODO
     
     if (value.indexOf("#") < 0)
         this.mode = SearchBar.MODE_TEXT;
@@ -330,10 +350,13 @@ SearchBar.prototype.clearText = function() {
  * Clears search results. In other words, un-highlights found nodes and motifs
  */
 SearchBar.prototype.clearResults = function() {
-    this.global.getViews().forEach(function(view) {
-        view.getTransformer().unhighlightMotif();
-    });
-    this.global.drawAll();
+    $("#prevButton").prop("disabled", true);
+    $("#nextButton").prop("disabled", true);
+    this.motifNavigator = null;
+    if(this.global.getController().hasHighlight()) {
+        this.global.getController().clearHighlight();
+        this.global.drawAll();
+    }
 };
 
 /**
@@ -353,6 +376,8 @@ SearchBar.prototype.clear = function() {
  * Performs a query based on what is currently in the text field.
  */
 SearchBar.prototype.query = function() {
+    $("#prevButton").prop("disabled", false);
+    $("#nextButton").prop("disabled", false);
     this.updateMode();
 
     try {
@@ -362,12 +387,15 @@ SearchBar.prototype.query = function() {
                 break;
 
             case SearchBar.MODE_TEXT:
-                this.queryText(this.getValue());
+                var finder = new TextQueryMotifFinder(this.getValue());
+                this.global.getController().highlightMotif(finder);
+                this.global.drawAll();
                 break;
 
             case SearchBar.MODE_STRUCTURAL:
                 var finder = new CustomMotifFinder(this.graphBuilder.convertToBG());
-                this.queryMotif(finder);
+                this.global.getController().highlightMotif(finder);
+                this.global.drawAll();
                 break;
 
             case SearchBar.MODE_PREDEFINED:
@@ -375,7 +403,9 @@ SearchBar.prototype.query = function() {
                 var type = value.trim().match(/^#(?:motif\s*=\s*)?(.*)/i)[1];
 
                 if (type == "request-response") {
-                    this.queryMotif(new RequestResponseFinder(999, 4));
+                    var finder = new RequestResponseFinder(999, 4);
+                    this.global.getController().highlightMotif(finder);
+                    this.global.drawAll();
                     return;
                 } else if (type == "broadcast" || type == "gather") {
                     var broadcast;
@@ -408,29 +438,14 @@ SearchBar.prototype.query = function() {
     catch (e) {
         Shiviz.getInstance().handleException(e);
     }
+    
+    var views = this.global.getViews();
+    this.motifNavigator = new MotifNavigator();
+    for(var i = 0; i < views.length; i++) {
+        this.motifNavigator.addMotif(views[i].getVisualModel(), views[i].getTransformer().getHighlightedMotif());
+    }
+    this.motifNavigator.start();
+    
+    
 };
 
-/**
- * Performs a text query
- * 
- * @param {String} query the query string
- */
-SearchBar.prototype.queryText = function(query) {
-    var finder = new TextQueryMotifFinder(query);
-    this.global.getViews().forEach(function(view) {
-        view.getTransformer().highlightMotif(finder, false);
-    });
-    this.global.drawAll();
-};
-
-/**
- * Performs a query for a motif
- * 
- * @param {MotifFinder} finder A motif finder
- */
-SearchBar.prototype.queryMotif = function(finder) {
-    this.global.getViews().forEach(function(view) {
-        view.getTransformer().highlightMotif(finder, false);
-    });
-    this.global.drawAll();
-};
