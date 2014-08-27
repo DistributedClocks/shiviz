@@ -16,7 +16,7 @@ function ModelNode(logEvents) {
     AbstractNode.call(this);
 
     /** @private */
-    this.logEvents = logEvents;
+    this.logEvents = logEvents.slice();
 }
 
 // ModelNode extends AbstractNode
