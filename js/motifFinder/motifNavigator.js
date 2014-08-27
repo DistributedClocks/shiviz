@@ -1,4 +1,4 @@
-function MotifNavigator() {
+function MotifNavigator(callback, data) {
 
     /** @private */
     this.motifDatas = [];
@@ -11,6 +11,12 @@ function MotifNavigator() {
     
     /** @private */
     this.hasStarted = false;
+    
+    /** @private */
+    this.callback = callback;
+    
+    /** @private */
+    this.data = data;
 
 };
 
@@ -26,28 +32,16 @@ MotifNavigator.prototype.addMotif = function(visualGraph, motifGroup) {
     for(var m = 0; m < motifs.length; m++) {
         var motif = motifs[m];
         var top = Number.POSITIVE_INFINITY;
-        var bottom = Number.NEGATIVE_INFINITY;
-        var left = Number.POSITIVE_INFINITY;
-        var right = Number.NEGATIVE_INFINITY;
 
         var nodes = motif.getNodes();
         for (var i = 0; i < nodes.length; i++) {
             var node = nodes[i];
             var visualNode = visualGraph.getVisualNodeByNode(node);
             top = Math.min(top, visualNode.getY());
-            bottom = Math.max(bottom, visualNode.getY());
-            left = Math.min(left, visualNode.getX());
-            right = Math.max(right, visualNode.getX());
         }
         
-        this.motifDatas.push({
-            top: top,
-            bottom: bottom,
-            left: left,
-            right: right,
-            motif: motif,
-            visualGraph: visualGraph
-        });
+        var data = new MotifDataNavigatorData(top, motif, visualGraph);
+        this.motifDatas.push(data);
     }
 
 };
@@ -58,7 +52,7 @@ MotifNavigator.prototype.setWrap = function(wrap) {
 
 MotifNavigator.prototype.start = function() {
     this.motifDatas.sort(function(a, b) {
-        return a.top - b.top;
+        return a.getTop() - b.getTop();
     });
     
     this.hasStarted = true;
@@ -99,15 +93,33 @@ MotifNavigator.prototype.handleCurrent = function() {
     
     var motifData = this.motifDatas[this.index];
     
-    var position = motifData.top - MotifNavigator.TOP_SPACING;
+    var position = motifData.getTop() - MotifNavigator.TOP_SPACING;
     position = Math.max(0, position);
     $(window).scrollTop(position);
+    this.callback(motifData, this.data);
+};
 
+
+function MotifDataNavigatorData(top, motif, visualGraph) {
     
-//    var motif = motifData.motif;
-//    var visualGraph = motifData.visualGraph;
-//    
-//    motif.getNodes().forEach(function(node) {
-//       visualGraph.getVisualNodeByNode(node).setRadius(20);
-//    });
+    /** @private */
+    this.top = top;
+    
+    /** @private */
+    this.motif = motif;
+    
+    /** @private */
+    this.visualGraph = visualGraph;
+}
+
+MotifDataNavigatorData.prototype.getTop = function() {
+    return this.top;
+};
+
+MotifDataNavigatorData.prototype.getMotif = function() {
+    return this.motif;
+};
+
+MotifDataNavigatorData.prototype.getVisualGraph = function() {
+    return this.visualGraph;
 };
