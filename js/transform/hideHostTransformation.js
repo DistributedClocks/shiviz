@@ -44,6 +44,11 @@ HideHostTransformation.prototype.getHost = function() {
  */
 HideHostTransformation.prototype.transform = function(model) {
     var graph = model.getGraph();
+    
+    if(graph.getHead(this.host) == null) {
+        return;
+    }
+    
     var curr = graph.getHead(this.host).getNext();
     var parents = [];
     var children = [];
