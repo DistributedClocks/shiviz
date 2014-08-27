@@ -12,7 +12,7 @@ function Controller(global) {
 
     /** @private */
     this.global = global;
-    
+
     var self = this;
 
     $(window).unbind("scroll");
@@ -24,7 +24,7 @@ function Controller(global) {
         try {
             self.global.drawAll();
         }
-        catch(exception) {
+        catch (exception) {
             Shiviz.getInstance().handleException(exception);
         }
     });
@@ -44,15 +44,20 @@ function Controller(global) {
         var tn = $target.prop("tagName");
 
         // Test for click inside dialog
-        if ($target.is(".dialog") || $target.parents(".dialog").length) return;
+        if ($target.is(".dialog") || $target.parents(".dialog").length)
+            return;
         // Test for node or host click
-        if (tn == "g" || $target.parents("g").length || tn == "rect") return;
+        if (tn == "g" || $target.parents("g").length || tn == "rect")
+            return;
         // Test for line click
-        if ($target.parents(".log").length || $target.is(".highlight")) return;
+        if ($target.parents(".log").length || $target.is(".highlight"))
+            return;
         // Test for clickable
-        if (tn.match(/input/i) || tn.match(/button/i)) return;
+        if (tn.match(/input/i) || tn.match(/button/i))
+            return;
         // Test for panel visibility
-        if ($("#searchbar #panel:visible").length) return;
+        if ($("#searchbar #panel:visible").length)
+            return;
 
         $(".dialog").hide();
         d3.select("circle.sel").each(function(d) {
@@ -65,34 +70,89 @@ function Controller(global) {
         var type = this.name;
         var e = $(".dialog").data("element");
 
-        self.action(type, e);
+        switch (type) {
+
+        // Hide host
+        case "hide":
+            self.hideHost(e);
+            break;
+
+        // Unhide host
+        case "unhide":
+            self.unhideHost(e);
+            break;
+
+        // Highlight host
+        case "filter":
+            self.toggleHostHighlight(e);
+            break;
+
+        // Toggle collapse
+        case "collapse":
+            self.toggleCollapseNode(e);
+            break;
+        }
+
     });
 }
 
 Controller.prototype.highlightMotif = function(motifFinder) {
-    
     this.global.getViews().forEach(function(view) {
         view.getTransformer().highlightMotif(motifFinder, false);
     });
-    
+
+    this.global.drawAll();
 };
 
 Controller.prototype.clearHighlight = function() {
     this.global.getViews().forEach(function(view) {
         view.getTransformer().unhighlightMotif();
     });
+
+    this.global.drawAll();
 };
 
 Controller.prototype.hasHighlight = function() {
     var views = this.global.getViews();
-    for(var i = 0; i < views.length; i++) {
-        if(views[i].getTransformer().hasHighlightedMotif()) {
+    for (var i = 0; i < views.length; i++) {
+        if (views[i].getTransformer().hasHighlightedMotif()) {
             return true;
         }
     }
     return false;
 };
 
+Controller.prototype.hideHost = function(host) {
+    this.global.getViews().forEach(function(view) {
+        view.getTransformer().hideHost(host);
+    });
+
+    this.global.drawAll();
+};
+
+Controller.prototype.unhideHost = function(host) {
+    this.global.getViews().forEach(function(view) {
+        view.getTransformer().unhideHost(host);
+    });
+
+    this.global.drawAll();
+};
+
+Controller.prototype.toggleHostHighlight = function(host) {
+    this.global.getViews().forEach(function(view) {
+        view.getTransformer().toggleHighlightHost(host);
+    });
+
+    this.global.drawAll();
+};
+
+Controller.prototype.toggleCollapseNode = function(node) {
+    this.global.getViews().forEach(function(view) {
+        view.getTransformer().toggleCollapseNode(node);
+    });
+
+    this.global.drawAll();
+};
 
 /**
  * Binds events to the nodes.
@@ -109,8 +169,9 @@ Controller.prototype.bindNodes = function(nodes) {
     nodes.on("click", function(e) {
         if (d3.event.shiftKey) {
             // Toggle node collapsing
-            controller.action("collapse", e.getNode());
-        } else {
+            controller.toggleCollapseNode(e.getNode());
+        }
+        else {
             controller.showDialog(e, 0, this);
         }
     }).on("mouseover", function(e) {
@@ -140,7 +201,7 @@ Controller.prototype.bindNodes = function(nodes) {
         $(".fields").children().remove();
         if (!e.isCollapsed()) {
             var fields = e.getNode().getLogEvents()[0].getFields();
-            for (var i in fields) {
+            for ( var i in fields) {
                 var $f = $("<tr>", {
                     "class": "field"
                 });
@@ -214,17 +275,18 @@ Controller.prototype.bindHosts = function(hosts) {
         $(".fields").children().remove();
     }).on("dblclick", function(e) {
         var views = controller.global.getViews();
-        
+
         if (d3.event.shiftKey) {
             // Filtering by host
             // If more than one view / execution then return
             if (views.length != 1)
                 return;
-            
-            controller.action("filter", e.getHost());
-        } else {
+
+            controller.toggleHostHighlight(e.getHost());
+        }
+        else {
             // Hide host
-            controller.action("hide", e.getHost());
+            controller.hideHost(e.getHost());
         }
     }).on("click", function(e) {
         controller.showDialog(e, 1, this);
@@ -257,13 +319,13 @@ Controller.prototype.bindLines = function(lines) {
 Controller.prototype.bindHiddenHosts = function(hh) {
     var controller = this;
     hh.on("dblclick", function(e) {
-        
+
         var views = controller.global.getViews();
         views.forEach(function(view) {
-          view.getTransformer().unhideHost(e);  
+            view.getTransformer().unhideHost(e);
         });
         controller.global.drawAll();
-        
+
     }).on("mouseover", function(e) {
         $(".event").text(e);
         $(".fields").children().remove();
@@ -292,9 +354,10 @@ Controller.prototype.onScroll = function(e) {
 /**
  * Shows the node selection popup dialog
  * 
- * @param  {VisualNode} e The VisualNode that is selected
- * @param  {Number} type The type of node: 0 for regular, 1 for host, 2 for hidden host
- * @param  {DOMElement} elem The SVG node element
+ * @param {VisualNode} e The VisualNode that is selected
+ * @param {Number} type The type of node: 0 for regular, 1 for host, 2 for
+ *        hidden host
+ * @param {DOMElement} elem The SVG node element
  */
 Controller.prototype.showDialog = function(e, type, elem) {
 
@@ -345,7 +408,7 @@ Controller.prototype.showDialog = function(e, type, elem) {
     // Set fill color, etc.
     if (type)
         $dialog.css({
-            "top": $(elem).offset().top  - $(window).scrollTop() + Global.HOST_SQUARE_SIZE / 2,
+            "top": $(elem).offset().top - $(window).scrollTop() + Global.HOST_SQUARE_SIZE / 2,
             "background": type == 2 ? $(elem).css("fill") : e.getFillColor(),
             "border-color": type == 2 ? $(elem).css("fill") : e.getFillColor()
         }).data("element", type == 2 ? e : e.getHost());
@@ -357,8 +420,10 @@ Controller.prototype.showDialog = function(e, type, elem) {
         }).data("element", e.getNode());
 
     // Set class "host" if host (hidden or not) is selected
-    if (type) $dialog.addClass("host");
-    else $dialog.removeClass("host");
+    if (type)
+        $dialog.addClass("host");
+    else
+        $dialog.removeClass("host");
 
     // Add info to the dialog
     $dialog.find(".name").text(type == 2 ? e : e.getText());
@@ -367,7 +432,7 @@ Controller.prototype.showDialog = function(e, type, elem) {
     if (!type && !e.isCollapsed()) {
         // Add fields, if normal node
         var fields = e.getNode().getLogEvents()[0].getFields();
-        for (var i in fields) {
+        for ( var i in fields) {
             var $f = $("<tr>", {
                 "class": "field"
             });
@@ -392,11 +457,13 @@ Controller.prototype.showDialog = function(e, type, elem) {
         else
             $dialog.find(".collapse").show().text("Collapse");
 
-    } else if (!type) {
+    }
+    else if (!type) {
         // Show uncollapse button for collapsed nodes
         $dialog.find(".collapse").show().text("Expand");
         $dialog.find(".filter").hide();
-    } else {
+    }
+    else {
         // Show highlight button if only one execution
         if (type == 2 || this.global.getViews().length > 1)
             $dialog.find(".filter").hide();
@@ -415,50 +482,7 @@ Controller.prototype.showDialog = function(e, type, elem) {
         else
             $dialog.find(".hide").attr("name", "hide").text("Hide");
 
-        // Hide collapse button       
+        // Hide collapse button
         $dialog.find(".collapse").hide();
     }
 }
-
-/**
- * Performs a transformation / action based on the type of action 
- * provided
- * 
- * @param  {String} type The action to perform
- * @param  {any} e Data associated with the action
- */
-Controller.prototype.action = function(type, e) {
-    var views = this.global.getViews();
-    switch (type) {
-
-        // Hide host
-        case "hide":
-            views.forEach(function(view) {
-                view.getTransformer().hideHost(e);
-            });
-            break;
-
-        // Unhide host
-        case "unhide":
-            views.forEach(function(view) {
-                view.getTransformer().unhideHost(e);
-            });
-            break;
-
-        // Highlight host
-        case "filter":
-            views.forEach(function(view) {
-               view.getTransformer().toggleHighlightHost(e); 
-            });
-            break;
-
-        // Toggle collapse
-        case "collapse":
-            views.forEach(function(view) {
-                view.getTransformer().toggleCollapseNode(e);
-            });
-            break;
-    }
-
-    this.global.drawAll();
-};
