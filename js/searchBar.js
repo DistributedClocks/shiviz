@@ -392,7 +392,6 @@ SearchBar.prototype.query = function() {
         case SearchBar.MODE_TEXT:
             var finder = new TextQueryMotifFinder(this.getValue());
             this.global.getController().highlightMotif(finder);
-            this.global.drawAll();
             break;
 
         case SearchBar.MODE_STRUCTURAL:
@@ -408,7 +407,6 @@ SearchBar.prototype.query = function() {
                 var builderGraph = BuilderGraph.fromVectorTimestamps(vectorTimestamps);
                 var finder = new CustomMotifFinder(builderGraph);
                 this.global.getController().highlightMotif(finder);
-                this.global.drawAll();
             }
             catch (exception) {
                 $("#searchbar #bar input").css("color", "red");
@@ -423,7 +421,6 @@ SearchBar.prototype.query = function() {
             if (type == "request-response") {
                 var finder = new RequestResponseFinder(999, 4);
                 this.global.getController().highlightMotif(finder);
-                this.global.drawAll();
                 break;
             }
             else if (type == "broadcast" || type == "gather") {
