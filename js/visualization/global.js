@@ -59,6 +59,12 @@ Global.HOST_SQUARE_SIZE = 25;
  */
 Global.HIDDEN_EDGE_LENGTH = 40;
 
+/**
+ * @static
+ * @const
+ */
+Global.MIN_HOST_WIDTH = 40;
+
 
 /**
  * Returns all hidden hosts over all views
@@ -93,7 +99,6 @@ Global.prototype.drawAll = function() {
     
     this.$vizContainer.height(maxHeight);
 
-    var hostMargin = this.resize();
     
     for (var i = 0; i < this.views.length; i++) {
         var view = this.views[i];
@@ -101,11 +106,6 @@ Global.prototype.drawAll = function() {
     }
     
     this.$vizContainer.height("auto");
-
-    // Add spacing between views
-    this.$vizContainer.find("svg:not(:last-child)").add("#hostBar > svg:not(:last-child)").css({
-        "margin-right": hostMargin * 2 + "px"
-    });
 
     $(".dialog").hide();
 
@@ -159,27 +159,14 @@ Global.prototype.resize = function() {
     
     $("#searchbar").width(globalWidth);
     
-    var totalMargin = globalWidth - visibleHosts * Global.HOST_SQUARE_SIZE;
-    var hostMargin = totalMargin / (visibleHosts + this.views.length - 2);
-
-    if (hostMargin < Global.HOST_SQUARE_SIZE) {
-        hostMargin = Global.HOST_SQUARE_SIZE;
-        totalMargin = hostMargin * (visibleHosts + this.views.length - 2);
-        globalWidth = totalMargin + visibleHosts * Global.HOST_SQUARE_SIZE;
-    }
-
-    var widthPerHost = Global.HOST_SQUARE_SIZE + hostMargin;
-
-    if (visibleHosts == 1) {
-        widthPerHost = globalWidth;
-        hostMargin = 0;
-    }
+    
+    var widthPerHost = globalWidth / visibleHosts;
 
     this.views.forEach(function(view) {
         var hosts = view.getHosts().filter(function(h) {
             return !hiddenHosts[h];
         });
-        view.setWidth(hosts.length * widthPerHost - hostMargin);
+        view.setWidth(hosts.length * widthPerHost);
     });
 
     var sel = d3.select("circle.sel").data()[0];
@@ -196,7 +183,6 @@ Global.prototype.resize = function() {
             }).removeClass("left").addClass("right").show();
     }
 
-    return hostMargin;
 };
 
 /**
