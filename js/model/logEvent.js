@@ -32,7 +32,7 @@ function LogEvent(text, vectorTimestamp, lineNum, fields) {
     this.lineNum = lineNum;
 
     /** @private */
-    this.fields = fields || {};
+    this.fields = Util.objectShallowCopy(fields) || {};
 }
 
 /**

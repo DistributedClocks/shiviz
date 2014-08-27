@@ -18,7 +18,7 @@
  */
 function VectorTimestamp(clock, host) {
     /** @private */
-    this.clock = clock;
+    this.clock = Util.objectShallowCopy(clock);
 
     /** @private */
     this.host = host;

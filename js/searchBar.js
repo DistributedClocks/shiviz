@@ -464,15 +464,10 @@ SearchBar.prototype.query = function() {
     $("#prevButton").prop("disabled", false);
     $("#nextButton").prop("disabled", false);
     var views = this.global.getViews();
-    this.motifNavigator = new MotifNavigator(this.motifNavigatorCallback, this);
+    this.motifNavigator = new MotifNavigator();
     for (var i = 0; i < views.length; i++) {
         this.motifNavigator.addMotif(views[i].getVisualModel(), views[i].getTransformer().getHighlightedMotif());
     }
     this.motifNavigator.start();
 
-};
-
-SearchBar.prototype.motifNavigatorCallback = function(motifNavigatorData, data) {
-
-    
 };

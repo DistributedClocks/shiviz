@@ -121,6 +121,32 @@ Motif.prototype.merge = function(other) {
 };
 
 /**
+ * Gets the number of nodes in this motif
+ * 
+ * @returns {Number} the number of nodes in this motif
+ */
+Motif.prototype.getNumNodes = function() {
+    var count = 0;
+    for(var key in this.nodes) {
+        count++;
+    }
+    return count;
+};
+
+/**
+ * Gets the number of edges in this motif
+ * 
+ * @returns {Number} the number of edges in this motif
+ */
+Motif.prototype.getNumEdges = function() {
+    var count = 0;
+    for(var key in this.edges) {
+        count++;
+    }
+    return count;
+};
+
+/**
  * 
  * @private
  */
