@@ -225,6 +225,7 @@ Shiviz.prototype.go = function(index, store, force) {
             $(window).on("load resize", inputHeight);
             break;
         case 2:
+            SearchBar.getInstance().clear();
             $(".visualization").show();
             try {
                 if (!$("#vizContainer svg").length || force)
