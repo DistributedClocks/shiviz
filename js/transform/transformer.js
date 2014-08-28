@@ -50,6 +50,9 @@ function Transformer() {
     /** @private */
     this.hiddenHosts = [];
 
+    /** @private */
+    this.highlighted = null;
+
 }
 
 /**
@@ -57,6 +60,7 @@ function Transformer() {
  * already set to be hidden, this method does nothing.
  * 
  * @param {String} host The host that is to be hidden
+ * @see {@link HideHostTransformation}
  */
 Transformer.prototype.hideHost = function(host) {
     if (this.hostToHidingTransform[host]) {
@@ -80,6 +84,7 @@ Transformer.prototype.hideHost = function(host) {
  * </p>
  * 
  * @param {String} host The host that is no longer to be hidden
+ * @see {@link HideHostTransformation}
  */
 Transformer.prototype.unhideHost = function(host) {
     var trans = this.hostToHidingTransform[host];
@@ -101,6 +106,7 @@ Transformer.prototype.unhideHost = function(host) {
  * that are actually hidden.
  * 
  * @returns {Array<String>} the hosts specified to be hidden
+ * @see {@link HideHostTransformation}
  */
 Transformer.prototype.getSpecifiedHiddenHosts = function() {
     return Object.keys(this.hostToHidingTransform);
@@ -123,7 +129,8 @@ Transformer.prototype.getHiddenHosts = function() {
  * 
  * @param {String} host The host to be highlighted
  * @param {Boolean} def Whether the transformation to remove is a default
- *        transformation.
+ *            transformation.
+ * @see {@link HighlightHostTransformation}
  */
 Transformer.prototype.highlightHost = function(host) {
     this.highlightHostTransformation.addHost(host);
@@ -134,6 +141,7 @@ Transformer.prototype.highlightHost = function(host) {
  * Unsets this transformer to highlight the specified host.
  * 
  * @param {String} host The host that is no longer to be highlighted
+ * @see {@link HighlightHostTransformation}
  */
 Transformer.prototype.unhighlighHost = function(host) {
     this.highlightHostTransformation.removeHost(host);
@@ -144,6 +152,7 @@ Transformer.prototype.unhighlighHost = function(host) {
  * Toggles highlighting of the specified host.
  * 
  * @param {String} host
+ * @see {@link HighlightHostTransformation}
  */
 Transformer.prototype.toggleHighlightHost = function(host) {
     if (this.highlightHostTransformation.isHighlighted(host)) {
@@ -160,6 +169,7 @@ Transformer.prototype.toggleHighlightHost = function(host) {
  * have no family.
  * 
  * @param {ModelNode} node
+ * @see {@link CollapseSequentialNodesTransformation}
  */
 Transformer.prototype.collapseNode = function(node) {
     this.collapseSequentialNodesTransformation.removeExemption(node);
@@ -171,6 +181,7 @@ Transformer.prototype.collapseNode = function(node) {
  * that have no family.
  * 
  * @param {ModelNode} node
+ * @see {@link CollapseSequentialNodesTransformation}
  */
 Transformer.prototype.uncollapseNode = function(node) {
     this.collapseSequentialNodesTransformation.addExemption(node);
@@ -180,6 +191,7 @@ Transformer.prototype.uncollapseNode = function(node) {
  * Toggles collapsing of the node
  * 
  * @param {ModelNode} node
+ * @see {@link CollapseSequentialNodesTransformation}
  */
 Transformer.prototype.toggleCollapseNode = function(node) {
     this.collapseSequentialNodesTransformation.toggleExemption(node);
@@ -191,8 +203,9 @@ Transformer.prototype.toggleCollapseNode = function(node) {
  * be highlighted, that one is replaced.
  * 
  * @param {MotifFinder} motifFinder The motif finder that specifies which nodes
- *        and edges are to be highlighted
+ *            and edges are to be highlighted
  * @param {Boolean} ignoreEdges edges will not be highlighted if true
+ * @see {@link HighlightMotifTransformation}
  */
 Transformer.prototype.highlightMotif = function(motifFinder, ignoreEdges) {
     this.highlightMotifTransformation = new HighlightMotifTransformation(motifFinder, ignoreEdges);
@@ -200,23 +213,34 @@ Transformer.prototype.highlightMotif = function(motifFinder, ignoreEdges) {
 
 /**
  * Sets this transformer to not highlight motifs.
+ * 
+ * @see {@link HighlightMotifTransformation}
  */
 Transformer.prototype.unhighlightMotif = function() {
     this.highlightMotifTransformation = null;
 };
 
+/**
+ * Determines if a motif is currently set to be highlighted.
+ * 
+ * @returns {Boolean} True if a motif is currently set to be highlighted
+ * @see {@link HighlightMotifTransformation}
+ */
 Transformer.prototype.hasHighlightedMotif = function() {
     return this.highlightMotifTransformation != null;
 };
 
+/**
+ * Returns the motif group that represents the highlighted elements from the
+ * last invocation of {@link Transformer#transform}. If transform has yet to be
+ * called, this method returns null
+ * 
+ * @returns {MotifGroup}
+ * @see {@link HighlightMotifTransformation}
+ */
 Transformer.prototype.getHighlightedMotif = function() {
-    if (this.highlightMotifTransformation == null) {
-        return null;
-    }
-
-    return this.highlightMotifTransformation.getHighlighted();
+    return this.highlighted;
 };
-
 
 /**
  * Transforms the specified {@link VisualGraph} and the underlying
@@ -225,11 +249,11 @@ Transformer.prototype.getHighlightedMotif = function() {
  */
 Transformer.prototype.transform = function(visualModel) {
     var originalHosts = visualModel.getHosts();
-    
+
     this.collapseSequentialNodesTransformation.transform(visualModel);
 
     var maxIndex = 0;
-    for ( var key in this.highlightHostToIndex) {
+    for (var key in this.highlightHostToIndex) {
         maxIndex = Math.max(maxIndex, this.highlightHostToIndex[key]);
     }
 
@@ -250,16 +274,17 @@ Transformer.prototype.transform = function(visualModel) {
     }
 
     var hidden = {};
-    for(var i = 0; i < originalHosts.length; i++) {
+    for (var i = 0; i < originalHosts.length; i++) {
         var host = originalHosts[i];
-        if(this.hostToHidingTransform[host]) {
+        if (this.hostToHidingTransform[host]) {
             hidden[host] = true;
         }
     }
-    
+
     this.highlightHostTransformation.getHiddenHosts().forEach(function(host) {
         hidden[host] = true;
     });
-    
+
     this.hiddenHosts = Object.keys(hidden);
+    this.highlighted = this.highlightMotifTransformation.getHighlighted();
 };
