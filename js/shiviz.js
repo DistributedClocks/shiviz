@@ -182,16 +182,13 @@ Shiviz.prototype.visualize = function(log, regexpString, delimiterString, sortTy
             var hostSVG = d3.select("#hostBar").append("svg");
             var view = new View(mainSVG, hostSVG, logTable, graph, hostPermutation, label);
             views.push(view);
-//            global.addView(view);
         }
 
         
         var global = new Global($("#vizContainer"), $("#sidebar"), views);
         var searchbar = SearchBar.getInstance();
         searchbar.setGlobal(global);
-        searchbar.clearText();
-        searchbar.clearText();
-        searchbar.update();
+        SearchBar.getInstance().clear();
 
         global.setHostPermutation(hostPermutation);
         global.drawAll();
@@ -225,7 +222,6 @@ Shiviz.prototype.go = function(index, store, force) {
             $(window).on("load resize", inputHeight);
             break;
         case 2:
-            SearchBar.getInstance().clear();
             $(".visualization").show();
             try {
                 if (!$("#vizContainer svg").length || force)
