@@ -18,7 +18,13 @@ function Global($vizContainer, $sidebar, views) {
     }
 
     /** @private */
-    this.views = views;
+    this.views = views.slice();
+    
+    /** @private */
+    this.view1 = this.views.length > 0 ? this.views[0] : null;
+    
+    /** @private */
+    this.view2 = this.views.length > 1 ? this.views[1] : null;
 
     /** @private */
     this.hostPermutation = null;
@@ -89,22 +95,22 @@ Global.prototype.getHiddenHosts = function() {
  */
 Global.prototype.drawAll = function() {
 
-    // Determine the max height of any view
-    // And if larger than window height (scrollbar will appear)
-    // then make scrollbar appear BEFORE calling resize
-    var maxHeight = Math.max.apply(null, this.views.map(function(v) {
-        v.getVisualModel().update();
-        return v.getVisualModel().getHeight();
-    }));
+    this.view1.getVisualModel().update();
+    var maxHeight = this.view1.getVisualModel().getHeight();
+    
+    if(this.view2 != null) {
+        this.view2.getVisualModel().update();
+        var maxHeight = Math.max(maxHeight, this.view2.getVisualModel().getHeight());
+    }
     
     this.$vizContainer.height(maxHeight);
 
+    this.view1.draw();
     
-    for (var i = 0; i < this.views.length; i++) {
-        var view = this.views[i];
-        view.draw();
+    if(this.view2 != null) {
+        this.view2.draw();
     }
-    
+
     this.$vizContainer.height("auto");
 
     $(".dialog").hide();
@@ -121,6 +127,15 @@ Global.prototype.getViews = function() {
     return this.views.slice();
 };
 
+Global.prototype.getViewByLabel = function(label) {
+    for(var i = 0; i < this.views.length; i++) {
+        var view = this.views[i];
+        if(view.getLabel() == label) {
+            return view;
+        }
+    }
+    return null;
+};
 
 /**
  * Sets the host permutation
@@ -142,15 +157,15 @@ Global.prototype.getController = function() {
  * Resizes the graph
  */
 Global.prototype.resize = function() {
-    var hiddenHosts = this.getHiddenHosts();
-    var numHidden = Object.keys(hiddenHosts).length;
-
-    var allHosts = 0;   
-    this.views.forEach(function(view) {
-        allHosts += view.getHosts().length;
-    });
-
-    var visibleHosts = allHosts - numHidden;
+    
+    var view1NumHosts = getNumVisibleHosts(this.view1.getHosts(), this.view1.getTransformer().getHiddenHosts());
+    
+    var view2NumHosts = 0;
+    if(this.view2 != null) {
+        view2NumHosts = getNumVisibleHosts(this.view2.getHosts(), this.view2.getTransformer().getHiddenHosts());
+    }
+    
+    var visibleHosts = view1NumHosts + view2NumHosts;
 
     // TODO: rename to sidebarLeft sidebarRight middleWidth
     var headerWidth = $(".visualization header").outerWidth();
@@ -158,17 +173,15 @@ Global.prototype.resize = function() {
     var globalWidth = $(window).width() - headerWidth - sidebarWidth;
     
     $("#searchbar").width(globalWidth);
-    
-    
+
     var widthPerHost = globalWidth / visibleHosts;
 
-    this.views.forEach(function(view) {
-        var hosts = view.getHosts().filter(function(h) {
-            return !hiddenHosts[h];
-        });
-        view.setWidth(hosts.length * widthPerHost);
-    });
-
+    this.view1.setWidth(view1NumHosts * widthPerHost);
+    
+    if(this.view2 != null) {
+        this.view2.setWidth(view2NumHosts * widthPerHost);
+    }
+    
     var sel = d3.select("circle.sel").data()[0];
     if (sel) {
         var $svg = $(d3.select("circle.sel").node()).parents("svg");
@@ -183,6 +196,23 @@ Global.prototype.resize = function() {
             }).removeClass("left").addClass("right").show();
     }
 
+    function getNumVisibleHosts(allHosts, hiddenHosts) {
+        var hostSet = {};
+        allHosts.forEach(function(host) {
+            hostSet[host] = true;
+        });
+        
+        hiddenHosts.forEach(function(host) {
+            delete hostSet[host];
+        });
+        
+        var count = 0;
+        for(var key in hostSet) {
+            count++;
+        }
+        
+        return count;
+    }
 };
 
 /**
@@ -192,19 +222,50 @@ Global.prototype.resize = function() {
  */
 Global.prototype.drawSideBar = function() {
     
-    this.$sidebar.children(".hidden").children("svg").remove();
-
     var global = this;
-    var hidden = d3.select(".hidden");
+    
+    this.$sidebar.children("#hiddenHosts").remove();
+    this.$sidebar.children("#viewSelectDiv").remove();
+    
+    if(this.views.length > 2) {
+        var viewSelectDiv = $('<div id="viewSelectDiv"></div>');
+        var viewSelect1 = $('<select id="viewSelect1"></select>');
+        var viewSelect2 = $('<select id="viewSelect2"></select>');
+        viewSelectDiv.append(viewSelect1);
+        viewSelectDiv.append(viewSelect2);
+        this.$sidebar.append(viewSelectDiv);
+        
+        this.views.forEach(function(view) {
+            var text = view.getLabel();
+            viewSelect1.append('<option value="' + text + '">' + text + '</option>');
+            viewSelect2.append('<option value="' + text + '">' + text + '</option>');
+        });
+        
+        viewSelect1.children("option[value='" + this.view1.getLabel() + "']").prop("selected", true);
+        viewSelect2.children("option[value='" + this.view2.getLabel() + "']").prop("selected", true);
+        
+        viewSelect1.unbind().on("change", function(e) {
+           var val = $("#viewSelect1 option:selected").val();
+           global.view1 = global.getViewByLabel(val);
+           global.drawAll();
+        });
+        
+        viewSelect2.unbind().on("change", function(e) {
+            var val = $("#viewSelect2 option:selected").val();
+            global.view2 = global.getViewByLabel(val);
+            global.drawAll();
+         });
+        
+    }
 
     // Draw hidden hosts
     var hh = Object.keys(this.getHiddenHosts());
     if (hh.length <= 0) {
-        this.$sidebar.children(".hidden").hide();
         return;
     }
 
-    this.$sidebar.children(".hidden").show();
+    this.$sidebar.append('<div id="hiddenHosts">Hidden processes:</div>');
+    var hidden = d3.select("#hiddenHosts");
 
     var hostsPerLine = Math.floor((Global.SIDE_BAR_WIDTH + 5) / (Global.HOST_SQUARE_SIZE + 5));
     var count = 0;

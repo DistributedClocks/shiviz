@@ -279,7 +279,6 @@ Shiviz.prototype.handleException = function(err) {
     var errhtml = err.getHTMLMessage();
 
     if (!err.isUserFriendly()) {
-        console.log(err.getMessage());
         errhtml = "An unexpected error was encountered. Sorry!";
     }
 

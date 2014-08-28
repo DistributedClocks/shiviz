@@ -94,11 +94,24 @@ Transformer.prototype.unhideHost = function(host) {
 };
 
 /**
+ * Gets the hosts that are explicitly specified to be hidden. Note that a hosts
+ * that doesn't actually exist can be specified to be hidden. In addition, there
+ * are hosts that may be implicitly hidden by other transformations. These two
+ * facts mean that the returned list of hosts may be different from the hosts
+ * that are actually hidden.
+ * 
+ * @returns {Array<String>} the hosts specified to be hidden
+ */
+Transformer.prototype.getHiddenHosts = function() {
+    return this.hiddenHosts.slice();
+};
+
+/**
  * Sets this transformer to highlight the specified host.
  * 
  * @param {String} host The host to be highlighted
  * @param {Boolean} def Whether the transformation to remove is a default
- *            transformation.
+ *        transformation.
  */
 Transformer.prototype.highlightHost = function(host) {
     this.highlightHostTransformation.addHost(host);
@@ -166,7 +179,7 @@ Transformer.prototype.toggleCollapseNode = function(node) {
  * be highlighted, that one is replaced.
  * 
  * @param {MotifFinder} motifFinder The motif finder that specifies which nodes
- *            and edges are to be highlighted
+ *        and edges are to be highlighted
  * @param {Boolean} ignoreEdges edges will not be highlighted if true
  */
 Transformer.prototype.highlightMotif = function(motifFinder, ignoreEdges) {
@@ -184,12 +197,11 @@ Transformer.prototype.hasHighlightedMotif = function() {
     return this.highlightMotifTransformation != null;
 };
 
-
 Transformer.prototype.getHighlightedMotif = function() {
-    if(this.highlightMotifTransformation == null) {
+    if (this.highlightMotifTransformation == null) {
         return null;
     }
-    
+
     return this.highlightMotifTransformation.getHighlighted();
 };
 
@@ -214,7 +226,7 @@ Transformer.prototype.transform = function(visualModel) {
     this.collapseSequentialNodesTransformation.transform(visualModel);
 
     var maxIndex = 0;
-    for (var key in this.highlightHostToIndex) {
+    for ( var key in this.highlightHostToIndex) {
         maxIndex = Math.max(maxIndex, this.highlightHostToIndex[key]);
     }
 

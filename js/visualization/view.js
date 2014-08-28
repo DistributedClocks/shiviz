@@ -74,6 +74,15 @@ View.prototype.getModel = function() {
 };
 
 /**
+ * Gets the label
+ * 
+ * @returns {Graph} The label
+ */
+View.prototype.getLabel = function() {
+    return this.label;
+};
+
+/**
  * Gets the current visual model
  * 
  * @returns {VisualGraph} The current model

@@ -306,7 +306,6 @@ Controller.prototype.bindLines = function(lines) {
 
     lines.add(".highlight").on("click", function() {
         var id = "#node" + $(this).data("id");
-        console.log(id);
         $(id)[0].dispatchEvent(new MouseEvent("click"));
     });
 };
