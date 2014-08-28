@@ -178,15 +178,13 @@ Shiviz.prototype.visualize = function(log, regexpString, delimiterString, sortTy
             }
             
             var graph = labelGraph[label];
-            var mainSVG = d3.select("#vizContainer").append("svg");
-            var hostSVG = d3.select("#hostBar").append("svg");
-            var view = new View(mainSVG, hostSVG, logTable, graph, hostPermutation, label);
+            var view = new View(logTable, graph, hostPermutation, label);
             views.push(view);
 //            global.addView(view);
         }
 
         
-        var global = new Global($("#vizContainer"), $("#sidebar"), views);
+        var global = new Global($("#vizContainer"), $("#sidebar"), $("#hostBar"), views);
         var searchbar = SearchBar.getInstance();
         searchbar.setGlobal(global);
         searchbar.clearText();
