@@ -72,30 +72,37 @@ function Controller(global) {
 
         switch (type) {
 
-        // Hide host
-        case "hide":
-            self.hideHost(e);
-            break;
+            // Hide host
+            case "hide":
+                self.hideHost(e);
+                break;
 
-        // Unhide host
-        case "unhide":
-            self.unhideHost(e);
-            break;
+            // Unhide host
+            case "unhide":
+                self.unhideHost(e);
+                break;
 
-        // Highlight host
-        case "filter":
-            self.toggleHostHighlight(e);
-            break;
+            // Highlight host
+            case "filter":
+                self.toggleHostHighlight(e);
+                break;
 
-        // Toggle collapse
-        case "collapse":
-            self.toggleCollapseNode(e);
-            break;
+            // Toggle collapse
+            case "collapse":
+                self.toggleCollapseNode(e);
+                break;
         }
 
     });
 }
 
+/**
+ * Highlights a motif across all {@link View}s using the provided motif finder.
+ * The visualization is then re-drawn.
+ * 
+ * @param {MotifFinder} motifFinder
+ * @see {@link HighlightMotifTransformation}
+ */
 Controller.prototype.highlightMotif = function(motifFinder) {
     this.global.getViews().forEach(function(view) {
         view.getTransformer().highlightMotif(motifFinder, false);
@@ -104,6 +111,12 @@ Controller.prototype.highlightMotif = function(motifFinder) {
     this.global.drawAll();
 };
 
+/**
+ * Clears highlighting of motifs across all {@link View}s. The visualization is
+ * then re-drawn
+ * 
+ * @see {@link HighlightMotifTransformation}
+ */
 Controller.prototype.clearHighlight = function() {
     this.global.getViews().forEach(function(view) {
         view.getTransformer().unhighlightMotif();
@@ -112,6 +125,11 @@ Controller.prototype.clearHighlight = function() {
     this.global.drawAll();
 };
 
+/**
+ * Determines if a motif is being highlighted in any of the {@link View}s.
+ * 
+ * @returns {Boolean} True if a motif is being highlighted
+ */
 Controller.prototype.hasHighlight = function() {
     var views = this.global.getViews();
     for (var i = 0; i < views.length; i++) {
@@ -122,6 +140,12 @@ Controller.prototype.hasHighlight = function() {
     return false;
 };
 
+/**
+ * Hides the specified host across all {@link View}s. The visualization is then
+ * re-drawn.
+ * 
+ * @param {String} host The host to hide.
+ */
 Controller.prototype.hideHost = function(host) {
     this.global.getViews().forEach(function(view) {
         view.getTransformer().hideHost(host);
@@ -130,6 +154,12 @@ Controller.prototype.hideHost = function(host) {
     this.global.drawAll();
 };
 
+/**
+ * Unhides the specified host across all {@link View}s. The visualization is
+ * then re-drawn.
+ * 
+ * @param {String} host The host to unhide.
+ */
 Controller.prototype.unhideHost = function(host) {
     this.global.getViews().forEach(function(view) {
         view.getTransformer().unhideHost(host);
@@ -138,6 +168,12 @@ Controller.prototype.unhideHost = function(host) {
     this.global.drawAll();
 };
 
+/**
+ * Toggles the highlighting of a host across all {@link View}s. The
+ * visualization is then re-drawn.
+ * 
+ * @param {String} host The host whose highlighting is to be toggled
+ */
 Controller.prototype.toggleHostHighlight = function(host) {
     this.global.getViews().forEach(function(view) {
         view.getTransformer().toggleHighlightHost(host);
@@ -146,6 +182,11 @@ Controller.prototype.toggleHostHighlight = function(host) {
     this.global.drawAll();
 };
 
+/**
+ * Toggles the collapsing of a node.
+ * 
+ * @param {ModelNode} node
+ */
 Controller.prototype.toggleCollapseNode = function(node) {
     this.global.getViews().forEach(function(view) {
         view.getTransformer().toggleCollapseNode(node);
@@ -201,7 +242,7 @@ Controller.prototype.bindNodes = function(nodes) {
         $(".fields").children().remove();
         if (!e.isCollapsed()) {
             var fields = e.getNode().getLogEvents()[0].getFields();
-            for ( var i in fields) {
+            for (var i in fields) {
                 var $f = $("<tr>", {
                     "class": "field"
                 });
@@ -355,7 +396,7 @@ Controller.prototype.onScroll = function(e) {
  * 
  * @param {VisualNode} e The VisualNode that is selected
  * @param {Number} type The type of node: 0 for regular, 1 for host, 2 for
- *        hidden host
+ *            hidden host
  * @param {DOMElement} elem The SVG node element
  */
 Controller.prototype.showDialog = function(e, type, elem) {
@@ -431,7 +472,7 @@ Controller.prototype.showDialog = function(e, type, elem) {
     if (!type && !e.isCollapsed()) {
         // Add fields, if normal node
         var fields = e.getNode().getLogEvents()[0].getFields();
-        for ( var i in fields) {
+        for (var i in fields) {
             var $f = $("<tr>", {
                 "class": "field"
             });
