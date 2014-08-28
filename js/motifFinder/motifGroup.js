@@ -31,7 +31,7 @@ function MotifGroup(motifs) {
  * @param {Motif} motif the motif to add to this group.
  */
 MotifGroup.prototype.addMotif = function(motif) {
-    if (motif.getNumNodes().length == 0 && motif.getNumEdges.length == 0) {
+    if (motif.getNumNodes() == 0 && motif.getNumEdges() == 0) {
         return;
     }
     this.motifs.push(motif);
