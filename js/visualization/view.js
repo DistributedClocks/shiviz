@@ -10,13 +10,13 @@
  * @param {HostPermutation} hostPermutation
  * @param {String} label
  */
-function View(svg, hostSVG, logTable, model, hostPermutation, label) {
-
-    /** @private */
-    this.svg = svg;
+function View(logTable, model, hostPermutation, label) {
     
     /** @private */
-    this.hostSVG = hostSVG;
+    this.svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+    
+    /** @private */
+    this.hostSVG = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
     
     /** @private */
     this.logTable = logTable;
@@ -53,6 +53,14 @@ function View(svg, hostSVG, logTable, model, hostPermutation, label) {
  */
 View.prototype.getTransformer = function() {
     return this.transformer;
+};
+
+View.prototype.getSVG = function() {
+    return $(this.svg);
+};
+
+View.prototype.getHostSVG = function() {
+    return $(this.hostSVG);
 };
 
 /**
@@ -104,11 +112,9 @@ View.prototype.setWidth = function(newWidth) {
  * Clears the current visualization and re-draws the current model.
  */
 View.prototype.draw = function() {
-    // Assign a unique ID to each execution so we can distinguish
-    // them
-    if (this.id == null) {
-        this.id = "view" + d3.selectAll("#vizContainer > svg").size();
-    }
+    
+    var svg = d3.select(this.svg);
+    var hostSVG = d3.select(this.hostSVG);
 
     this.model = this.initialModel.clone();
     this.visualGraph = new VisualGraph(this.model, this.layout, this.hostPermutation);
@@ -120,12 +126,11 @@ View.prototype.draw = function() {
     // Define locally so that we can use in lambdas below
     var view = this;
 
-    this.svg.selectAll("*").remove();
+    svg.selectAll("*").remove();
 
-    this.svg.attr({
+    svg.attr({
         "height": this.visualGraph.getHeight(),
         "width": this.visualGraph.getWidth(),
-        "class": this.id
     });
 
     drawLinks();
@@ -138,7 +143,7 @@ View.prototype.draw = function() {
 
     function drawLinks() {
         var vedg = view.visualGraph.getVisualEdges();
-        var links = view.svg.selectAll().data(vedg).enter().append("line");
+        var links = svg.selectAll().data(vedg).enter().append("line");
         links.style({
             "stroke-width": function(d) {
                 return d.getWidth() + "px";
@@ -171,7 +176,7 @@ View.prototype.draw = function() {
 
     function drawNodes() {
         var vn = view.visualGraph.getNonStartVisualNodes();
-        var nodes = view.svg.selectAll().data(vn).enter().append("g");
+        var nodes = svg.selectAll().data(vn).enter().append("g");
         nodes.attr({
             "transform": function(d) {
                 return "translate(" + d.getX() + "," + d.getY() + ")";
@@ -274,15 +279,15 @@ View.prototype.draw = function() {
 
     function drawHosts() {
         // Draw the host bar
-        view.hostSVG.selectAll("*").remove();
+        hostSVG.selectAll("*").remove();
         
-        view.hostSVG.attr({
+        hostSVG.attr({
             "width": view.visualGraph.getWidth(),
             "height": Global.HOST_SQUARE_SIZE,
             "class": view.id
         });
 
-        var bar = view.hostSVG.append("rect");
+        var bar = hostSVG.append("rect");
         bar.attr({
             "width": view.visualGraph.getWidth(),
             "height": Global.HOST_SQUARE_SIZE,
@@ -291,7 +296,7 @@ View.prototype.draw = function() {
 
         // Draw the hosts
         var svn = view.visualGraph.getStartVisualNodes();
-        var hosts = view.hostSVG.selectAll().data(svn).enter().append("rect");
+        var hosts = hostSVG.selectAll().data(svn).enter().append("rect");
         hosts.attr({
             "width": Global.HOST_SQUARE_SIZE,
             "height": Global.HOST_SQUARE_SIZE,

@@ -11,7 +11,7 @@
  * 
  * @constructor
  */
-function Global($vizContainer, $sidebar, views) {
+function Global($vizContainer, $sidebar, $hostBar, views) {
 
     if (!!Global.instance) {
         throw new Exception("Global is a singleton - use getInstance() instead.");
@@ -35,6 +35,8 @@ function Global($vizContainer, $sidebar, views) {
     this.$vizContainer = $vizContainer;
     
     this.$sidebar = $sidebar;
+    
+    this.$hostBar = $hostBar;
 
     this.$sidebar.css({
         width: Global.SIDE_BAR_WIDTH + "px"
@@ -44,8 +46,6 @@ function Global($vizContainer, $sidebar, views) {
     views.forEach(function(view) {
         view.controller = context.controller; //TODO
     });
-    
-    this.resize();
     
 }
 
@@ -73,28 +73,15 @@ Global.MIN_HOST_WIDTH = 40;
 
 
 /**
- * Returns all hidden hosts over all views
- * 
- * @private
- * @returns {Set<Hosts>}
- */
-Global.prototype.getHiddenHosts = function() {
-    var hiddenHosts = {};
-    
-    this.views.forEach(function(view) {
-        view.getTransformer().getHiddenHosts().forEach(function(host) {
-            hiddenHosts[host] = true;
-        });
-    });
-    
-    return hiddenHosts;
-};
-
-/**
  * Redraws the global.
  */
 Global.prototype.drawAll = function() {
+    
+    this.resize();
 
+    this.$vizContainer.children("*").remove();
+    this.$hostBar.children("*").remove();
+    
     this.view1.getVisualModel().update();
     var maxHeight = this.view1.getVisualModel().getHeight();
     
@@ -106,9 +93,13 @@ Global.prototype.drawAll = function() {
     this.$vizContainer.height(maxHeight);
 
     this.view1.draw();
+    this.$vizContainer.append($(this.view1.getSVG()));
+    this.$hostBar.append($(this.view1.getHostSVG()));
     
     if(this.view2 != null) {
         this.view2.draw();
+        this.$vizContainer.append($(this.view2.getSVG()));
+        this.$hostBar.append($(this.view2.getHostSVG()));
     }
 
     this.$vizContainer.height("auto");
@@ -158,11 +149,11 @@ Global.prototype.getController = function() {
  */
 Global.prototype.resize = function() {
     
-    var view1NumHosts = getNumVisibleHosts(this.view1.getHosts(), this.view1.getTransformer().getHiddenHosts());
+    var view1NumHosts = getNumVisibleHosts(this.view1.getHosts(), this.view1.getTransformer().getSpecifiedHiddenHosts());
     
     var view2NumHosts = 0;
     if(this.view2 != null) {
-        view2NumHosts = getNumVisibleHosts(this.view2.getHosts(), this.view2.getTransformer().getHiddenHosts());
+        view2NumHosts = getNumVisibleHosts(this.view2.getHosts(), this.view2.getTransformer().getSpecifiedHiddenHosts());
     }
     
     var visibleHosts = view1NumHosts + view2NumHosts;
@@ -236,9 +227,15 @@ Global.prototype.drawSideBar = function() {
         this.$sidebar.append(viewSelectDiv);
         
         this.views.forEach(function(view) {
-            var text = view.getLabel();
-            viewSelect1.append('<option value="' + text + '">' + text + '</option>');
-            viewSelect2.append('<option value="' + text + '">' + text + '</option>');
+            var label = view.getLabel();
+            
+            if(label != global.view2.getLabel()) {
+                viewSelect1.append('<option value="' + label + '">' + label + '</option>');
+            }
+            
+            if(label != global.view1.getLabel()) {
+                viewSelect2.append('<option value="' + label + '">' + label + '</option>');
+            }
         });
         
         viewSelect1.children("option[value='" + this.view1.getLabel() + "']").prop("selected", true);
@@ -258,8 +255,21 @@ Global.prototype.drawSideBar = function() {
         
     }
 
+    
+    var hiddenHosts = {};
+    
+    this.view1.getTransformer().getHiddenHosts().forEach(function(host) {
+        hiddenHosts[host] = true;
+    });
+    
+    if(this.view2 != null) {
+        this.view2.getTransformer().getHiddenHosts().forEach(function(host) {
+            hiddenHosts[host] = true;
+        });
+    }
+    
     // Draw hidden hosts
-    var hh = Object.keys(this.getHiddenHosts());
+    var hh = Object.keys(hiddenHosts);
     if (hh.length <= 0) {
         return;
     }

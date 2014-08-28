@@ -102,6 +102,18 @@ Transformer.prototype.unhideHost = function(host) {
  * 
  * @returns {Array<String>} the hosts specified to be hidden
  */
+Transformer.prototype.getSpecifiedHiddenHosts = function() {
+    return Object.keys(this.hostToHidingTransform);
+};
+
+/**
+ * Get all of the hosts hidden by this transformer by the last invocation of
+ * {@link Transformer#transform}. If the transform method has never been
+ * called, this method returns an empty array.
+ * 
+ * @returns {Array<String>} the hosts that have been hidden by this
+ *          transformer.
+ */
 Transformer.prototype.getHiddenHosts = function() {
     return this.hiddenHosts.slice();
 };
@@ -205,17 +217,6 @@ Transformer.prototype.getHighlightedMotif = function() {
     return this.highlightMotifTransformation.getHighlighted();
 };
 
-/**
- * Get all of the hosts hidden by this transformer by the last invocation of
- * {@link Transformer#transform}. If the transform method has never been
- * called, this method returns an empty array.
- * 
- * @returns {Array<String>} the hosts that have been hidden by this
- *          transformer.
- */
-Transformer.prototype.getHiddenHosts = function() {
-    return this.hiddenHosts;
-};
 
 /**
  * Transforms the specified {@link VisualGraph} and the underlying
