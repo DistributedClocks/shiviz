@@ -271,6 +271,7 @@ Transformer.prototype.transform = function(visualModel) {
 
     if (this.highlightMotifTransformation != null) {
         this.highlightMotifTransformation.transform(visualModel);
+        this.highlighted = this.highlightMotifTransformation.getHighlighted();
     }
 
     var hidden = {};
@@ -286,5 +287,4 @@ Transformer.prototype.transform = function(visualModel) {
     });
 
     this.hiddenHosts = Object.keys(hidden);
-    this.highlighted = this.highlightMotifTransformation.getHighlighted();
 };
