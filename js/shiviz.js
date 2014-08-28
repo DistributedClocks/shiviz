@@ -157,34 +157,19 @@ Shiviz.prototype.visualize = function(log, regexpString, delimiterString, sortTy
         
         hostPermutation.update();
 
-        
-        var logColWidth = (240 - 12 * (labels.length - 1)) / labels.length;
-
-        
-        $("table.log").empty(); //TODO: check
-        d3.select("#hostBar").selectAll("*").remove();
-        d3.select("#vizContainer").selectAll("*").remove();
-        
         var views = [];
         
         for(var i = 0; i < labels.length; i++) {
             var label = labels[i];
-            var logTable = $("<td></td>");
-            $("table.log").append(logTable.width(logColWidth + "pt"));
-            
-            // Add the spacer after log column
-            if(i != labels.length - 1) {
-                $("table.log").append($("<td></td>").addClass("spacer"));
-            }
             
             var graph = labelGraph[label];
-            var view = new View(logTable, graph, hostPermutation, label);
+            var view = new View(graph, hostPermutation, label);
             views.push(view);
 //            global.addView(view);
         }
 
         
-        var global = new Global($("#vizContainer"), $("#sidebar"), $("#hostBar"), views);
+        var global = new Global($("#vizContainer"), $("#sidebar"), $("#hostBar"), $("table.log"), views);
         var searchbar = SearchBar.getInstance();
         searchbar.setGlobal(global);
         searchbar.clearText();

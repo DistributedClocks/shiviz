@@ -11,7 +11,7 @@
  * 
  * @constructor
  */
-function Global($vizContainer, $sidebar, $hostBar, views) {
+function Global($vizContainer, $sidebar, $hostBar, $logTable, views) {
 
     if (!!Global.instance) {
         throw new Exception("Global is a singleton - use getInstance() instead.");
@@ -32,11 +32,17 @@ function Global($vizContainer, $sidebar, $hostBar, views) {
     /** @private */
     this.controller = new Controller(this);
     
+    /** @private */
     this.$vizContainer = $vizContainer;
     
+    /** @private */
     this.$sidebar = $sidebar;
     
+    /** @private */
     this.$hostBar = $hostBar;
+    
+    /** @private */
+    this.$logTable = $logTable;
 
     this.$sidebar.css({
         width: Global.SIDE_BAR_WIDTH + "px"
@@ -76,9 +82,10 @@ Global.MIN_HOST_WIDTH = 40;
  * Redraws the global.
  */
 Global.prototype.drawAll = function() {
-    
+
     this.resize();
 
+    this.$logTable.empty(); //TODO: check
     this.$vizContainer.children("*").remove();
     this.$hostBar.children("*").remove();
     
@@ -93,15 +100,20 @@ Global.prototype.drawAll = function() {
     this.$vizContainer.height(maxHeight);
 
     this.view1.draw();
-    this.$vizContainer.append($(this.view1.getSVG()));
-    this.$hostBar.append($(this.view1.getHostSVG()));
+    this.$vizContainer.append(this.view1.getSVG());
+    this.$hostBar.append(this.view1.getHostSVG());
+    this.$logTable.append(this.view1.getLogTable());
+    this.controller.bindLines(this.view1.getLogTable().children("*").filter(".log .line:not(.more)"));
     
     if(this.view2 != null) {
         this.view2.draw();
-        this.$vizContainer.append($(this.view2.getSVG()));
-        this.$hostBar.append($(this.view2.getHostSVG()));
+        this.$vizContainer.append(this.view2.getSVG());
+        this.$hostBar.append(this.view2.getHostSVG());
+        this.$logTable.append($("<td></td>").addClass("spacer"));
+        this.$logTable.append(this.view2.getLogTable());
+        this.controller.bindLines(this.view2.getLogTable().children("*").filter(".log .line:not(.more)"));
     }
-
+    
     this.$vizContainer.height("auto");
 
     $(".dialog").hide();
@@ -166,11 +178,14 @@ Global.prototype.resize = function() {
     $("#searchbar").width(globalWidth);
 
     var widthPerHost = globalWidth / visibleHosts;
+    var logTableWidth = this.view2 == null ? Global.SIDE_BAR_WIDTH : (Global.SIDE_BAR_WIDTH - 12) / 2;
 
     this.view1.setWidth(view1NumHosts * widthPerHost);
+    this.view1.setLogTableWidth(logTableWidth);
     
     if(this.view2 != null) {
         this.view2.setWidth(view2NumHosts * widthPerHost);
+        this.view2.setLogTableWidth(logTableWidth);
     }
     
     var sel = d3.select("circle.sel").data()[0];
