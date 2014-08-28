@@ -49,7 +49,7 @@ function LogParser(rawString, delimiter, regexp) {
 
     var names = this.regexp.getNames();
     if (names.indexOf("clock") < 0 || names.indexOf("host") < 0 || names.indexOf("event") < 0) {
-        var e = new Exception("The parser RegExp you entered does not have the necessary named capture groups.\n", true)
+        var e = new Exception("The parser RegExp you entered does not have the necessary named capture groups.\n", true);
         e.append("Please see the documentation for details.");
         throw e;
     }
@@ -67,8 +67,12 @@ function LogParser(rawString, delimiter, regexp) {
 
         for (var i = 0; i < currExecs.length; i++) {
             if (currExecs[i].trim().length > 0) {
-                this.executions[currLabels[i]] = new ExecutionParser(currExecs[i], currLabels[i], regexp);
-                this.labels.push(currLabels[i]);
+                var currlabel = currLabels[i];
+                if(this.executions[currlabel]) {
+                    throw new Exception("Execution names must be unique. There are multiple executions called \"" + currlabel + "\"", true);
+                }
+                this.executions[currlabel] = new ExecutionParser(currExecs[i], currlabel, regexp);
+                this.labels.push(currlabel);
             }
         }
     }
