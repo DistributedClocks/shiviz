@@ -358,7 +358,7 @@ SearchBar.prototype.clearResults = function() {
     $("#prevButton").prop("disabled", true);
     $("#nextButton").prop("disabled", true);
     this.motifNavigator = null;
-    if (this.global.getController().hasHighlight()) {
+    if (this.global != null && this.global.getController().hasHighlight()) {
         this.global.getController().clearHighlight();
         this.global.drawAll();
     }
@@ -458,13 +458,16 @@ SearchBar.prototype.query = function() {
         Shiviz.getInstance().handleException(e);
     }
 
-    $("#prevButton").prop("disabled", false);
-    $("#nextButton").prop("disabled", false);
     var views = this.global.getActiveViews();
     this.motifNavigator = new MotifNavigator();
     for (var i = 0; i < views.length; i++) {
         this.motifNavigator.addMotif(views[i].getVisualModel(), views[i].getTransformer().getHighlightedMotif());
     }
     this.motifNavigator.start();
+    
+    if(this.motifNavigator.getNumMotifs() > 0) {
+        $("#prevButton").prop("disabled", false);
+        $("#nextButton").prop("disabled", false);
+    }
 
 };

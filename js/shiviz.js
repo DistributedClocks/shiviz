@@ -165,16 +165,13 @@ Shiviz.prototype.visualize = function(log, regexpString, delimiterString, sortTy
             var graph = labelGraph[label];
             var view = new View(graph, hostPermutation, label);
             views.push(view);
-//            global.addView(view);
         }
 
         
         var global = new Global($("#vizContainer"), $("#sidebar"), $("#hostBar"), $("table.log"), views);
         var searchbar = SearchBar.getInstance();
         searchbar.setGlobal(global);
-        searchbar.clearText();
-        searchbar.clearText();
-        searchbar.update();
+        SearchBar.getInstance().clear();
 
         global.setHostPermutation(hostPermutation);
         global.drawAll();
