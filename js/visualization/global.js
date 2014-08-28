@@ -130,6 +130,14 @@ Global.prototype.getViews = function() {
     return this.views.slice();
 };
 
+Global.prototype.getActiveViews = function() {
+    var result = [this.view1];
+    if(this.view2 != null) {
+        result.push(this.view2);
+    }
+    return result;
+};
+
 Global.prototype.getViewByLabel = function(label) {
     for(var i = 0; i < this.views.length; i++) {
         var view = this.views[i];

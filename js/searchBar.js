@@ -432,7 +432,7 @@ SearchBar.prototype.query = function() {
 
                 var hiddenHosts = this.global.getHiddenHosts();
 
-                this.global.getViews().forEach(function(view) {
+                this.global.getActiveViews().forEach(function(view) {
                     var hosts = view.getHosts().filter(function(h) {
                         return !hiddenHosts[h];
                     }).length;
@@ -460,7 +460,7 @@ SearchBar.prototype.query = function() {
 
     $("#prevButton").prop("disabled", false);
     $("#nextButton").prop("disabled", false);
-    var views = this.global.getViews();
+    var views = this.global.getActiveViews();
     this.motifNavigator = new MotifNavigator();
     for (var i = 0; i < views.length; i++) {
         this.motifNavigator.addMotif(views[i].getVisualModel(), views[i].getTransformer().getHighlightedMotif());
