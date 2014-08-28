@@ -31,9 +31,9 @@ function VectorTimestamp(clock, host) {
         throw exp;
     }
 
-    for (var host in clock) {
-        if (clock[host] == 0) {
-            delete clock[host];
+    for (var host in this.clock) {
+        if (this.clock[host] == 0) {
+            delete this.clock[host];
         }
     }
 }
