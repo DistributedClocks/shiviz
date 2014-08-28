@@ -28,6 +28,46 @@ Util.objectShallowCopy = function(obj) {
     return result;
 };
 
+Util.arrayToObject = function(array, idFn) {
+    var result = {};
+    for(var i = 0; i < array.length; i++) {
+        if(idFn) {
+            result[idFn(array[i])] = array[i];
+        }
+        else {
+            result[array[i]] = array[i];
+        }
+    }
+};
+
+Util.objectUnion = function() {
+    var result = {};
+    
+    for(var i = 0; i < arguments.length; i++) {
+        var obj = arguments[i];
+        for(var key in obj) {
+            result[key] = obj[key];
+        }
+    }
+
+    return result;
+};
+
+
+Util.objectIntersection = function() {
+    var result = Util.objectUnion.apply(this, arguments);
+    
+    for(var key in result) {
+        for(var i = 0; i < arguments.length; i++) {
+            if(arguments[i][key] == undefined) {
+                delete result[key];
+            }
+        }
+    }
+    
+    return result;
+};
+
 /**
  * Removes elements from an array
  * 

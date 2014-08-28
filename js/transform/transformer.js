@@ -224,6 +224,8 @@ Transformer.prototype.getHighlightedMotif = function() {
  * method is solely responsible for modifying visual and model graphs
  */
 Transformer.prototype.transform = function(visualModel) {
+    var originalHosts = visualModel.getHosts();
+    
     this.collapseSequentialNodesTransformation.transform(visualModel);
 
     var maxIndex = 0;
@@ -247,5 +249,17 @@ Transformer.prototype.transform = function(visualModel) {
         this.highlightMotifTransformation.transform(visualModel);
     }
 
-    this.hiddenHosts = Object.keys(this.hostToHidingTransform).concat(this.highlightHostTransformation.getHiddenHosts());
+    var hidden = {};
+    for(var i = 0; i < originalHosts.length; i++) {
+        var host = originalHosts[i];
+        if(this.hostToHidingTransform[host]) {
+            hidden[host] = true;
+        }
+    }
+    
+    this.highlightHostTransformation.getHiddenHosts().forEach(function(host) {
+        hidden[host] = true;
+    });
+    
+    this.hiddenHosts = Object.keys(hidden);
 };
