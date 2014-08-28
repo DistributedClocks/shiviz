@@ -257,7 +257,6 @@ Global.prototype.drawSideBar = function() {
 
     
     var hiddenHosts = {};
-    
     this.view1.getTransformer().getHiddenHosts().forEach(function(host) {
         hiddenHosts[host] = true;
     });
