@@ -220,11 +220,21 @@ Global.prototype.drawSideBar = function() {
     
     if(this.views.length > 2) {
         var viewSelectDiv = $('<div id="viewSelectDiv"></div>');
-        var viewSelect1 = $('<select id="viewSelect1"></select>');
-        var viewSelect2 = $('<select id="viewSelect2"></select>');
-        viewSelectDiv.append(viewSelect1);
-        viewSelectDiv.append(viewSelect2);
         this.$sidebar.append(viewSelectDiv);
+        
+        viewSelectDiv.append('<p>View 1:</p>');
+        
+        var viewSelect1 = $('<select id="viewSelect1"></select>');
+        viewSelect1.css("width", Global.SIDE_BAR_WIDTH - 50);
+        viewSelectDiv.append(viewSelect1);
+        
+        viewSelectDiv.append('<p>View 2:</p>');
+        
+        var viewSelect2 = $('<select id="viewSelect2"></select>');
+        viewSelect2.css("width", Global.SIDE_BAR_WIDTH - 50);
+        viewSelectDiv.append(viewSelect2);
+
+        viewSelectDiv.append('<p></p>');
         
         this.views.forEach(function(view) {
             var label = view.getLabel();
