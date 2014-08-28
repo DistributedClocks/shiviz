@@ -10,7 +10,7 @@
  * @param {HostPermutation} hostPermutation
  * @param {String} label
  */
-function View(logTable, model, hostPermutation, label) {
+function View(model, hostPermutation, label) {
     
     /** @private */
     this.svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
@@ -19,7 +19,7 @@ function View(logTable, model, hostPermutation, label) {
     this.hostSVG = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
     
     /** @private */
-    this.logTable = logTable;
+    this.logTable = $("<td></td>");
     
     /** @private */
     this.hostPermutation = hostPermutation;
@@ -61,6 +61,10 @@ View.prototype.getSVG = function() {
 
 View.prototype.getHostSVG = function() {
     return $(this.hostSVG);
+};
+
+View.prototype.getLogTable = function() {
+    return this.logTable;
 };
 
 /**
@@ -106,6 +110,10 @@ View.prototype.getVisualModel = function() {
  */
 View.prototype.setWidth = function(newWidth) {
     this.layout.setWidth(newWidth);
+};
+
+View.prototype.setLogTableWidth = function(newWidth) {
+    this.logTable.width(newWidth + "pt");
 };
 
 /**
@@ -409,7 +417,5 @@ View.prototype.draw = function() {
             }
         }
 
-        // Bind the log lines
-        view.controller.bindLines($(".log .line:not(.more)")); // TODO
     }
 };
