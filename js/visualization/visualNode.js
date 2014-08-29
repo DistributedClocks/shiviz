@@ -13,6 +13,13 @@
  *            object will then be a visualization of the argument
  */
 function VisualNode(node) {
+    
+    /** @private */
+    this.$svg = $(document.createElementNS('http://www.w3.org/2000/svg', 'g'));
+    
+    this.$title = $("<title></title>");
+    
+    
     /** @private */
     this.id = VisualNode.id++;
 
@@ -54,6 +61,18 @@ function VisualNode(node) {
 
     /** @private */
     this._isSelected = false;
+    
+    this.$svg.append(this.$title);
+    
+    if (this.isStart()) {
+        this.$title.text(this.getHost());
+    }
+    else if (!this.isCollapsed()) {
+        this.$title.text(this.node.getFirstLogEvent().getText());
+    }
+    else {
+        this.$title.text(this.node.getLogEvents().length + " collapsed events");
+    }
 }
 
 /**
@@ -99,6 +118,7 @@ VisualNode.prototype.getX = function() {
  */
 VisualNode.prototype.setX = function(newX) {
     this.x = newX;
+    this.$svg.attr("transform", "translate(" + this.getX() + "," + this.getY() + ")");
 };
 
 /**
@@ -118,6 +138,7 @@ VisualNode.prototype.getY = function() {
  */
 VisualNode.prototype.setY = function(newY) {
     this.y = newY;
+    this.$svg.attr("transform", "translate(" + this.getX() + "," + this.getY() + ")");
 };
 
 /**
@@ -136,6 +157,7 @@ VisualNode.prototype.getRadius = function() {
  */
 VisualNode.prototype.setRadius = function(newRadius) {
     this.radius = newRadius;
+    
 };
 
 /**
@@ -203,7 +225,7 @@ VisualNode.prototype.getStrokeWidth = function() {
  */
 VisualNode.prototype.getOpacity = function() {
     return this.opacity;
-}
+};
 
 /**
  * Sets the opacity
@@ -212,7 +234,7 @@ VisualNode.prototype.getOpacity = function() {
  */
 VisualNode.prototype.setOpacity = function(opacity) {
     this.opacity = opacity;
-}
+};
 
 /**
  * Gets the texual description of the VisualNode.

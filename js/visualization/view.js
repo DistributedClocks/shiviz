@@ -15,6 +15,8 @@ function View(model, hostPermutation, label) {
     /** @private */
     this.svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
     
+    this.$svg = $(this.svg);
+    
     /** @private */
     this.hostSVG = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
     
@@ -150,53 +152,27 @@ View.prototype.draw = function() {
     $(".highlight").hide();
 
     function drawLinks() {
-        var vedg = view.visualGraph.getVisualEdges();
-        var links = svg.selectAll().data(vedg).enter().append("line");
-        links.style({
-            "stroke-width": function(d) {
-                return d.getWidth() + "px";
-            },
-            "stroke-dasharray": function(d) {
-                return d.getDashLength();
-            },
-            "stroke": function(d) {
-                return d.getColor();
-            },
-            "opacity": function(d) {
-                return d.getOpacity();
-            }
-        });
-        links.attr({
-            "x1": function(d) {
-                return d.getSourceVisualNode().getX();
-            },
-            "y1": function(d) {
-                return d.getSourceVisualNode().getY();
-            },
-            "x2": function(d) {
-                return d.getTargetVisualNode().getX();
-            },
-            "y2": function(d) {
-                return d.getTargetVisualNode().getY();
-            }
+        view.visualGraph.getVisualEdges().forEach(function(visualEdge) {
+            visualEdge.updateCoords();
+            view.$svg.append(visualEdge.getSVG());
         });
     }
 
     function drawNodes() {
         var vn = view.visualGraph.getNonStartVisualNodes();
         var nodes = svg.selectAll().data(vn).enter().append("g");
-        nodes.attr({
-            "transform": function(d) {
-                return "translate(" + d.getX() + "," + d.getY() + ")";
-            },
-            "id": function(d) {
-                return "node" + d.getId();
-            }
-        });
+//        nodes.attr({
+//            "transform": function(d) {
+//                return "translate(" + d.getX() + "," + d.getY() + ")";
+//            },
+//            "id": function(d) {
+//                return "node" + d.getId();
+//            }
+//        });
 
-        nodes.append("title").text(function(d) {
-            return d.getText();
-        });
+//        nodes.append("title").text(function(d) {
+//            return d.getText();
+//        });
         nodes.append("rect").attr({
             "width": 48,
             "height": 48,
