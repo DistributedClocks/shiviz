@@ -29,16 +29,20 @@ function VisualEdge(sourceVisualNode, targetVisualNode) {
     this.targetVisualNode = targetVisualNode;
 
     /** @private */
-    this.width = 1;
+    this.width;
+    this.setWidth(1);
 
     /** @private */
-    this.dashLength = 0;
+    this.dashLength;
+    this.setDashLength(0);
 
     /** @private */
-    this.color = "#999";
+    this.color;
+    this.setColor("#999");
 
     /** @private */
-    this.opacity = 0.6;
+    this.opacity;
+    this.setOpacity(0.6);
     
     this.$svg.attr({
         "x1": sourceVisualNode.getX(),

@@ -159,109 +159,17 @@ View.prototype.draw = function() {
     }
 
     function drawNodes() {
-        var vn = view.visualGraph.getNonStartVisualNodes();
-        var nodes = svg.selectAll().data(vn).enter().append("g");
-//        nodes.attr({
-//            "transform": function(d) {
-//                return "translate(" + d.getX() + "," + d.getY() + ")";
-//            },
-//            "id": function(d) {
-//                return "node" + d.getId();
-//            }
-//        });
-
-//        nodes.append("title").text(function(d) {
-//            return d.getText();
-//        });
-        nodes.append("rect").attr({
-            "width": 48,
-            "height": 48,
-            "x": -24,
-            "y": -24
+        var nodes = view.visualGraph.getNonStartVisualNodes();
+        nodes.forEach(function(visualNode) {
+            view.$svg.append(visualNode.getSVG());
         });
 
-        // Draw faded hidden links
-        var hiddenParentLinks = nodes.filter(function(val) {
-            return val.hasHiddenParent();
-        }).append("line");
-        hiddenParentLinks.attr({
-            "class": "hidden-link",
-            "x1": 0,
-            "y1": 0,
-            "x2": function(d) {
-                return (Global.HIDDEN_EDGE_LENGTH + d.getRadius());
-            },
-            "y2": function(d) {
-                return -(Global.HIDDEN_EDGE_LENGTH + d.getRadius());
-            }
-        });
-        var hiddenChildLinks = nodes.filter(function(val) {
-            return val.hasHiddenChild();
-        }).append("line");
-        hiddenChildLinks.attr({
-            "class": "hidden-link",
-            "x1": 0,
-            "y1": 0,
-            "x2": function(d) {
-                return (Global.HIDDEN_EDGE_LENGTH + d.getRadius());
-            },
-            "y2": function(d) {
-                return (Global.HIDDEN_EDGE_LENGTH + d.getRadius());
-            }
-        });
-
-        var selcirc = nodes.filter(function(n) {
-            return n.isSelected();
-        }).append("circle");
-        selcirc.style({
-            "fill": function(d) {
-                return d.getFillColor();
-            }
-        });
-        selcirc.attr({
-            "class": "sel",
-            "r": function(d) {
-                return d.getRadius() + 4;
-            }
-        });
-
-        var circle = nodes.append("circle");
-        circle.style({
-            "fill": function(d) {
-                return d.getFillColor();
-            },
-            "stroke": function(d) {
-                return d.getStrokeColor();
-            },
-            "stroke-width": function(d) {
-                return d.getStrokeWidth() + "px";
-            },
-            "opacity": function(d) {
-                return d.getOpacity();
-            }
-        });
-        circle.attr({
-            "class": function(d) {
-                return d.getHost();
-            },
-            "r": function(d) {
-                return d.getRadius();
-            },
-            "data-r": function(d) {
-                return d.getRadius();
-            }
-        });
-
-        var label = nodes.append("text");
-        label.text(function(d) {
-            return d.getLabel();
-        });
-
-        // Bind the nodes
-        view.controller.bindNodes(nodes); // TODO
+//        // Bind the nodes
+//        view.controller.bindNodes(nodes); // TODO
     }
 
     function drawHosts() {
+        return;
         // Draw the host bar
         hostSVG.selectAll("*").remove();
         
@@ -329,6 +237,7 @@ View.prototype.draw = function() {
     }
 
     function drawLogLines() {
+        return;
         view.logTable.empty();
         
         var lines = {};

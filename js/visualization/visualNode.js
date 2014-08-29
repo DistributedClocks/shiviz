@@ -15,10 +15,17 @@
 function VisualNode(node) {
     
     /** @private */
-    this.$svg = $(document.createElementNS('http://www.w3.org/2000/svg', 'g'));
+    this.$svg = Util.svgElement("g");
     
     this.$title = $("<title></title>");
     
+    this.$circle = Util.svgElement("circle");
+    
+    this.$text = Util.svgElement("text");
+    
+    this.$hiddenParentLine = Util.svgElement("line");
+    
+    this.$hiddenChildLine = Util.svgElement("line");
     
     /** @private */
     this.id = VisualNode.id++;
@@ -33,22 +40,28 @@ function VisualNode(node) {
     this.y = 0;
 
     /** @private */
-    this.radius = 5;
+    this.radius;
+    this.setRadius(5);
 
     /** @private */
-    this.fillColor = "#000";
+    this.fillColor;
+    this.setFillColor("#000");
 
     /** @private */
-    this.strokeColor = "#fff";
+    this.strokeColor;
+    this.setStrokeColor("#fff");
 
     /** @private */
-    this.strokeWidth = 2;
+    this.strokeWidth;
+    this.setStrokeWidth(2);
 
     /** @private */
-    this.opacity = 1;
+    this.opacity;
+    this.setOpacity(1);
 
     /** @private */
     this.label = "";
+    this.setLabel("");
 
     /** @private */
     this.hasHiddenParentInner = false;
@@ -62,17 +75,22 @@ function VisualNode(node) {
     /** @private */
     this._isSelected = false;
     
-    this.$svg.append(this.$title);
+    this.$title.text(this.getText());
     
-    if (this.isStart()) {
-        this.$title.text(this.getHost());
-    }
-    else if (!this.isCollapsed()) {
-        this.$title.text(this.node.getFirstLogEvent().getText());
-    }
-    else {
-        this.$title.text(this.node.getLogEvents().length + " collapsed events");
-    }
+    this.$svg.append(this.$title);
+    this.$svg.append(this.$circle);
+    
+    this.$hiddenParentLine.attr({
+        "class": "hidden-link",
+        "x1": 0,
+        "y1": 0
+    });
+    
+    this.$hiddenChildLine.attr({
+        "class": "hidden-link",
+        "x1": 0,
+        "y1": 0
+    });
 }
 
 /**
@@ -82,6 +100,10 @@ function VisualNode(node) {
  * @static
  */
 VisualNode.id = 0;
+
+VisualNode.prototype.getSVG = function() {
+    return this.$svg;
+};
 
 /**
  * Gets this VisualNode's globally unique ID
@@ -157,7 +179,21 @@ VisualNode.prototype.getRadius = function() {
  */
 VisualNode.prototype.setRadius = function(newRadius) {
     this.radius = newRadius;
+    this.$circle.attr("r", newRadius);
     
+    if(this.hasHiddenParent()) {
+        this.$hiddenParentLine.attr({
+            "x2": Global.HIDDEN_EDGE_LENGTH + newRadius,
+            "y2": -(Global.HIDDEN_EDGE_LENGTH + newRadius)
+        });
+    }
+    
+    if(this.hasHiddenChild()) {
+        this.$hiddenChildLine.attr({
+            "x2": Global.HIDDEN_EDGE_LENGTH + newRadius,
+            "y2": Global.HIDDEN_EDGE_LENGTH + newRadius
+        });
+    }
 };
 
 /**
@@ -178,6 +214,7 @@ VisualNode.prototype.getFillColor = function() {
  */
 VisualNode.prototype.setFillColor = function(newFillColor) {
     this.fillColor = newFillColor;
+    this.$circle.attr("fill", newFillColor);
 };
 
 /**
@@ -198,6 +235,7 @@ VisualNode.prototype.getStrokeColor = function() {
  */
 VisualNode.prototype.setStrokeColor = function(newStrokeColor) {
     this.strokeColor = newStrokeColor;
+    this.$circle.attr("stroke", newStrokeColor);
 };
 
 /**
@@ -207,6 +245,7 @@ VisualNode.prototype.setStrokeColor = function(newStrokeColor) {
  */
 VisualNode.prototype.setStrokeWidth = function(newStrokeWidth) {
     this.strokeWidth = newStrokeWidth;
+    this.$circle.attr("stroke-wdith", newStrokeWidth + "px");
 };
 
 /**
@@ -234,20 +273,7 @@ VisualNode.prototype.getOpacity = function() {
  */
 VisualNode.prototype.setOpacity = function(opacity) {
     this.opacity = opacity;
-};
-
-/**
- * Gets the texual description of the VisualNode.
- * 
- * @returns {String} The text
- */
-VisualNode.prototype.getText = function() {
-    if (this.isStart())
-        return this.getHost();
-    else if (!this.isCollapsed())
-        return this.node.getFirstLogEvent().getText();
-    else
-        return this.node.getLogEvents().length + " collapsed events";
+    this.$circle.attr("opacity", opacity);
 };
 
 /**
@@ -267,7 +293,29 @@ VisualNode.prototype.getLabel = function() {
  * @param {String} newLabel The new label text
  */
 VisualNode.prototype.setLabel = function(newLabel) {
+    newLabel += "";
+    if(this.label.trim() == "" && newLabel.trim() != "") {
+        this.$svg.append(this.$text);
+    }
+    if(this.label.trim() != "" && newLabel.trim() == "") {
+        this.$text.remove();
+    }
     this.label = newLabel;
+    this.$text.text(newLabel);
+};
+
+/**
+ * Gets the texual description of the VisualNode.
+ * 
+ * @returns {String} The text
+ */
+VisualNode.prototype.getText = function() {
+    if (this.isStart())
+        return this.getHost();
+    else if (!this.isCollapsed())
+        return this.node.getFirstLogEvent().getText();
+    else
+        return this.node.getLogEvents().length + " collapsed events";
 };
 
 /**
@@ -314,6 +362,16 @@ VisualNode.prototype.hasHiddenParent = function() {
  * @param {Boolean} val True if edge should be drawn
  */
 VisualNode.prototype.setHasHiddenParent = function(val) {
+    if(this.hasHiddenParentInner && !val) {
+        this.$hiddenParentLine.remove();
+    }
+    else if(!this.hasHiddenParentInner && val) {
+        this.$hiddenParentLine.attr({
+            "x2": Global.HIDDEN_EDGE_LENGTH + this.getRadius(),
+            "y2": -(Global.HIDDEN_EDGE_LENGTH + this.getRadius())
+        });
+        this.$svg.appen(this.$hiddenParentLine);
+    }
     this.hasHiddenParentInner = val;
 };
 
@@ -332,6 +390,16 @@ VisualNode.prototype.hasHiddenChild = function() {
  * @param {Boolean} val True if edge should be drawn
  */
 VisualNode.prototype.setHasHiddenChild = function(val) {
+    if(this.hasHiddenChildInner && !val) {
+        this.$hiddenChildLine.remove();
+    }
+    else if(!this.hasHiddenChildInner && val) {
+        this.$hiddenChildLine.attr({
+            "x2": Global.HIDDEN_EDGE_LENGTH + this.getRadius(),
+            "y2": Global.HIDDEN_EDGE_LENGTH + this.getRadius()
+        });
+        this.$svg.appen(this.$hiddenChildLine);
+    }
     this.hasHiddenChildInner = val;
 };
 
