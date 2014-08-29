@@ -370,7 +370,7 @@ VisualNode.prototype.setHasHiddenParent = function(val) {
             "x2": Global.HIDDEN_EDGE_LENGTH + this.getRadius(),
             "y2": -(Global.HIDDEN_EDGE_LENGTH + this.getRadius())
         });
-        this.$svg.appen(this.$hiddenParentLine);
+        this.$svg.append(this.$hiddenParentLine);
     }
     this.hasHiddenParentInner = val;
 };
@@ -398,7 +398,7 @@ VisualNode.prototype.setHasHiddenChild = function(val) {
             "x2": Global.HIDDEN_EDGE_LENGTH + this.getRadius(),
             "y2": Global.HIDDEN_EDGE_LENGTH + this.getRadius()
         });
-        this.$svg.appen(this.$hiddenChildLine);
+        this.$svg.append(this.$hiddenChildLine);
     }
     this.hasHiddenChildInner = val;
 };

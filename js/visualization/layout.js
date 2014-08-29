@@ -125,6 +125,10 @@ SpaceTimeLayout.prototype.start = function(visualGraph, hostPermutation) {
     }
 
     this.height += this.delta;
+    
+    visualGraph.getVisualEdges().forEach(function(visualEdge) {
+        visualEdge.updateCoords();
+    });
 
 };
 

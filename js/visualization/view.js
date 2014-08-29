@@ -153,7 +153,6 @@ View.prototype.draw = function() {
 
     function drawLinks() {
         view.visualGraph.getVisualEdges().forEach(function(visualEdge) {
-            visualEdge.updateCoords();
             view.$svg.append(visualEdge.getSVG());
         });
     }
