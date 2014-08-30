@@ -529,20 +529,9 @@ svg {
 }
 
 #hostBar {
-	position: fixed;
+    position: fixed;
     background: white;
     z-index: 1;
-}
-
-#hostBar svg rect.bg {
-    fill: #fff;
-}
-
-#hostBar svg rect.high-rect {
-    fill: transparent;
-    stroke: #fff;
-    stroke-width: 2px;
-    pointer-events: none;
 }
 
 #sidebar {
