@@ -13,14 +13,10 @@
 function View(model, hostPermutation, label) {
     
     /** @private */
-    this.svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-    
-    this.$svg = $(this.svg);
+    this.$svg = $(document.createElementNS('http://www.w3.org/2000/svg', 'svg'));
     
     /** @private */
-    this.hostSVG = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-    
-    this.$hostSVG = $(this.hostSVG);
+    this.$hostSVG = $(document.createElementNS('http://www.w3.org/2000/svg', 'svg'));
     
     /** @private */
     this.logTable = $("<td></td>");
@@ -60,11 +56,11 @@ View.prototype.getTransformer = function() {
 };
 
 View.prototype.getSVG = function() {
-    return $(this.svg);
+    return this.$svg;
 };
 
 View.prototype.getHostSVG = function() {
-    return $(this.hostSVG);
+    return this.$hostSVG;
 };
 
 View.prototype.getLogTable = function() {
@@ -125,8 +121,6 @@ View.prototype.setLogTableWidth = function(newWidth) {
  */
 View.prototype.draw = function() {
     
-    var svg = d3.select(this.svg);
-    var hostSVG = d3.select(this.hostSVG);
 
     this.model = this.initialModel.clone();
     this.visualGraph = new VisualGraph(this.model, this.layout, this.hostPermutation);
@@ -138,12 +132,22 @@ View.prototype.draw = function() {
     // Define locally so that we can use in lambdas below
     var view = this;
 
-    svg.selectAll("*").remove();
+    this.$svg.children("*").remove();
 
-    svg.attr({
+    this.$svg.attr({
         "height": this.visualGraph.getHeight(),
         "width": this.visualGraph.getWidth(),
     });
+    
+    var hackyFixRect = Util.svgElement("rect");
+    hackyFixRect.attr({
+        "height": this.visualGraph.getHeight() + "px",
+        "width": this.visualGraph.getWidth() + "px",
+        "opacity": 0,
+        "stroke-width": "0px",
+        "z-index": -121
+    });
+    this.$svg.append(hackyFixRect);
 
     drawLinks();
     drawNodes();
@@ -176,7 +180,7 @@ View.prototype.draw = function() {
         
         view.$hostSVG.children("*").remove();
         
-        hostSVG.attr({
+        view.$hostSVG.attr({
             "width": view.visualGraph.getWidth(),
             "height": Global.HOST_SQUARE_SIZE,
             "class": view.id
