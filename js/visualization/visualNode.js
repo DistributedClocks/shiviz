@@ -85,6 +85,8 @@ function VisualNode(node) {
     this.$svg.append(this.$title);
     this.$svg.append(this.$circle);
     
+    this.$svg.attr("id", "node" + this.getId());
+    
     this.$hiddenParentLine.attr({
         "class": "hidden-link",
         "x1": 0,

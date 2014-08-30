@@ -430,9 +430,10 @@ SearchBar.prototype.query = function() {
                 else
                     broadcast = false;
 
-                var hiddenHosts = this.global.getHiddenHosts();
 
                 this.global.getActiveViews().forEach(function(view) {
+                    var hiddenHosts = view.getTransformer().getHiddenHosts();
+                    
                     var hosts = view.getHosts().filter(function(h) {
                         return !hiddenHosts[h];
                     }).length;
