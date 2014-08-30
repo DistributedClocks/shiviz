@@ -15,6 +15,12 @@
 function VisualNode(node) {
     
     /** @private */
+    this.id = VisualNode.id++;
+
+    /** @private */
+    this.node = node;
+    
+    /** @private */
     this.$svg = Util.svgElement("g");
     
     this.$title = $("<title></title>");
@@ -27,20 +33,19 @@ function VisualNode(node) {
     
     this.$hiddenChildLine = Util.svgElement("line");
     
-    /** @private */
-    this.id = VisualNode.id++;
-
-    /** @private */
-    this.node = node;
+    this.$highlightRect = Util.svgElement("rect");
 
     /** @private */
     this.x = 0;
 
     /** @private */
     this.y = 0;
+    
+    this.setX(0);
+    this.setY(0);
 
     /** @private */
-    this.radius;
+    this.radius = 0;
     this.setRadius(5);
 
     /** @private */
@@ -91,6 +96,14 @@ function VisualNode(node) {
         "x1": 0,
         "y1": 0
     });
+    
+    this.$highlightRect.attr({
+        "fill": "transparent",
+        "stroke": "#FFF",
+        "stroke-width": "2px",
+        "pointer-events": "none"
+    });
+
 }
 
 /**
@@ -103,6 +116,20 @@ VisualNode.id = 0;
 
 VisualNode.prototype.getSVG = function() {
     return this.$svg;
+};
+
+VisualNode.prototype.getStartNodeSVG = function() {
+    var result = Util.svgElement("rect");
+    result.attr({
+        "width": Global.HOST_SQUARE_SIZE,
+        "height": Global.HOST_SQUARE_SIZE,
+        "y": 0,
+        "x": Math.round(this.getX() - (Global.HOST_SQUARE_SIZE / 2)),
+        "fill": this.getFillColor(),
+        "stroke": this.getStrokeColor(),
+        "stroke-width": this.getStrokeWidth() + "px"
+    });
+    return result;
 };
 
 /**
@@ -140,7 +167,7 @@ VisualNode.prototype.getX = function() {
  */
 VisualNode.prototype.setX = function(newX) {
     this.x = newX;
-    this.$svg.attr("transform", "translate(" + this.getX() + "," + this.getY() + ")");
+    this.$svg.attr("transform", "translate(" + newX + "," + this.getY() + ")");
 };
 
 /**
@@ -160,7 +187,7 @@ VisualNode.prototype.getY = function() {
  */
 VisualNode.prototype.setY = function(newY) {
     this.y = newY;
-    this.$svg.attr("transform", "translate(" + this.getX() + "," + this.getY() + ")");
+    this.$svg.attr("transform", "translate(" + this.getX() + "," + newY + ")");
 };
 
 /**
@@ -428,7 +455,21 @@ VisualNode.prototype.isHighlighted = function() {
  * @param {Boolean} val True if this node is highlighted
  */
 VisualNode.prototype.setHighlight = function(val) {
+    if(this._isHighlighted && !val) {
+        this.$highlightRect.remove();
+    }
+    else {
+        this.$highlightRect.attr({
+            "width": "15px",
+            "height": "15px",
+            "x": Math.round(this.getX() - Global.HOST_SQUARE_SIZE / 2 + 5) + "px",
+            "y": this.getY() + 5
+        });
+        this.$svg.append(this.$highlightRect);
+    }
+    
     this._isHighlighted = val;
+
 };
 
 /**

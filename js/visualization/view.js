@@ -20,6 +20,8 @@ function View(model, hostPermutation, label) {
     /** @private */
     this.hostSVG = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
     
+    this.$hostSVG = $(this.hostSVG);
+    
     /** @private */
     this.logTable = $("<td></td>");
     
@@ -159,84 +161,40 @@ View.prototype.draw = function() {
 
     function drawNodes() {
         var nodes = view.visualGraph.getNonStartVisualNodes();
+        var arr = [];
         nodes.forEach(function(visualNode) {
-            view.$svg.append(visualNode.getSVG());
+            var svg = visualNode.getSVG();
+            view.$svg.append(svg);
+            arr.push(svg[0]);
         });
 
-//        // Bind the nodes
-//        view.controller.bindNodes(nodes); // TODO
+        // Bind the nodes
+        view.controller.bindNodes(d3.selectAll(arr).data(nodes));
     }
 
     function drawHosts() {
-        return;
-        // Draw the host bar
-        hostSVG.selectAll("*").remove();
+        
+        view.$hostSVG.children("*").remove();
         
         hostSVG.attr({
             "width": view.visualGraph.getWidth(),
             "height": Global.HOST_SQUARE_SIZE,
             "class": view.id
         });
-
-        var bar = hostSVG.append("rect");
-        bar.attr({
-            "width": view.visualGraph.getWidth(),
-            "height": Global.HOST_SQUARE_SIZE,
-            "class": "bg"
+        
+        var startNodes = view.visualGraph.getStartVisualNodes();
+        var arr = [];
+        startNodes.forEach(function(visualNode) {
+            var svg = visualNode.getStartNodeSVG();
+            view.$hostSVG.append(svg);
+            arr.push(svg[0]);
         });
-
-        // Draw the hosts
-        var svn = view.visualGraph.getStartVisualNodes();
-        var hosts = hostSVG.selectAll().data(svn).enter().append("rect");
-        hosts.attr({
-            "width": Global.HOST_SQUARE_SIZE,
-            "height": Global.HOST_SQUARE_SIZE,
-            "y": 0,
-            "x": function(d) {
-                return Math.round(d.getX() - (Global.HOST_SQUARE_SIZE / 2));
-            },
-            "fill": function(d) {
-                return d.getFillColor();
-            },
-            "class": function(d) {
-                if (d.isHighlighted())
-                    return "high-host";
-            }
-        });
-        hosts.style({
-            "stroke": function(d) {
-                return d.getStrokeColor();
-            },
-            "stroke-width": function(d) {
-                return d.getStrokeWidth() + "px";
-            }
-        });
-
-        // Draw highlighting for highlighted hosts
-        d3.selectAll(".high-host").each(function(d) {
-            var ns = "http://www.w3.org/2000/svg";
-            var r = document.createElementNS(ns, "rect");
-            $(r).attr({
-                "class": "high-rect",
-                "width": "15",
-                "height": "15",
-                "x": function() {
-                    var px = d.getX() - Global.HOST_SQUARE_SIZE / 2 + 5;
-                    return Math.round(px);
-                },
-                "y": function() {
-                    return d.getY() + 5;
-                }
-            });
-            this.parentNode.appendChild(r);
-        });
-
+        
         // Bind the hosts
-        view.controller.bindHosts(hosts); // TODO
+        view.controller.bindHosts(d3.selectAll(arr).data(startNodes));
     }
 
     function drawLogLines() {
-        return;
         view.logTable.empty();
         
         var lines = {};
