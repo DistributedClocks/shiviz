@@ -83,6 +83,16 @@ function VisualNode(node) {
     this.$title.text(this.getText());
     
     this.$svg.append(this.$title);
+    
+    var mouseOverRect = Util.svgElement("rect");
+    mouseOverRect.attr({
+        "width": 48,
+        "height": 48,
+        "x": -24,
+        "y": -24
+    });
+    this.$svg.append(mouseOverRect);
+
     this.$svg.append(this.$circle);
     
     this.$svg.attr("id", "node" + this.getId());
