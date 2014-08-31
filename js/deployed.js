@@ -1,5 +1,4 @@
-// Where to load example logs from:
-var logUrlPrefix='http://bestchai.bitbucket.org/shiviz/';
+var dev = false;
 
 ///////////////////// Google analytics snippet:
 (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
@@ -13,4 +12,4 @@ ga('send', 'pageview');
 // NOTE: the string ZZZ below is replaced with the current revision id
 // during deployment. Do not change the value of version without
 // updating the deploy_shiviz.py script.
-var versionText='revision: ZZZ';
+var versionText="revision: ZZZ";
