@@ -27,21 +27,24 @@ function Shiviz() {
         e.preventDefault();
 
         // logUrlPrefix is defined in dev.js & deployed.js
-        var url = logUrlPrefix + $(this).data("log");
+        var prefix = (dev ? "https://api.github.com/repos/bestchai/shiviz-logs/contents/" : "/log/");
+        var url = prefix + $(this).data("log");
         var defaultParser = "(?<event>.*)\\n(?<host>\\S*) (?<clock>{.*})";
 
         $.get(url, function(response) {
+            if (dev)
+                response = atob(response.content)
+
             $("#input").val(response);
-            context.resetView();
+            context.resetview();
             $("#delimiter").val($(e.target).data("delimiter"));
-            $("#parser").val($(e.target).data("parser") || defaultParser);
+            $("#parser").val($(e.target).data("parser") || defaultparser);
             $(e.target).css({
                 color: "gray",
-                pointerEvents: "none"
+                pointerevents: "none"
             });
-
         }).fail(function() {
-            Shiviz.getInstance().handleException(new Exception("Unable to retrieve example log from: " + url, true));
+            shiviz.getinstance().handleexception(new exception("unable to retrieve example log from: " + url, true));
         });
     });
 
