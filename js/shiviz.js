@@ -36,7 +36,7 @@ function Shiviz() {
                 response = atob(response.content)
 
             $("#input").val(response);
-            context.resetview();
+            context.resetView();
             $("#delimiter").val($(e.target).data("delimiter"));
             $("#parser").val($(e.target).data("parser") || defaultparser);
             $(e.target).css({
