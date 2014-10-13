@@ -138,7 +138,7 @@
                 You can specify the log format using a regular expression on the Input page. The regular expression must contain three named capture groups:
                 <ul>
                     <li><strong><code>event</code>:</strong> the description of the event</li>
-                    <li><strong><code>process</code>:</strong> the name of the process or host</li>
+                    <li><strong><code>node</code>:</strong> the name of the process or host</li>
                     <li><strong><code>clock</code>:</strong> the vector clock associated with the event, in JSON format</li>
                 </ul>
             </p>
@@ -150,7 +150,7 @@
                 <pre>28/07/14 01:15 PM Event excecuted<br>process2 {"process1" : time1, "process2" : time2, ..., "processN" : timeN}</pre>
 
                 We might have a parser RegExp like:
-                <pre>(?&lt;date&gt;\d\d/\d\d/\d\d \d\d:\d\d (AM|PM)) (?&lt;event&gt;.*)\n(?&lt;process&gt;\w+) (?&lt;clock&gt;\{.*\})</pre>
+                <pre>(?&lt;date&gt;\d\d/\d\d/\d\d \d\d:\d\d (AM|PM)) (?&lt;event&gt;.*)\n(?&lt;node&gt;\w+) (?&lt;clock&gt;\{.*\})</pre>
             </p>
 
             <h3>How can I generate logs to use in ShiViz?</h3>
