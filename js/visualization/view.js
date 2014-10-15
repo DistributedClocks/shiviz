@@ -13,10 +13,10 @@
 function View(model, hostPermutation, label) {
     
     /** @private */
-    this.svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+    this.$svg = $(document.createElementNS('http://www.w3.org/2000/svg', 'svg'));
     
     /** @private */
-    this.hostSVG = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+    this.$hostSVG = $(document.createElementNS('http://www.w3.org/2000/svg', 'svg'));
     
     /** @private */
     this.logTable = $("<td></td>");
@@ -56,11 +56,11 @@ View.prototype.getTransformer = function() {
 };
 
 View.prototype.getSVG = function() {
-    return $(this.svg);
+    return this.$svg;
 };
 
 View.prototype.getHostSVG = function() {
-    return $(this.hostSVG);
+    return this.$hostSVG;
 };
 
 View.prototype.getLogTable = function() {
@@ -121,8 +121,6 @@ View.prototype.setLogTableWidth = function(newWidth) {
  */
 View.prototype.draw = function() {
     
-    var svg = d3.select(this.svg);
-    var hostSVG = d3.select(this.hostSVG);
 
     this.model = this.initialModel.clone();
     this.visualGraph = new VisualGraph(this.model, this.layout, this.hostPermutation);
@@ -134,12 +132,22 @@ View.prototype.draw = function() {
     // Define locally so that we can use in lambdas below
     var view = this;
 
-    svg.selectAll("*").remove();
+    this.$svg.children("*").remove();
 
-    svg.attr({
+    this.$svg.attr({
         "height": this.visualGraph.getHeight(),
         "width": this.visualGraph.getWidth(),
     });
+    
+    var hackyFixRect = Util.svgElement("rect");
+    hackyFixRect.attr({
+        "height": this.visualGraph.getHeight() + "px",
+        "width": this.visualGraph.getWidth() + "px",
+        "opacity": 0,
+        "stroke-width": "0px",
+        "z-index": -121
+    });
+    this.$svg.append(hackyFixRect);
 
     drawLinks();
     drawNodes();
@@ -150,206 +158,44 @@ View.prototype.draw = function() {
     $(".highlight").hide();
 
     function drawLinks() {
-        var vedg = view.visualGraph.getVisualEdges();
-        var links = svg.selectAll().data(vedg).enter().append("line");
-        links.style({
-            "stroke-width": function(d) {
-                return d.getWidth() + "px";
-            },
-            "stroke-dasharray": function(d) {
-                return d.getDashLength();
-            },
-            "stroke": function(d) {
-                return d.getColor();
-            },
-            "opacity": function(d) {
-                return d.getOpacity();
-            }
-        });
-        links.attr({
-            "x1": function(d) {
-                return d.getSourceVisualNode().getX();
-            },
-            "y1": function(d) {
-                return d.getSourceVisualNode().getY();
-            },
-            "x2": function(d) {
-                return d.getTargetVisualNode().getX();
-            },
-            "y2": function(d) {
-                return d.getTargetVisualNode().getY();
-            }
+        view.visualGraph.getVisualEdges().forEach(function(visualEdge) {
+            view.$svg.append(visualEdge.getSVG());
         });
     }
 
     function drawNodes() {
-        var vn = view.visualGraph.getNonStartVisualNodes();
-        var nodes = svg.selectAll().data(vn).enter().append("g");
-        nodes.attr({
-            "transform": function(d) {
-                return "translate(" + d.getX() + "," + d.getY() + ")";
-            },
-            "id": function(d) {
-                return "node" + d.getId();
-            }
-        });
-
-        nodes.append("title").text(function(d) {
-            return d.getText();
-        });
-        nodes.append("rect").attr({
-            "width": 48,
-            "height": 48,
-            "x": -24,
-            "y": -24
-        });
-
-        // Draw faded hidden links
-        var hiddenParentLinks = nodes.filter(function(val) {
-            return val.hasHiddenParent();
-        }).append("line");
-        hiddenParentLinks.attr({
-            "class": "hidden-link",
-            "x1": 0,
-            "y1": 0,
-            "x2": function(d) {
-                return (Global.HIDDEN_EDGE_LENGTH + d.getRadius());
-            },
-            "y2": function(d) {
-                return -(Global.HIDDEN_EDGE_LENGTH + d.getRadius());
-            }
-        });
-        var hiddenChildLinks = nodes.filter(function(val) {
-            return val.hasHiddenChild();
-        }).append("line");
-        hiddenChildLinks.attr({
-            "class": "hidden-link",
-            "x1": 0,
-            "y1": 0,
-            "x2": function(d) {
-                return (Global.HIDDEN_EDGE_LENGTH + d.getRadius());
-            },
-            "y2": function(d) {
-                return (Global.HIDDEN_EDGE_LENGTH + d.getRadius());
-            }
-        });
-
-        var selcirc = nodes.filter(function(n) {
-            return n.isSelected();
-        }).append("circle");
-        selcirc.style({
-            "fill": function(d) {
-                return d.getFillColor();
-            }
-        });
-        selcirc.attr({
-            "class": "sel",
-            "r": function(d) {
-                return d.getRadius() + 4;
-            }
-        });
-
-        var circle = nodes.append("circle");
-        circle.style({
-            "fill": function(d) {
-                return d.getFillColor();
-            },
-            "stroke": function(d) {
-                return d.getStrokeColor();
-            },
-            "stroke-width": function(d) {
-                return d.getStrokeWidth() + "px";
-            },
-            "opacity": function(d) {
-                return d.getOpacity();
-            }
-        });
-        circle.attr({
-            "class": function(d) {
-                return d.getHost();
-            },
-            "r": function(d) {
-                return d.getRadius();
-            },
-            "data-r": function(d) {
-                return d.getRadius();
-            }
-        });
-
-        var label = nodes.append("text");
-        label.text(function(d) {
-            return d.getLabel();
+        var nodes = view.visualGraph.getNonStartVisualNodes();
+        var arr = [];
+        nodes.forEach(function(visualNode) {
+            var svg = visualNode.getSVG();
+            view.$svg.append(svg);
+            arr.push(svg[0]);
         });
 
         // Bind the nodes
-        view.controller.bindNodes(nodes); // TODO
+        view.controller.bindNodes(d3.selectAll(arr).data(nodes));
     }
 
     function drawHosts() {
-        // Draw the host bar
-        hostSVG.selectAll("*").remove();
         
-        hostSVG.attr({
+        view.$hostSVG.children("*").remove();
+        
+        view.$hostSVG.attr({
             "width": view.visualGraph.getWidth(),
             "height": Global.HOST_SQUARE_SIZE,
             "class": view.id
         });
-
-        var bar = hostSVG.append("rect");
-        bar.attr({
-            "width": view.visualGraph.getWidth(),
-            "height": Global.HOST_SQUARE_SIZE,
-            "class": "bg"
+        
+        var startNodes = view.visualGraph.getStartVisualNodes();
+        var arr = [];
+        startNodes.forEach(function(visualNode) {
+            var svg = visualNode.getStartNodeSVG();
+            view.$hostSVG.append(svg);
+            arr.push(svg[0]);
         });
-
-        // Draw the hosts
-        var svn = view.visualGraph.getStartVisualNodes();
-        var hosts = hostSVG.selectAll().data(svn).enter().append("rect");
-        hosts.attr({
-            "width": Global.HOST_SQUARE_SIZE,
-            "height": Global.HOST_SQUARE_SIZE,
-            "y": 0,
-            "x": function(d) {
-                return Math.round(d.getX() - (Global.HOST_SQUARE_SIZE / 2));
-            },
-            "fill": function(d) {
-                return d.getFillColor();
-            },
-            "class": function(d) {
-                if (d.isHighlighted())
-                    return "high-host";
-            }
-        });
-        hosts.style({
-            "stroke": function(d) {
-                return d.getStrokeColor();
-            },
-            "stroke-width": function(d) {
-                return d.getStrokeWidth() + "px";
-            }
-        });
-
-        // Draw highlighting for highlighted hosts
-        d3.selectAll(".high-host").each(function(d) {
-            var ns = "http://www.w3.org/2000/svg";
-            var r = document.createElementNS(ns, "rect");
-            $(r).attr({
-                "class": "high-rect",
-                "width": "15",
-                "height": "15",
-                "x": function() {
-                    var px = d.getX() - Global.HOST_SQUARE_SIZE / 2 + 5;
-                    return Math.round(px);
-                },
-                "y": function() {
-                    return d.getY() + 5;
-                }
-            });
-            this.parentNode.appendChild(r);
-        });
-
+        
         // Bind the hosts
-        view.controller.bindHosts(hosts); // TODO
+        view.controller.bindHosts(d3.selectAll(arr).data(startNodes));
     }
 
     function drawLogLines() {
