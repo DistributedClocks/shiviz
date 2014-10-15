@@ -13,35 +13,60 @@
  *            object will then be a visualization of the argument
  */
 function VisualNode(node) {
+    
     /** @private */
     this.id = VisualNode.id++;
 
     /** @private */
     this.node = node;
+    
+    /** @private */
+    this.$svg = Util.svgElement("g");
+    
+    this.$title = $("<title></title>");
+    
+    this.$circle = Util.svgElement("circle");
+    
+    this.$text = Util.svgElement("text");
+    
+    this.$hiddenParentLine = Util.svgElement("line");
+    
+    this.$hiddenChildLine = Util.svgElement("line");
+    
+    this.$highlightRect = Util.svgElement("rect");
 
     /** @private */
     this.x = 0;
 
     /** @private */
     this.y = 0;
+    
+    this.setX(0);
+    this.setY(0);
 
     /** @private */
-    this.radius = 5;
+    this.radius = 0;
+    this.setRadius(5);
 
     /** @private */
-    this.fillColor = "#000";
+    this.fillColor;
+    this.setFillColor("#000");
 
     /** @private */
-    this.strokeColor = "#fff";
+    this.strokeColor;
+    this.setStrokeColor("#fff");
 
     /** @private */
-    this.strokeWidth = 2;
+    this.strokeWidth;
+    this.setStrokeWidth(2);
 
     /** @private */
-    this.opacity = 1;
+    this.opacity;
+    this.setOpacity(1);
 
     /** @private */
     this.label = "";
+    this.setLabel("");
 
     /** @private */
     this.hasHiddenParentInner = false;
@@ -54,6 +79,43 @@ function VisualNode(node) {
 
     /** @private */
     this._isSelected = false;
+    
+    this.$title.text(this.getText());
+    
+    this.$svg.append(this.$title);
+    
+    var mouseOverRect = Util.svgElement("rect");
+    mouseOverRect.attr({
+        "width": 48,
+        "height": 48,
+        "x": -24,
+        "y": -24
+    });
+    this.$svg.append(mouseOverRect);
+
+    this.$svg.append(this.$circle);
+    
+    this.$svg.attr("id", "node" + this.getId());
+    
+    this.$hiddenParentLine.attr({
+        "class": "hidden-link",
+        "x1": 0,
+        "y1": 0
+    });
+    
+    this.$hiddenChildLine.attr({
+        "class": "hidden-link",
+        "x1": 0,
+        "y1": 0
+    });
+    
+    this.$highlightRect.attr({
+        "fill": "transparent",
+        "stroke": "#FFF",
+        "stroke-width": "2px",
+        "pointer-events": "none"
+    });
+
 }
 
 /**
@@ -63,6 +125,24 @@ function VisualNode(node) {
  * @static
  */
 VisualNode.id = 0;
+
+VisualNode.prototype.getSVG = function() {
+    return this.$svg;
+};
+
+VisualNode.prototype.getStartNodeSVG = function() {
+    var result = Util.svgElement("rect");
+    result.attr({
+        "width": Global.HOST_SQUARE_SIZE,
+        "height": Global.HOST_SQUARE_SIZE,
+        "y": 0,
+        "x": Math.round(this.getX() - (Global.HOST_SQUARE_SIZE / 2)),
+        "fill": this.getFillColor(),
+        "stroke": this.getStrokeColor(),
+        "stroke-width": this.getStrokeWidth() + "px"
+    });
+    return result;
+};
 
 /**
  * Gets this VisualNode's globally unique ID
@@ -99,6 +179,7 @@ VisualNode.prototype.getX = function() {
  */
 VisualNode.prototype.setX = function(newX) {
     this.x = newX;
+    this.$svg.attr("transform", "translate(" + newX + "," + this.getY() + ")");
 };
 
 /**
@@ -118,6 +199,7 @@ VisualNode.prototype.getY = function() {
  */
 VisualNode.prototype.setY = function(newY) {
     this.y = newY;
+    this.$svg.attr("transform", "translate(" + this.getX() + "," + newY + ")");
 };
 
 /**
@@ -136,6 +218,21 @@ VisualNode.prototype.getRadius = function() {
  */
 VisualNode.prototype.setRadius = function(newRadius) {
     this.radius = newRadius;
+    this.$circle.attr("r", newRadius);
+    
+    if(this.hasHiddenParent()) {
+        this.$hiddenParentLine.attr({
+            "x2": Global.HIDDEN_EDGE_LENGTH + newRadius,
+            "y2": -(Global.HIDDEN_EDGE_LENGTH + newRadius)
+        });
+    }
+    
+    if(this.hasHiddenChild()) {
+        this.$hiddenChildLine.attr({
+            "x2": Global.HIDDEN_EDGE_LENGTH + newRadius,
+            "y2": Global.HIDDEN_EDGE_LENGTH + newRadius
+        });
+    }
 };
 
 /**
@@ -156,6 +253,7 @@ VisualNode.prototype.getFillColor = function() {
  */
 VisualNode.prototype.setFillColor = function(newFillColor) {
     this.fillColor = newFillColor;
+    this.$circle.attr("fill", newFillColor);
 };
 
 /**
@@ -176,6 +274,7 @@ VisualNode.prototype.getStrokeColor = function() {
  */
 VisualNode.prototype.setStrokeColor = function(newStrokeColor) {
     this.strokeColor = newStrokeColor;
+    this.$circle.attr("stroke", newStrokeColor);
 };
 
 /**
@@ -185,6 +284,7 @@ VisualNode.prototype.setStrokeColor = function(newStrokeColor) {
  */
 VisualNode.prototype.setStrokeWidth = function(newStrokeWidth) {
     this.strokeWidth = newStrokeWidth;
+    this.$circle.attr("stroke-wdith", newStrokeWidth + "px");
 };
 
 /**
@@ -203,7 +303,7 @@ VisualNode.prototype.getStrokeWidth = function() {
  */
 VisualNode.prototype.getOpacity = function() {
     return this.opacity;
-}
+};
 
 /**
  * Sets the opacity
@@ -212,20 +312,7 @@ VisualNode.prototype.getOpacity = function() {
  */
 VisualNode.prototype.setOpacity = function(opacity) {
     this.opacity = opacity;
-}
-
-/**
- * Gets the texual description of the VisualNode.
- * 
- * @returns {String} The text
- */
-VisualNode.prototype.getText = function() {
-    if (this.isStart())
-        return this.getHost();
-    else if (!this.isCollapsed())
-        return this.node.getFirstLogEvent().getText();
-    else
-        return this.node.getLogEvents().length + " collapsed events";
+    this.$circle.attr("opacity", opacity);
 };
 
 /**
@@ -245,7 +332,29 @@ VisualNode.prototype.getLabel = function() {
  * @param {String} newLabel The new label text
  */
 VisualNode.prototype.setLabel = function(newLabel) {
+    newLabel += "";
+    if(this.label.trim() == "" && newLabel.trim() != "") {
+        this.$svg.append(this.$text);
+    }
+    if(this.label.trim() != "" && newLabel.trim() == "") {
+        this.$text.remove();
+    }
     this.label = newLabel;
+    this.$text.text(newLabel);
+};
+
+/**
+ * Gets the texual description of the VisualNode.
+ * 
+ * @returns {String} The text
+ */
+VisualNode.prototype.getText = function() {
+    if (this.isStart())
+        return this.getHost();
+    else if (!this.isCollapsed())
+        return this.node.getFirstLogEvent().getText();
+    else
+        return this.node.getLogEvents().length + " collapsed events";
 };
 
 /**
@@ -292,6 +401,16 @@ VisualNode.prototype.hasHiddenParent = function() {
  * @param {Boolean} val True if edge should be drawn
  */
 VisualNode.prototype.setHasHiddenParent = function(val) {
+    if(this.hasHiddenParentInner && !val) {
+        this.$hiddenParentLine.remove();
+    }
+    else if(!this.hasHiddenParentInner && val) {
+        this.$hiddenParentLine.attr({
+            "x2": Global.HIDDEN_EDGE_LENGTH + this.getRadius(),
+            "y2": -(Global.HIDDEN_EDGE_LENGTH + this.getRadius())
+        });
+        this.$svg.append(this.$hiddenParentLine);
+    }
     this.hasHiddenParentInner = val;
 };
 
@@ -310,6 +429,16 @@ VisualNode.prototype.hasHiddenChild = function() {
  * @param {Boolean} val True if edge should be drawn
  */
 VisualNode.prototype.setHasHiddenChild = function(val) {
+    if(this.hasHiddenChildInner && !val) {
+        this.$hiddenChildLine.remove();
+    }
+    else if(!this.hasHiddenChildInner && val) {
+        this.$hiddenChildLine.attr({
+            "x2": Global.HIDDEN_EDGE_LENGTH + this.getRadius(),
+            "y2": Global.HIDDEN_EDGE_LENGTH + this.getRadius()
+        });
+        this.$svg.append(this.$hiddenChildLine);
+    }
     this.hasHiddenChildInner = val;
 };
 
@@ -338,7 +467,21 @@ VisualNode.prototype.isHighlighted = function() {
  * @param {Boolean} val True if this node is highlighted
  */
 VisualNode.prototype.setHighlight = function(val) {
+    if(this._isHighlighted && !val) {
+        this.$highlightRect.remove();
+    }
+    else {
+        this.$highlightRect.attr({
+            "width": "15px",
+            "height": "15px",
+            "x": Math.round(this.getX() - Global.HOST_SQUARE_SIZE / 2 + 5) + "px",
+            "y": this.getY() + 5
+        });
+        this.$svg.append(this.$highlightRect);
+    }
+    
     this._isHighlighted = val;
+
 };
 
 /**
