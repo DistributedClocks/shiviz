@@ -136,7 +136,7 @@ View.prototype.draw = function() {
 
     this.$svg.attr({
         "height": this.visualGraph.getHeight(),
-        "width": this.visualGraph.getWidth(),
+        "width": this.visualGraph.getWidth()
     });
     
     var hackyFixRect = Util.svgElement("rect");
