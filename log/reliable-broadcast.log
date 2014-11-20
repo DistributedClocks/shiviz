@@ -1,0 +1,118 @@
+[INFO] [10/13/2014 04:23:20.113] [Broadcast-akka.actor.default-dispatcher-4] [akka://Broadcast/user/node0] {"node0" : 1} Initiating RBBroadcast(DataMessage(1,Message1))
+[INFO] [10/13/2014 04:23:20.113] [Broadcast-akka.actor.default-dispatcher-3] [akka://Broadcast/user/node1] {"node1" : 1} Crashing
+[INFO] [10/13/2014 04:23:20.113] [Broadcast-akka.actor.default-dispatcher-2] [akka://Broadcast/user/node3] {"node3" : 1} Suspected crash of node1
+[INFO] [10/13/2014 04:23:20.113] [Broadcast-akka.actor.default-dispatcher-5] [akka://Broadcast/user/node2] {"node2" : 1} Suspected crash of node1
+[INFO] [10/13/2014 04:23:20.113] [Broadcast-akka.actor.default-dispatcher-2] [akka://Broadcast/user/node3] {"node3" : 2} Initiating RBBroadcast(DataMessage(2,Message2))
+[INFO] [10/13/2014 04:23:20.114] [Broadcast-akka.actor.default-dispatcher-4] [akka://Broadcast/user/node0] {"node0" : 2} Sending SLDeliver(DataMessage(1,Message1)) to node1
+[INFO] [10/13/2014 04:23:20.114] [Broadcast-akka.actor.default-dispatcher-2] [akka://Broadcast/user/node3] {"node3" : 3} Sending SLDeliver(DataMessage(2,Message2)) to node0
+[INFO] [10/13/2014 04:23:20.118] [Broadcast-akka.actor.default-dispatcher-7] [akka://Broadcast/user/node1] Message [SLDeliver] from Actor[akka://Broadcast/deadLetters] to Actor[akka://Broadcast/user/node1#168136134] was not delivered. [1] dead letters encountered. This logging can be turned off or adjusted with configuration settings 'akka.log-dead-letters' and 'akka.log-dead-letters-during-shutdown'.
+[INFO] [10/13/2014 04:23:20.119] [Broadcast-akka.actor.default-dispatcher-2] [akka://Broadcast/user/node3] {"node3" : 4} Sending SLDeliver(DataMessage(2,Message2)) to node2
+[INFO] [10/13/2014 04:23:20.119] [Broadcast-akka.actor.default-dispatcher-4] [akka://Broadcast/user/node0] {"node0" : 3} Sending SLDeliver(DataMessage(1,Message1)) to node2
+[INFO] [10/13/2014 04:23:20.120] [Broadcast-akka.actor.default-dispatcher-4] [akka://Broadcast/user/node0] {"node0" : 4} Sending SLDeliver(DataMessage(1,Message1)) to node3
+[INFO] [10/13/2014 04:23:20.120] [Broadcast-akka.actor.default-dispatcher-4] [akka://Broadcast/user/node0] {"node0" : 5} Suspected crash of node1
+[INFO] [10/13/2014 04:23:20.120] [Broadcast-akka.actor.default-dispatcher-4] [akka://Broadcast/user/node0] {"node0" : 6} Initiating RBBroadcast(DataMessage(3,Message3))
+[INFO] [10/13/2014 04:23:20.120] [Broadcast-akka.actor.default-dispatcher-4] [akka://Broadcast/user/node0] {"node0" : 7} Sending SLDeliver(DataMessage(3,Message3)) to node2
+[INFO] [10/13/2014 04:23:20.120] [Broadcast-akka.actor.default-dispatcher-4] [akka://Broadcast/user/node0] {"node0" : 8} Sending SLDeliver(DataMessage(3,Message3)) to node3
+[INFO] [10/13/2014 04:23:20.122] [Broadcast-akka.actor.default-dispatcher-2] [akka://Broadcast/user/node2] {"node2" : 2, "node3" : 4} Received SLDeliver(DataMessage(2,Message2)) from node3
+[INFO] [10/13/2014 04:23:20.122] [Broadcast-akka.actor.default-dispatcher-7] [akka://Broadcast/user/node3] {"node0" : 4, "node3" : 5} Received SLDeliver(DataMessage(1,Message1)) from node0
+[INFO] [10/13/2014 04:23:20.122] [Broadcast-akka.actor.default-dispatcher-4] [akka://Broadcast/user/node0] {"node0" : 9, "node3" : 3} Received SLDeliver(DataMessage(2,Message2)) from node3
+[INFO] [10/13/2014 04:23:20.122] [Broadcast-akka.actor.default-dispatcher-7] [akka://Broadcast/user/node3] {"node0" : 4, "node3" : 6} Sending ACK(1) to node0
+[INFO] [10/13/2014 04:23:20.122] [Broadcast-akka.actor.default-dispatcher-2] [akka://Broadcast/user/node2] {"node2" : 3, "node3" : 4} Sending ACK(2) to node3
+[INFO] [10/13/2014 04:23:20.122] [Broadcast-akka.actor.default-dispatcher-4] [akka://Broadcast/user/node0] {"node0" : 10, "node3" : 3} Sending ACK(2) to node3
+[INFO] [10/13/2014 04:23:20.123] [Broadcast-akka.actor.default-dispatcher-7] [akka://Broadcast/user/node3] {"node0" : 4, "node3" : 7} RBDeliver of message DataMessage(1,Message1) from node0
+[INFO] [10/13/2014 04:23:20.123] [Broadcast-akka.actor.default-dispatcher-4] [akka://Broadcast/user/node0] {"node0" : 11, "node3" : 3} RBDeliver of message DataMessage(2,Message2) from node3
+[INFO] [10/13/2014 04:23:20.123] [Broadcast-akka.actor.default-dispatcher-2] [akka://Broadcast/user/node2] {"node2" : 4, "node3" : 4} RBDeliver of message DataMessage(2,Message2) from node3
+[INFO] [10/13/2014 04:23:20.123] [Broadcast-akka.actor.default-dispatcher-7] [akka://Broadcast/user/node3] {"node0" : 4, "node3" : 8} Sending SLDeliver(DataMessage(1,Message1)) to node0
+[INFO] [10/13/2014 04:23:20.123] [Broadcast-akka.actor.default-dispatcher-4] [akka://Broadcast/user/node0] {"node0" : 12, "node3" : 3} Sending SLDeliver(DataMessage(2,Message2)) to node2
+[INFO] [10/13/2014 04:23:20.123] [Broadcast-akka.actor.default-dispatcher-2] [akka://Broadcast/user/node2] {"node2" : 5, "node3" : 4} Sending SLDeliver(DataMessage(2,Message2)) to node0
+[INFO] [10/13/2014 04:23:20.123] [Broadcast-akka.actor.default-dispatcher-7] [akka://Broadcast/user/node3] {"node0" : 4, "node3" : 9} Sending SLDeliver(DataMessage(1,Message1)) to node2
+[INFO] [10/13/2014 04:23:20.123] [Broadcast-akka.actor.default-dispatcher-4] [akka://Broadcast/user/node0] {"node0" : 13, "node3" : 3} Sending SLDeliver(DataMessage(2,Message2)) to node3
+[INFO] [10/13/2014 04:23:20.123] [Broadcast-akka.actor.default-dispatcher-2] [akka://Broadcast/user/node2] {"node2" : 6, "node3" : 4} Sending SLDeliver(DataMessage(2,Message2)) to node3
+[INFO] [10/13/2014 04:23:20.123] [Broadcast-akka.actor.default-dispatcher-7] [akka://Broadcast/user/node3] {"node0" : 8, "node3" : 10} Received SLDeliver(DataMessage(3,Message3)) from node0
+[INFO] [10/13/2014 04:23:20.123] [Broadcast-akka.actor.default-dispatcher-7] [akka://Broadcast/user/node3] {"node0" : 8, "node3" : 11} Sending ACK(3) to node0
+[INFO] [10/13/2014 04:23:20.123] [Broadcast-akka.actor.default-dispatcher-2] [akka://Broadcast/user/node2] {"node0" : 3, "node2" : 7, "node3" : 4} Received SLDeliver(DataMessage(1,Message1)) from node0
+[INFO] [10/13/2014 04:23:20.123] [Broadcast-akka.actor.default-dispatcher-7] [akka://Broadcast/user/node3] {"node0" : 8, "node3" : 12} RBDeliver of message DataMessage(3,Message3) from node0
+[INFO] [10/13/2014 04:23:20.123] [Broadcast-akka.actor.default-dispatcher-2] [akka://Broadcast/user/node2] {"node0" : 3, "node2" : 8, "node3" : 4} Sending ACK(1) to node0
+[INFO] [10/13/2014 04:23:20.123] [Broadcast-akka.actor.default-dispatcher-7] [akka://Broadcast/user/node3] {"node0" : 8, "node3" : 13} Sending SLDeliver(DataMessage(3,Message3)) to node0
+[INFO] [10/13/2014 04:23:20.123] [Broadcast-akka.actor.default-dispatcher-2] [akka://Broadcast/user/node2] {"node0" : 3, "node2" : 9, "node3" : 4} RBDeliver of message DataMessage(1,Message1) from node0
+[INFO] [10/13/2014 04:23:20.123] [Broadcast-akka.actor.default-dispatcher-7] [akka://Broadcast/user/node3] {"node0" : 8, "node3" : 14} Sending SLDeliver(DataMessage(3,Message3)) to node2
+[INFO] [10/13/2014 04:23:20.123] [Broadcast-akka.actor.default-dispatcher-2] [akka://Broadcast/user/node2] {"node0" : 3, "node2" : 10, "node3" : 4} Sending SLDeliver(DataMessage(1,Message1)) to node0
+[INFO] [10/13/2014 04:23:20.123] [Broadcast-akka.actor.default-dispatcher-4] [akka://Broadcast/user/node0] {"node0" : 14, "node3" : 6} Received ACK(1) from node3
+[INFO] [10/13/2014 04:23:20.123] [Broadcast-akka.actor.default-dispatcher-7] [akka://Broadcast/user/node3] {"node0" : 10, "node3" : 15} Received ACK(2) from node0
+[INFO] [10/13/2014 04:23:20.123] [Broadcast-akka.actor.default-dispatcher-2] [akka://Broadcast/user/node2] {"node0" : 3, "node2" : 11, "node3" : 4} Sending SLDeliver(DataMessage(1,Message1)) to node3
+[INFO] [10/13/2014 04:23:20.123] [Broadcast-akka.actor.default-dispatcher-4] [akka://Broadcast/user/node0] {"node0" : 15, "node3" : 8} Received SLDeliver(DataMessage(1,Message1)) from node3
+[INFO] [10/13/2014 04:23:20.123] [Broadcast-akka.actor.default-dispatcher-7] [akka://Broadcast/user/node3] {"node0" : 10, "node2" : 3, "node3" : 16} Received ACK(2) from node2
+[INFO] [10/13/2014 04:23:20.123] [Broadcast-akka.actor.default-dispatcher-4] [akka://Broadcast/user/node0] {"node0" : 16, "node3" : 8} Sending ACK(1) to node3
+[INFO] [10/13/2014 04:23:20.123] [Broadcast-akka.actor.default-dispatcher-2] [akka://Broadcast/user/node2] {"node0" : 7, "node2" : 12, "node3" : 4} Received SLDeliver(DataMessage(3,Message3)) from node0
+[INFO] [10/13/2014 04:23:20.123] [Broadcast-akka.actor.default-dispatcher-4] [akka://Broadcast/user/node0] {"node0" : 17, "node3" : 8} RBDeliver of message DataMessage(1,Message1) from node3
+[INFO] [10/13/2014 04:23:20.123] [Broadcast-akka.actor.default-dispatcher-7] [akka://Broadcast/user/node3] {"node0" : 13, "node2" : 3, "node3" : 17} Received SLDeliver(DataMessage(2,Message2)) from node0
+[INFO] [10/13/2014 04:23:20.123] [Broadcast-akka.actor.default-dispatcher-2] [akka://Broadcast/user/node2] {"node0" : 7, "node2" : 13, "node3" : 4} Sending ACK(3) to node0
+[INFO] [10/13/2014 04:23:20.123] [Broadcast-akka.actor.default-dispatcher-4] [akka://Broadcast/user/node0] {"node0" : 18, "node3" : 8} Sending SLDeliver(DataMessage(1,Message1)) to node2
+[INFO] [10/13/2014 04:23:20.123] [Broadcast-akka.actor.default-dispatcher-7] [akka://Broadcast/user/node3] {"node0" : 13, "node2" : 3, "node3" : 18} Sending ACK(2) to node0
+[INFO] [10/13/2014 04:23:20.123] [Broadcast-akka.actor.default-dispatcher-2] [akka://Broadcast/user/node2] {"node0" : 7, "node2" : 14, "node3" : 4} RBDeliver of message DataMessage(3,Message3) from node0
+[INFO] [10/13/2014 04:23:20.123] [Broadcast-akka.actor.default-dispatcher-4] [akka://Broadcast/user/node0] {"node0" : 19, "node3" : 8} Sending SLDeliver(DataMessage(1,Message1)) to node3
+[INFO] [10/13/2014 04:23:20.123] [Broadcast-akka.actor.default-dispatcher-7] [akka://Broadcast/user/node3] {"node0" : 13, "node2" : 3, "node3" : 19} RBDeliver of message DataMessage(2,Message2) from node0
+[INFO] [10/13/2014 04:23:20.123] [Broadcast-akka.actor.default-dispatcher-2] [akka://Broadcast/user/node2] {"node0" : 7, "node2" : 15, "node3" : 4} Sending SLDeliver(DataMessage(3,Message3)) to node0
+[INFO] [10/13/2014 04:23:20.123] [Broadcast-akka.actor.default-dispatcher-7] [akka://Broadcast/user/node3] {"node0" : 13, "node2" : 3, "node3" : 20} Sending SLDeliver(DataMessage(2,Message2)) to node0
+[INFO] [10/13/2014 04:23:20.123] [Broadcast-akka.actor.default-dispatcher-4] [akka://Broadcast/user/node0] {"node0" : 20, "node2" : 5, "node3" : 8} Received SLDeliver(DataMessage(2,Message2)) from node2
+[INFO] [10/13/2014 04:23:20.123] [Broadcast-akka.actor.default-dispatcher-2] [akka://Broadcast/user/node2] {"node0" : 7, "node2" : 16, "node3" : 4} Sending SLDeliver(DataMessage(3,Message3)) to node3
+[INFO] [10/13/2014 04:23:20.124] [Broadcast-akka.actor.default-dispatcher-7] [akka://Broadcast/user/node3] {"node0" : 13, "node2" : 3, "node3" : 21} Sending SLDeliver(DataMessage(2,Message2)) to node2
+[INFO] [10/13/2014 04:23:20.124] [Broadcast-akka.actor.default-dispatcher-4] [akka://Broadcast/user/node0] {"node0" : 21, "node2" : 5, "node3" : 8} Sending ACK(2) to node2
+[INFO] [10/13/2014 04:23:20.124] [Broadcast-akka.actor.default-dispatcher-2] [akka://Broadcast/user/node2] {"node0" : 12, "node2" : 17, "node3" : 4} Received SLDeliver(DataMessage(2,Message2)) from node0
+[INFO] [10/13/2014 04:23:20.124] [Broadcast-akka.actor.default-dispatcher-7] [akka://Broadcast/user/node3] {"node0" : 13, "node2" : 6, "node3" : 22} Received SLDeliver(DataMessage(2,Message2)) from node2
+[INFO] [10/13/2014 04:23:20.124] [Broadcast-akka.actor.default-dispatcher-4] [akka://Broadcast/user/node0] {"node0" : 22, "node2" : 5, "node3" : 11} Received ACK(3) from node3
+[INFO] [10/13/2014 04:23:20.124] [Broadcast-akka.actor.default-dispatcher-2] [akka://Broadcast/user/node2] {"node0" : 12, "node2" : 18, "node3" : 4} Sending ACK(2) to node0
+[INFO] [10/13/2014 04:23:20.124] [Broadcast-akka.actor.default-dispatcher-7] [akka://Broadcast/user/node3] {"node0" : 13, "node2" : 6, "node3" : 23} Sending ACK(2) to node2
+[INFO] [10/13/2014 04:23:20.124] [Broadcast-akka.actor.default-dispatcher-4] [akka://Broadcast/user/node0] {"node0" : 23, "node2" : 8, "node3" : 11} Received ACK(1) from node2
+[INFO] [10/13/2014 04:23:20.124] [Broadcast-akka.actor.default-dispatcher-2] [akka://Broadcast/user/node2] {"node0" : 12, "node2" : 19, "node3" : 9} Received SLDeliver(DataMessage(1,Message1)) from node3
+[INFO] [10/13/2014 04:23:20.124] [Broadcast-akka.actor.default-dispatcher-7] [akka://Broadcast/user/node3] {"node0" : 13, "node2" : 11, "node3" : 24} Received SLDeliver(DataMessage(1,Message1)) from node2
+[INFO] [10/13/2014 04:23:20.124] [Broadcast-akka.actor.default-dispatcher-4] [akka://Broadcast/user/node0] {"node0" : 24, "node2" : 8, "node3" : 13} Received SLDeliver(DataMessage(3,Message3)) from node3
+[INFO] [10/13/2014 04:23:20.124] [Broadcast-akka.actor.default-dispatcher-2] [akka://Broadcast/user/node2] {"node0" : 12, "node2" : 20, "node3" : 9} Sending ACK(1) to node3
+[INFO] [10/13/2014 04:23:20.124] [Broadcast-akka.actor.default-dispatcher-7] [akka://Broadcast/user/node3] {"node0" : 13, "node2" : 11, "node3" : 25} Sending ACK(1) to node2
+[INFO] [10/13/2014 04:23:20.124] [Broadcast-akka.actor.default-dispatcher-4] [akka://Broadcast/user/node0] {"node0" : 25, "node2" : 8, "node3" : 13} Sending ACK(3) to node3
+[INFO] [10/13/2014 04:23:20.124] [Broadcast-akka.actor.default-dispatcher-2] [akka://Broadcast/user/node2] {"node0" : 12, "node2" : 21, "node3" : 14} Received SLDeliver(DataMessage(3,Message3)) from node3
+[INFO] [10/13/2014 04:23:20.124] [Broadcast-akka.actor.default-dispatcher-7] [akka://Broadcast/user/node3] {"node0" : 16, "node2" : 11, "node3" : 26} Received ACK(1) from node0
+[INFO] [10/13/2014 04:23:20.124] [Broadcast-akka.actor.default-dispatcher-4] [akka://Broadcast/user/node0] {"node0" : 26, "node2" : 8, "node3" : 13} RBDeliver of message DataMessage(3,Message3) from node3
+[INFO] [10/13/2014 04:23:20.124] [Broadcast-akka.actor.default-dispatcher-2] [akka://Broadcast/user/node2] {"node0" : 12, "node2" : 22, "node3" : 14} Sending ACK(3) to node3
+[INFO] [10/13/2014 04:23:20.124] [Broadcast-akka.actor.default-dispatcher-4] [akka://Broadcast/user/node0] {"node0" : 27, "node2" : 8, "node3" : 13} Sending SLDeliver(DataMessage(3,Message3)) to node2
+[INFO] [10/13/2014 04:23:20.124] [Broadcast-akka.actor.default-dispatcher-7] [akka://Broadcast/user/node3] {"node0" : 19, "node2" : 11, "node3" : 27} Received SLDeliver(DataMessage(1,Message1)) from node0
+[INFO] [10/13/2014 04:23:20.124] [Broadcast-akka.actor.default-dispatcher-2] [akka://Broadcast/user/node2] {"node0" : 18, "node2" : 23, "node3" : 14} Received SLDeliver(DataMessage(1,Message1)) from node0
+[INFO] [10/13/2014 04:23:20.124] [Broadcast-akka.actor.default-dispatcher-4] [akka://Broadcast/user/node0] {"node0" : 28, "node2" : 8, "node3" : 13} Sending SLDeliver(DataMessage(3,Message3)) to node3
+[INFO] [10/13/2014 04:23:20.124] [Broadcast-akka.actor.default-dispatcher-7] [akka://Broadcast/user/node3] {"node0" : 19, "node2" : 11, "node3" : 28} Sending ACK(1) to node0
+[INFO] [10/13/2014 04:23:20.124] [Broadcast-akka.actor.default-dispatcher-2] [akka://Broadcast/user/node2] {"node0" : 18, "node2" : 24, "node3" : 14} Sending ACK(1) to node0
+[INFO] [10/13/2014 04:23:20.124] [Broadcast-akka.actor.default-dispatcher-7] [akka://Broadcast/user/node3] {"node0" : 19, "node2" : 16, "node3" : 29} Received SLDeliver(DataMessage(3,Message3)) from node2
+[INFO] [10/13/2014 04:23:20.124] [Broadcast-akka.actor.default-dispatcher-4] [akka://Broadcast/user/node0] {"node0" : 29, "node2" : 10, "node3" : 13} Received SLDeliver(DataMessage(1,Message1)) from node2
+[INFO] [10/13/2014 04:23:20.124] [Broadcast-akka.actor.default-dispatcher-2] [akka://Broadcast/user/node2] {"node0" : 18, "node2" : 25, "node3" : 21} Received SLDeliver(DataMessage(2,Message2)) from node3
+[INFO] [10/13/2014 04:23:20.124] [Broadcast-akka.actor.default-dispatcher-7] [akka://Broadcast/user/node3] {"node0" : 19, "node2" : 16, "node3" : 30} Sending ACK(3) to node2
+[INFO] [10/13/2014 04:23:20.124] [Broadcast-akka.actor.default-dispatcher-4] [akka://Broadcast/user/node0] {"node0" : 30, "node2" : 10, "node3" : 13} Sending ACK(1) to node2
+[INFO] [10/13/2014 04:23:20.124] [Broadcast-akka.actor.default-dispatcher-2] [akka://Broadcast/user/node2] {"node0" : 18, "node2" : 26, "node3" : 21} Sending ACK(2) to node3
+[INFO] [10/13/2014 04:23:20.124] [Broadcast-akka.actor.default-dispatcher-2] [akka://Broadcast/user/node2] {"node0" : 21, "node2" : 27, "node3" : 21} Received ACK(2) from node0
+[INFO] [10/13/2014 04:23:20.124] [Broadcast-akka.actor.default-dispatcher-7] [akka://Broadcast/user/node3] {"node0" : 19, "node2" : 20, "node3" : 31} Received ACK(1) from node2
+[INFO] [10/13/2014 04:23:20.124] [Broadcast-akka.actor.default-dispatcher-4] [akka://Broadcast/user/node0] {"node0" : 31, "node2" : 13, "node3" : 13} Received ACK(3) from node2
+[INFO] [10/13/2014 04:23:20.125] [Broadcast-akka.actor.default-dispatcher-2] [akka://Broadcast/user/node2] {"node0" : 21, "node2" : 28, "node3" : 23} Received ACK(2) from node3
+[INFO] [10/13/2014 04:23:20.125] [Broadcast-akka.actor.default-dispatcher-7] [akka://Broadcast/user/node3] {"node0" : 25, "node2" : 20, "node3" : 32} Received ACK(3) from node0
+[INFO] [10/13/2014 04:23:20.125] [Broadcast-akka.actor.default-dispatcher-2] [akka://Broadcast/user/node2] {"node0" : 21, "node2" : 29, "node3" : 25} Received ACK(1) from node3
+[INFO] [10/13/2014 04:23:20.125] [Broadcast-akka.actor.default-dispatcher-4] [akka://Broadcast/user/node0] {"node0" : 32, "node2" : 13, "node3" : 18} Received ACK(2) from node3
+[INFO] [10/13/2014 04:23:20.125] [Broadcast-akka.actor.default-dispatcher-7] [akka://Broadcast/user/node3] {"node0" : 25, "node2" : 22, "node3" : 33} Received ACK(3) from node2
+[INFO] [10/13/2014 04:23:20.125] [Broadcast-akka.actor.default-dispatcher-2] [akka://Broadcast/user/node2] {"node0" : 27, "node2" : 30, "node3" : 25} Received SLDeliver(DataMessage(3,Message3)) from node0
+[INFO] [10/13/2014 04:23:20.125] [Broadcast-akka.actor.default-dispatcher-7] [akka://Broadcast/user/node3] {"node0" : 28, "node2" : 22, "node3" : 34} Received SLDeliver(DataMessage(3,Message3)) from node0
+[INFO] [10/13/2014 04:23:20.125] [Broadcast-akka.actor.default-dispatcher-4] [akka://Broadcast/user/node0] {"node0" : 33, "node2" : 15, "node3" : 18} Received SLDeliver(DataMessage(3,Message3)) from node2
+[INFO] [10/13/2014 04:23:20.125] [Broadcast-akka.actor.default-dispatcher-2] [akka://Broadcast/user/node2] {"node0" : 27, "node2" : 31, "node3" : 25} Sending ACK(3) to node0
+[INFO] [10/13/2014 04:23:20.125] [Broadcast-akka.actor.default-dispatcher-7] [akka://Broadcast/user/node3] {"node0" : 28, "node2" : 22, "node3" : 35} Sending ACK(3) to node0
+[INFO] [10/13/2014 04:23:20.125] [Broadcast-akka.actor.default-dispatcher-4] [akka://Broadcast/user/node0] {"node0" : 34, "node2" : 15, "node3" : 18} Sending ACK(3) to node2
+[INFO] [10/13/2014 04:23:20.125] [Broadcast-akka.actor.default-dispatcher-2] [akka://Broadcast/user/node2] {"node0" : 27, "node2" : 32, "node3" : 30} Received ACK(3) from node3
+[INFO] [10/13/2014 04:23:20.125] [Broadcast-akka.actor.default-dispatcher-7] [akka://Broadcast/user/node3] {"node0" : 28, "node2" : 26, "node3" : 36} Received ACK(2) from node2
+[INFO] [10/13/2014 04:23:20.125] [Broadcast-akka.actor.default-dispatcher-2] [akka://Broadcast/user/node2] {"node0" : 30, "node2" : 33, "node3" : 30} Received ACK(1) from node0
+[INFO] [10/13/2014 04:23:20.125] [Broadcast-akka.actor.default-dispatcher-4] [akka://Broadcast/user/node0] {"node0" : 35, "node2" : 15, "node3" : 20} Received SLDeliver(DataMessage(2,Message2)) from node3
+[INFO] [10/13/2014 04:23:20.125] [Broadcast-akka.actor.default-dispatcher-4] [akka://Broadcast/user/node0] {"node0" : 36, "node2" : 15, "node3" : 20} Sending ACK(2) to node3
+[INFO] [10/13/2014 04:23:20.125] [Broadcast-akka.actor.default-dispatcher-2] [akka://Broadcast/user/node2] {"node0" : 34, "node2" : 34, "node3" : 30} Received ACK(3) from node0
+[INFO] [10/13/2014 04:23:20.125] [Broadcast-akka.actor.default-dispatcher-4] [akka://Broadcast/user/node0] {"node0" : 37, "node2" : 18, "node3" : 20} Received ACK(2) from node2
+[INFO] [10/13/2014 04:23:20.125] [Broadcast-akka.actor.default-dispatcher-7] [akka://Broadcast/user/node3] {"node0" : 36, "node2" : 26, "node3" : 37} Received ACK(2) from node0
+[INFO] [10/13/2014 04:23:20.125] [Broadcast-akka.actor.default-dispatcher-4] [akka://Broadcast/user/node0] {"node0" : 38, "node2" : 18, "node3" : 28} Received ACK(1) from node3
+[INFO] [10/13/2014 04:23:20.125] [Broadcast-akka.actor.default-dispatcher-4] [akka://Broadcast/user/node0] {"node0" : 39, "node2" : 24, "node3" : 28} Received ACK(1) from node2
+[INFO] [10/13/2014 04:23:20.125] [Broadcast-akka.actor.default-dispatcher-4] [akka://Broadcast/user/node0] {"node0" : 40, "node2" : 31, "node3" : 28} Received ACK(3) from node2
+[INFO] [10/13/2014 04:23:20.126] [Broadcast-akka.actor.default-dispatcher-4] [akka://Broadcast/user/node0] {"node0" : 41, "node2" : 31, "node3" : 35} Received ACK(3) from node3
+[INFO] [10/13/2014 04:23:20.635] [Broadcast-akka.actor.default-dispatcher-5] [akka://Broadcast/user/node0] {"node0" : 42, "node2" : 31, "node3" : 35} Handle Tick()
+[INFO] [10/13/2014 04:23:20.635] [Broadcast-akka.actor.default-dispatcher-7] [akka://Broadcast/user/node3] {"node0" : 36, "node2" : 26, "node3" : 38} Handle Tick()
+[INFO] [10/13/2014 04:23:20.644] [Broadcast-akka.actor.default-dispatcher-5] [akka://Broadcast/user/node2] {"node0" : 34, "node2" : 35, "node3" : 30} Handle Tick()
+

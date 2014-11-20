@@ -27,7 +27,7 @@ function Shiviz() {
         e.preventDefault();
 
         // logUrlPrefix is defined in dev.js & deployed.js
-        var prefix = (dev ? "https://api.github.com/repos/bestchai/shiviz-logs/contents/" : "/log/");
+        var prefix = (dev ? "https://api.github.com/repos/bestchai/shiviz-logs/contents/" : "/shiviz/log/");
         var url = prefix + $(this).data("log");
         var defaultParser = "(?<event>.*)\\n(?<host>\\S*) (?<clock>{.*})";
 
