@@ -30,6 +30,8 @@ function Shiviz() {
         var prefix = (dev ? "https://api.github.com/repos/bestchai/shiviz-logs/contents/" : "/shiviz/log/");
         var url = prefix + $(this).data("log");
         var defaultParser = "(?<event>.*)\\n(?<host>\\S*) (?<clock>{.*})";
+        var defaultOrdering = "descending";
+        var defaultHostSort = "#hostsortLength";
 
         $.get(url, function(response) {
             if (dev)
@@ -38,7 +40,10 @@ function Shiviz() {
             $("#input").val(response);
             context.resetView();
             $("#delimiter").val($(e.target).data("delimiter"));
-            $("#parser").val($(e.target).data("parser") || defaultparser);
+            $("#parser").val($(e.target).data("parser") || defaultParser);
+            $("#ordering").val($(e.target).data("ordering") || defaultOrdering);
+            $($(e.target).data("hostsort") || defaultHostSort).prop("checked", true);
+
             $(e.target).css({
                 color: "gray",
                 pointerevents: "none"
