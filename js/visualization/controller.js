@@ -49,7 +49,7 @@ function Controller(global) {
         if ($target.is(".dialog") || $target.parents(".dialog").length)
             return;
         // Test for node or host click
-        if (tn == "g" || $target.parents("g").length)
+        if (tn == "g" || $target.parents("g").length || $target.parents(".hidden-hosts").length)
             return;
         // Test for line click
         if ($target.parents(".log").length || $target.is(".highlight"))
