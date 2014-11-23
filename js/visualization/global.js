@@ -185,7 +185,7 @@ Global.prototype.resize = function() {
     
     $("#searchbar").width(globalWidth);
 
-    var widthPerHost = globalWidth / visibleHosts;
+    var widthPerHost = Math.max(Global.MIN_HOST_WIDTH, globalWidth / visibleHosts);
     var logTableWidth = this.view2 == null ? Global.SIDE_BAR_WIDTH : (Global.SIDE_BAR_WIDTH - 12) / 2;
 
     this.view1.setWidth(view1NumHosts * widthPerHost);
