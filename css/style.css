@@ -605,6 +605,9 @@ svg#defs {
     position: fixed;
     z-index: 1;
 }
+.dialog.hidden {
+    z-index: 3;
+}
 
 .dialog .triangle {
     position: absolute;
