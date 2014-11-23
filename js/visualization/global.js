@@ -103,7 +103,7 @@ Global.prototype.drawAll = function() {
     this.$vizContainer.append(this.view1.getSVG());
     this.$hostBar.append(this.view1.getHostSVG());
     this.$logTable.append(this.view1.getLogTable());
-    this.controller.bindLines(this.view1.getLogTable().children("*").filter(".log .line:not(.more)"));
+    this.controller.bindLines(this.view1.getLogTable().find(".line:not(.more)"));
     
     if(this.view2 != null) {
         this.view2.draw();
@@ -111,7 +111,7 @@ Global.prototype.drawAll = function() {
         this.$hostBar.append(this.view2.getHostSVG());
         this.$logTable.append($("<td></td>").addClass("spacer"));
         this.$logTable.append(this.view2.getLogTable());
-        this.controller.bindLines(this.view2.getLogTable().children("*").filter(".log .line:not(.more)"));
+        this.controller.bindLines(this.view2.getLogTable().find(".line:not(.more)"));
     }
     
     this.$vizContainer.height("auto");
