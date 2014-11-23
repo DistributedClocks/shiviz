@@ -418,6 +418,10 @@ section.input .left {
 #searchbar #bar input.focus ~ button {
     border: 1px solid #000;
 }
+#searchbar #bar input:focus ~ button ~ button,
+#searchbar #bar input.focus ~ button ~ button {
+    border-right: none;
+}
 #searchbar #panel {
     display: none;
     width: calc(100% - 9px - 104pt);
