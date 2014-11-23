@@ -237,7 +237,7 @@ section.input .left {
     z-index: 4;
 }
 
-.visualization .left {
+.visualization > .left:not(.dialog) {
     position: relative;
     z-index: 4;
 }

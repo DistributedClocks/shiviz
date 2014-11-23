@@ -389,7 +389,7 @@ Controller.prototype.onScroll = function(e) {
 
     if ($(".line.focus").length)
         $(".highlight").css({
-            "left": $(".line.focus").offset().left - parseFloat($(".line.focus").css("margin-left"))
+            "left": $(".line.focus").offset().left - parseFloat($(".line.focus").css("margin-left")) - $(".visualization .left").offset().left
         });
 };
 
