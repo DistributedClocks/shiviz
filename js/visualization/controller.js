@@ -43,11 +43,13 @@ function Controller(global) {
         var $target = $(e.target);
         var tn = $target.prop("tagName");
 
+        console.log($target);
+
         // Test for click inside dialog
         if ($target.is(".dialog") || $target.parents(".dialog").length)
             return;
         // Test for node or host click
-        if (tn == "g" || $target.parents("g").length || tn == "rect")
+        if (tn == "g" || $target.parents("g").length)
             return;
         // Test for line click
         if ($target.parents(".log").length || $target.is(".highlight"))
