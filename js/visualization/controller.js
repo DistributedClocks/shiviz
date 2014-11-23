@@ -382,7 +382,7 @@ Controller.prototype.bindHiddenHosts = function(hh) {
  */
 Controller.prototype.onScroll = function(e) {
     var x = window.pageXOffset;
-    $("#hostBar, .dialog.host").css("margin-left", -x);
+    $("#hostBar, .dialog.host:not(.hidden)").css("margin-left", -x);
     $(".log").css("margin-left", x);
 
     if ($(".line.focus").length)
@@ -460,10 +460,16 @@ Controller.prototype.showDialog = function(e, type, elem) {
         }).data("element", e.getNode());
 
     // Set class "host" if host (hidden or not) is selected
-    if (type)
+    if (type) {
         $dialog.addClass("host");
-    else
+        if (type == 2) {
+            $dialog.addClass("hidden");
+        } else {
+            $dialog.removeClass("hidden");
+        }
+    } else {
         $dialog.removeClass("host");
+    }
 
     // Add info to the dialog
     $dialog.find(".name").text(type == 2 ? e : e.getText());
