@@ -189,7 +189,7 @@ View.prototype.draw = function() {
         var startNodes = view.visualGraph.getStartVisualNodes();
         var arr = [];
         startNodes.forEach(function(visualNode) {
-            var svg = visualNode.getStartNodeSVG();
+            var svg = visualNode.getSVG();
             view.$hostSVG.append(svg);
             arr.push(svg[0]);
         });

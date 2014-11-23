@@ -32,6 +32,8 @@ function VisualNode(node) {
     this.$hiddenParentLine = Util.svgElement("line");
     
     this.$hiddenChildLine = Util.svgElement("line");
+
+    this.$rect = Util.svgElement("rect");
     
     this.$highlightRect = Util.svgElement("rect");
 
@@ -79,42 +81,48 @@ function VisualNode(node) {
 
     /** @private */
     this._isSelected = false;
-    
-    this.$title.text(this.getText());
-    
-    this.$svg.append(this.$title);
-    
-    var mouseOverRect = Util.svgElement("rect");
-    mouseOverRect.attr({
-        "width": 48,
-        "height": 48,
-        "x": -24,
-        "y": -24
-    });
-    this.$svg.append(mouseOverRect);
 
-    this.$svg.append(this.$circle);
-    
-    this.$svg.attr("id", "node" + this.getId());
-    
-    this.$hiddenParentLine.attr({
-        "class": "hidden-link",
-        "x1": 0,
-        "y1": 0
-    });
-    
-    this.$hiddenChildLine.attr({
-        "class": "hidden-link",
-        "x1": 0,
-        "y1": 0
-    });
-    
-    this.$highlightRect.attr({
-        "fill": "transparent",
-        "stroke": "#FFF",
-        "stroke-width": "2px",
-        "pointer-events": "none"
-    });
+    if (this.isStart()) {
+        this.$rect.attr({
+            "width": Global.HOST_SQUARE_SIZE,
+            "height": Global.HOST_SQUARE_SIZE
+        });
+        this.$svg.append(this.$rect);
+        this.$highlightRect.attr({
+            "fill": "transparent",
+            "stroke": "#FFF",
+            "stroke-width": "2px",
+            "pointer-events": "none"
+        });
+    } else {
+        this.$title.text(this.getText());
+        this.$svg.append(this.$title);
+
+        var mouseOverRect = Util.svgElement("rect");
+        mouseOverRect.attr({
+            "width": 48,
+            "height": 48,
+            "x": -24,
+            "y": -24
+        });
+        this.$svg.append(mouseOverRect);
+
+        this.$svg.append(this.$circle);
+
+        this.$svg.attr("id", "node" + this.getId());
+
+        this.$hiddenParentLine.attr({
+            "class": "hidden-link",
+            "x1": 0,
+            "y1": 0
+        });
+
+        this.$hiddenChildLine.attr({
+            "class": "hidden-link",
+            "x1": 0,
+            "y1": 0
+        });
+    }
 
 }
 
@@ -128,20 +136,6 @@ VisualNode.id = 0;
 
 VisualNode.prototype.getSVG = function() {
     return this.$svg;
-};
-
-VisualNode.prototype.getStartNodeSVG = function() {
-    var result = Util.svgElement("rect");
-    result.attr({
-        "width": Global.HOST_SQUARE_SIZE,
-        "height": Global.HOST_SQUARE_SIZE,
-        "y": 0,
-        "x": Math.round(this.getX() - (Global.HOST_SQUARE_SIZE / 2)),
-        "fill": this.getFillColor(),
-        "stroke": this.getStrokeColor(),
-        "stroke-width": this.getStrokeWidth() + "px"
-    });
-    return result;
 };
 
 /**
@@ -178,8 +172,9 @@ VisualNode.prototype.getX = function() {
  * @param {Number} newX The new x-coordinate
  */
 VisualNode.prototype.setX = function(newX) {
+    var translateX = this.isStart() ? newX  - (Global.HOST_SQUARE_SIZE / 2) : newX;
     this.x = newX;
-    this.$svg.attr("transform", "translate(" + newX + "," + this.getY() + ")");
+    this.$svg.attr("transform", "translate(" + translateX + "," + this.getY() + ")");
 };
 
 /**
@@ -254,6 +249,7 @@ VisualNode.prototype.getFillColor = function() {
 VisualNode.prototype.setFillColor = function(newFillColor) {
     this.fillColor = newFillColor;
     this.$circle.attr("fill", newFillColor);
+    this.$rect.attr("fill", newFillColor);
 };
 
 /**
@@ -275,6 +271,7 @@ VisualNode.prototype.getStrokeColor = function() {
 VisualNode.prototype.setStrokeColor = function(newStrokeColor) {
     this.strokeColor = newStrokeColor;
     this.$circle.attr("stroke", newStrokeColor);
+    this.$rect.attr("stroke", newStrokeColor);
 };
 
 /**
@@ -284,7 +281,8 @@ VisualNode.prototype.setStrokeColor = function(newStrokeColor) {
  */
 VisualNode.prototype.setStrokeWidth = function(newStrokeWidth) {
     this.strokeWidth = newStrokeWidth;
-    this.$circle.attr("stroke-wdith", newStrokeWidth + "px");
+    this.$circle.attr("stroke-width", newStrokeWidth + "px");
+    this.$rect.attr("stroke-width", newStrokeWidth + "px");
 };
 
 /**
@@ -474,8 +472,8 @@ VisualNode.prototype.setHighlight = function(val) {
         this.$highlightRect.attr({
             "width": "15px",
             "height": "15px",
-            "x": Math.round(this.getX() - Global.HOST_SQUARE_SIZE / 2 + 5) + "px",
-            "y": this.getY() + 5
+            "x": "5px",
+            "y": "5px"
         });
         this.$svg.append(this.$highlightRect);
     }
