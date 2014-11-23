@@ -237,6 +237,10 @@ section.input .left {
     z-index: 4;
 }
 
+.visualization .left {
+    position: relative;
+    z-index: 4;
+}
 .visualization .left .bg {
     position: fixed;
     background: #fff;
@@ -245,7 +249,6 @@ section.input .left {
     padding: 24pt;
     top: 0;
     left: 0;
-    z-index: 2;
 }
 
 .visualization .left #tabs {
@@ -280,7 +283,6 @@ section.input .left {
     overflow: hidden;
     background: #fff;
     cursor: pointer;
-    z-index: 2;
     transition: margin;
     transition-duration: .1s;
     transition-timing-function: ease-out;
@@ -295,7 +297,7 @@ section.input .left {
 
 .visualization .log .line.more:hover > .line,
 .visualization .log .line.more.reveal > .line {
-    z-index: 3;
+    z-index: 1;
     font-size: 10pt;
     line-height: 1em;
 }

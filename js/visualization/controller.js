@@ -285,12 +285,14 @@ Controller.prototype.bindNodes = function(nodes) {
         var ptop = parseFloat($parent.css("top")) || 0;
         var margin = parseFloat($line.css("margin-top")) || 0;
         var pmargin = parseFloat($parent.css("margin-top")) || 0;
-        var offset = $(".log").offset().top;
+        var vleft = $(".visualization .left").offset().left;
+        var vtop = $(".visualization .left").offset().top;
+        var offset = $(".log").offset().top - vtop;
 
         $(".highlight").css({
             "background": e.getFillColor(),
             "top": top + ptop + margin + pmargin + offset,
-            "left": $line.offset().left - parseFloat($line.css("margin-left"))
+            "left": $line.offset().left - parseFloat($line.css("margin-left")) - vleft
         }).attr({
             "data-ln": e.getLineNumber()
         }).data({
