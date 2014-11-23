@@ -420,7 +420,7 @@ section.input .left {
 }
 #searchbar #bar input:focus ~ button ~ button,
 #searchbar #bar input.focus ~ button ~ button {
-    border-right: none;
+    border-left: none;
 }
 #searchbar #panel {
     display: none;
