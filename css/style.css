@@ -469,11 +469,18 @@ section.input .left {
 #searchbar #panel .add:disabled {
     display: none;
 }
-#searchbar #panel td > p:first-child {
+#searchbar #panel ul {
+    margin: 0;
+    padding: 0;
+}
+#searchbar #panel li {
+    margin-top: 1em;
+}
+#searchbar #panel li:first-child {
     margin-top: 0;
 }
 #searchbar #panel .predefined {
-    margin-bottom: 1em;
+    margin-top: .5em;
 }
 #searchbar #panel .predefined button {
     display: table-cell;
