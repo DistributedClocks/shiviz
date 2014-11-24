@@ -1,0 +1,1727 @@
+[2013-05-24 23:28:00,637 voldemort.store.metadata.MetadataStore] INFO metadata init().
+main {"main":1}  
+[2013-05-24 23:28:00,749 voldemort.store.metadata.MetadataStore] INFO Updating routing strategy for all stores
+main {"main":2}  
+[2013-05-24 23:28:00,830 voldemort.server.VoldemortServer] INFO Using NIO Connector.
+main {"main":3}  
+[2013-05-24 23:28:00,845 voldemort.server.VoldemortServer] INFO Using NIO Connector for Admin Service.
+main {"main":4}  
+[2013-05-24 23:28:00,845 voldemort.server.VoldemortService] INFO Starting voldemort-server
+main {"main":5}  
+[2013-05-24 23:28:00,903 voldemort.server.VoldemortServer] INFO Starting 7 services.
+main {"main":6}  
+[2013-05-24 23:28:00,903 voldemort.server.VoldemortService] INFO Starting storage-service
+main {"main":7}  
+[2013-05-24 23:28:00,946 voldemort.server.storage.StorageService] INFO Initializing bdb storage engine.
+main {"main":8}  
+[2013-05-24 23:28:00,953 voldemort.server.storage.StorageService] INFO Initializing mysql storage engine.
+main {"main":9}  
+[2013-05-24 23:28:00,953 voldemort.server.storage.StorageService] INFO Initializing memory storage engine.
+main {"main":10}  
+[2013-05-24 23:28:00,953 voldemort.server.storage.StorageService] INFO Initializing cache storage engine.
+main {"main":11}  
+[2013-05-24 23:28:00,954 voldemort.server.storage.StorageService] INFO Initializing read-only storage engine.
+main {"main":12}  
+[2013-05-24 23:28:00,955 voldemort.server.storage.StorageService] INFO Initializing the slop store using bdb
+main {"main":13}  
+[2013-05-24 23:28:00,956 voldemort.store.bdb.BdbStorageConfiguration] INFO Creating BDB data directory '/var/folders/nk/rnnlnbcd7sg7vn6cntx_kpfc0000gn/T/106482/node-0/data/bdb.
+main {"main":14}  
+[2013-05-24 23:28:01,155 voldemort.store.bdb.BdbStorageConfiguration] INFO Creating shared BDB environment: 
+main {"main":15}  
+[2013-05-24 23:28:01,155 voldemort.store.bdb.BdbStorageConfiguration] INFO     BDB cache size = 1145359564
+main {"main":16}  
+[2013-05-24 23:28:01,155 voldemort.store.bdb.BdbStorageConfiguration] INFO     BDB je.cleaner.threads = 1
+main {"main":17}  
+[2013-05-24 23:28:01,155 voldemort.store.bdb.BdbStorageConfiguration] INFO     BDB je.cleaner.minUtilization = 50
+main {"main":18}  
+[2013-05-24 23:28:01,155 voldemort.store.bdb.BdbStorageConfiguration] INFO     BDB je.cleaner.minFileUtilization = 5
+main {"main":19}  
+[2013-05-24 23:28:01,155 voldemort.store.bdb.BdbStorageConfiguration] INFO     BDB je.log.fileMax = 62914560
+main {"main":20}  
+[2013-05-24 23:28:01,156 voldemort.store.bdb.BdbStorageConfiguration] INFO     BDB allowCreate=true,cacheSize=1145359564,txnNoSync=false,txnWriteNoSync=false,{je.log.fileMax=62914560, je.cleaner.minFileUtilization=5, je.cleaner.minUtilization=50, je.cleaner.threads=1, je.cleaner.maxBatchFiles=0, je.checkpointer.wakeupInterval=30000000, je.checkpointer.highPriority=false, je.env.isTransactional=true, je.env.fairLatches=false, je.cleaner.lookAheadCacheSize=8192, je.log.faultReadSize=2048, je.lock.nLockTables=1, je.checkpointer.bytesInterval=20971520, je.lock.timeout=500 MILLISECONDS, je.log.iteratorReadSize=8192, je.txn.durability=SYNC,NO_SYNC,SIMPLE_MAJORITY},
+main {"main":21}  
+[2013-05-24 23:28:01,177 voldemort.server.storage.StorageService] INFO Initializing slop pusher job type streaming at Fri May 24 23:33:01 PDT 2013
+main {"main":22}  
+[2013-05-24 23:28:01,190 voldemort.server.storage.StorageService] INFO Initializing repair job.
+main {"main":23}  
+[2013-05-24 23:28:01,204 voldemort.server.storage.StorageService] INFO Initializing stores:
+main {"main":24}  
+[2013-05-24 23:28:01,204 voldemort.server.storage.StorageService] INFO Opening store 'users' (bdb).
+main {"main":25}  
+[2013-05-24 23:28:01,209 voldemort.store.routed.RoutedStoreFactory] WARN Using pseudo NonblockingStore implementation for class voldemort.store.stats.StatTrackingStore
+main {"main":26}  
+[2013-05-24 23:28:01,220 voldemort.server.storage.StorageService] INFO Opening store 'veggies' (bdb).
+main {"main":27}  
+[2013-05-24 23:28:01,221 voldemort.store.routed.RoutedStoreFactory] WARN Using pseudo NonblockingStore implementation for class voldemort.store.stats.StatTrackingStore
+main {"main":28}  
+[2013-05-24 23:28:01,222 voldemort.server.storage.StorageService] INFO Opening store 'test-replication-memory' (memory).
+main {"main":29}  
+[2013-05-24 23:28:01,230 voldemort.store.routed.RoutedStoreFactory] WARN Using pseudo NonblockingStore implementation for class voldemort.store.stats.StatTrackingStore
+main {"main":30}  
+[2013-05-24 23:28:01,230 voldemort.server.storage.StorageService] INFO Opening store 'test-recovery-data' (memory).
+main {"main":31}  
+[2013-05-24 23:28:01,231 voldemort.store.routed.RoutedStoreFactory] WARN Using pseudo NonblockingStore implementation for class voldemort.store.stats.StatTrackingStore
+main {"main":32}  
+[2013-05-24 23:28:01,231 voldemort.server.storage.StorageService] INFO Opening store 'test-replication-persistent' (bdb).
+main {"main":33}  
+[2013-05-24 23:28:01,233 voldemort.store.routed.RoutedStoreFactory] WARN Using pseudo NonblockingStore implementation for class voldemort.store.stats.StatTrackingStore
+main {"main":34}  
+[2013-05-24 23:28:01,233 voldemort.server.storage.StorageService] INFO Opening store 'test-readrepair-memory' (memory).
+main {"main":35}  
+[2013-05-24 23:28:01,234 voldemort.store.routed.RoutedStoreFactory] WARN Using pseudo NonblockingStore implementation for class voldemort.store.stats.StatTrackingStore
+main {"main":36}  
+[2013-05-24 23:28:01,234 voldemort.server.storage.StorageService] INFO Opening store 'test-readonly-fetchfiles' (read-only).
+main {"main":37}  
+[2013-05-24 23:28:01,248 voldemort.store.readonly.ReadOnlyStorageEngine] INFO Creating symbolic link for 'test-readonly-fetchfiles' using directory /var/folders/nk/rnnlnbcd7sg7vn6cntx_kpfc0000gn/T/106482/node-0/data/read-only/test-readonly-fetchfiles/version-0
+main {"main":38}  
+[2013-05-24 23:28:01,261 voldemort.store.readonly.chunk.ChunkedFileSet] WARN Metadata file not found. Assuming default settings
+main {"main":39}  
+[2013-05-24 23:28:01,264 voldemort.store.readonly.chunk.ChunkedFileSet] INFO No index or data files found, creating empty files 0.index and 0.data.
+main {"main":40}  
+[2013-05-24 23:28:01,274 voldemort.store.routed.RoutedStoreFactory] WARN Using pseudo NonblockingStore implementation for class voldemort.store.stats.StatTrackingStore
+main {"main":41}  
+[2013-05-24 23:28:01,274 voldemort.server.storage.StorageService] INFO Opening store 'test-readonly-versions' (read-only).
+main {"main":42}  
+[2013-05-24 23:28:01,275 voldemort.store.readonly.ReadOnlyStorageEngine] INFO Creating symbolic link for 'test-readonly-versions' using directory /var/folders/nk/rnnlnbcd7sg7vn6cntx_kpfc0000gn/T/106482/node-0/data/read-only/test-readonly-versions/version-0
+main {"main":43}  
+[2013-05-24 23:28:01,275 voldemort.store.readonly.chunk.ChunkedFileSet] WARN Metadata file not found. Assuming default settings
+main {"main":44}  
+[2013-05-24 23:28:01,276 voldemort.store.readonly.chunk.ChunkedFileSet] INFO No index or data files found, creating empty files 0.index and 0.data.
+main {"main":45}  
+[2013-05-24 23:28:01,280 voldemort.store.routed.RoutedStoreFactory] WARN Using pseudo NonblockingStore implementation for class voldemort.store.stats.StatTrackingStore
+main {"main":46}  
+[2013-05-24 23:28:01,280 voldemort.server.storage.StorageService] INFO Opening store 'test-consistent' (memory).
+main {"main":47}  
+[2013-05-24 23:28:01,280 voldemort.store.routed.RoutedStoreFactory] WARN Using pseudo NonblockingStore implementation for class voldemort.store.stats.StatTrackingStore
+main {"main":48}  
+[2013-05-24 23:28:01,282 voldemort.server.storage.StorageService] INFO Opening store 'test-to-all' (memory).
+main {"main":49}  
+[2013-05-24 23:28:01,282 voldemort.store.routed.RoutedStoreFactory] WARN Using pseudo NonblockingStore implementation for class voldemort.store.stats.StatTrackingStore
+main {"main":50}  
+[2013-05-24 23:28:01,282 voldemort.server.storage.StorageService] INFO Opening store 'test-consistent-with-pref-list' (memory).
+main {"main":51}  
+[2013-05-24 23:28:01,282 voldemort.store.routed.RoutedStoreFactory] WARN Using pseudo NonblockingStore implementation for class voldemort.store.stats.StatTrackingStore
+main {"main":52}  
+[2013-05-24 23:28:01,313 voldemort.server.storage.StorageService] INFO All stores initialized.
+main {"main":53}  
+[2013-05-24 23:28:01,313 voldemort.server.VoldemortService] INFO Starting scheduler-service
+main {"main":54}  
+[2013-05-24 23:28:01,313 voldemort.server.VoldemortService] INFO Starting async-scheduler
+main {"main":55}  
+[2013-05-24 23:28:01,313 voldemort.server.protocol.admin.AsyncOperationService] INFO Starting asyncOperationRunner
+main {"main":56}  
+[2013-05-24 23:28:01,313 voldemort.server.VoldemortService] INFO Starting http-service
+main {"main":57}  
+[2013-05-24 23:28:01,403 voldemort.server.http.HttpService] INFO HTTP service started on port 64145
+main {"main":58}  
+[2013-05-24 23:28:01,404 voldemort.server.VoldemortService] INFO Starting socket-service
+main {"main":59}  
+[2013-05-24 23:28:01,404 voldemort.server.niosocket.NioSocketService] INFO Starting Voldemort NIO socket server (nio-socket-server) on port 64146
+main {"main":60}  
+[2013-05-24 23:28:01,407 voldemort.server.VoldemortService] INFO Starting rebalance-service
+main {"main":61}  
+[2013-05-24 23:28:01,407 voldemort.server.niosocket.NioSocketService] INFO Server now listening for connections on port 64146
+nio-acceptor {"nio-acceptor":1}  
+[2013-05-24 23:28:01,408 voldemort.server.VoldemortService] INFO Starting socket-service
+main {"main":62}  
+[2013-05-24 23:28:01,408 voldemort.server.niosocket.NioSocketService] INFO Starting Voldemort NIO socket server (admin-server) on port 64147
+main {"main":63}  
+[2013-05-24 23:28:01,410 voldemort.server.VoldemortServer] INFO Startup completed in 506 ms.
+main {"main":64}  
+[2013-05-24 23:28:01,410 voldemort.server.niosocket.NioSocketService] INFO Server now listening for connections on port 64147
+nio-acceptor {"nio-acceptor":2}  
+[2013-05-24 23:28:01,431 voldemort.server.niosocket.AsyncRequestHandler] INFO Protocol negotiated for Socket[addr=/127.0.0.1,port=64151,localport=64146]: voldemort-native-v1
+nio-server1 {"nio-server1":1, "nio-client1":0}  
+[2013-05-24 23:28:01,463 voldemort.store.metadata.MetadataStore] INFO metadata init().
+main {"main":65}  
+[2013-05-24 23:28:01,495 voldemort.store.metadata.MetadataStore] INFO Updating routing strategy for all stores
+main {"main":66}  
+[2013-05-24 23:28:01,498 voldemort.server.VoldemortServer] INFO Using NIO Connector.
+main {"main":67}  
+[2013-05-24 23:28:01,499 voldemort.server.VoldemortServer] INFO Using NIO Connector for Admin Service.
+main {"main":68}  
+[2013-05-24 23:28:01,499 voldemort.server.VoldemortService] INFO Starting voldemort-server
+main {"main":69}  
+[2013-05-24 23:28:01,499 voldemort.server.VoldemortServer] INFO Starting 7 services.
+main {"main":70}  
+[2013-05-24 23:28:01,499 voldemort.server.VoldemortService] INFO Starting storage-service
+main {"main":71}  
+[2013-05-24 23:28:01,500 voldemort.server.storage.StorageService] INFO Initializing bdb storage engine.
+main {"main":72}  
+[2013-05-24 23:28:01,500 voldemort.server.storage.StorageService] INFO Initializing mysql storage engine.
+main {"main":73}  
+[2013-05-24 23:28:01,500 voldemort.server.storage.StorageService] INFO Initializing memory storage engine.
+main {"main":74}  
+[2013-05-24 23:28:01,500 voldemort.server.storage.StorageService] INFO Initializing cache storage engine.
+main {"main":75}  
+[2013-05-24 23:28:01,500 voldemort.server.storage.StorageService] INFO Initializing read-only storage engine.
+main {"main":76}  
+[2013-05-24 23:28:01,500 voldemort.server.storage.StorageService] INFO Initializing the slop store using bdb
+main {"main":77}  
+[2013-05-24 23:28:01,501 voldemort.store.bdb.BdbStorageConfiguration] INFO Creating BDB data directory '/var/folders/nk/rnnlnbcd7sg7vn6cntx_kpfc0000gn/T/65447/node-1/data/bdb.
+main {"main":78}  
+[2013-05-24 23:28:01,517 voldemort.store.bdb.BdbStorageConfiguration] INFO Creating shared BDB environment: 
+main {"main":79}  
+[2013-05-24 23:28:01,517 voldemort.store.bdb.BdbStorageConfiguration] INFO     BDB cache size = 1145359564
+main {"main":80}  
+[2013-05-24 23:28:01,517 voldemort.store.bdb.BdbStorageConfiguration] INFO     BDB je.cleaner.threads = 1
+main {"main":81}  
+[2013-05-24 23:28:01,517 voldemort.store.bdb.BdbStorageConfiguration] INFO     BDB je.cleaner.minUtilization = 50
+main {"main":82}  
+[2013-05-24 23:28:01,517 voldemort.store.bdb.BdbStorageConfiguration] INFO     BDB je.cleaner.minFileUtilization = 5
+main {"main":83}  
+[2013-05-24 23:28:01,517 voldemort.store.bdb.BdbStorageConfiguration] INFO     BDB je.log.fileMax = 62914560
+main {"main":84}  
+[2013-05-24 23:28:01,517 voldemort.store.bdb.BdbStorageConfiguration] INFO     BDB allowCreate=true,cacheSize=1145359564,txnNoSync=false,txnWriteNoSync=false,{je.log.fileMax=62914560, je.cleaner.minFileUtilization=5, je.cleaner.minUtilization=50, je.cleaner.threads=1, je.cleaner.maxBatchFiles=0, je.checkpointer.wakeupInterval=30000000, je.checkpointer.highPriority=false, je.env.isTransactional=true, je.env.fairLatches=false, je.cleaner.lookAheadCacheSize=8192, je.log.faultReadSize=2048, je.lock.nLockTables=1, je.checkpointer.bytesInterval=20971520, je.lock.timeout=500 MILLISECONDS, je.log.iteratorReadSize=8192, je.txn.durability=SYNC,NO_SYNC,SIMPLE_MAJORITY},
+main {"main":85}  
+[2013-05-24 23:28:01,519 voldemort.server.storage.StorageService] INFO Initializing slop pusher job type streaming at Fri May 24 23:33:01 PDT 2013
+main {"main":86}  
+[2013-05-24 23:28:01,519 voldemort.server.storage.StorageService] INFO Initializing repair job.
+main {"main":87}  
+[2013-05-24 23:28:01,520 voldemort.server.storage.StorageService] INFO Initializing stores:
+main {"main":88}  
+[2013-05-24 23:28:01,520 voldemort.server.storage.StorageService] INFO Opening store 'users' (bdb).
+main {"main":89}  
+[2013-05-24 23:28:01,522 voldemort.store.routed.RoutedStoreFactory] WARN Using pseudo NonblockingStore implementation for class voldemort.store.stats.StatTrackingStore
+main {"main":90}  
+[2013-05-24 23:28:01,522 voldemort.server.storage.StorageService] INFO Opening store 'veggies' (bdb).
+main {"main":91}  
+[2013-05-24 23:28:01,523 voldemort.store.routed.RoutedStoreFactory] WARN Using pseudo NonblockingStore implementation for class voldemort.store.stats.StatTrackingStore
+main {"main":92}  
+[2013-05-24 23:28:01,523 voldemort.server.storage.StorageService] INFO Opening store 'test-replication-memory' (memory).
+main {"main":93}  
+[2013-05-24 23:28:01,523 voldemort.store.routed.RoutedStoreFactory] WARN Using pseudo NonblockingStore implementation for class voldemort.store.stats.StatTrackingStore
+main {"main":94}  
+[2013-05-24 23:28:01,524 voldemort.server.storage.StorageService] INFO Opening store 'test-recovery-data' (memory).
+main {"main":95}  
+[2013-05-24 23:28:01,524 voldemort.store.routed.RoutedStoreFactory] WARN Using pseudo NonblockingStore implementation for class voldemort.store.stats.StatTrackingStore
+main {"main":96}  
+[2013-05-24 23:28:01,524 voldemort.server.storage.StorageService] INFO Opening store 'test-replication-persistent' (bdb).
+main {"main":97}  
+[2013-05-24 23:28:01,525 voldemort.store.routed.RoutedStoreFactory] WARN Using pseudo NonblockingStore implementation for class voldemort.store.stats.StatTrackingStore
+main {"main":98}  
+[2013-05-24 23:28:01,526 voldemort.server.storage.StorageService] INFO Opening store 'test-readrepair-memory' (memory).
+main {"main":99}  
+[2013-05-24 23:28:01,526 voldemort.store.routed.RoutedStoreFactory] WARN Using pseudo NonblockingStore implementation for class voldemort.store.stats.StatTrackingStore
+main {"main":100}  
+[2013-05-24 23:28:01,526 voldemort.server.storage.StorageService] INFO Opening store 'test-readonly-fetchfiles' (read-only).
+main {"main":101}  
+[2013-05-24 23:28:01,527 voldemort.store.readonly.ReadOnlyStorageEngine] INFO Creating symbolic link for 'test-readonly-fetchfiles' using directory /var/folders/nk/rnnlnbcd7sg7vn6cntx_kpfc0000gn/T/65447/node-1/data/read-only/test-readonly-fetchfiles/version-0
+main {"main":102}  
+[2013-05-24 23:28:01,527 voldemort.store.readonly.chunk.ChunkedFileSet] WARN Metadata file not found. Assuming default settings
+main {"main":103}  
+[2013-05-24 23:28:01,528 voldemort.store.readonly.chunk.ChunkedFileSet] INFO No index or data files found, creating empty files 0.index and 0.data.
+main {"main":104}  
+[2013-05-24 23:28:01,532 voldemort.store.routed.RoutedStoreFactory] WARN Using pseudo NonblockingStore implementation for class voldemort.store.stats.StatTrackingStore
+main {"main":105}  
+[2013-05-24 23:28:01,532 voldemort.server.storage.StorageService] INFO Opening store 'test-readonly-versions' (read-only).
+main {"main":106}  
+[2013-05-24 23:28:01,533 voldemort.store.readonly.ReadOnlyStorageEngine] INFO Creating symbolic link for 'test-readonly-versions' using directory /var/folders/nk/rnnlnbcd7sg7vn6cntx_kpfc0000gn/T/65447/node-1/data/read-only/test-readonly-versions/version-0
+main {"main":107}  
+[2013-05-24 23:28:01,533 voldemort.store.readonly.chunk.ChunkedFileSet] WARN Metadata file not found. Assuming default settings
+main {"main":108}  
+[2013-05-24 23:28:01,534 voldemort.store.readonly.chunk.ChunkedFileSet] INFO No index or data files found, creating empty files 0.index and 0.data.
+main {"main":109}  
+[2013-05-24 23:28:01,537 voldemort.store.routed.RoutedStoreFactory] WARN Using pseudo NonblockingStore implementation for class voldemort.store.stats.StatTrackingStore
+main {"main":110}  
+[2013-05-24 23:28:01,538 voldemort.server.storage.StorageService] INFO Opening store 'test-consistent' (memory).
+main {"main":111}  
+[2013-05-24 23:28:01,538 voldemort.store.routed.RoutedStoreFactory] WARN Using pseudo NonblockingStore implementation for class voldemort.store.stats.StatTrackingStore
+main {"main":112}  
+[2013-05-24 23:28:01,538 voldemort.server.storage.StorageService] INFO Opening store 'test-to-all' (memory).
+main {"main":113}  
+[2013-05-24 23:28:01,539 voldemort.store.routed.RoutedStoreFactory] WARN Using pseudo NonblockingStore implementation for class voldemort.store.stats.StatTrackingStore
+main {"main":114}  
+[2013-05-24 23:28:01,539 voldemort.server.storage.StorageService] INFO Opening store 'test-consistent-with-pref-list' (memory).
+main {"main":115}  
+[2013-05-24 23:28:01,539 voldemort.store.routed.RoutedStoreFactory] WARN Using pseudo NonblockingStore implementation for class voldemort.store.stats.StatTrackingStore
+main {"main":116}  
+[2013-05-24 23:28:01,561 voldemort.server.storage.StorageService] INFO All stores initialized.
+main {"main":117}  
+[2013-05-24 23:28:01,561 voldemort.server.VoldemortService] INFO Starting scheduler-service
+main {"main":118}  
+[2013-05-24 23:28:01,561 voldemort.server.VoldemortService] INFO Starting async-scheduler
+main {"main":119}  
+[2013-05-24 23:28:01,561 voldemort.server.protocol.admin.AsyncOperationService] INFO Starting asyncOperationRunner
+main {"main":120}  
+[2013-05-24 23:28:01,562 voldemort.server.VoldemortService] INFO Starting http-service
+main {"main":121}  
+[2013-05-24 23:28:01,563 voldemort.server.http.HttpService] INFO HTTP service started on port 64148
+main {"main":122}  
+[2013-05-24 23:28:01,563 voldemort.server.VoldemortService] INFO Starting socket-service
+main {"main":123}  
+[2013-05-24 23:28:01,563 voldemort.server.niosocket.NioSocketService] INFO Starting Voldemort NIO socket server (nio-socket-server) on port 64149
+main {"main":124}  
+[2013-05-24 23:28:01,565 voldemort.server.VoldemortService] INFO Starting rebalance-service
+main {"main":125}  
+[2013-05-24 23:28:01,565 voldemort.server.niosocket.NioSocketService] INFO Server now listening for connections on port 64149
+nio-acceptor {"nio-acceptor":3}  
+[2013-05-24 23:28:01,566 voldemort.server.VoldemortService] INFO Starting socket-service
+main {"main":126}  
+[2013-05-24 23:28:01,566 voldemort.server.niosocket.NioSocketService] INFO Starting Voldemort NIO socket server (admin-server) on port 64150
+main {"main":127}  
+[2013-05-24 23:28:01,567 voldemort.server.VoldemortServer] INFO Startup completed in 68 ms.
+main {"main":128}  
+[2013-05-24 23:28:01,567 voldemort.server.niosocket.NioSocketService] INFO Server now listening for connections on port 64150
+nio-acceptor {"nio-acceptor":4}  
+[2013-05-24 23:28:01,570 voldemort.server.niosocket.AsyncRequestHandler] INFO Protocol negotiated for Socket[addr=/127.0.0.1,port=64152,localport=64149]: voldemort-native-v1
+nio-server1 {"nio-server1":2, "nio-client2":0, "nio-client1":0}  
+[2013-05-24 23:28:01,670 voldemort.client.DefaultStoreClient] INFO Bootstrapping metadata for store test-readrepair-memory
+main {"main":129}  
+[2013-05-24 23:28:01,670 voldemort.client.AbstractStoreClientFactory] INFO Client zone-id [0] Attempting to obtain metadata for store [test-readrepair-memory] 
+main {"main":130}  
+[2013-05-24 23:28:01,674 voldemort.server.niosocket.AsyncRequestHandler] INFO Protocol negotiated for Socket[addr=/127.0.0.1,port=64153,localport=64146]: voldemort-native-v1
+nio-server2 {"nio-server1":1, "nio-client1":0, "nio-server2":1}  
+[2013-05-24 23:28:01,779 voldemort.server.niosocket.AsyncRequestHandler] INFO Protocol negotiated for Socket[addr=/127.0.0.1,port=64154,localport=64149]: voldemort-native-v1
+nio-server2 {"nio-server1":2, "nio-client2":0, "nio-client1":0, "nio-server2":2}  
+[2013-05-24 23:28:01,862 voldemort.server.niosocket.AsyncRequestHandler] INFO Closing remote connection from Socket[addr=/127.0.0.1,port=64151,localport=64146]
+nio-server1 {"nio-server1":3, "nio-client2":0, "nio-client1":0}  
+[2013-05-24 23:28:01,863 voldemort.store.socket.clientrequest.ClientRequestExecutorFactory$ClientRequestSelectorManager] INFO Closed, exiting
+nio-client1 {"nio-server1":2, "nio-client2":0, "nio-client1":1, "nio-server2":2}  
+[2013-05-24 23:28:01,865 voldemort.store.socket.clientrequest.ClientRequestExecutorFactory$ClientRequestSelectorManager] INFO Closed, exiting
+nio-client2 {"nio-server1":2, "nio-client2":1, "nio-client1":0, "nio-server2":2}  
+[2013-05-24 23:28:01,865 voldemort.server.niosocket.AsyncRequestHandler] INFO Closing remote connection from Socket[addr=/127.0.0.1,port=64152,localport=64149]
+nio-server1 {"nio-server1":4, "nio-client2":0, "nio-client1":0}  
+[2013-05-24 23:28:01,865 voldemort.store.socket.clientrequest.ClientRequestExecutor] WARN No client associated with Socket[unconnected]
+main {"main":131}  
+[2013-05-24 23:28:01,865 voldemort.store.socket.clientrequest.ClientRequestExecutor] INFO Closing remote connection from Socket[unconnected]
+main {"main":132}  
+[2013-05-24 23:28:01,865 voldemort.store.socket.clientrequest.ClientRequestExecutor] WARN No client associated with Socket[unconnected]
+main {"main":133}  
+[2013-05-24 23:28:01,865 voldemort.store.socket.clientrequest.ClientRequestExecutor] INFO Closing remote connection from Socket[unconnected]
+main {"main":134}  
+.[2013-05-24 23:28:01,874 voldemort.store.metadata.MetadataStore] INFO metadata init().
+main {"main":135}  
+[2013-05-24 23:28:01,896 voldemort.store.metadata.MetadataStore] INFO Updating routing strategy for all stores
+main {"main":136}  
+[2013-05-24 23:28:01,899 voldemort.server.VoldemortServer] INFO Using NIO Connector.
+main {"main":137}  
+[2013-05-24 23:28:01,900 voldemort.server.VoldemortServer] INFO Using NIO Connector for Admin Service.
+main {"main":138}  
+[2013-05-24 23:28:01,900 voldemort.server.VoldemortService] INFO Starting voldemort-server
+main {"main":139}  
+[2013-05-24 23:28:01,900 voldemort.server.VoldemortServer] INFO Starting 7 services.
+main {"main":140}  
+[2013-05-24 23:28:01,900 voldemort.server.VoldemortService] INFO Starting storage-service
+main {"main":141}  
+[2013-05-24 23:28:01,901 voldemort.server.storage.StorageService] INFO Initializing bdb storage engine.
+main {"main":142}  
+[2013-05-24 23:28:01,901 voldemort.server.storage.StorageService] INFO Initializing mysql storage engine.
+main {"main":143}  
+[2013-05-24 23:28:01,901 voldemort.server.storage.StorageService] INFO Initializing memory storage engine.
+main {"main":144}  
+[2013-05-24 23:28:01,901 voldemort.server.storage.StorageService] INFO Initializing cache storage engine.
+main {"main":145}  
+[2013-05-24 23:28:01,901 voldemort.server.storage.StorageService] INFO Initializing read-only storage engine.
+main {"main":146}  
+[2013-05-24 23:28:01,901 voldemort.server.storage.StorageService] INFO Initializing the slop store using bdb
+main {"main":147}  
+[2013-05-24 23:28:01,901 voldemort.store.bdb.BdbStorageConfiguration] INFO Creating BDB data directory '/var/folders/nk/rnnlnbcd7sg7vn6cntx_kpfc0000gn/T/692549/node-0/data/bdb.
+main {"main":148}  
+[2013-05-24 23:28:01,910 voldemort.store.bdb.BdbStorageConfiguration] INFO Creating shared BDB environment: 
+main {"main":149}  
+[2013-05-24 23:28:01,911 voldemort.store.bdb.BdbStorageConfiguration] INFO     BDB cache size = 1145359564
+main {"main":150}  
+[2013-05-24 23:28:01,911 voldemort.store.bdb.BdbStorageConfiguration] INFO     BDB je.cleaner.threads = 1
+main {"main":151}  
+[2013-05-24 23:28:01,911 voldemort.store.bdb.BdbStorageConfiguration] INFO     BDB je.cleaner.minUtilization = 50
+main {"main":152}  
+[2013-05-24 23:28:01,911 voldemort.store.bdb.BdbStorageConfiguration] INFO     BDB je.cleaner.minFileUtilization = 5
+main {"main":153}  
+[2013-05-24 23:28:01,911 voldemort.store.bdb.BdbStorageConfiguration] INFO     BDB je.log.fileMax = 62914560
+main {"main":154}  
+[2013-05-24 23:28:01,911 voldemort.store.bdb.BdbStorageConfiguration] INFO     BDB allowCreate=true,cacheSize=1145359564,txnNoSync=false,txnWriteNoSync=false,{je.log.fileMax=62914560, je.cleaner.minFileUtilization=5, je.cleaner.minUtilization=50, je.cleaner.threads=1, je.cleaner.maxBatchFiles=0, je.checkpointer.wakeupInterval=30000000, je.checkpointer.highPriority=false, je.env.isTransactional=true, je.env.fairLatches=false, je.cleaner.lookAheadCacheSize=8192, je.log.faultReadSize=2048, je.lock.nLockTables=1, je.checkpointer.bytesInterval=20971520, je.lock.timeout=500 MILLISECONDS, je.log.iteratorReadSize=8192, je.txn.durability=SYNC,NO_SYNC,SIMPLE_MAJORITY},
+main {"main":155}  
+[2013-05-24 23:28:01,913 voldemort.server.storage.StorageService] INFO Initializing slop pusher job type streaming at Fri May 24 23:33:01 PDT 2013
+main {"main":156}  
+[2013-05-24 23:28:01,913 voldemort.server.storage.StorageService] INFO Initializing repair job.
+main {"main":157}  
+[2013-05-24 23:28:01,914 voldemort.server.storage.StorageService] INFO Initializing stores:
+main {"main":158}  
+[2013-05-24 23:28:01,914 voldemort.server.storage.StorageService] INFO Opening store 'users' (bdb).
+main {"main":159}  
+[2013-05-24 23:28:01,916 voldemort.store.routed.RoutedStoreFactory] WARN Using pseudo NonblockingStore implementation for class voldemort.store.stats.StatTrackingStore
+main {"main":160}  
+[2013-05-24 23:28:01,916 voldemort.server.storage.StorageService] INFO Opening store 'veggies' (bdb).
+main {"main":161}  
+[2013-05-24 23:28:01,917 voldemort.store.routed.RoutedStoreFactory] WARN Using pseudo NonblockingStore implementation for class voldemort.store.stats.StatTrackingStore
+main {"main":162}  
+[2013-05-24 23:28:01,918 voldemort.server.storage.StorageService] INFO Opening store 'test-replication-memory' (memory).
+main {"main":163}  
+[2013-05-24 23:28:01,918 voldemort.store.routed.RoutedStoreFactory] WARN Using pseudo NonblockingStore implementation for class voldemort.store.stats.StatTrackingStore
+main {"main":164}  
+[2013-05-24 23:28:01,918 voldemort.server.storage.StorageService] INFO Opening store 'test-recovery-data' (memory).
+main {"main":165}  
+[2013-05-24 23:28:01,919 voldemort.store.routed.RoutedStoreFactory] WARN Using pseudo NonblockingStore implementation for class voldemort.store.stats.StatTrackingStore
+main {"main":166}  
+[2013-05-24 23:28:01,919 voldemort.server.storage.StorageService] INFO Opening store 'test-replication-persistent' (bdb).
+main {"main":167}  
+[2013-05-24 23:28:01,920 voldemort.store.routed.RoutedStoreFactory] WARN Using pseudo NonblockingStore implementation for class voldemort.store.stats.StatTrackingStore
+main {"main":168}  
+[2013-05-24 23:28:01,921 voldemort.server.storage.StorageService] INFO Opening store 'test-readrepair-memory' (memory).
+main {"main":169}  
+[2013-05-24 23:28:01,921 voldemort.store.routed.RoutedStoreFactory] WARN Using pseudo NonblockingStore implementation for class voldemort.store.stats.StatTrackingStore
+main {"main":170}  
+[2013-05-24 23:28:01,921 voldemort.server.storage.StorageService] INFO Opening store 'test-readonly-fetchfiles' (read-only).
+main {"main":171}  
+[2013-05-24 23:28:01,922 voldemort.store.readonly.ReadOnlyStorageEngine] INFO Creating symbolic link for 'test-readonly-fetchfiles' using directory /var/folders/nk/rnnlnbcd7sg7vn6cntx_kpfc0000gn/T/692549/node-0/data/read-only/test-readonly-fetchfiles/version-0
+main {"main":172}  
+[2013-05-24 23:28:01,923 voldemort.store.readonly.chunk.ChunkedFileSet] WARN Metadata file not found. Assuming default settings
+main {"main":173}  
+[2013-05-24 23:28:01,923 voldemort.store.readonly.chunk.ChunkedFileSet] INFO No index or data files found, creating empty files 0.index and 0.data.
+main {"main":174}  
+[2013-05-24 23:28:01,926 voldemort.store.routed.RoutedStoreFactory] WARN Using pseudo NonblockingStore implementation for class voldemort.store.stats.StatTrackingStore
+main {"main":175}  
+[2013-05-24 23:28:01,926 voldemort.server.storage.StorageService] INFO Opening store 'test-readonly-versions' (read-only).
+main {"main":176}  
+[2013-05-24 23:28:01,927 voldemort.store.readonly.ReadOnlyStorageEngine] INFO Creating symbolic link for 'test-readonly-versions' using directory /var/folders/nk/rnnlnbcd7sg7vn6cntx_kpfc0000gn/T/692549/node-0/data/read-only/test-readonly-versions/version-0
+main {"main":177}  
+[2013-05-24 23:28:01,927 voldemort.store.readonly.chunk.ChunkedFileSet] WARN Metadata file not found. Assuming default settings
+main {"main":178}  
+[2013-05-24 23:28:01,927 voldemort.store.readonly.chunk.ChunkedFileSet] INFO No index or data files found, creating empty files 0.index and 0.data.
+main {"main":179}  
+[2013-05-24 23:28:01,995 voldemort.store.routed.RoutedStoreFactory] WARN Using pseudo NonblockingStore implementation for class voldemort.store.stats.StatTrackingStore
+main {"main":180}  
+[2013-05-24 23:28:01,995 voldemort.server.storage.StorageService] INFO Opening store 'test-consistent' (memory).
+main {"main":181}  
+[2013-05-24 23:28:01,996 voldemort.store.routed.RoutedStoreFactory] WARN Using pseudo NonblockingStore implementation for class voldemort.store.stats.StatTrackingStore
+main {"main":182}  
+[2013-05-24 23:28:01,996 voldemort.server.storage.StorageService] INFO Opening store 'test-to-all' (memory).
+main {"main":183}  
+[2013-05-24 23:28:01,996 voldemort.store.routed.RoutedStoreFactory] WARN Using pseudo NonblockingStore implementation for class voldemort.store.stats.StatTrackingStore
+main {"main":184}  
+[2013-05-24 23:28:01,996 voldemort.server.storage.StorageService] INFO Opening store 'test-consistent-with-pref-list' (memory).
+main {"main":185}  
+[2013-05-24 23:28:01,997 voldemort.store.routed.RoutedStoreFactory] WARN Using pseudo NonblockingStore implementation for class voldemort.store.stats.StatTrackingStore
+main {"main":186}  
+[2013-05-24 23:28:02,012 voldemort.server.storage.StorageService] INFO All stores initialized.
+main {"main":187}  
+[2013-05-24 23:28:02,012 voldemort.server.VoldemortService] INFO Starting scheduler-service
+main {"main":188}  
+[2013-05-24 23:28:02,012 voldemort.server.VoldemortService] INFO Starting async-scheduler
+main {"main":189}  
+[2013-05-24 23:28:02,012 voldemort.server.protocol.admin.AsyncOperationService] INFO Starting asyncOperationRunner
+main {"main":190}  
+[2013-05-24 23:28:02,012 voldemort.server.VoldemortService] INFO Starting http-service
+main {"main":191}  
+[2013-05-24 23:28:02,013 voldemort.server.http.HttpService] INFO HTTP service started on port 64155
+main {"main":192}  
+[2013-05-24 23:28:02,013 voldemort.server.VoldemortService] INFO Starting socket-service
+main {"main":193}  
+[2013-05-24 23:28:02,013 voldemort.server.niosocket.NioSocketService] INFO Starting Voldemort NIO socket server (nio-socket-server) on port 64156
+main {"main":194}  
+[2013-05-24 23:28:02,015 voldemort.server.VoldemortService] INFO Starting rebalance-service
+main {"main":195}  
+[2013-05-24 23:28:02,015 voldemort.server.niosocket.NioSocketService] INFO Server now listening for connections on port 64156
+nio-acceptor {"nio-acceptor":5}  
+[2013-05-24 23:28:02,015 voldemort.server.VoldemortService] INFO Starting socket-service
+main {"main":196}  
+[2013-05-24 23:28:02,015 voldemort.server.niosocket.NioSocketService] INFO Starting Voldemort NIO socket server (admin-server) on port 64157
+main {"main":197}  
+[2013-05-24 23:28:02,017 voldemort.server.VoldemortServer] INFO Startup completed in 117 ms.
+main {"main":198}  
+[2013-05-24 23:28:02,017 voldemort.server.niosocket.NioSocketService] INFO Server now listening for connections on port 64157
+nio-acceptor {"nio-acceptor":6}  
+[2013-05-24 23:28:02,019 voldemort.server.niosocket.AsyncRequestHandler] INFO Protocol negotiated for Socket[addr=/127.0.0.1,port=64161,localport=64156]: voldemort-native-v1
+nio-server1 {"nio-server1":5, "nio-client2":0, "nio-client1":1, "nio-server2":2}  
+[2013-05-24 23:28:02,051 voldemort.store.metadata.MetadataStore] INFO metadata init().
+main {"main":199}  
+[2013-05-24 23:28:02,073 voldemort.store.metadata.MetadataStore] INFO Updating routing strategy for all stores
+main {"main":200}  
+[2013-05-24 23:28:02,075 voldemort.server.VoldemortServer] INFO Using NIO Connector.
+main {"main":201}  
+[2013-05-24 23:28:02,075 voldemort.server.VoldemortServer] INFO Using NIO Connector for Admin Service.
+main {"main":202}  
+[2013-05-24 23:28:02,075 voldemort.server.VoldemortService] INFO Starting voldemort-server
+main {"main":203}  
+[2013-05-24 23:28:02,075 voldemort.server.VoldemortServer] INFO Starting 7 services.
+main {"main":204}  
+[2013-05-24 23:28:02,075 voldemort.server.VoldemortService] INFO Starting storage-service
+main {"main":205}  
+[2013-05-24 23:28:02,076 voldemort.server.storage.StorageService] INFO Initializing bdb storage engine.
+main {"main":206}  
+[2013-05-24 23:28:02,076 voldemort.server.storage.StorageService] INFO Initializing mysql storage engine.
+main {"main":207}  
+[2013-05-24 23:28:02,076 voldemort.server.storage.StorageService] INFO Initializing memory storage engine.
+main {"main":208}  
+[2013-05-24 23:28:02,076 voldemort.server.storage.StorageService] INFO Initializing cache storage engine.
+main {"main":209}  
+[2013-05-24 23:28:02,076 voldemort.server.storage.StorageService] INFO Initializing read-only storage engine.
+main {"main":210}  
+[2013-05-24 23:28:02,076 voldemort.server.storage.StorageService] INFO Initializing the slop store using bdb
+main {"main":211}  
+[2013-05-24 23:28:02,076 voldemort.store.bdb.BdbStorageConfiguration] INFO Creating BDB data directory '/var/folders/nk/rnnlnbcd7sg7vn6cntx_kpfc0000gn/T/502415/node-1/data/bdb.
+main {"main":212}  
+[2013-05-24 23:28:02,084 voldemort.store.bdb.BdbStorageConfiguration] INFO Creating shared BDB environment: 
+main {"main":213}  
+[2013-05-24 23:28:02,084 voldemort.store.bdb.BdbStorageConfiguration] INFO     BDB cache size = 1145359564
+main {"main":214}  
+[2013-05-24 23:28:02,084 voldemort.store.bdb.BdbStorageConfiguration] INFO     BDB je.cleaner.threads = 1
+main {"main":215}  
+[2013-05-24 23:28:02,084 voldemort.store.bdb.BdbStorageConfiguration] INFO     BDB je.cleaner.minUtilization = 50
+main {"main":216}  
+[2013-05-24 23:28:02,084 voldemort.store.bdb.BdbStorageConfiguration] INFO     BDB je.cleaner.minFileUtilization = 5
+main {"main":217}  
+[2013-05-24 23:28:02,084 voldemort.store.bdb.BdbStorageConfiguration] INFO     BDB je.log.fileMax = 62914560
+main {"main":218}  
+[2013-05-24 23:28:02,084 voldemort.store.bdb.BdbStorageConfiguration] INFO     BDB allowCreate=true,cacheSize=1145359564,txnNoSync=false,txnWriteNoSync=false,{je.log.fileMax=62914560, je.cleaner.minFileUtilization=5, je.cleaner.minUtilization=50, je.cleaner.threads=1, je.cleaner.maxBatchFiles=0, je.checkpointer.wakeupInterval=30000000, je.checkpointer.highPriority=false, je.env.isTransactional=true, je.env.fairLatches=false, je.cleaner.lookAheadCacheSize=8192, je.log.faultReadSize=2048, je.lock.nLockTables=1, je.checkpointer.bytesInterval=20971520, je.lock.timeout=500 MILLISECONDS, je.log.iteratorReadSize=8192, je.txn.durability=SYNC,NO_SYNC,SIMPLE_MAJORITY},
+main {"main":219}  
+[2013-05-24 23:28:02,086 voldemort.server.storage.StorageService] INFO Initializing slop pusher job type streaming at Fri May 24 23:33:02 PDT 2013
+main {"main":220}  
+[2013-05-24 23:28:02,086 voldemort.server.storage.StorageService] INFO Initializing repair job.
+main {"main":221}  
+[2013-05-24 23:28:02,087 voldemort.server.storage.StorageService] INFO Initializing stores:
+main {"main":222}  
+[2013-05-24 23:28:02,087 voldemort.server.storage.StorageService] INFO Opening store 'users' (bdb).
+main {"main":223}  
+[2013-05-24 23:28:02,088 voldemort.store.routed.RoutedStoreFactory] WARN Using pseudo NonblockingStore implementation for class voldemort.store.stats.StatTrackingStore
+main {"main":224}  
+[2013-05-24 23:28:02,089 voldemort.server.storage.StorageService] INFO Opening store 'veggies' (bdb).
+main {"main":225}  
+[2013-05-24 23:28:02,090 voldemort.store.routed.RoutedStoreFactory] WARN Using pseudo NonblockingStore implementation for class voldemort.store.stats.StatTrackingStore
+main {"main":226}  
+[2013-05-24 23:28:02,090 voldemort.server.storage.StorageService] INFO Opening store 'test-replication-memory' (memory).
+main {"main":227}  
+[2013-05-24 23:28:02,091 voldemort.store.routed.RoutedStoreFactory] WARN Using pseudo NonblockingStore implementation for class voldemort.store.stats.StatTrackingStore
+main {"main":228}  
+[2013-05-24 23:28:02,091 voldemort.server.storage.StorageService] INFO Opening store 'test-recovery-data' (memory).
+main {"main":229}  
+[2013-05-24 23:28:02,091 voldemort.store.routed.RoutedStoreFactory] WARN Using pseudo NonblockingStore implementation for class voldemort.store.stats.StatTrackingStore
+main {"main":230}  
+[2013-05-24 23:28:02,091 voldemort.server.storage.StorageService] INFO Opening store 'test-replication-persistent' (bdb).
+main {"main":231}  
+[2013-05-24 23:28:02,093 voldemort.store.routed.RoutedStoreFactory] WARN Using pseudo NonblockingStore implementation for class voldemort.store.stats.StatTrackingStore
+main {"main":232}  
+[2013-05-24 23:28:02,093 voldemort.server.storage.StorageService] INFO Opening store 'test-readrepair-memory' (memory).
+main {"main":233}  
+[2013-05-24 23:28:02,093 voldemort.store.routed.RoutedStoreFactory] WARN Using pseudo NonblockingStore implementation for class voldemort.store.stats.StatTrackingStore
+main {"main":234}  
+[2013-05-24 23:28:02,093 voldemort.server.storage.StorageService] INFO Opening store 'test-readonly-fetchfiles' (read-only).
+main {"main":235}  
+[2013-05-24 23:28:02,094 voldemort.store.readonly.ReadOnlyStorageEngine] INFO Creating symbolic link for 'test-readonly-fetchfiles' using directory /var/folders/nk/rnnlnbcd7sg7vn6cntx_kpfc0000gn/T/502415/node-1/data/read-only/test-readonly-fetchfiles/version-0
+main {"main":236}  
+[2013-05-24 23:28:02,094 voldemort.store.readonly.chunk.ChunkedFileSet] WARN Metadata file not found. Assuming default settings
+main {"main":237}  
+[2013-05-24 23:28:02,095 voldemort.store.readonly.chunk.ChunkedFileSet] INFO No index or data files found, creating empty files 0.index and 0.data.
+main {"main":238}  
+[2013-05-24 23:28:02,097 voldemort.store.routed.RoutedStoreFactory] WARN Using pseudo NonblockingStore implementation for class voldemort.store.stats.StatTrackingStore
+main {"main":239}  
+[2013-05-24 23:28:02,098 voldemort.server.storage.StorageService] INFO Opening store 'test-readonly-versions' (read-only).
+main {"main":240}  
+[2013-05-24 23:28:02,098 voldemort.store.readonly.ReadOnlyStorageEngine] INFO Creating symbolic link for 'test-readonly-versions' using directory /var/folders/nk/rnnlnbcd7sg7vn6cntx_kpfc0000gn/T/502415/node-1/data/read-only/test-readonly-versions/version-0
+main {"main":241}  
+[2013-05-24 23:28:02,099 voldemort.store.readonly.chunk.ChunkedFileSet] WARN Metadata file not found. Assuming default settings
+main {"main":242}  
+[2013-05-24 23:28:02,099 voldemort.store.readonly.chunk.ChunkedFileSet] INFO No index or data files found, creating empty files 0.index and 0.data.
+main {"main":243}  
+[2013-05-24 23:28:02,101 voldemort.store.routed.RoutedStoreFactory] WARN Using pseudo NonblockingStore implementation for class voldemort.store.stats.StatTrackingStore
+main {"main":244}  
+[2013-05-24 23:28:02,101 voldemort.server.storage.StorageService] INFO Opening store 'test-consistent' (memory).
+main {"main":245}  
+[2013-05-24 23:28:02,102 voldemort.store.routed.RoutedStoreFactory] WARN Using pseudo NonblockingStore implementation for class voldemort.store.stats.StatTrackingStore
+main {"main":246}  
+[2013-05-24 23:28:02,102 voldemort.server.storage.StorageService] INFO Opening store 'test-to-all' (memory).
+main {"main":247}  
+[2013-05-24 23:28:02,102 voldemort.store.routed.RoutedStoreFactory] WARN Using pseudo NonblockingStore implementation for class voldemort.store.stats.StatTrackingStore
+main {"main":248}  
+[2013-05-24 23:28:02,102 voldemort.server.storage.StorageService] INFO Opening store 'test-consistent-with-pref-list' (memory).
+main {"main":249}  
+[2013-05-24 23:28:02,103 voldemort.store.routed.RoutedStoreFactory] WARN Using pseudo NonblockingStore implementation for class voldemort.store.stats.StatTrackingStore
+main {"main":250}  
+[2013-05-24 23:28:02,116 voldemort.server.storage.StorageService] INFO All stores initialized.
+main {"main":251}  
+[2013-05-24 23:28:02,117 voldemort.server.VoldemortService] INFO Starting scheduler-service
+main {"main":252}  
+[2013-05-24 23:28:02,117 voldemort.server.VoldemortService] INFO Starting async-scheduler
+main {"main":253}  
+[2013-05-24 23:28:02,117 voldemort.server.protocol.admin.AsyncOperationService] INFO Starting asyncOperationRunner
+main {"main":254}  
+[2013-05-24 23:28:02,117 voldemort.server.VoldemortService] INFO Starting http-service
+main {"main":255}  
+[2013-05-24 23:28:02,118 voldemort.server.http.HttpService] INFO HTTP service started on port 64158
+main {"main":256}  
+[2013-05-24 23:28:02,118 voldemort.server.VoldemortService] INFO Starting socket-service
+main {"main":257}  
+[2013-05-24 23:28:02,118 voldemort.server.niosocket.NioSocketService] INFO Starting Voldemort NIO socket server (nio-socket-server) on port 64159
+main {"main":258}  
+[2013-05-24 23:28:02,120 voldemort.server.VoldemortService] INFO Starting rebalance-service
+main {"main":259}  
+[2013-05-24 23:28:02,120 voldemort.server.niosocket.NioSocketService] INFO Server now listening for connections on port 64159
+nio-acceptor {"nio-acceptor":7}  
+[2013-05-24 23:28:02,120 voldemort.server.VoldemortService] INFO Starting socket-service
+main {"main":260}  
+[2013-05-24 23:28:02,120 voldemort.server.niosocket.NioSocketService] INFO Starting Voldemort NIO socket server (admin-server) on port 64160
+main {"main":261}  
+[2013-05-24 23:28:02,121 voldemort.server.VoldemortServer] INFO Startup completed in 46 ms.
+main {"main":262}  
+[2013-05-24 23:28:02,121 voldemort.server.niosocket.NioSocketService] INFO Server now listening for connections on port 64160
+nio-acceptor {"nio-acceptor":8}  
+[2013-05-24 23:28:02,124 voldemort.server.niosocket.AsyncRequestHandler] INFO Protocol negotiated for Socket[addr=/127.0.0.1,port=64162,localport=64159]: voldemort-native-v1
+nio-server1 {"nio-server1":6, "nio-client2":1, "nio-client1":1, "nio-server2":2}  
+[2013-05-24 23:28:02,172 voldemort.client.DefaultStoreClient] INFO Bootstrapping metadata for store test-readrepair-memory
+main {"main":263}  
+[2013-05-24 23:28:02,172 voldemort.client.AbstractStoreClientFactory] INFO Client zone-id [0] Attempting to obtain metadata for store [test-readrepair-memory] 
+main {"main":264}  
+[2013-05-24 23:28:02,175 voldemort.server.niosocket.AsyncRequestHandler] INFO Protocol negotiated for Socket[addr=/127.0.0.1,port=64163,localport=64156]: voldemort-native-v1
+nio-server2 {"nio-server1":5, "nio-client2":0, "nio-client1":1, "nio-server2":3}  
+[2013-05-24 23:28:02,222 voldemort.server.niosocket.AsyncRequestHandler] INFO Protocol negotiated for Socket[addr=/127.0.0.1,port=64164,localport=64159]: voldemort-native-v1
+nio-server2 {"nio-server1":6, "nio-client2":1, "nio-client1":1, "nio-server2":4}  
+[2013-05-24 23:28:02,274 voldemort.store.socket.clientrequest.ClientRequestExecutorFactory$ClientRequestSelectorManager] INFO Closed, exiting
+nio-client1 {"nio-server1":6, "nio-client2":1, "nio-client1":2, "nio-server2":4}  
+[2013-05-24 23:28:02,274 voldemort.server.niosocket.AsyncRequestHandler] INFO Closing remote connection from Socket[addr=/127.0.0.1,port=64161,localport=64156]
+nio-server1 {"nio-server1":7, "nio-client2":1, "nio-client1":1, "nio-server2":2}  
+[2013-05-24 23:28:02,274 voldemort.store.socket.clientrequest.ClientRequestExecutorFactory$ClientRequestSelectorManager] INFO Closed, exiting
+nio-client2 {"nio-server1":6, "nio-client2":2, "nio-client1":1, "nio-server2":4}  
+[2013-05-24 23:28:02,274 voldemort.server.niosocket.AsyncRequestHandler] INFO Closing remote connection from Socket[addr=/127.0.0.1,port=64162,localport=64159]
+nio-server1 {"nio-server1":8, "nio-client2":1, "nio-client1":1, "nio-server2":2}  
+[2013-05-24 23:28:02,274 voldemort.store.socket.clientrequest.ClientRequestExecutor] WARN No client associated with Socket[unconnected]
+main {"main":265}  
+[2013-05-24 23:28:02,274 voldemort.store.socket.clientrequest.ClientRequestExecutor] INFO Closing remote connection from Socket[unconnected]
+main {"main":266}  
+[2013-05-24 23:28:02,275 voldemort.store.socket.clientrequest.ClientRequestExecutor] WARN No client associated with Socket[unconnected]
+main {"main":267}  
+[2013-05-24 23:28:02,275 voldemort.store.socket.clientrequest.ClientRequestExecutor] INFO Closing remote connection from Socket[unconnected]
+main {"main":268}  
+.[2013-05-24 23:28:02,283 voldemort.store.metadata.MetadataStore] INFO metadata init().
+main {"main":269}  
+[2013-05-24 23:28:02,302 voldemort.store.metadata.MetadataStore] INFO Updating routing strategy for all stores
+main {"main":270}  
+[2013-05-24 23:28:02,305 voldemort.server.VoldemortServer] INFO Using NIO Connector.
+main {"main":271}  
+[2013-05-24 23:28:02,305 voldemort.server.VoldemortServer] INFO Using NIO Connector for Admin Service.
+main {"main":272}  
+[2013-05-24 23:28:02,305 voldemort.server.VoldemortService] INFO Starting voldemort-server
+main {"main":273}  
+[2013-05-24 23:28:02,305 voldemort.server.VoldemortServer] INFO Starting 7 services.
+main {"main":274}  
+[2013-05-24 23:28:02,305 voldemort.server.VoldemortService] INFO Starting storage-service
+main {"main":275}  
+[2013-05-24 23:28:02,306 voldemort.server.storage.StorageService] INFO Initializing bdb storage engine.
+main {"main":276}  
+[2013-05-24 23:28:02,306 voldemort.server.storage.StorageService] INFO Initializing mysql storage engine.
+main {"main":277}  
+[2013-05-24 23:28:02,306 voldemort.server.storage.StorageService] INFO Initializing memory storage engine.
+main {"main":278}  
+[2013-05-24 23:28:02,306 voldemort.server.storage.StorageService] INFO Initializing cache storage engine.
+main {"main":279}  
+[2013-05-24 23:28:02,306 voldemort.server.storage.StorageService] INFO Initializing read-only storage engine.
+main {"main":280}  
+[2013-05-24 23:28:02,306 voldemort.server.storage.StorageService] INFO Initializing the slop store using bdb
+main {"main":281}  
+[2013-05-24 23:28:02,306 voldemort.store.bdb.BdbStorageConfiguration] INFO Creating BDB data directory '/var/folders/nk/rnnlnbcd7sg7vn6cntx_kpfc0000gn/T/129286/node-0/data/bdb.
+main {"main":282}  
+[2013-05-24 23:28:02,313 voldemort.store.bdb.BdbStorageConfiguration] INFO Creating shared BDB environment: 
+main {"main":283}  
+[2013-05-24 23:28:02,314 voldemort.store.bdb.BdbStorageConfiguration] INFO     BDB cache size = 1145359564
+main {"main":284}  
+[2013-05-24 23:28:02,314 voldemort.store.bdb.BdbStorageConfiguration] INFO     BDB je.cleaner.threads = 1
+main {"main":285}  
+[2013-05-24 23:28:02,314 voldemort.store.bdb.BdbStorageConfiguration] INFO     BDB je.cleaner.minUtilization = 50
+main {"main":286}  
+[2013-05-24 23:28:02,314 voldemort.store.bdb.BdbStorageConfiguration] INFO     BDB je.cleaner.minFileUtilization = 5
+main {"main":287}  
+[2013-05-24 23:28:02,314 voldemort.store.bdb.BdbStorageConfiguration] INFO     BDB je.log.fileMax = 62914560
+main {"main":288}  
+[2013-05-24 23:28:02,314 voldemort.store.bdb.BdbStorageConfiguration] INFO     BDB allowCreate=true,cacheSize=1145359564,txnNoSync=false,txnWriteNoSync=false,{je.log.fileMax=62914560, je.cleaner.minFileUtilization=5, je.cleaner.minUtilization=50, je.cleaner.threads=1, je.cleaner.maxBatchFiles=0, je.checkpointer.wakeupInterval=30000000, je.checkpointer.highPriority=false, je.env.isTransactional=true, je.env.fairLatches=false, je.cleaner.lookAheadCacheSize=8192, je.log.faultReadSize=2048, je.lock.nLockTables=1, je.checkpointer.bytesInterval=20971520, je.lock.timeout=500 MILLISECONDS, je.log.iteratorReadSize=8192, je.txn.durability=SYNC,NO_SYNC,SIMPLE_MAJORITY},
+main {"main":289}  
+[2013-05-24 23:28:02,326 voldemort.server.storage.StorageService] INFO Initializing slop pusher job type streaming at Fri May 24 23:33:02 PDT 2013
+main {"main":290}  
+[2013-05-24 23:28:02,326 voldemort.server.storage.StorageService] INFO Initializing repair job.
+main {"main":291}  
+[2013-05-24 23:28:02,327 voldemort.server.storage.StorageService] INFO Initializing stores:
+main {"main":292}  
+[2013-05-24 23:28:02,327 voldemort.server.storage.StorageService] INFO Opening store 'users' (bdb).
+main {"main":293}  
+[2013-05-24 23:28:02,329 voldemort.store.routed.RoutedStoreFactory] WARN Using pseudo NonblockingStore implementation for class voldemort.store.stats.StatTrackingStore
+main {"main":294}  
+[2013-05-24 23:28:02,329 voldemort.server.storage.StorageService] INFO Opening store 'veggies' (bdb).
+main {"main":295}  
+[2013-05-24 23:28:02,330 voldemort.store.routed.RoutedStoreFactory] WARN Using pseudo NonblockingStore implementation for class voldemort.store.stats.StatTrackingStore
+main {"main":296}  
+[2013-05-24 23:28:02,330 voldemort.server.storage.StorageService] INFO Opening store 'test-replication-memory' (memory).
+main {"main":297}  
+[2013-05-24 23:28:02,331 voldemort.store.routed.RoutedStoreFactory] WARN Using pseudo NonblockingStore implementation for class voldemort.store.stats.StatTrackingStore
+main {"main":298}  
+[2013-05-24 23:28:02,331 voldemort.server.storage.StorageService] INFO Opening store 'test-recovery-data' (memory).
+main {"main":299}  
+[2013-05-24 23:28:02,331 voldemort.store.routed.RoutedStoreFactory] WARN Using pseudo NonblockingStore implementation for class voldemort.store.stats.StatTrackingStore
+main {"main":300}  
+[2013-05-24 23:28:02,331 voldemort.server.storage.StorageService] INFO Opening store 'test-replication-persistent' (bdb).
+main {"main":301}  
+[2013-05-24 23:28:02,333 voldemort.store.routed.RoutedStoreFactory] WARN Using pseudo NonblockingStore implementation for class voldemort.store.stats.StatTrackingStore
+main {"main":302}  
+[2013-05-24 23:28:02,333 voldemort.server.storage.StorageService] INFO Opening store 'test-readrepair-memory' (memory).
+main {"main":303}  
+[2013-05-24 23:28:02,333 voldemort.store.routed.RoutedStoreFactory] WARN Using pseudo NonblockingStore implementation for class voldemort.store.stats.StatTrackingStore
+main {"main":304}  
+[2013-05-24 23:28:02,333 voldemort.server.storage.StorageService] INFO Opening store 'test-readonly-fetchfiles' (read-only).
+main {"main":305}  
+[2013-05-24 23:28:02,334 voldemort.store.readonly.ReadOnlyStorageEngine] INFO Creating symbolic link for 'test-readonly-fetchfiles' using directory /var/folders/nk/rnnlnbcd7sg7vn6cntx_kpfc0000gn/T/129286/node-0/data/read-only/test-readonly-fetchfiles/version-0
+main {"main":306}  
+[2013-05-24 23:28:02,334 voldemort.store.readonly.chunk.ChunkedFileSet] WARN Metadata file not found. Assuming default settings
+main {"main":307}  
+[2013-05-24 23:28:02,335 voldemort.store.readonly.chunk.ChunkedFileSet] INFO No index or data files found, creating empty files 0.index and 0.data.
+main {"main":308}  
+[2013-05-24 23:28:02,337 voldemort.store.routed.RoutedStoreFactory] WARN Using pseudo NonblockingStore implementation for class voldemort.store.stats.StatTrackingStore
+main {"main":309}  
+[2013-05-24 23:28:02,337 voldemort.server.storage.StorageService] INFO Opening store 'test-readonly-versions' (read-only).
+main {"main":310}  
+[2013-05-24 23:28:02,338 voldemort.store.readonly.ReadOnlyStorageEngine] INFO Creating symbolic link for 'test-readonly-versions' using directory /var/folders/nk/rnnlnbcd7sg7vn6cntx_kpfc0000gn/T/129286/node-0/data/read-only/test-readonly-versions/version-0
+main {"main":311}  
+[2013-05-24 23:28:02,339 voldemort.store.readonly.chunk.ChunkedFileSet] WARN Metadata file not found. Assuming default settings
+main {"main":312}  
+[2013-05-24 23:28:02,339 voldemort.store.readonly.chunk.ChunkedFileSet] INFO No index or data files found, creating empty files 0.index and 0.data.
+main {"main":313}  
+[2013-05-24 23:28:02,343 voldemort.store.routed.RoutedStoreFactory] WARN Using pseudo NonblockingStore implementation for class voldemort.store.stats.StatTrackingStore
+main {"main":314}  
+[2013-05-24 23:28:02,343 voldemort.server.storage.StorageService] INFO Opening store 'test-consistent' (memory).
+main {"main":315}  
+[2013-05-24 23:28:02,343 voldemort.store.routed.RoutedStoreFactory] WARN Using pseudo NonblockingStore implementation for class voldemort.store.stats.StatTrackingStore
+main {"main":316}  
+[2013-05-24 23:28:02,344 voldemort.server.storage.StorageService] INFO Opening store 'test-to-all' (memory).
+main {"main":317}  
+[2013-05-24 23:28:02,344 voldemort.store.routed.RoutedStoreFactory] WARN Using pseudo NonblockingStore implementation for class voldemort.store.stats.StatTrackingStore
+main {"main":318}  
+[2013-05-24 23:28:02,344 voldemort.server.storage.StorageService] INFO Opening store 'test-consistent-with-pref-list' (memory).
+main {"main":319}  
+[2013-05-24 23:28:02,344 voldemort.store.routed.RoutedStoreFactory] WARN Using pseudo NonblockingStore implementation for class voldemort.store.stats.StatTrackingStore
+main {"main":320}  
+[2013-05-24 23:28:02,357 voldemort.server.storage.StorageService] INFO All stores initialized.
+main {"main":321}  
+[2013-05-24 23:28:02,358 voldemort.server.VoldemortService] INFO Starting scheduler-service
+main {"main":322}  
+[2013-05-24 23:28:02,358 voldemort.server.VoldemortService] INFO Starting async-scheduler
+main {"main":323}  
+[2013-05-24 23:28:02,358 voldemort.server.protocol.admin.AsyncOperationService] INFO Starting asyncOperationRunner
+main {"main":324}  
+[2013-05-24 23:28:02,358 voldemort.server.VoldemortService] INFO Starting http-service
+main {"main":325}  
+[2013-05-24 23:28:02,359 voldemort.server.http.HttpService] INFO HTTP service started on port 64165
+main {"main":326}  
+[2013-05-24 23:28:02,360 voldemort.server.VoldemortService] INFO Starting socket-service
+main {"main":327}  
+[2013-05-24 23:28:02,360 voldemort.server.niosocket.NioSocketService] INFO Starting Voldemort NIO socket server (nio-socket-server) on port 64166
+main {"main":328}  
+[2013-05-24 23:28:02,362 voldemort.server.VoldemortService] INFO Starting rebalance-service
+main {"main":329}  
+[2013-05-24 23:28:02,362 voldemort.server.niosocket.NioSocketService] INFO Server now listening for connections on port 64166
+nio-acceptor {"nio-acceptor":9}  
+[2013-05-24 23:28:02,362 voldemort.server.VoldemortService] INFO Starting socket-service
+main {"main":330}  
+[2013-05-24 23:28:02,362 voldemort.server.niosocket.NioSocketService] INFO Starting Voldemort NIO socket server (admin-server) on port 64167
+main {"main":331}  
+[2013-05-24 23:28:02,364 voldemort.server.VoldemortServer] INFO Startup completed in 59 ms.
+main {"main":332}  
+[2013-05-24 23:28:02,364 voldemort.server.niosocket.NioSocketService] INFO Server now listening for connections on port 64167
+nio-acceptor {"nio-acceptor":10}  
+[2013-05-24 23:28:02,367 voldemort.server.niosocket.AsyncRequestHandler] INFO Protocol negotiated for Socket[addr=/127.0.0.1,port=64171,localport=64166]: voldemort-native-v1
+nio-server1 {"nio-server1":9, "nio-client2":1, "nio-client1":2, "nio-server2":4}  
+[2013-05-24 23:28:02,399 voldemort.store.metadata.MetadataStore] INFO metadata init().
+main {"main":333}  
+[2013-05-24 23:28:02,421 voldemort.store.metadata.MetadataStore] INFO Updating routing strategy for all stores
+main {"main":334}  
+[2013-05-24 23:28:02,423 voldemort.server.VoldemortServer] INFO Using NIO Connector.
+main {"main":335}  
+[2013-05-24 23:28:02,423 voldemort.server.VoldemortServer] INFO Using NIO Connector for Admin Service.
+main {"main":336}  
+[2013-05-24 23:28:02,423 voldemort.server.VoldemortService] INFO Starting voldemort-server
+main {"main":337}  
+[2013-05-24 23:28:02,423 voldemort.server.VoldemortServer] INFO Starting 7 services.
+main {"main":338}  
+[2013-05-24 23:28:02,423 voldemort.server.VoldemortService] INFO Starting storage-service
+main {"main":339}  
+[2013-05-24 23:28:02,424 voldemort.server.storage.StorageService] INFO Initializing bdb storage engine.
+main {"main":340}  
+[2013-05-24 23:28:02,424 voldemort.server.storage.StorageService] INFO Initializing mysql storage engine.
+main {"main":341}  
+[2013-05-24 23:28:02,424 voldemort.server.storage.StorageService] INFO Initializing memory storage engine.
+main {"main":342}  
+[2013-05-24 23:28:02,424 voldemort.server.storage.StorageService] INFO Initializing cache storage engine.
+main {"main":343}  
+[2013-05-24 23:28:02,424 voldemort.server.storage.StorageService] INFO Initializing read-only storage engine.
+main {"main":344}  
+[2013-05-24 23:28:02,424 voldemort.server.storage.StorageService] INFO Initializing the slop store using bdb
+main {"main":345}  
+[2013-05-24 23:28:02,424 voldemort.store.bdb.BdbStorageConfiguration] INFO Creating BDB data directory '/var/folders/nk/rnnlnbcd7sg7vn6cntx_kpfc0000gn/T/311939/node-1/data/bdb.
+main {"main":346}  
+[2013-05-24 23:28:02,432 voldemort.store.bdb.BdbStorageConfiguration] INFO Creating shared BDB environment: 
+main {"main":347}  
+[2013-05-24 23:28:02,432 voldemort.store.bdb.BdbStorageConfiguration] INFO     BDB cache size = 1145359564
+main {"main":348}  
+[2013-05-24 23:28:02,432 voldemort.store.bdb.BdbStorageConfiguration] INFO     BDB je.cleaner.threads = 1
+main {"main":349}  
+[2013-05-24 23:28:02,432 voldemort.store.bdb.BdbStorageConfiguration] INFO     BDB je.cleaner.minUtilization = 50
+main {"main":350}  
+[2013-05-24 23:28:02,432 voldemort.store.bdb.BdbStorageConfiguration] INFO     BDB je.cleaner.minFileUtilization = 5
+main {"main":351}  
+[2013-05-24 23:28:02,432 voldemort.store.bdb.BdbStorageConfiguration] INFO     BDB je.log.fileMax = 62914560
+main {"main":352}  
+[2013-05-24 23:28:02,432 voldemort.store.bdb.BdbStorageConfiguration] INFO     BDB allowCreate=true,cacheSize=1145359564,txnNoSync=false,txnWriteNoSync=false,{je.log.fileMax=62914560, je.cleaner.minFileUtilization=5, je.cleaner.minUtilization=50, je.cleaner.threads=1, je.cleaner.maxBatchFiles=0, je.checkpointer.wakeupInterval=30000000, je.checkpointer.highPriority=false, je.env.isTransactional=true, je.env.fairLatches=false, je.cleaner.lookAheadCacheSize=8192, je.log.faultReadSize=2048, je.lock.nLockTables=1, je.checkpointer.bytesInterval=20971520, je.lock.timeout=500 MILLISECONDS, je.log.iteratorReadSize=8192, je.txn.durability=SYNC,NO_SYNC,SIMPLE_MAJORITY},
+main {"main":353}  
+[2013-05-24 23:28:02,434 voldemort.server.storage.StorageService] INFO Initializing slop pusher job type streaming at Fri May 24 23:33:02 PDT 2013
+main {"main":354}  
+[2013-05-24 23:28:02,434 voldemort.server.storage.StorageService] INFO Initializing repair job.
+main {"main":355}  
+[2013-05-24 23:28:02,435 voldemort.server.storage.StorageService] INFO Initializing stores:
+main {"main":356}  
+[2013-05-24 23:28:02,435 voldemort.server.storage.StorageService] INFO Opening store 'users' (bdb).
+main {"main":357}  
+[2013-05-24 23:28:02,436 voldemort.store.routed.RoutedStoreFactory] WARN Using pseudo NonblockingStore implementation for class voldemort.store.stats.StatTrackingStore
+main {"main":358}  
+[2013-05-24 23:28:02,437 voldemort.server.storage.StorageService] INFO Opening store 'veggies' (bdb).
+main {"main":359}  
+[2013-05-24 23:28:02,438 voldemort.store.routed.RoutedStoreFactory] WARN Using pseudo NonblockingStore implementation for class voldemort.store.stats.StatTrackingStore
+main {"main":360}  
+[2013-05-24 23:28:02,438 voldemort.server.storage.StorageService] INFO Opening store 'test-replication-memory' (memory).
+main {"main":361}  
+[2013-05-24 23:28:02,438 voldemort.store.routed.RoutedStoreFactory] WARN Using pseudo NonblockingStore implementation for class voldemort.store.stats.StatTrackingStore
+main {"main":362}  
+[2013-05-24 23:28:02,439 voldemort.server.storage.StorageService] INFO Opening store 'test-recovery-data' (memory).
+main {"main":363}  
+[2013-05-24 23:28:02,439 voldemort.store.routed.RoutedStoreFactory] WARN Using pseudo NonblockingStore implementation for class voldemort.store.stats.StatTrackingStore
+main {"main":364}  
+[2013-05-24 23:28:02,439 voldemort.server.storage.StorageService] INFO Opening store 'test-replication-persistent' (bdb).
+main {"main":365}  
+[2013-05-24 23:28:02,441 voldemort.store.routed.RoutedStoreFactory] WARN Using pseudo NonblockingStore implementation for class voldemort.store.stats.StatTrackingStore
+main {"main":366}  
+[2013-05-24 23:28:02,441 voldemort.server.storage.StorageService] INFO Opening store 'test-readrepair-memory' (memory).
+main {"main":367}  
+[2013-05-24 23:28:02,442 voldemort.store.routed.RoutedStoreFactory] WARN Using pseudo NonblockingStore implementation for class voldemort.store.stats.StatTrackingStore
+main {"main":368}  
+[2013-05-24 23:28:02,442 voldemort.server.storage.StorageService] INFO Opening store 'test-readonly-fetchfiles' (read-only).
+main {"main":369}  
+[2013-05-24 23:28:02,442 voldemort.store.readonly.ReadOnlyStorageEngine] INFO Creating symbolic link for 'test-readonly-fetchfiles' using directory /var/folders/nk/rnnlnbcd7sg7vn6cntx_kpfc0000gn/T/311939/node-1/data/read-only/test-readonly-fetchfiles/version-0
+main {"main":370}  
+[2013-05-24 23:28:02,443 voldemort.store.readonly.chunk.ChunkedFileSet] WARN Metadata file not found. Assuming default settings
+main {"main":371}  
+[2013-05-24 23:28:02,443 voldemort.store.readonly.chunk.ChunkedFileSet] INFO No index or data files found, creating empty files 0.index and 0.data.
+main {"main":372}  
+[2013-05-24 23:28:02,446 voldemort.store.routed.RoutedStoreFactory] WARN Using pseudo NonblockingStore implementation for class voldemort.store.stats.StatTrackingStore
+main {"main":373}  
+[2013-05-24 23:28:02,446 voldemort.server.storage.StorageService] INFO Opening store 'test-readonly-versions' (read-only).
+main {"main":374}  
+[2013-05-24 23:28:02,447 voldemort.store.readonly.ReadOnlyStorageEngine] INFO Creating symbolic link for 'test-readonly-versions' using directory /var/folders/nk/rnnlnbcd7sg7vn6cntx_kpfc0000gn/T/311939/node-1/data/read-only/test-readonly-versions/version-0
+main {"main":375}  
+[2013-05-24 23:28:02,448 voldemort.store.readonly.chunk.ChunkedFileSet] WARN Metadata file not found. Assuming default settings
+main {"main":376}  
+[2013-05-24 23:28:02,448 voldemort.store.readonly.chunk.ChunkedFileSet] INFO No index or data files found, creating empty files 0.index and 0.data.
+main {"main":377}  
+[2013-05-24 23:28:02,451 voldemort.store.routed.RoutedStoreFactory] WARN Using pseudo NonblockingStore implementation for class voldemort.store.stats.StatTrackingStore
+main {"main":378}  
+[2013-05-24 23:28:02,451 voldemort.server.storage.StorageService] INFO Opening store 'test-consistent' (memory).
+main {"main":379}  
+[2013-05-24 23:28:02,452 voldemort.store.routed.RoutedStoreFactory] WARN Using pseudo NonblockingStore implementation for class voldemort.store.stats.StatTrackingStore
+main {"main":380}  
+[2013-05-24 23:28:02,452 voldemort.server.storage.StorageService] INFO Opening store 'test-to-all' (memory).
+main {"main":381}  
+[2013-05-24 23:28:02,452 voldemort.store.routed.RoutedStoreFactory] WARN Using pseudo NonblockingStore implementation for class voldemort.store.stats.StatTrackingStore
+main {"main":382}  
+[2013-05-24 23:28:02,453 voldemort.server.storage.StorageService] INFO Opening store 'test-consistent-with-pref-list' (memory).
+main {"main":383}  
+[2013-05-24 23:28:02,453 voldemort.store.routed.RoutedStoreFactory] WARN Using pseudo NonblockingStore implementation for class voldemort.store.stats.StatTrackingStore
+main {"main":384}  
+[2013-05-24 23:28:02,467 voldemort.server.storage.StorageService] INFO All stores initialized.
+main {"main":385}  
+[2013-05-24 23:28:02,467 voldemort.server.VoldemortService] INFO Starting scheduler-service
+main {"main":386}  
+[2013-05-24 23:28:02,467 voldemort.server.VoldemortService] INFO Starting async-scheduler
+main {"main":387}  
+[2013-05-24 23:28:02,467 voldemort.server.protocol.admin.AsyncOperationService] INFO Starting asyncOperationRunner
+main {"main":388}  
+[2013-05-24 23:28:02,467 voldemort.server.VoldemortService] INFO Starting http-service
+main {"main":389}  
+[2013-05-24 23:28:02,468 voldemort.server.http.HttpService] INFO HTTP service started on port 64168
+main {"main":390}  
+[2013-05-24 23:28:02,468 voldemort.server.VoldemortService] INFO Starting socket-service
+main {"main":391}  
+[2013-05-24 23:28:02,469 voldemort.server.niosocket.NioSocketService] INFO Starting Voldemort NIO socket server (nio-socket-server) on port 64169
+main {"main":392}  
+[2013-05-24 23:28:02,470 voldemort.server.VoldemortService] INFO Starting rebalance-service
+main {"main":393}  
+[2013-05-24 23:28:02,470 voldemort.server.niosocket.NioSocketService] INFO Server now listening for connections on port 64169
+nio-acceptor {"nio-acceptor":11}  
+[2013-05-24 23:28:02,471 voldemort.server.VoldemortService] INFO Starting socket-service
+main {"main":394}  
+[2013-05-24 23:28:02,471 voldemort.server.niosocket.NioSocketService] INFO Starting Voldemort NIO socket server (admin-server) on port 64170
+main {"main":395}  
+[2013-05-24 23:28:02,473 voldemort.server.VoldemortServer] INFO Startup completed in 50 ms.
+main {"main":396}  
+[2013-05-24 23:28:02,473 voldemort.server.niosocket.NioSocketService] INFO Server now listening for connections on port 64170
+nio-acceptor {"nio-acceptor":12}  
+[2013-05-24 23:28:02,476 voldemort.server.niosocket.AsyncRequestHandler] INFO Protocol negotiated for Socket[addr=/127.0.0.1,port=64172,localport=64169]: voldemort-native-v1
+nio-server1 {"nio-server1":10, "nio-client2":2, "nio-client1":2, "nio-server2":4}  
+[2013-05-24 23:28:02,511 voldemort.client.DefaultStoreClient] INFO Bootstrapping metadata for store test-readrepair-memory
+main {"main":397}  
+[2013-05-24 23:28:02,511 voldemort.client.AbstractStoreClientFactory] INFO Client zone-id [0] Attempting to obtain metadata for store [test-readrepair-memory] 
+main {"main":398}  
+[2013-05-24 23:28:02,514 voldemort.server.niosocket.AsyncRequestHandler] INFO Protocol negotiated for Socket[addr=/127.0.0.1,port=64173,localport=64166]: voldemort-native-v1
+nio-server2 {"nio-server1":9, "nio-client2":1, "nio-client1":2, "nio-server2":5}  
+[2013-05-24 23:28:02,553 voldemort.server.niosocket.AsyncRequestHandler] INFO Protocol negotiated for Socket[addr=/127.0.0.1,port=64174,localport=64169]: voldemort-native-v1
+nio-server2 {"nio-server1":10, "nio-client2":2, "nio-client1":2, "nio-server2":6}  
+[2013-05-24 23:28:02,650 voldemort.store.socket.clientrequest.ClientRequestExecutorFactory$ClientRequestSelectorManager] INFO Closed, exiting
+nio-client1 {"nio-server1":10, "nio-client2":2, "nio-client1":3, "nio-server2":6}  
+[2013-05-24 23:28:02,650 voldemort.server.niosocket.AsyncRequestHandler] INFO Closing remote connection from Socket[addr=/127.0.0.1,port=64171,localport=64166]
+nio-server1 {"nio-server1":11, "nio-client2":2, "nio-client1":2, "nio-server2":4}  
+[2013-05-24 23:28:02,650 voldemort.store.socket.clientrequest.ClientRequestExecutorFactory$ClientRequestSelectorManager] INFO Closed, exiting
+nio-client2 {"nio-server1":10, "nio-client2":3, "nio-client1":2, "nio-server2":6}  
+[2013-05-24 23:28:02,650 voldemort.server.niosocket.AsyncRequestHandler] INFO Closing remote connection from Socket[addr=/127.0.0.1,port=64172,localport=64169]
+nio-server1 {"nio-server1":12, "nio-client2":2, "nio-client1":2, "nio-server2":4}  
+[2013-05-24 23:28:02,650 voldemort.store.socket.clientrequest.ClientRequestExecutor] WARN No client associated with Socket[unconnected]
+main {"main":399}  
+[2013-05-24 23:28:02,650 voldemort.store.socket.clientrequest.ClientRequestExecutor] INFO Closing remote connection from Socket[unconnected]
+main {"main":400}  
+[2013-05-24 23:28:02,650 voldemort.store.socket.clientrequest.ClientRequestExecutor] WARN No client associated with Socket[unconnected]
+main {"main":401}  
+[2013-05-24 23:28:02,650 voldemort.store.socket.clientrequest.ClientRequestExecutor] INFO Closing remote connection from Socket[unconnected]
+main {"main":402}  
+.[2013-05-24 23:28:02,659 voldemort.store.metadata.MetadataStore] INFO metadata init().
+main {"main":403}  
+[2013-05-24 23:28:02,677 voldemort.store.metadata.MetadataStore] INFO Updating routing strategy for all stores
+main {"main":404}  
+[2013-05-24 23:28:02,680 voldemort.server.VoldemortServer] INFO Using BIO Connector.
+main {"main":405}  
+[2013-05-24 23:28:02,684 voldemort.server.VoldemortServer] INFO Using BIO Connector for Admin Service.
+main {"main":406}  
+[2013-05-24 23:28:02,684 voldemort.server.VoldemortService] INFO Starting voldemort-server
+main {"main":407}  
+[2013-05-24 23:28:02,684 voldemort.server.VoldemortServer] INFO Starting 7 services.
+main {"main":408}  
+[2013-05-24 23:28:02,684 voldemort.server.VoldemortService] INFO Starting storage-service
+main {"main":409}  
+[2013-05-24 23:28:02,685 voldemort.server.storage.StorageService] INFO Initializing bdb storage engine.
+main {"main":410}  
+[2013-05-24 23:28:02,685 voldemort.server.storage.StorageService] INFO Initializing mysql storage engine.
+main {"main":411}  
+[2013-05-24 23:28:02,685 voldemort.server.storage.StorageService] INFO Initializing memory storage engine.
+main {"main":412}  
+[2013-05-24 23:28:02,685 voldemort.server.storage.StorageService] INFO Initializing cache storage engine.
+main {"main":413}  
+[2013-05-24 23:28:02,685 voldemort.server.storage.StorageService] INFO Initializing read-only storage engine.
+main {"main":414}  
+[2013-05-24 23:28:02,685 voldemort.server.storage.StorageService] INFO Initializing the slop store using bdb
+main {"main":415}  
+[2013-05-24 23:28:02,686 voldemort.store.bdb.BdbStorageConfiguration] INFO Creating BDB data directory '/var/folders/nk/rnnlnbcd7sg7vn6cntx_kpfc0000gn/T/500391/node-0/data/bdb.
+main {"main":416}  
+[2013-05-24 23:28:02,693 voldemort.store.bdb.BdbStorageConfiguration] INFO Creating shared BDB environment: 
+main {"main":417}  
+[2013-05-24 23:28:02,693 voldemort.store.bdb.BdbStorageConfiguration] INFO     BDB cache size = 1145359564
+main {"main":418}  
+[2013-05-24 23:28:02,693 voldemort.store.bdb.BdbStorageConfiguration] INFO     BDB je.cleaner.threads = 1
+main {"main":419}  
+[2013-05-24 23:28:02,694 voldemort.store.bdb.BdbStorageConfiguration] INFO     BDB je.cleaner.minUtilization = 50
+main {"main":420}  
+[2013-05-24 23:28:02,694 voldemort.store.bdb.BdbStorageConfiguration] INFO     BDB je.cleaner.minFileUtilization = 5
+main {"main":421}  
+[2013-05-24 23:28:02,694 voldemort.store.bdb.BdbStorageConfiguration] INFO     BDB je.log.fileMax = 62914560
+main {"main":422}  
+[2013-05-24 23:28:02,694 voldemort.store.bdb.BdbStorageConfiguration] INFO     BDB allowCreate=true,cacheSize=1145359564,txnNoSync=false,txnWriteNoSync=false,{je.log.fileMax=62914560, je.cleaner.minFileUtilization=5, je.cleaner.minUtilization=50, je.cleaner.threads=1, je.cleaner.maxBatchFiles=0, je.checkpointer.wakeupInterval=30000000, je.checkpointer.highPriority=false, je.env.isTransactional=true, je.env.fairLatches=false, je.cleaner.lookAheadCacheSize=8192, je.log.faultReadSize=2048, je.lock.nLockTables=1, je.checkpointer.bytesInterval=20971520, je.lock.timeout=500 MILLISECONDS, je.log.iteratorReadSize=8192, je.txn.durability=SYNC,NO_SYNC,SIMPLE_MAJORITY},
+main {"main":423}  
+[2013-05-24 23:28:02,696 voldemort.server.storage.StorageService] INFO Initializing slop pusher job type streaming at Fri May 24 23:33:02 PDT 2013
+main {"main":424}  
+[2013-05-24 23:28:02,696 voldemort.server.storage.StorageService] INFO Initializing repair job.
+main {"main":425}  
+[2013-05-24 23:28:02,697 voldemort.server.storage.StorageService] INFO Initializing stores:
+main {"main":426}  
+[2013-05-24 23:28:02,697 voldemort.server.storage.StorageService] INFO Opening store 'users' (bdb).
+main {"main":427}  
+[2013-05-24 23:28:02,698 voldemort.store.routed.RoutedStoreFactory] WARN Using pseudo NonblockingStore implementation for class voldemort.store.stats.StatTrackingStore
+main {"main":428}  
+[2013-05-24 23:28:02,698 voldemort.server.storage.StorageService] INFO Opening store 'veggies' (bdb).
+main {"main":429}  
+[2013-05-24 23:28:02,700 voldemort.store.routed.RoutedStoreFactory] WARN Using pseudo NonblockingStore implementation for class voldemort.store.stats.StatTrackingStore
+main {"main":430}  
+[2013-05-24 23:28:02,700 voldemort.server.storage.StorageService] INFO Opening store 'test-replication-memory' (memory).
+main {"main":431}  
+[2013-05-24 23:28:02,701 voldemort.store.routed.RoutedStoreFactory] WARN Using pseudo NonblockingStore implementation for class voldemort.store.stats.StatTrackingStore
+main {"main":432}  
+[2013-05-24 23:28:02,701 voldemort.server.storage.StorageService] INFO Opening store 'test-recovery-data' (memory).
+main {"main":433}  
+[2013-05-24 23:28:02,701 voldemort.store.routed.RoutedStoreFactory] WARN Using pseudo NonblockingStore implementation for class voldemort.store.stats.StatTrackingStore
+main {"main":434}  
+[2013-05-24 23:28:02,702 voldemort.server.storage.StorageService] INFO Opening store 'test-replication-persistent' (bdb).
+main {"main":435}  
+[2013-05-24 23:28:02,703 voldemort.store.routed.RoutedStoreFactory] WARN Using pseudo NonblockingStore implementation for class voldemort.store.stats.StatTrackingStore
+main {"main":436}  
+[2013-05-24 23:28:02,703 voldemort.server.storage.StorageService] INFO Opening store 'test-readrepair-memory' (memory).
+main {"main":437}  
+[2013-05-24 23:28:02,704 voldemort.store.routed.RoutedStoreFactory] WARN Using pseudo NonblockingStore implementation for class voldemort.store.stats.StatTrackingStore
+main {"main":438}  
+[2013-05-24 23:28:02,704 voldemort.server.storage.StorageService] INFO Opening store 'test-readonly-fetchfiles' (read-only).
+main {"main":439}  
+[2013-05-24 23:28:02,705 voldemort.store.readonly.ReadOnlyStorageEngine] INFO Creating symbolic link for 'test-readonly-fetchfiles' using directory /var/folders/nk/rnnlnbcd7sg7vn6cntx_kpfc0000gn/T/500391/node-0/data/read-only/test-readonly-fetchfiles/version-0
+main {"main":440}  
+[2013-05-24 23:28:02,705 voldemort.store.readonly.chunk.ChunkedFileSet] WARN Metadata file not found. Assuming default settings
+main {"main":441}  
+[2013-05-24 23:28:02,705 voldemort.store.readonly.chunk.ChunkedFileSet] INFO No index or data files found, creating empty files 0.index and 0.data.
+main {"main":442}  
+[2013-05-24 23:28:02,707 voldemort.store.routed.RoutedStoreFactory] WARN Using pseudo NonblockingStore implementation for class voldemort.store.stats.StatTrackingStore
+main {"main":443}  
+[2013-05-24 23:28:02,707 voldemort.server.storage.StorageService] INFO Opening store 'test-readonly-versions' (read-only).
+main {"main":444}  
+[2013-05-24 23:28:02,708 voldemort.store.readonly.ReadOnlyStorageEngine] INFO Creating symbolic link for 'test-readonly-versions' using directory /var/folders/nk/rnnlnbcd7sg7vn6cntx_kpfc0000gn/T/500391/node-0/data/read-only/test-readonly-versions/version-0
+main {"main":445}  
+[2013-05-24 23:28:02,708 voldemort.store.readonly.chunk.ChunkedFileSet] WARN Metadata file not found. Assuming default settings
+main {"main":446}  
+[2013-05-24 23:28:02,709 voldemort.store.readonly.chunk.ChunkedFileSet] INFO No index or data files found, creating empty files 0.index and 0.data.
+main {"main":447}  
+[2013-05-24 23:28:02,711 voldemort.store.routed.RoutedStoreFactory] WARN Using pseudo NonblockingStore implementation for class voldemort.store.stats.StatTrackingStore
+main {"main":448}  
+[2013-05-24 23:28:02,711 voldemort.server.storage.StorageService] INFO Opening store 'test-consistent' (memory).
+main {"main":449}  
+[2013-05-24 23:28:02,711 voldemort.store.routed.RoutedStoreFactory] WARN Using pseudo NonblockingStore implementation for class voldemort.store.stats.StatTrackingStore
+main {"main":450}  
+[2013-05-24 23:28:02,711 voldemort.server.storage.StorageService] INFO Opening store 'test-to-all' (memory).
+main {"main":451}  
+[2013-05-24 23:28:02,712 voldemort.store.routed.RoutedStoreFactory] WARN Using pseudo NonblockingStore implementation for class voldemort.store.stats.StatTrackingStore
+main {"main":452}  
+[2013-05-24 23:28:02,712 voldemort.server.storage.StorageService] INFO Opening store 'test-consistent-with-pref-list' (memory).
+main {"main":453}  
+[2013-05-24 23:28:02,713 voldemort.store.routed.RoutedStoreFactory] WARN Using pseudo NonblockingStore implementation for class voldemort.store.stats.StatTrackingStore
+main {"main":454}  
+[2013-05-24 23:28:02,722 voldemort.server.storage.StorageService] INFO All stores initialized.
+main {"main":455}  
+[2013-05-24 23:28:02,722 voldemort.server.VoldemortService] INFO Starting scheduler-service
+main {"main":456}  
+[2013-05-24 23:28:02,722 voldemort.server.VoldemortService] INFO Starting async-scheduler
+main {"main":457}  
+[2013-05-24 23:28:02,722 voldemort.server.protocol.admin.AsyncOperationService] INFO Starting asyncOperationRunner
+main {"main":458}  
+[2013-05-24 23:28:02,722 voldemort.server.VoldemortService] INFO Starting http-service
+main {"main":459}  
+[2013-05-24 23:28:02,724 voldemort.server.http.HttpService] INFO HTTP service started on port 64175
+main {"main":460}  
+[2013-05-24 23:28:02,724 voldemort.server.VoldemortService] INFO Starting socket-service
+main {"main":461}  
+[2013-05-24 23:28:02,724 voldemort.server.socket.SocketServer[socket-server]] INFO Starting voldemort socket server (socket-server) on port 64176
+main-thread5 {"main-thread5":1}  
+[2013-05-24 23:28:02,725 voldemort.server.VoldemortService] INFO Starting rebalance-service
+main {"main":462}  
+[2013-05-24 23:28:02,725 voldemort.server.VoldemortService] INFO Starting socket-service
+main {"main":463}  
+[2013-05-24 23:28:02,726 voldemort.server.socket.SocketServer[admin-server]] INFO Starting voldemort socket server (admin-server) on port 64177main-thread5 {"main-thread5":1}  
+[2013-05-24 23:28:02,726 voldemort.server.VoldemortServer] INFO Startup completed in 42 ms.
+main {"main":464}  
+[2013-05-24 23:28:02,734 voldemort.server.socket.SocketServerSession] INFO Client /127.0.0.1:64181 connected successfully with protocol vp1
+vold-server1 {"nio-server1":10, "vold-server1":1, "nio-client2":2, "nio-client1":3, "nio-server2":6}  
+[2013-05-24 23:28:02,762 voldemort.store.metadata.MetadataStore] INFO metadata init().
+main {"main":465}  
+[2013-05-24 23:28:02,784 voldemort.store.metadata.MetadataStore] INFO Updating routing strategy for all stores
+main {"main":466}  
+[2013-05-24 23:28:02,787 voldemort.server.VoldemortServer] INFO Using BIO Connector.
+main {"main":467}  
+[2013-05-24 23:28:02,787 voldemort.server.VoldemortServer] INFO Using BIO Connector for Admin Service.
+main {"main":468}  
+[2013-05-24 23:28:02,787 voldemort.server.VoldemortService] INFO Starting voldemort-server
+main {"main":469}  
+[2013-05-24 23:28:02,787 voldemort.server.VoldemortServer] INFO Starting 7 services.
+main {"main":470}  
+[2013-05-24 23:28:02,787 voldemort.server.VoldemortService] INFO Starting storage-service
+main {"main":471}  
+[2013-05-24 23:28:02,884 voldemort.server.storage.StorageService] INFO Initializing bdb storage engine.
+main {"main":472}  
+[2013-05-24 23:28:02,884 voldemort.server.storage.StorageService] INFO Initializing mysql storage engine.
+main {"main":473}  
+[2013-05-24 23:28:02,885 voldemort.server.storage.StorageService] INFO Initializing memory storage engine.
+main {"main":474}  
+[2013-05-24 23:28:02,885 voldemort.server.storage.StorageService] INFO Initializing cache storage engine.
+main {"main":475}  
+[2013-05-24 23:28:02,885 voldemort.server.storage.StorageService] INFO Initializing read-only storage engine.
+main {"main":476}  
+[2013-05-24 23:28:02,885 voldemort.server.storage.StorageService] INFO Initializing the slop store using bdb
+main {"main":477}  
+[2013-05-24 23:28:02,885 voldemort.store.bdb.BdbStorageConfiguration] INFO Creating BDB data directory '/var/folders/nk/rnnlnbcd7sg7vn6cntx_kpfc0000gn/T/637436/node-1/data/bdb.
+main {"main":478}  
+[2013-05-24 23:28:02,896 voldemort.store.bdb.BdbStorageConfiguration] INFO Creating shared BDB environment: 
+main {"main":479}  
+[2013-05-24 23:28:02,896 voldemort.store.bdb.BdbStorageConfiguration] INFO     BDB cache size = 1145359564
+main {"main":480}  
+[2013-05-24 23:28:02,896 voldemort.store.bdb.BdbStorageConfiguration] INFO     BDB je.cleaner.threads = 1
+main {"main":481}  
+[2013-05-24 23:28:02,896 voldemort.store.bdb.BdbStorageConfiguration] INFO     BDB je.cleaner.minUtilization = 50
+main {"main":482}  
+[2013-05-24 23:28:02,896 voldemort.store.bdb.BdbStorageConfiguration] INFO     BDB je.cleaner.minFileUtilization = 5
+main {"main":483}  
+[2013-05-24 23:28:02,896 voldemort.store.bdb.BdbStorageConfiguration] INFO     BDB je.log.fileMax = 62914560
+main {"main":484}  
+[2013-05-24 23:28:02,896 voldemort.store.bdb.BdbStorageConfiguration] INFO     BDB allowCreate=true,cacheSize=1145359564,txnNoSync=false,txnWriteNoSync=false,{je.log.fileMax=62914560, je.cleaner.minFileUtilization=5, je.cleaner.minUtilization=50, je.cleaner.threads=1, je.cleaner.maxBatchFiles=0, je.checkpointer.wakeupInterval=30000000, je.checkpointer.highPriority=false, je.env.isTransactional=true, je.env.fairLatches=false, je.cleaner.lookAheadCacheSize=8192, je.log.faultReadSize=2048, je.lock.nLockTables=1, je.checkpointer.bytesInterval=20971520, je.lock.timeout=500 MILLISECONDS, je.log.iteratorReadSize=8192, je.txn.durability=SYNC,NO_SYNC,SIMPLE_MAJORITY},
+main {"main":485}  
+[2013-05-24 23:28:02,898 voldemort.server.storage.StorageService] INFO Initializing slop pusher job type streaming at Fri May 24 23:33:02 PDT 2013
+main {"main":486}  
+[2013-05-24 23:28:02,898 voldemort.server.storage.StorageService] INFO Initializing repair job.
+main {"main":487}  
+[2013-05-24 23:28:02,899 voldemort.server.storage.StorageService] INFO Initializing stores:
+main {"main":488}  
+[2013-05-24 23:28:02,899 voldemort.server.storage.StorageService] INFO Opening store 'users' (bdb).
+main {"main":489}  
+[2013-05-24 23:28:02,900 voldemort.store.routed.RoutedStoreFactory] WARN Using pseudo NonblockingStore implementation for class voldemort.store.stats.StatTrackingStore
+main {"main":490}  
+[2013-05-24 23:28:02,900 voldemort.server.storage.StorageService] INFO Opening store 'veggies' (bdb).
+main {"main":491}  
+[2013-05-24 23:28:02,902 voldemort.store.routed.RoutedStoreFactory] WARN Using pseudo NonblockingStore implementation for class voldemort.store.stats.StatTrackingStore
+main {"main":492}  
+[2013-05-24 23:28:02,902 voldemort.server.storage.StorageService] INFO Opening store 'test-replication-memory' (memory).
+main {"main":493}  
+[2013-05-24 23:28:02,902 voldemort.store.routed.RoutedStoreFactory] WARN Using pseudo NonblockingStore implementation for class voldemort.store.stats.StatTrackingStore
+main {"main":494}  
+[2013-05-24 23:28:02,902 voldemort.server.storage.StorageService] INFO Opening store 'test-recovery-data' (memory).
+main {"main":495}  
+[2013-05-24 23:28:02,902 voldemort.store.routed.RoutedStoreFactory] WARN Using pseudo NonblockingStore implementation for class voldemort.store.stats.StatTrackingStore
+main {"main":496}  
+[2013-05-24 23:28:02,902 voldemort.server.storage.StorageService] INFO Opening store 'test-replication-persistent' (bdb).
+main {"main":497}  
+[2013-05-24 23:28:02,904 voldemort.store.routed.RoutedStoreFactory] WARN Using pseudo NonblockingStore implementation for class voldemort.store.stats.StatTrackingStore
+main {"main":498}  
+[2013-05-24 23:28:02,904 voldemort.server.storage.StorageService] INFO Opening store 'test-readrepair-memory' (memory).
+main {"main":499}  
+[2013-05-24 23:28:02,904 voldemort.store.routed.RoutedStoreFactory] WARN Using pseudo NonblockingStore implementation for class voldemort.store.stats.StatTrackingStore
+main {"main":500}  
+[2013-05-24 23:28:02,904 voldemort.server.storage.StorageService] INFO Opening store 'test-readonly-fetchfiles' (read-only).
+main {"main":501}  
+[2013-05-24 23:28:02,905 voldemort.store.readonly.ReadOnlyStorageEngine] INFO Creating symbolic link for 'test-readonly-fetchfiles' using directory /var/folders/nk/rnnlnbcd7sg7vn6cntx_kpfc0000gn/T/637436/node-1/data/read-only/test-readonly-fetchfiles/version-0
+main {"main":502}  
+[2013-05-24 23:28:02,905 voldemort.store.readonly.chunk.ChunkedFileSet] WARN Metadata file not found. Assuming default settings
+main {"main":503}  
+[2013-05-24 23:28:02,905 voldemort.store.readonly.chunk.ChunkedFileSet] INFO No index or data files found, creating empty files 0.index and 0.data.
+main {"main":504}  
+[2013-05-24 23:28:02,907 voldemort.store.routed.RoutedStoreFactory] WARN Using pseudo NonblockingStore implementation for class voldemort.store.stats.StatTrackingStore
+main {"main":505}  
+[2013-05-24 23:28:02,908 voldemort.server.storage.StorageService] INFO Opening store 'test-readonly-versions' (read-only).
+main {"main":506}  
+[2013-05-24 23:28:02,908 voldemort.store.readonly.ReadOnlyStorageEngine] INFO Creating symbolic link for 'test-readonly-versions' using directory /var/folders/nk/rnnlnbcd7sg7vn6cntx_kpfc0000gn/T/637436/node-1/data/read-only/test-readonly-versions/version-0
+main {"main":507}  
+[2013-05-24 23:28:02,909 voldemort.store.readonly.chunk.ChunkedFileSet] WARN Metadata file not found. Assuming default settings
+main {"main":508}  
+[2013-05-24 23:28:02,909 voldemort.store.readonly.chunk.ChunkedFileSet] INFO No index or data files found, creating empty files 0.index and 0.data.
+main {"main":509}  
+[2013-05-24 23:28:02,911 voldemort.store.routed.RoutedStoreFactory] WARN Using pseudo NonblockingStore implementation for class voldemort.store.stats.StatTrackingStore
+main {"main":510}  
+[2013-05-24 23:28:02,912 voldemort.server.storage.StorageService] INFO Opening store 'test-consistent' (memory).
+main {"main":511}  
+[2013-05-24 23:28:02,912 voldemort.store.routed.RoutedStoreFactory] WARN Using pseudo NonblockingStore implementation for class voldemort.store.stats.StatTrackingStore
+main {"main":512}  
+[2013-05-24 23:28:02,912 voldemort.server.storage.StorageService] INFO Opening store 'test-to-all' (memory).
+main {"main":513}  
+[2013-05-24 23:28:02,912 voldemort.store.routed.RoutedStoreFactory] WARN Using pseudo NonblockingStore implementation for class voldemort.store.stats.StatTrackingStore
+main {"main":514}  
+[2013-05-24 23:28:02,912 voldemort.server.storage.StorageService] INFO Opening store 'test-consistent-with-pref-list' (memory).
+main {"main":515}  
+[2013-05-24 23:28:02,913 voldemort.store.routed.RoutedStoreFactory] WARN Using pseudo NonblockingStore implementation for class voldemort.store.stats.StatTrackingStore
+main {"main":516}  
+[2013-05-24 23:28:02,921 voldemort.server.storage.StorageService] INFO All stores initialized.
+main {"main":517}  
+[2013-05-24 23:28:02,921 voldemort.server.VoldemortService] INFO Starting scheduler-service
+main {"main":518}  
+[2013-05-24 23:28:02,921 voldemort.server.VoldemortService] INFO Starting async-scheduler
+main {"main":519}  
+[2013-05-24 23:28:02,921 voldemort.server.protocol.admin.AsyncOperationService] INFO Starting asyncOperationRunner
+main {"main":520}  
+[2013-05-24 23:28:02,921 voldemort.server.VoldemortService] INFO Starting http-service
+main {"main":521}  
+[2013-05-24 23:28:02,923 voldemort.server.http.HttpService] INFO HTTP service started on port 64178
+main {"main":522}  
+[2013-05-24 23:28:02,923 voldemort.server.VoldemortService] INFO Starting socket-service
+main {"main":523}  
+[2013-05-24 23:28:02,924 voldemort.server.socket.SocketServer[socket-server]] INFO Starting voldemort socket server (socket-server) on port 64179
+main-thread3 {"main-thread3":1}  
+[2013-05-24 23:28:02,924 voldemort.server.VoldemortService] INFO Starting rebalance-service
+main {"main":524}  
+[2013-05-24 23:28:02,924 voldemort.server.VoldemortService] INFO Starting socket-service
+main {"main":525}  
+[2013-05-24 23:28:02,924 voldemort.server.socket.SocketServer[admin-server]] INFO Starting voldemort socket server (admin-server) on port 64180
+main-thread11 {"main-thread11":1}  
+[2013-05-24 23:28:02,925 voldemort.server.VoldemortServer] INFO Startup completed in 138 ms.
+main {"main":526}  
+[2013-05-24 23:28:02,928 voldemort.server.socket.SocketServerSession] INFO Client /127.0.0.1:64182 connected successfully with protocol vp1
+vold-server1 {"nio-server1":10, "vold-server1":2, "nio-client2":3, "nio-client1":3, "nio-server2":6}  
+[2013-05-24 23:28:02,967 voldemort.client.DefaultStoreClient] INFO Bootstrapping metadata for store test-readrepair-memory
+main {"main":527}  
+[2013-05-24 23:28:02,967 voldemort.client.AbstractStoreClientFactory] INFO Client zone-id [0] Attempting to obtain metadata for store [test-readrepair-memory] 
+main {"main":528}  
+[2013-05-24 23:28:02,970 voldemort.server.socket.SocketServerSession] INFO Client /127.0.0.1:64183 connected successfully with protocol vp1
+vold-server2 {"vold-server2":1, "nio-server1":10, "vold-server1":1, "nio-client2":2, "nio-client1":3, "nio-server2":6}  
+[2013-05-24 23:28:03,020 voldemort.server.socket.SocketServerSession] INFO Client /127.0.0.1:64184 connected successfully with protocol vp1
+vold-server2 {"vold-server2":2, "nio-server1":10, "vold-server1":2, "nio-client2":3, "nio-client1":3, "nio-server2":6}  
+[2013-05-24 23:28:03,063 voldemort.store.socket.clientrequest.ClientRequestExecutorFactory$ClientRequestSelectorManager] INFO Closed, exiting
+nio-client1 {"vold-server2":2, "nio-server1":10, "vold-server1":2, "nio-client2":3, "nio-client1":4, "nio-server2":6}  
+[2013-05-24 23:28:03,063 voldemort.server.socket.SocketServerSession] INFO Client /127.0.0.1:64182 disconnected.
+vold-server1 {"nio-server1":10, "vold-server1":3, "nio-client2":3, "nio-client1":3, "nio-server2":6}  
+[2013-05-24 23:28:03,063 voldemort.store.socket.clientrequest.ClientRequestExecutorFactory$ClientRequestSelectorManager] INFO Closed, exiting
+nio-client2 {"vold-server2":2, "nio-server1":10, "vold-server1":2, "nio-client2":4, "nio-client1":3, "nio-server2":6}  
+[2013-05-24 23:28:03,063 voldemort.server.socket.SocketServerSession] INFO Client /127.0.0.1:64181 disconnected.
+vold-server1 {"nio-server1":10, "vold-server1":4, "nio-client2":3, "nio-client1":3, "nio-server2":6}  
+[2013-05-24 23:28:03,063 voldemort.store.socket.clientrequest.ClientRequestExecutor] WARN No client associated with Socket[unconnected]
+main {"main":529}  
+[2013-05-24 23:28:03,064 voldemort.store.socket.clientrequest.ClientRequestExecutor] INFO Closing remote connection from Socket[unconnected]
+main {"main":530}  
+[2013-05-24 23:28:03,064 voldemort.store.socket.clientrequest.ClientRequestExecutor] WARN No client associated with Socket[unconnected]
+main {"main":531}  
+[2013-05-24 23:28:03,064 voldemort.store.socket.clientrequest.ClientRequestExecutor] INFO Closing remote connection from Socket[unconnected]
+main {"main":532}  
+.[2013-05-24 23:28:03,071 voldemort.store.metadata.MetadataStore] INFO metadata init().
+main {"main":533}  
+[2013-05-24 23:28:03,089 voldemort.store.metadata.MetadataStore] INFO Updating routing strategy for all stores
+main {"main":534}  
+[2013-05-24 23:28:03,093 voldemort.server.VoldemortServer] INFO Using BIO Connector.
+main {"main":535}  
+[2013-05-24 23:28:03,093 voldemort.server.VoldemortServer] INFO Using BIO Connector for Admin Service.
+main {"main":536}  
+[2013-05-24 23:28:03,093 voldemort.server.VoldemortService] INFO Starting voldemort-server
+main {"main":537}  
+[2013-05-24 23:28:03,093 voldemort.server.VoldemortServer] INFO Starting 7 services.
+main {"main":538}  
+[2013-05-24 23:28:03,093 voldemort.server.VoldemortService] INFO Starting storage-service
+main {"main":539}  
+[2013-05-24 23:28:03,094 voldemort.server.storage.StorageService] INFO Initializing bdb storage engine.
+main {"main":540}  
+[2013-05-24 23:28:03,094 voldemort.server.storage.StorageService] INFO Initializing mysql storage engine.
+main {"main":541}  
+[2013-05-24 23:28:03,094 voldemort.server.storage.StorageService] INFO Initializing memory storage engine.
+main {"main":542}  
+[2013-05-24 23:28:03,094 voldemort.server.storage.StorageService] INFO Initializing cache storage engine.
+main {"main":543}  
+[2013-05-24 23:28:03,094 voldemort.server.storage.StorageService] INFO Initializing read-only storage engine.
+main {"main":544}  
+[2013-05-24 23:28:03,094 voldemort.server.storage.StorageService] INFO Initializing the slop store using bdb
+main {"main":545}  
+[2013-05-24 23:28:03,094 voldemort.store.bdb.BdbStorageConfiguration] INFO Creating BDB data directory '/var/folders/nk/rnnlnbcd7sg7vn6cntx_kpfc0000gn/T/47837/node-0/data/bdb.
+main {"main":546}  
+[2013-05-24 23:28:03,103 voldemort.store.bdb.BdbStorageConfiguration] INFO Creating shared BDB environment: 
+main {"main":547}  
+[2013-05-24 23:28:03,103 voldemort.store.bdb.BdbStorageConfiguration] INFO     BDB cache size = 1145359564
+main {"main":548}  
+[2013-05-24 23:28:03,103 voldemort.store.bdb.BdbStorageConfiguration] INFO     BDB je.cleaner.threads = 1
+main {"main":549}  
+[2013-05-24 23:28:03,103 voldemort.store.bdb.BdbStorageConfiguration] INFO     BDB je.cleaner.minUtilization = 50
+main {"main":550}  
+[2013-05-24 23:28:03,103 voldemort.store.bdb.BdbStorageConfiguration] INFO     BDB je.cleaner.minFileUtilization = 5
+main {"main":551}  
+[2013-05-24 23:28:03,103 voldemort.store.bdb.BdbStorageConfiguration] INFO     BDB je.log.fileMax = 62914560
+main {"main":552}  
+[2013-05-24 23:28:03,103 voldemort.store.bdb.BdbStorageConfiguration] INFO     BDB allowCreate=true,cacheSize=1145359564,txnNoSync=false,txnWriteNoSync=false,{je.log.fileMax=62914560, je.cleaner.minFileUtilization=5, je.cleaner.minUtilization=50, je.cleaner.threads=1, je.cleaner.maxBatchFiles=0, je.checkpointer.wakeupInterval=30000000, je.checkpointer.highPriority=false, je.env.isTransactional=true, je.env.fairLatches=false, je.cleaner.lookAheadCacheSize=8192, je.log.faultReadSize=2048, je.lock.nLockTables=1, je.checkpointer.bytesInterval=20971520, je.lock.timeout=500 MILLISECONDS, je.log.iteratorReadSize=8192, je.txn.durability=SYNC,NO_SYNC,SIMPLE_MAJORITY},
+main {"main":553}  
+[2013-05-24 23:28:03,105 voldemort.server.storage.StorageService] INFO Initializing slop pusher job type streaming at Fri May 24 23:33:03 PDT 2013
+main {"main":554}  
+[2013-05-24 23:28:03,106 voldemort.server.storage.StorageService] INFO Initializing repair job.
+main {"main":555}  
+[2013-05-24 23:28:03,106 voldemort.server.storage.StorageService] INFO Initializing stores:
+main {"main":556}  
+[2013-05-24 23:28:03,106 voldemort.server.storage.StorageService] INFO Opening store 'users' (bdb).
+main {"main":557}  
+[2013-05-24 23:28:03,107 voldemort.store.routed.RoutedStoreFactory] WARN Using pseudo NonblockingStore implementation for class voldemort.store.stats.StatTrackingStore
+main {"main":558}  
+[2013-05-24 23:28:03,108 voldemort.server.storage.StorageService] INFO Opening store 'veggies' (bdb).
+main {"main":559}  
+[2013-05-24 23:28:03,109 voldemort.store.routed.RoutedStoreFactory] WARN Using pseudo NonblockingStore implementation for class voldemort.store.stats.StatTrackingStore
+main {"main":560}  
+[2013-05-24 23:28:03,109 voldemort.server.storage.StorageService] INFO Opening store 'test-replication-memory' (memory).
+main {"main":561}  
+[2013-05-24 23:28:03,109 voldemort.store.routed.RoutedStoreFactory] WARN Using pseudo NonblockingStore implementation for class voldemort.store.stats.StatTrackingStore
+main {"main":562}  
+[2013-05-24 23:28:03,110 voldemort.server.storage.StorageService] INFO Opening store 'test-recovery-data' (memory).
+main {"main":563}  
+[2013-05-24 23:28:03,110 voldemort.store.routed.RoutedStoreFactory] WARN Using pseudo NonblockingStore implementation for class voldemort.store.stats.StatTrackingStore
+main {"main":564}  
+[2013-05-24 23:28:03,110 voldemort.server.storage.StorageService] INFO Opening store 'test-replication-persistent' (bdb).
+main {"main":565}  
+[2013-05-24 23:28:03,111 voldemort.store.routed.RoutedStoreFactory] WARN Using pseudo NonblockingStore implementation for class voldemort.store.stats.StatTrackingStore
+main {"main":566}  
+[2013-05-24 23:28:03,112 voldemort.server.storage.StorageService] INFO Opening store 'test-readrepair-memory' (memory).
+main {"main":567}  
+[2013-05-24 23:28:03,112 voldemort.store.routed.RoutedStoreFactory] WARN Using pseudo NonblockingStore implementation for class voldemort.store.stats.StatTrackingStore
+main {"main":568}  
+[2013-05-24 23:28:03,112 voldemort.server.storage.StorageService] INFO Opening store 'test-readonly-fetchfiles' (read-only).
+main {"main":569}  
+[2013-05-24 23:28:03,113 voldemort.store.readonly.ReadOnlyStorageEngine] INFO Creating symbolic link for 'test-readonly-fetchfiles' using directory /var/folders/nk/rnnlnbcd7sg7vn6cntx_kpfc0000gn/T/47837/node-0/data/read-only/test-readonly-fetchfiles/version-0
+main {"main":570}  
+[2013-05-24 23:28:03,113 voldemort.store.readonly.chunk.ChunkedFileSet] WARN Metadata file not found. Assuming default settings
+main {"main":571}  
+[2013-05-24 23:28:03,114 voldemort.store.readonly.chunk.ChunkedFileSet] INFO No index or data files found, creating empty files 0.index and 0.data.
+main {"main":572}  
+[2013-05-24 23:28:03,115 voldemort.store.routed.RoutedStoreFactory] WARN Using pseudo NonblockingStore implementation for class voldemort.store.stats.StatTrackingStore
+main {"main":573}  
+[2013-05-24 23:28:03,116 voldemort.server.storage.StorageService] INFO Opening store 'test-readonly-versions' (read-only).
+main {"main":574}  
+[2013-05-24 23:28:03,116 voldemort.store.readonly.ReadOnlyStorageEngine] INFO Creating symbolic link for 'test-readonly-versions' using directory /var/folders/nk/rnnlnbcd7sg7vn6cntx_kpfc0000gn/T/47837/node-0/data/read-only/test-readonly-versions/version-0
+main {"main":575}  
+[2013-05-24 23:28:03,117 voldemort.store.readonly.chunk.ChunkedFileSet] WARN Metadata file not found. Assuming default settings
+main {"main":576}  
+[2013-05-24 23:28:03,117 voldemort.store.readonly.chunk.ChunkedFileSet] INFO No index or data files found, creating empty files 0.index and 0.data.
+main {"main":577}  
+[2013-05-24 23:28:03,118 voldemort.store.routed.RoutedStoreFactory] WARN Using pseudo NonblockingStore implementation for class voldemort.store.stats.StatTrackingStore
+main {"main":578}  
+[2013-05-24 23:28:03,119 voldemort.server.storage.StorageService] INFO Opening store 'test-consistent' (memory).
+main {"main":579}  
+[2013-05-24 23:28:03,119 voldemort.store.routed.RoutedStoreFactory] WARN Using pseudo NonblockingStore implementation for class voldemort.store.stats.StatTrackingStore
+main {"main":580}  
+[2013-05-24 23:28:03,119 voldemort.server.storage.StorageService] INFO Opening store 'test-to-all' (memory).
+main {"main":581}  
+[2013-05-24 23:28:03,119 voldemort.store.routed.RoutedStoreFactory] WARN Using pseudo NonblockingStore implementation for class voldemort.store.stats.StatTrackingStore
+main {"main":582}  
+[2013-05-24 23:28:03,119 voldemort.server.storage.StorageService] INFO Opening store 'test-consistent-with-pref-list' (memory).
+main {"main":583}  
+[2013-05-24 23:28:03,120 voldemort.store.routed.RoutedStoreFactory] WARN Using pseudo NonblockingStore implementation for class voldemort.store.stats.StatTrackingStore
+main {"main":584}  
+[2013-05-24 23:28:03,128 voldemort.server.storage.StorageService] INFO All stores initialized.
+main {"main":585}  
+[2013-05-24 23:28:03,129 voldemort.server.VoldemortService] INFO Starting scheduler-service
+main {"main":586}  
+[2013-05-24 23:28:03,129 voldemort.server.VoldemortService] INFO Starting async-scheduler
+main {"main":587}  
+[2013-05-24 23:28:03,129 voldemort.server.protocol.admin.AsyncOperationService] INFO Starting asyncOperationRunner
+main {"main":588}  
+[2013-05-24 23:28:03,129 voldemort.server.VoldemortService] INFO Starting http-service
+main {"main":589}  
+[2013-05-24 23:28:03,130 voldemort.server.http.HttpService] INFO HTTP service started on port 64185
+main {"main":590}  
+[2013-05-24 23:28:03,130 voldemort.server.VoldemortService] INFO Starting socket-service
+main {"main":591}  
+[2013-05-24 23:28:03,130 voldemort.server.socket.SocketServer[socket-server]] INFO Starting voldemort socket server (socket-server) on port 64186
+main-thread1 {"main-thread1":1}  
+[2013-05-24 23:28:03,131 voldemort.server.VoldemortService] INFO Starting rebalance-service
+main {"main":592}  
+[2013-05-24 23:28:03,131 voldemort.server.VoldemortService] INFO Starting socket-service
+main {"main":593}  
+[2013-05-24 23:28:03,131 voldemort.server.socket.SocketServer[admin-server]] INFO Starting voldemort socket server (admin-server) on port 64187
+main-thread2 {"main-thread2":1}  
+[2013-05-24 23:28:03,131 voldemort.server.VoldemortServer] INFO Startup completed in 38 ms.
+main {"main":594}  
+[2013-05-24 23:28:03,134 voldemort.server.socket.SocketServerSession] INFO Client /127.0.0.1:64191 connected successfully with protocol vp1
+vold-server1 {"vold-server2":2, "nio-server1":10, "vold-server1":5, "nio-client2":3, "nio-client1":4, "nio-server2":6}  
+[2013-05-24 23:28:03,160 voldemort.store.metadata.MetadataStore] INFO metadata init().
+main {"main":595}  
+[2013-05-24 23:28:03,181 voldemort.store.metadata.MetadataStore] INFO Updating routing strategy for all stores
+main {"main":596}  
+[2013-05-24 23:28:03,183 voldemort.server.VoldemortServer] INFO Using BIO Connector.
+main {"main":597}  
+[2013-05-24 23:28:03,184 voldemort.server.VoldemortServer] INFO Using BIO Connector for Admin Service.
+main {"main":598}  
+[2013-05-24 23:28:03,184 voldemort.server.VoldemortService] INFO Starting voldemort-server
+main {"main":599}  
+[2013-05-24 23:28:03,184 voldemort.server.VoldemortServer] INFO Starting 7 services.
+main {"main":600}  
+[2013-05-24 23:28:03,184 voldemort.server.VoldemortService] INFO Starting storage-service
+main {"main":601}  
+[2013-05-24 23:28:03,184 voldemort.server.storage.StorageService] INFO Initializing bdb storage engine.
+main {"main":602}  
+[2013-05-24 23:28:03,185 voldemort.server.storage.StorageService] INFO Initializing mysql storage engine.
+main {"main":603}  
+[2013-05-24 23:28:03,185 voldemort.server.storage.StorageService] INFO Initializing memory storage engine.
+main {"main":604}  
+[2013-05-24 23:28:03,185 voldemort.server.storage.StorageService] INFO Initializing cache storage engine.
+main {"main":605}  
+[2013-05-24 23:28:03,185 voldemort.server.storage.StorageService] INFO Initializing read-only storage engine.
+main {"main":606}  
+[2013-05-24 23:28:03,185 voldemort.server.storage.StorageService] INFO Initializing the slop store using bdb
+main {"main":607}  
+[2013-05-24 23:28:03,185 voldemort.store.bdb.BdbStorageConfiguration] INFO Creating BDB data directory '/var/folders/nk/rnnlnbcd7sg7vn6cntx_kpfc0000gn/T/459415/node-1/data/bdb.
+main {"main":608}  
+[2013-05-24 23:28:03,195 voldemort.store.bdb.BdbStorageConfiguration] INFO Creating shared BDB environment: 
+main {"main":609}  
+[2013-05-24 23:28:03,196 voldemort.store.bdb.BdbStorageConfiguration] INFO     BDB cache size = 1145359564
+main {"main":610}  
+[2013-05-24 23:28:03,196 voldemort.store.bdb.BdbStorageConfiguration] INFO     BDB je.cleaner.threads = 1
+main {"main":611}  
+[2013-05-24 23:28:03,196 voldemort.store.bdb.BdbStorageConfiguration] INFO     BDB je.cleaner.minUtilization = 50
+main {"main":612}  
+[2013-05-24 23:28:03,196 voldemort.store.bdb.BdbStorageConfiguration] INFO     BDB je.cleaner.minFileUtilization = 5
+main {"main":613}  
+[2013-05-24 23:28:03,196 voldemort.store.bdb.BdbStorageConfiguration] INFO     BDB je.log.fileMax = 62914560
+main {"main":614}  
+[2013-05-24 23:28:03,197 voldemort.store.bdb.BdbStorageConfiguration] INFO     BDB allowCreate=true,cacheSize=1145359564,txnNoSync=false,txnWriteNoSync=false,{je.log.fileMax=62914560, je.cleaner.minFileUtilization=5, je.cleaner.minUtilization=50, je.cleaner.threads=1, je.cleaner.maxBatchFiles=0, je.checkpointer.wakeupInterval=30000000, je.checkpointer.highPriority=false, je.env.isTransactional=true, je.env.fairLatches=false, je.cleaner.lookAheadCacheSize=8192, je.log.faultReadSize=2048, je.lock.nLockTables=1, je.checkpointer.bytesInterval=20971520, je.lock.timeout=500 MILLISECONDS, je.log.iteratorReadSize=8192, je.txn.durability=SYNC,NO_SYNC,SIMPLE_MAJORITY},
+main {"main":615}  
+[2013-05-24 23:28:03,199 voldemort.server.storage.StorageService] INFO Initializing slop pusher job type streaming at Fri May 24 23:33:03 PDT 2013
+main {"main":616}  
+[2013-05-24 23:28:03,202 voldemort.server.storage.StorageService] INFO Initializing repair job.
+main {"main":617}  
+[2013-05-24 23:28:03,203 voldemort.server.storage.StorageService] INFO Initializing stores:
+main {"main":618}  
+[2013-05-24 23:28:03,203 voldemort.server.storage.StorageService] INFO Opening store 'users' (bdb).
+main {"main":619}  
+[2013-05-24 23:28:03,205 voldemort.store.routed.RoutedStoreFactory] WARN Using pseudo NonblockingStore implementation for class voldemort.store.stats.StatTrackingStore
+main {"main":620}  
+[2013-05-24 23:28:03,205 voldemort.server.storage.StorageService] INFO Opening store 'veggies' (bdb).
+main {"main":621}  
+[2013-05-24 23:28:03,207 voldemort.store.routed.RoutedStoreFactory] WARN Using pseudo NonblockingStore implementation for class voldemort.store.stats.StatTrackingStore
+main {"main":622}  
+[2013-05-24 23:28:03,207 voldemort.server.storage.StorageService] INFO Opening store 'test-replication-memory' (memory).
+main {"main":623}  
+[2013-05-24 23:28:03,208 voldemort.store.routed.RoutedStoreFactory] WARN Using pseudo NonblockingStore implementation for class voldemort.store.stats.StatTrackingStore
+main {"main":624}  
+[2013-05-24 23:28:03,208 voldemort.server.storage.StorageService] INFO Opening store 'test-recovery-data' (memory).
+main {"main":625}  
+[2013-05-24 23:28:03,209 voldemort.store.routed.RoutedStoreFactory] WARN Using pseudo NonblockingStore implementation for class voldemort.store.stats.StatTrackingStore
+main {"main":626}  
+[2013-05-24 23:28:03,209 voldemort.server.storage.StorageService] INFO Opening store 'test-replication-persistent' (bdb).
+main {"main":627}  
+[2013-05-24 23:28:03,211 voldemort.store.routed.RoutedStoreFactory] WARN Using pseudo NonblockingStore implementation for class voldemort.store.stats.StatTrackingStore
+main {"main":628}  
+[2013-05-24 23:28:03,211 voldemort.server.storage.StorageService] INFO Opening store 'test-readrepair-memory' (memory).
+main {"main":629}  
+[2013-05-24 23:28:03,212 voldemort.store.routed.RoutedStoreFactory] WARN Using pseudo NonblockingStore implementation for class voldemort.store.stats.StatTrackingStore
+main {"main":630}  
+[2013-05-24 23:28:03,212 voldemort.server.storage.StorageService] INFO Opening store 'test-readonly-fetchfiles' (read-only).
+main {"main":631}  
+[2013-05-24 23:28:03,213 voldemort.store.readonly.ReadOnlyStorageEngine] INFO Creating symbolic link for 'test-readonly-fetchfiles' using directory /var/folders/nk/rnnlnbcd7sg7vn6cntx_kpfc0000gn/T/459415/node-1/data/read-only/test-readonly-fetchfiles/version-0
+main {"main":632}  
+[2013-05-24 23:28:03,214 voldemort.store.readonly.chunk.ChunkedFileSet] WARN Metadata file not found. Assuming default settings
+main {"main":633}  
+[2013-05-24 23:28:03,214 voldemort.store.readonly.chunk.ChunkedFileSet] INFO No index or data files found, creating empty files 0.index and 0.data.
+main {"main":634}  
+[2013-05-24 23:28:03,216 voldemort.store.routed.RoutedStoreFactory] WARN Using pseudo NonblockingStore implementation for class voldemort.store.stats.StatTrackingStore
+main {"main":635}  
+[2013-05-24 23:28:03,217 voldemort.server.storage.StorageService] INFO Opening store 'test-readonly-versions' (read-only).
+main {"main":636}  
+[2013-05-24 23:28:03,217 voldemort.store.readonly.ReadOnlyStorageEngine] INFO Creating symbolic link for 'test-readonly-versions' using directory /var/folders/nk/rnnlnbcd7sg7vn6cntx_kpfc0000gn/T/459415/node-1/data/read-only/test-readonly-versions/version-0
+main {"main":637}  
+[2013-05-24 23:28:03,218 voldemort.store.readonly.chunk.ChunkedFileSet] WARN Metadata file not found. Assuming default settings
+main {"main":638}  
+[2013-05-24 23:28:03,218 voldemort.store.readonly.chunk.ChunkedFileSet] INFO No index or data files found, creating empty files 0.index and 0.data.
+main {"main":639}  
+[2013-05-24 23:28:03,220 voldemort.store.routed.RoutedStoreFactory] WARN Using pseudo NonblockingStore implementation for class voldemort.store.stats.StatTrackingStore
+main {"main":640}  
+[2013-05-24 23:28:03,221 voldemort.server.storage.StorageService] INFO Opening store 'test-consistent' (memory).
+main {"main":641}  
+[2013-05-24 23:28:03,221 voldemort.store.routed.RoutedStoreFactory] WARN Using pseudo NonblockingStore implementation for class voldemort.store.stats.StatTrackingStore
+main {"main":642}  
+[2013-05-24 23:28:03,221 voldemort.server.storage.StorageService] INFO Opening store 'test-to-all' (memory).
+main {"main":643}  
+[2013-05-24 23:28:03,222 voldemort.store.routed.RoutedStoreFactory] WARN Using pseudo NonblockingStore implementation for class voldemort.store.stats.StatTrackingStore
+main {"main":644}  
+[2013-05-24 23:28:03,222 voldemort.server.storage.StorageService] INFO Opening store 'test-consistent-with-pref-list' (memory).
+main {"main":645}  
+[2013-05-24 23:28:03,223 voldemort.store.routed.RoutedStoreFactory] WARN Using pseudo NonblockingStore implementation for class voldemort.store.stats.StatTrackingStore
+main {"main":646}  
+[2013-05-24 23:28:03,233 voldemort.server.storage.StorageService] INFO All stores initialized.
+main {"main":647}  
+[2013-05-24 23:28:03,233 voldemort.server.VoldemortService] INFO Starting scheduler-service
+main {"main":648}  
+[2013-05-24 23:28:03,258 voldemort.server.VoldemortService] INFO Starting async-scheduler
+main {"main":649}  
+[2013-05-24 23:28:03,258 voldemort.server.protocol.admin.AsyncOperationService] INFO Starting asyncOperationRunner
+main {"main":650}  
+[2013-05-24 23:28:03,258 voldemort.server.VoldemortService] INFO Starting http-service
+main {"main":651}  
+[2013-05-24 23:28:03,260 voldemort.server.http.HttpService] INFO HTTP service started on port 64188
+main {"main":652}  
+[2013-05-24 23:28:03,260 voldemort.server.VoldemortService] INFO Starting socket-service
+main {"main":653}  
+[2013-05-24 23:28:03,260 voldemort.server.socket.SocketServer[socket-server]] INFO Starting voldemort socket server (socket-server) on port 64189
+main-thread4 {"main-thread4":1}  
+[2013-05-24 23:28:03,260 voldemort.server.VoldemortService] INFO Starting rebalance-service
+main {"main":654}  
+[2013-05-24 23:28:03,261 voldemort.server.VoldemortService] INFO Starting socket-service
+main {"main":655}  
+[2013-05-24 23:28:03,261 voldemort.server.socket.SocketServer[admin-server]] INFO Starting voldemort socket server (admin-server) on port 64190
+main-thread6 {"main-thread6":1}  
+[2013-05-24 23:28:03,262 voldemort.server.VoldemortServer] INFO Startup completed in 78 ms.
+main {"main":656}  
+[2013-05-24 23:28:03,266 voldemort.server.socket.SocketServerSession] INFO Client /127.0.0.1:64192 connected successfully with protocol vp1
+vold-server1 {"vold-server2":2, "nio-server1":10, "vold-server1":6, "nio-client2":4, "nio-client1":4, "nio-server2":6}  
+[2013-05-24 23:28:03,305 voldemort.client.DefaultStoreClient] INFO Bootstrapping metadata for store test-readrepair-memory
+main {"main":657}  
+[2013-05-24 23:28:03,305 voldemort.client.AbstractStoreClientFactory] INFO Client zone-id [0] Attempting to obtain metadata for store [test-readrepair-memory] 
+main {"main":658}  
+[2013-05-24 23:28:03,308 voldemort.server.socket.SocketServerSession] INFO Client /127.0.0.1:64193 connected successfully with protocol vp1
+vold-server2 {"vold-server2":3, "nio-server1":10, "vold-server1":5, "nio-client2":3, "nio-client1":4, "nio-server2":6}  
+[2013-05-24 23:28:03,346 voldemort.server.socket.SocketServerSession] INFO Client /127.0.0.1:64194 connected successfully with protocol vp1
+vold-server2 {"vold-server2":4, "nio-server1":10, "vold-server1":6, "nio-client2":4, "nio-client1":4, "nio-server2":6}  
+[2013-05-24 23:28:03,387 voldemort.store.socket.clientrequest.ClientRequestExecutorFactory$ClientRequestSelectorManager] INFO Closed, exiting
+nio-client1 {"vold-server2":4, "nio-server1":10, "vold-server1":6, "nio-client2":4, "nio-client1":5, "nio-server2":6}  
+[2013-05-24 23:28:03,387 voldemort.server.socket.SocketServerSession] INFO Client /127.0.0.1:64191 disconnected.
+vold-server1 {"vold-server2":2, "nio-server1":10, "vold-server1":7, "nio-client2":4, "nio-client1":4, "nio-server2":6}  
+[2013-05-24 23:28:03,387 voldemort.store.socket.clientrequest.ClientRequestExecutorFactory$ClientRequestSelectorManager] INFO Closed, exiting
+nio-client2 {"vold-server2":4, "nio-server1":10, "vold-server1":6, "nio-client2":5, "nio-client1":4, "nio-server2":6}  
+[2013-05-24 23:28:03,387 voldemort.server.socket.SocketServerSession] INFO Client /127.0.0.1:64192 disconnected.
+vold-server1 {"vold-server2":2, "nio-server1":10, "vold-server1":8, "nio-client2":4, "nio-client1":4, "nio-server2":6}  
+[2013-05-24 23:28:03,387 voldemort.store.socket.clientrequest.ClientRequestExecutor] WARN No client associated with Socket[unconnected]
+main {"main":659}  
+[2013-05-24 23:28:03,387 voldemort.store.socket.clientrequest.ClientRequestExecutor] INFO Closing remote connection from Socket[unconnected]
+main {"main":660}  
+[2013-05-24 23:28:03,387 voldemort.store.socket.clientrequest.ClientRequestExecutor] WARN No client associated with Socket[unconnected]
+main {"main":661}  
+[2013-05-24 23:28:03,387 voldemort.store.socket.clientrequest.ClientRequestExecutor] INFO Closing remote connection from Socket[unconnected]
+main {"main":662}  
+.[2013-05-24 23:28:03,395 voldemort.store.metadata.MetadataStore] INFO metadata init().
+main {"main":663}  
+[2013-05-24 23:28:03,415 voldemort.store.metadata.MetadataStore] INFO Updating routing strategy for all stores
+main {"main":664}  
+[2013-05-24 23:28:03,417 voldemort.server.VoldemortServer] INFO Using BIO Connector.
+main {"main":665}  
+[2013-05-24 23:28:03,418 voldemort.server.VoldemortServer] INFO Using BIO Connector for Admin Service.
+main {"main":666}  
+[2013-05-24 23:28:03,418 voldemort.server.VoldemortService] INFO Starting voldemort-server
+main {"main":667}  
+[2013-05-24 23:28:03,418 voldemort.server.VoldemortServer] INFO Starting 7 services.
+main {"main":668}  
+[2013-05-24 23:28:03,418 voldemort.server.VoldemortService] INFO Starting storage-service
+main {"main":669}  
+[2013-05-24 23:28:03,418 voldemort.server.storage.StorageService] INFO Initializing bdb storage engine.
+main {"main":670}  
+[2013-05-24 23:28:03,418 voldemort.server.storage.StorageService] INFO Initializing mysql storage engine.
+main {"main":671}  
+[2013-05-24 23:28:03,418 voldemort.server.storage.StorageService] INFO Initializing memory storage engine.
+main {"main":672}  
+[2013-05-24 23:28:03,419 voldemort.server.storage.StorageService] INFO Initializing cache storage engine.
+main {"main":673}  
+[2013-05-24 23:28:03,419 voldemort.server.storage.StorageService] INFO Initializing read-only storage engine.
+main {"main":674}  
+[2013-05-24 23:28:03,419 voldemort.server.storage.StorageService] INFO Initializing the slop store using bdb
+main {"main":675}  
+[2013-05-24 23:28:03,419 voldemort.store.bdb.BdbStorageConfiguration] INFO Creating BDB data directory '/var/folders/nk/rnnlnbcd7sg7vn6cntx_kpfc0000gn/T/288986/node-0/data/bdb.
+main {"main":676}  
+[2013-05-24 23:28:03,426 voldemort.store.bdb.BdbStorageConfiguration] INFO Creating shared BDB environment: 
+main {"main":677}  
+[2013-05-24 23:28:03,426 voldemort.store.bdb.BdbStorageConfiguration] INFO     BDB cache size = 1145359564
+main {"main":678}  
+[2013-05-24 23:28:03,426 voldemort.store.bdb.BdbStorageConfiguration] INFO     BDB je.cleaner.threads = 1
+main {"main":679}  
+[2013-05-24 23:28:03,426 voldemort.store.bdb.BdbStorageConfiguration] INFO     BDB je.cleaner.minUtilization = 50
+main {"main":680}  
+[2013-05-24 23:28:03,426 voldemort.store.bdb.BdbStorageConfiguration] INFO     BDB je.cleaner.minFileUtilization = 5
+main {"main":681}  
+[2013-05-24 23:28:03,426 voldemort.store.bdb.BdbStorageConfiguration] INFO     BDB je.log.fileMax = 62914560
+main {"main":682}  
+[2013-05-24 23:28:03,426 voldemort.store.bdb.BdbStorageConfiguration] INFO     BDB allowCreate=true,cacheSize=1145359564,txnNoSync=false,txnWriteNoSync=false,{je.log.fileMax=62914560, je.cleaner.minFileUtilization=5, je.cleaner.minUtilization=50, je.cleaner.threads=1, je.cleaner.maxBatchFiles=0, je.checkpointer.wakeupInterval=30000000, je.checkpointer.highPriority=false, je.env.isTransactional=true, je.env.fairLatches=false, je.cleaner.lookAheadCacheSize=8192, je.log.faultReadSize=2048, je.lock.nLockTables=1, je.checkpointer.bytesInterval=20971520, je.lock.timeout=500 MILLISECONDS, je.log.iteratorReadSize=8192, je.txn.durability=SYNC,NO_SYNC,SIMPLE_MAJORITY},
+main {"main":683}  
+[2013-05-24 23:28:03,428 voldemort.server.storage.StorageService] INFO Initializing slop pusher job type streaming at Fri May 24 23:33:03 PDT 2013
+main {"main":684}  
+[2013-05-24 23:28:03,429 voldemort.server.storage.StorageService] INFO Initializing repair job.
+main {"main":685}  
+[2013-05-24 23:28:03,429 voldemort.server.storage.StorageService] INFO Initializing stores:
+main {"main":686}  
+[2013-05-24 23:28:03,430 voldemort.server.storage.StorageService] INFO Opening store 'users' (bdb).
+main {"main":687}  
+[2013-05-24 23:28:03,431 voldemort.store.routed.RoutedStoreFactory] WARN Using pseudo NonblockingStore implementation for class voldemort.store.stats.StatTrackingStore
+main {"main":688}  
+[2013-05-24 23:28:03,431 voldemort.server.storage.StorageService] INFO Opening store 'veggies' (bdb).
+main {"main":689}  
+[2013-05-24 23:28:03,432 voldemort.store.routed.RoutedStoreFactory] WARN Using pseudo NonblockingStore implementation for class voldemort.store.stats.StatTrackingStore
+main {"main":690}  
+[2013-05-24 23:28:03,432 voldemort.server.storage.StorageService] INFO Opening store 'test-replication-memory' (memory).
+main {"main":691}  
+[2013-05-24 23:28:03,432 voldemort.store.routed.RoutedStoreFactory] WARN Using pseudo NonblockingStore implementation for class voldemort.store.stats.StatTrackingStore
+main {"main":692}  
+[2013-05-24 23:28:03,433 voldemort.server.storage.StorageService] INFO Opening store 'test-recovery-data' (memory).
+main {"main":693}  
+[2013-05-24 23:28:03,433 voldemort.store.routed.RoutedStoreFactory] WARN Using pseudo NonblockingStore implementation for class voldemort.store.stats.StatTrackingStore
+main {"main":694}  
+[2013-05-24 23:28:03,433 voldemort.server.storage.StorageService] INFO Opening store 'test-replication-persistent' (bdb).
+main {"main":695}  
+[2013-05-24 23:28:03,434 voldemort.store.routed.RoutedStoreFactory] WARN Using pseudo NonblockingStore implementation for class voldemort.store.stats.StatTrackingStore
+main {"main":696}  
+[2013-05-24 23:28:03,434 voldemort.server.storage.StorageService] INFO Opening store 'test-readrepair-memory' (memory).
+main {"main":697}  
+[2013-05-24 23:28:03,434 voldemort.store.routed.RoutedStoreFactory] WARN Using pseudo NonblockingStore implementation for class voldemort.store.stats.StatTrackingStore
+main {"main":698}  
+[2013-05-24 23:28:03,435 voldemort.server.storage.StorageService] INFO Opening store 'test-readonly-fetchfiles' (read-only).
+main {"main":699}  
+[2013-05-24 23:28:03,435 voldemort.store.readonly.ReadOnlyStorageEngine] INFO Creating symbolic link for 'test-readonly-fetchfiles' using directory /var/folders/nk/rnnlnbcd7sg7vn6cntx_kpfc0000gn/T/288986/node-0/data/read-only/test-readonly-fetchfiles/version-0
+main {"main":700}  
+[2013-05-24 23:28:03,436 voldemort.store.readonly.chunk.ChunkedFileSet] WARN Metadata file not found. Assuming default settings
+main {"main":701}  
+[2013-05-24 23:28:03,436 voldemort.store.readonly.chunk.ChunkedFileSet] INFO No index or data files found, creating empty files 0.index and 0.data.
+main {"main":702}  
+[2013-05-24 23:28:03,437 voldemort.store.routed.RoutedStoreFactory] WARN Using pseudo NonblockingStore implementation for class voldemort.store.stats.StatTrackingStore
+main {"main":703}  
+[2013-05-24 23:28:03,438 voldemort.server.storage.StorageService] INFO Opening store 'test-readonly-versions' (read-only).
+main {"main":704}  
+[2013-05-24 23:28:03,438 voldemort.store.readonly.ReadOnlyStorageEngine] INFO Creating symbolic link for 'test-readonly-versions' using directory /var/folders/nk/rnnlnbcd7sg7vn6cntx_kpfc0000gn/T/288986/node-0/data/read-only/test-readonly-versions/version-0
+main {"main":705}  
+[2013-05-24 23:28:03,438 voldemort.store.readonly.chunk.ChunkedFileSet] WARN Metadata file not found. Assuming default settings
+main {"main":706}  
+[2013-05-24 23:28:03,439 voldemort.store.readonly.chunk.ChunkedFileSet] INFO No index or data files found, creating empty files 0.index and 0.data.
+main {"main":707}  
+[2013-05-24 23:28:03,440 voldemort.store.routed.RoutedStoreFactory] WARN Using pseudo NonblockingStore implementation for class voldemort.store.stats.StatTrackingStore
+main {"main":708}  
+[2013-05-24 23:28:03,440 voldemort.server.storage.StorageService] INFO Opening store 'test-consistent' (memory).
+main {"main":709}  
+[2013-05-24 23:28:03,441 voldemort.store.routed.RoutedStoreFactory] WARN Using pseudo NonblockingStore implementation for class voldemort.store.stats.StatTrackingStore
+main {"main":710}  
+[2013-05-24 23:28:03,441 voldemort.server.storage.StorageService] INFO Opening store 'test-to-all' (memory).
+main {"main":711}  
+[2013-05-24 23:28:03,441 voldemort.store.routed.RoutedStoreFactory] WARN Using pseudo NonblockingStore implementation for class voldemort.store.stats.StatTrackingStore
+main {"main":712}  
+[2013-05-24 23:28:03,441 voldemort.server.storage.StorageService] INFO Opening store 'test-consistent-with-pref-list' (memory).
+main {"main":713}  
+[2013-05-24 23:28:03,441 voldemort.store.routed.RoutedStoreFactory] WARN Using pseudo NonblockingStore implementation for class voldemort.store.stats.StatTrackingStore
+main {"main":714}  
+[2013-05-24 23:28:03,449 voldemort.server.storage.StorageService] INFO All stores initialized.
+main {"main":715}  
+[2013-05-24 23:28:03,449 voldemort.server.VoldemortService] INFO Starting scheduler-service
+main {"main":716}  
+[2013-05-24 23:28:03,449 voldemort.server.VoldemortService] INFO Starting async-scheduler
+main {"main":717}  
+[2013-05-24 23:28:03,449 voldemort.server.protocol.admin.AsyncOperationService] INFO Starting asyncOperationRunner
+main {"main":718}  
+[2013-05-24 23:28:03,449 voldemort.server.VoldemortService] INFO Starting http-service
+main {"main":719}  
+[2013-05-24 23:28:03,450 voldemort.server.http.HttpService] INFO HTTP service started on port 64195
+main {"main":720}  
+[2013-05-24 23:28:03,450 voldemort.server.VoldemortService] INFO Starting socket-service
+main {"main":721}  
+[2013-05-24 23:28:03,451 voldemort.server.socket.SocketServer[socket-server]] INFO Starting voldemort socket server (socket-server) on port 64196
+main-thread7 {"main-thread7":1}  
+[2013-05-24 23:28:03,451 voldemort.server.VoldemortService] INFO Starting rebalance-service
+main {"main":722}  
+[2013-05-24 23:28:03,451 voldemort.server.VoldemortService] INFO Starting socket-service
+main {"main":723}  
+[2013-05-24 23:28:03,452 voldemort.server.socket.SocketServer[admin-server]] INFO Starting voldemort socket server (admin-server) on port 64197
+main-thread8 {"main-thread8":1}  
+[2013-05-24 23:28:03,452 voldemort.server.VoldemortServer] INFO Startup completed in 34 ms.
+main {"main":724}  
+[2013-05-24 23:28:03,455 voldemort.server.socket.SocketServerSession] INFO Client /127.0.0.1:64201 connected successfully with protocol vp1
+vold-server1 {"vold-server2":4, "nio-server1":10, "vold-server1":9, "nio-client2":4, "nio-client1":5, "nio-server2":6}  
+[2013-05-24 23:28:03,480 voldemort.store.metadata.MetadataStore] INFO metadata init().
+main {"main":725}  
+[2013-05-24 23:28:03,498 voldemort.store.metadata.MetadataStore] INFO Updating routing strategy for all stores
+main {"main":726}  
+[2013-05-24 23:28:03,501 voldemort.server.VoldemortServer] INFO Using BIO Connector.
+main {"main":727}  
+[2013-05-24 23:28:03,501 voldemort.server.VoldemortServer] INFO Using BIO Connector for Admin Service.
+main {"main":728}  
+[2013-05-24 23:28:03,501 voldemort.server.VoldemortService] INFO Starting voldemort-server
+main {"main":729}  
+[2013-05-24 23:28:03,501 voldemort.server.VoldemortServer] INFO Starting 7 services.
+main {"main":730}  
+[2013-05-24 23:28:03,501 voldemort.server.VoldemortService] INFO Starting storage-service
+main {"main":731}  
+[2013-05-24 23:28:03,502 voldemort.server.storage.StorageService] INFO Initializing bdb storage engine.
+main {"main":732}  
+[2013-05-24 23:28:03,502 voldemort.server.storage.StorageService] INFO Initializing mysql storage engine.
+main {"main":733}  
+[2013-05-24 23:28:03,502 voldemort.server.storage.StorageService] INFO Initializing memory storage engine.
+main {"main":734}  
+[2013-05-24 23:28:03,502 voldemort.server.storage.StorageService] INFO Initializing cache storage engine.
+main {"main":735}  
+[2013-05-24 23:28:03,502 voldemort.server.storage.StorageService] INFO Initializing read-only storage engine.
+main {"main":736}  
+[2013-05-24 23:28:03,502 voldemort.server.storage.StorageService] INFO Initializing the slop store using bdb
+main {"main":737}  
+[2013-05-24 23:28:03,503 voldemort.store.bdb.BdbStorageConfiguration] INFO Creating BDB data directory '/var/folders/nk/rnnlnbcd7sg7vn6cntx_kpfc0000gn/T/36119/node-1/data/bdb.
+main {"main":738}  
+[2013-05-24 23:28:03,510 voldemort.store.bdb.BdbStorageConfiguration] INFO Creating shared BDB environment: 
+main {"main":739}  
+[2013-05-24 23:28:03,511 voldemort.store.bdb.BdbStorageConfiguration] INFO     BDB cache size = 1145359564
+main {"main":740}  
+[2013-05-24 23:28:03,511 voldemort.store.bdb.BdbStorageConfiguration] INFO     BDB je.cleaner.threads = 1
+main {"main":741}  
+[2013-05-24 23:28:03,511 voldemort.store.bdb.BdbStorageConfiguration] INFO     BDB je.cleaner.minUtilization = 50
+main {"main":742}  
+[2013-05-24 23:28:03,511 voldemort.store.bdb.BdbStorageConfiguration] INFO     BDB je.cleaner.minFileUtilization = 5
+main {"main":743}  
+[2013-05-24 23:28:03,511 voldemort.store.bdb.BdbStorageConfiguration] INFO     BDB je.log.fileMax = 62914560
+main {"main":744}  
+[2013-05-24 23:28:03,511 voldemort.store.bdb.BdbStorageConfiguration] INFO     BDB allowCreate=true,cacheSize=1145359564,txnNoSync=false,txnWriteNoSync=false,{je.log.fileMax=62914560, je.cleaner.minFileUtilization=5, je.cleaner.minUtilization=50, je.cleaner.threads=1, je.cleaner.maxBatchFiles=0, je.checkpointer.wakeupInterval=30000000, je.checkpointer.highPriority=false, je.env.isTransactional=true, je.env.fairLatches=false, je.cleaner.lookAheadCacheSize=8192, je.log.faultReadSize=2048, je.lock.nLockTables=1, je.checkpointer.bytesInterval=20971520, je.lock.timeout=500 MILLISECONDS, je.log.iteratorReadSize=8192, je.txn.durability=SYNC,NO_SYNC,SIMPLE_MAJORITY},
+main {"main":745}  
+[2013-05-24 23:28:03,513 voldemort.server.storage.StorageService] INFO Initializing slop pusher job type streaming at Fri May 24 23:33:03 PDT 2013
+main {"main":746}  
+[2013-05-24 23:28:03,513 voldemort.server.storage.StorageService] INFO Initializing repair job.
+main {"main":747}  
+[2013-05-24 23:28:03,514 voldemort.server.storage.StorageService] INFO Initializing stores:
+main {"main":748}  
+[2013-05-24 23:28:03,514 voldemort.server.storage.StorageService] INFO Opening store 'users' (bdb).
+main {"main":749}  
+[2013-05-24 23:28:03,515 voldemort.store.routed.RoutedStoreFactory] WARN Using pseudo NonblockingStore implementation for class voldemort.store.stats.StatTrackingStore
+main {"main":750}  
+[2013-05-24 23:28:03,515 voldemort.server.storage.StorageService] INFO Opening store 'veggies' (bdb).
+main {"main":751}  
+[2013-05-24 23:28:03,516 voldemort.store.routed.RoutedStoreFactory] WARN Using pseudo NonblockingStore implementation for class voldemort.store.stats.StatTrackingStore
+main {"main":752}  
+[2013-05-24 23:28:03,517 voldemort.server.storage.StorageService] INFO Opening store 'test-replication-memory' (memory).
+main {"main":753}  
+[2013-05-24 23:28:03,517 voldemort.store.routed.RoutedStoreFactory] WARN Using pseudo NonblockingStore implementation for class voldemort.store.stats.StatTrackingStore
+main {"main":754}  
+[2013-05-24 23:28:03,517 voldemort.server.storage.StorageService] INFO Opening store 'test-recovery-data' (memory).
+main {"main":755}  
+[2013-05-24 23:28:03,517 voldemort.store.routed.RoutedStoreFactory] WARN Using pseudo NonblockingStore implementation for class voldemort.store.stats.StatTrackingStore
+main {"main":756}  
+[2013-05-24 23:28:03,517 voldemort.server.storage.StorageService] INFO Opening store 'test-replication-persistent' (bdb).
+main {"main":757}  
+[2013-05-24 23:28:03,519 voldemort.store.routed.RoutedStoreFactory] WARN Using pseudo NonblockingStore implementation for class voldemort.store.stats.StatTrackingStore
+main {"main":758}  
+[2013-05-24 23:28:03,519 voldemort.server.storage.StorageService] INFO Opening store 'test-readrepair-memory' (memory).
+main {"main":759}  
+[2013-05-24 23:28:03,519 voldemort.store.routed.RoutedStoreFactory] WARN Using pseudo NonblockingStore implementation for class voldemort.store.stats.StatTrackingStore
+main {"main":760}  
+[2013-05-24 23:28:03,519 voldemort.server.storage.StorageService] INFO Opening store 'test-readonly-fetchfiles' (read-only).
+main {"main":761}  
+[2013-05-24 23:28:03,520 voldemort.store.readonly.ReadOnlyStorageEngine] INFO Creating symbolic link for 'test-readonly-fetchfiles' using directory /var/folders/nk/rnnlnbcd7sg7vn6cntx_kpfc0000gn/T/36119/node-1/data/read-only/test-readonly-fetchfiles/version-0
+main {"main":762}  
+[2013-05-24 23:28:03,520 voldemort.store.readonly.chunk.ChunkedFileSet] WARN Metadata file not found. Assuming default settings
+main {"main":763}  
+[2013-05-24 23:28:03,521 voldemort.store.readonly.chunk.ChunkedFileSet] INFO No index or data files found, creating empty files 0.index and 0.data.
+main {"main":764}  
+[2013-05-24 23:28:03,523 voldemort.store.routed.RoutedStoreFactory] WARN Using pseudo NonblockingStore implementation for class voldemort.store.stats.StatTrackingStore
+main {"main":765}  
+[2013-05-24 23:28:03,523 voldemort.server.storage.StorageService] INFO Opening store 'test-readonly-versions' (read-only).
+main {"main":766}  
+[2013-05-24 23:28:03,524 voldemort.store.readonly.ReadOnlyStorageEngine] INFO Creating symbolic link for 'test-readonly-versions' using directory /var/folders/nk/rnnlnbcd7sg7vn6cntx_kpfc0000gn/T/36119/node-1/data/read-only/test-readonly-versions/version-0
+main {"main":767}  
+[2013-05-24 23:28:03,524 voldemort.store.readonly.chunk.ChunkedFileSet] WARN Metadata file not found. Assuming default settings
+main {"main":768}  
+[2013-05-24 23:28:03,525 voldemort.store.readonly.chunk.ChunkedFileSet] INFO No index or data files found, creating empty files 0.index and 0.data.
+main {"main":769}  
+[2013-05-24 23:28:03,526 voldemort.store.routed.RoutedStoreFactory] WARN Using pseudo NonblockingStore implementation for class voldemort.store.stats.StatTrackingStore
+main {"main":770}  
+[2013-05-24 23:28:03,527 voldemort.server.storage.StorageService] INFO Opening store 'test-consistent' (memory).
+main {"main":771}  
+[2013-05-24 23:28:03,527 voldemort.store.routed.RoutedStoreFactory] WARN Using pseudo NonblockingStore implementation for class voldemort.store.stats.StatTrackingStore
+main {"main":772}  
+[2013-05-24 23:28:03,527 voldemort.server.storage.StorageService] INFO Opening store 'test-to-all' (memory).
+main {"main":773}  
+[2013-05-24 23:28:03,527 voldemort.store.routed.RoutedStoreFactory] WARN Using pseudo NonblockingStore implementation for class voldemort.store.stats.StatTrackingStore
+main {"main":774}  
+[2013-05-24 23:28:03,527 voldemort.server.storage.StorageService] INFO Opening store 'test-consistent-with-pref-list' (memory).
+main {"main":775}  
+[2013-05-24 23:28:03,528 voldemort.store.routed.RoutedStoreFactory] WARN Using pseudo NonblockingStore implementation for class voldemort.store.stats.StatTrackingStore
+main {"main":776}  
+[2013-05-24 23:28:03,537 voldemort.server.storage.StorageService] INFO All stores initialized.
+main {"main":777}  
+[2013-05-24 23:28:03,537 voldemort.server.VoldemortService] INFO Starting scheduler-service
+main {"main":778}  
+[2013-05-24 23:28:03,538 voldemort.server.VoldemortService] INFO Starting async-scheduler
+main {"main":779}  
+[2013-05-24 23:28:03,538 voldemort.server.protocol.admin.AsyncOperationService] INFO Starting asyncOperationRunner
+main {"main":780}  
+[2013-05-24 23:28:03,538 voldemort.server.VoldemortService] INFO Starting http-service
+main {"main":781}  
+[2013-05-24 23:28:03,540 voldemort.server.http.HttpService] INFO HTTP service started on port 64198
+main {"main":782}  
+[2013-05-24 23:28:03,540 voldemort.server.VoldemortService] INFO Starting socket-service
+main {"main":783}  
+[2013-05-24 23:28:03,540 voldemort.server.socket.SocketServer[socket-server]] INFO Starting voldemort socket server (socket-server) on port 64199
+main-thread9 {"main-thread9":1}  
+[2013-05-24 23:28:03,541 voldemort.server.VoldemortService] INFO Starting rebalance-service
+main {"main":784}  
+[2013-05-24 23:28:03,541 voldemort.server.VoldemortService] INFO Starting socket-service
+main {"main":785}  
+[2013-05-24 23:28:03,542 voldemort.server.socket.SocketServer[admin-server]] INFO Starting voldemort socket server (admin-server) on port 64200
+main-thread10 {"main-thread10":1}  
+[2013-05-24 23:28:03,542 voldemort.server.VoldemortServer] INFO Startup completed in 41 ms.
+main {"main":786}  
+[2013-05-24 23:28:03,545 voldemort.server.socket.SocketServerSession] INFO Client /127.0.0.1:64202 connected successfully with protocol vp1
+vold-server1 {"vold-server2":4, "nio-server1":10, "vold-server1":10, "nio-client2":5, "nio-client1":5, "nio-server2":6}  
+[2013-05-24 23:28:03,585 voldemort.client.DefaultStoreClient] INFO Bootstrapping metadata for store test-readrepair-memory
+main {"main":787}  
+[2013-05-24 23:28:03,586 voldemort.client.AbstractStoreClientFactory] INFO Client zone-id [0] Attempting to obtain metadata for store [test-readrepair-memory] 
+main {"main":788}  
+[2013-05-24 23:28:03,588 voldemort.server.socket.SocketServerSession] INFO Client /127.0.0.1:64203 connected successfully with protocol vp1
+vold-server2 {"vold-server2":5, "nio-server1":10, "vold-server1":9, "nio-client2":4, "nio-client1":5, "nio-server2":6}  
+[2013-05-24 23:28:03,623 voldemort.server.socket.SocketServerSession] INFO Client /127.0.0.1:64204 connected successfully with protocol vp1
+vold-server2 {"vold-server2":6, "nio-server1":10, "vold-server1":10, "nio-client2":5, "nio-client1":5, "nio-server2":6}  
+[2013-05-24 23:28:03,712 voldemort.server.socket.SocketServerSession] INFO Client /127.0.0.1:64201 disconnected.
+vold-server1 {"vold-server2":4, "nio-server1":10, "vold-server1":11, "nio-client2":5, "nio-client1":5, "nio-server2":6}  
+[2013-05-24 23:28:03,712 voldemort.store.socket.clientrequest.ClientRequestExecutorFactory$ClientRequestSelectorManager] INFO Closed, exiting
+nio-client1 {"vold-server2":6, "nio-server1":10, "vold-server1":10, "nio-client2":5, "nio-client1":6, "nio-server2":6}  
+[2013-05-24 23:28:03,713 voldemort.store.socket.clientrequest.ClientRequestExecutorFactory$ClientRequestSelectorManager] INFO Closed, exiting
+nio-client2 {"vold-server2":6, "nio-server1":10, "vold-server1":10, "nio-client2":6, "nio-client1":5, "nio-server2":6}  
+[2013-05-24 23:28:03,713 voldemort.store.socket.clientrequest.ClientRequestExecutor] WARN No client associated with Socket[unconnected]
+main {"main":789}  
+[2013-05-24 23:28:03,713 voldemort.server.socket.SocketServerSession] INFO Client /127.0.0.1:64202 disconnected.
+vold-server1 {"vold-server2":4, "nio-server1":10, "vold-server1":12, "nio-client2":5, "nio-client1":5, "nio-server2":6}  
+[2013-05-24 23:28:03,713 voldemort.store.socket.clientrequest.ClientRequestExecutor] INFO Closing remote connection from Socket[unconnected]
+main {"main":790}  
+[2013-05-24 23:28:03,713 voldemort.store.socket.clientrequest.ClientRequestExecutor] WARN No client associated with Socket[unconnected]
+main {"main":791}  
+[2013-05-24 23:28:03,713 voldemort.store.socket.clientrequest.ClientRequestExecutor] INFO Closing remote connection from Socket[unconnected]
+main {"main":792}
