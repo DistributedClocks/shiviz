@@ -355,8 +355,7 @@ SearchBar.prototype.clearText = function() {
  * Clears search results. In other words, un-highlights found nodes and motifs
  */
 SearchBar.prototype.clearResults = function() {
-    $("#prevButton").prop("disabled", true);
-    $("#nextButton").prop("disabled", true);
+    $("#searchbar").removeClass("results");
     this.motifNavigator = null;
     if (this.global != null && this.global.getController().hasHighlight()) {
         this.global.getController().clearHighlight();
@@ -466,9 +465,8 @@ SearchBar.prototype.query = function() {
     }
     this.motifNavigator.start();
     
-    if(this.motifNavigator.getNumMotifs() > 0) {
-        $("#prevButton").prop("disabled", false);
-        $("#nextButton").prop("disabled", false);
-    }
+    var numMotifs = this.motifNavigator.getNumMotifs();
+    $("#searchbar").addClass("results");
+    $("#numFound").text(numMotifs + " instances");
 
 };

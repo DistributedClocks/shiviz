@@ -352,13 +352,13 @@ section.input .left {
     position: fixed;
     top: 0;
     height: 2em;
-    padding: 2em 5px;
+    padding: 2em 0;
     background: #fff;
     z-index: 4;
 }
 #searchbar #bar {
     height: 24pt;
-    width: calc(100% - 10px);
+    width: 100%;
     z-index: 1;
 }
 #searchbar #bar input {
@@ -366,18 +366,24 @@ section.input .left {
     font-size: 12pt;
     margin: 0;
     float: left;
-    width: calc(100% - 104pt);
+    width: calc(100% - 52pt);
     padding-right: 24pt;
     border-right: none;
+}
+#searchbar.results #bar input {
+    width: calc(100% - 140pt);
 }
 #searchbar #bar .clear {
     height: 22pt;
     width: 22pt;
     position: absolute;
     margin-top: 1px;
-    left: calc(100% - 86pt - 54pt);
+    left: calc(100% - 76pt);
     background: white;
     cursor: pointer;
+}
+#searchbar.results #bar .clear {
+    left: calc(100% - 164pt);
 }
 #searchbar #bar input.empty + .clear {
     display: none;
@@ -398,39 +404,64 @@ section.input .left {
     transform: rotate(-45deg);
 }
 
-#prevButton, #nextButton {
-    width: 26pt;
+#searchbar #bar .nav {
+    display: none;
+}
+#searchbar.results #bar .nav {
+    display: initial;
 }
 
-#searchButton {
+#searchbar #bar #numResults {
+    width: 72pt;
+}
+
+#searchbar #bar #searchButton {
     width: 52pt;
+}
+#searchbar.results #searchButton {
+    display: none;
+}
+
+#searchbar #bar #numFound {
+    width: 92pt;
+    float: left;
+    line-height: calc(24pt - 2px);
+    text-align: center;
+    font-size: 10pt;
+    text-transform: uppercase;
+    border-width: 1px 0;
+    border-style: solid;
+    border-color: #aaa;
+}
+#searchbar #bar input:focus ~ #numFound,
+#searchbar #bar input.focus ~ #numFound {
+    border-color: #000;
 }
 
 #searchbar #bar button {
     float: left;
     margin: 0;
+    width: 24pt;
     height: 24pt;
     padding: 0;
 }
-
 
 #searchbar #bar input:focus ~ button,
 #searchbar #bar input.focus ~ button {
     border: 1px solid #000;
 }
-#searchbar #bar input:focus ~ button ~ button,
-#searchbar #bar input.focus ~ button ~ button {
-    border-left: none;
-}
 #searchbar #panel {
     display: none;
-    width: calc(100% - 9px - 104pt);
+    width: calc(100% - 52pt + 1px);
     border: 1px solid black;
     border-top: none;
     box-sizing: border-box;
     overflow: hidden;
     padding: .4em;
     background: #fff;
+}
+#searchbar.results #panel {
+    width: calc(100% - 140pt + 1px);
 }
 #searchbar #panel table {
     border-collapse: collapse;
