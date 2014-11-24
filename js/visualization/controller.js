@@ -43,8 +43,6 @@ function Controller(global) {
         var $target = $(e.target);
         var tn = $target.prop("tagName");
 
-        console.log($target);
-
         // Test for click inside dialog
         if ($target.is(".dialog") || $target.parents(".dialog").length)
             return;
