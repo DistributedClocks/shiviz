@@ -144,7 +144,7 @@ function ExecutionParser(rawString, label, regexp) {
 
         var fields = {};
         regexp.getNames().forEach(function(name, i) {
-            if (name == "clock" || name == "host" || name == "event")
+            if (name == "clock" || name == "event")
                 return;
 
             fields[name] = match[name];
