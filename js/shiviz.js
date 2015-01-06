@@ -75,7 +75,33 @@ function Shiviz() {
     $("#visualize").on("click", function() {
         context.go(2, true, true);
     });
-
+	
+	$("#file").on("change", function(e) {
+	   var file = e.target.files[0];
+	   var reader = new FileReader();
+	   
+	   reader.onload = function(e) {
+	     var text = reader.result;
+		 var lines = text.split("\n",2);
+		 var defaultParser = "(?<event>.*)\\n(?<host>\\S*) (?<clock>{.*})";
+         var defaultOrdering = "descending";
+		 
+		 if (lines[0].trim()) {
+	   	   $("#parser").val(lines[0]);
+		 }
+		 else {
+		   $("#parser").val(defaultParser);
+		 }
+	     $("#delimiter").val(lines[1].trim());
+		 $("#ordering").val(defaultOrdering);
+		 var startOfLog = text.indexOf("\n", (text.indexOf("\n")) + 1);
+	     $("#input").val(text.substr(startOfLog + 1));
+		 context.resetView();
+		 $("#visualize").click();
+	   }
+	   
+	   reader.readAsText(file);
+    });
 }
 
 /**
