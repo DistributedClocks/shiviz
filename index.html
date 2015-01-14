@@ -195,9 +195,15 @@
                         </ul>
                     </header>
                     <h3>Options</h3>
-					<div class="option">
-					    <label>Select a file: <input type="file" id="file"></label>
-				    </div>
+		      <div id="file_input">
+			      <label>Select a file: <input type="file" id="file"></label>
+			      <a><img src="https://cdn2.iconfinder.com/data/icons/pictograms-3/512/25-128.png" height="27" width="28"></a>
+			      <div id="img_text">Upload a log by selecting a file with the following format: <br><br>
+			      <li> The first line of the file is the log parsing regular expression.<br> 
+			      <li> The second line of the file is the multiple executions regular expression delimiter. <br> 
+			      <li> The rest of the file is the log.
+			      </div>
+		      </div>					
                     <div class="option">
                         <label>Log parsing regular expression: <input class="mono" type="text" id="parser"></label>
                     </div>
