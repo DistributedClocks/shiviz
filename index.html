@@ -197,10 +197,11 @@
                     <h3>Options</h3>
 		      <div id="file_input">
 			      <label>Select a file: <input type="file" id="file"></label>
-			      <a><img src="https://cdn2.iconfinder.com/data/icons/pictograms-3/512/25-128.png" height="27" width="28"></a>
-			      <div id="img_text">Upload a log by selecting a file with the following format: <br><br>
-			      <li> The first line of the file is the log parsing regular expression.<br> 
-			      <li> The second line of the file is the multiple executions regular expression delimiter. <br> 
+			      <span id="file_icon">d</span>
+			      <div id="file_desc">Upload a log by selecting a file with the following format: <br><br>
+			      <li> The first line of the file is the log parsing regular expression. If left empty, the default regular expression 
+			      <span class="regex">"(?&ltevent&gt.*)\n(?&lthost&gt\S*) (?&ltclock&gt{.*})"</span> will be used.<br>
+			      <li> The second line of the file is the multiple executions regular expression delimiter. This can be left empty if the log does not contain multiple executions. <br>
 			      <li> The rest of the file is the log.
 			      </div>
 		      </div>					

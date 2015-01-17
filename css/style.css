@@ -64,29 +64,47 @@ input[type="text"], textarea, button {
 }
 
 #file_input {
-	position:relative;
+	position: relative;
 }
 
-#file_input img{
+#file_input li {
+	list-style-position: inside;
+	text-indent: -9.5pt;
+	padding-left: 1em;
+}
+
+#file_icon {
+	font-family: "Icon";
+	font-size: 24pt;
 	position:relative;
-	top: 8px;
+	top: 10px;
 	left: 5px;
-	opacity: 0.5;
+	opacity: 0.35;
 }
 
-#img_text {
+#file_desc {
 	display: none;
-	position:absolute;
-	left:90%;
+	position: absolute;
+	left: 90%;
 	background-color: #fff;
 	padding: .5em;
 }
 
-a:hover + #img_text{
-	display:block;
+#file_icon:hover + #file_desc {
+	display: block;
 	border: 1px solid #aaa;
 	width: 170%;
 	font-size: 11pt;
+}
+
+#file_icon:hover {
+	opacity: 0.4;
+	cursor: default;
+}
+
+.regex {
+	font-family: monospace;
+	font-size: .9em;
 }
 
 input, textarea {
