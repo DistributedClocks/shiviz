@@ -75,8 +75,14 @@ function Shiviz() {
     $("#versionContainer").html(versionText);
 
     $("#visualize").on("click", function() {
+        $("#diff_button").html("Show Differences");
         context.go(2, true, true);
     });
+	
+	$("#diff_button").on("click", function() {
+		if (this.innerHTML == "Show Differences") this.innerHTML = "Hide Differences";
+		else this.innerHTML = "Show Differences";
+	});
 	
 	// Clears the file input value whenever 'Choose File' is clicked
 	$("#file").on("click", function() {
@@ -158,7 +164,8 @@ Shiviz.prototype.resetView = function() {
         $("#visualize").prop("disabled", false);
         $(".icon .tabs li:last-child").removeClass("disabled");
     }
-
+    $("#diff_button").html("Show Differences");
+    $("#diff_button").prop("disabled", true);
     $(".event").text("");
     $(".fields").html("");
 
