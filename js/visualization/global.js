@@ -106,6 +106,7 @@ Global.prototype.drawAll = function() {
     this.controller.bindLines(this.view1.getLogTable().find(".line:not(.more)"));
     
     if(this.view2 != null) {
+        $("#diff_button").prop("disabled", false);
         this.view2.draw();
         this.$vizContainer.append(this.view2.getSVG());
         this.$hostBar.append(this.view2.getHostSVG());

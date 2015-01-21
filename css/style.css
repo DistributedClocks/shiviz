@@ -634,6 +634,14 @@ svg {
     z-index: 2;
 }
 
+#sidebar #diff_button{
+    position: relative;
+    top: -27px;
+    right: 2px;
+    padding: 0.65em;
+    margin-bottom: 7px;
+}
+
 #sidebar .info {
     height: 12em;
     overflow: auto;
