@@ -94,6 +94,24 @@ function Controller(global) {
         }
 
     });
+	
+    $("#diff_button").unbind().click(function() {
+        if (this.innerHTML == "Show Differences") {
+            this.innerHTML = "Hide Differences";
+            $(this).css ({
+              opacity: 0.6
+            });
+            self.showDiff();
+        }			
+        else {
+            this.innerHTML = "Show Differences";
+            $(this).css ({
+              opacity: 1
+            });
+            // TODO
+            //self.hideDifferences();			
+        }
+    });
 }
 
 /**
@@ -194,6 +212,29 @@ Controller.prototype.toggleCollapseNode = function(node) {
 
     this.global.drawAll();
 };
+
+/**
+ * Highlights different hosts among the current active views
+ * @see {@link ShowDiffTransformation}
+ */
+
+Controller.prototype.showDiff = function() {
+    var views = this.global.getActiveViews();
+	var view1 = views[0];
+	var view2 = views[1];
+    view1.getTransformer().showDiff(view2);
+	view2.getTransformer().showDiff(view1);
+    this.global.drawAll();	
+};
+
+// TODO
+/**Controller.prototype.hideDifferences = function() {
+    this.global.getViews().forEach(function(view) {
+        view.getTransformer().hideDifferences();
+    });
+
+    this.global.drawAll();	
+};**/
 
 /**
  * Binds events to the nodes.

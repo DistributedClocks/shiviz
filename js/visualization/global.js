@@ -98,15 +98,16 @@ Global.prototype.drawAll = function() {
     }
     
     this.$vizContainer.height(maxHeight);
-
+    
     this.view1.draw();
     this.$vizContainer.append(this.view1.getSVG());
     this.$hostBar.append(this.view1.getHostSVG());
     this.$logTable.append(this.view1.getLogTable());
     this.controller.bindLines(this.view1.getLogTable().find(".line:not(.more)"));
-    
-    if(this.view2 != null) {
-        $("#diff_button").prop("disabled", false);
+	
+    if (this.view2 != null) {
+        // the "Show Differences" button is only visible when there are multiple executions
+        $("#diff_button").show();
         this.view2.draw();
         this.$vizContainer.append(this.view2.getSVG());
         this.$hostBar.append(this.view2.getHostSVG());
@@ -114,7 +115,7 @@ Global.prototype.drawAll = function() {
         this.$logTable.append(this.view2.getLogTable());
         this.controller.bindLines(this.view2.getLogTable().find(".line:not(.more)"));
     }
-    
+	
     this.$vizContainer.height("auto");
 
     $(".dialog").hide();

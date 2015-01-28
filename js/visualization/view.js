@@ -117,15 +117,23 @@ View.prototype.setLogTableWidth = function(newWidth) {
 };
 
 /**
+ * Gets the hosts as an array
+ * 
+ * @returns {Array<String>} The hosts
+ */
+View.prototype.hasHost = function(host) {
+    return this.initialModel.hasHost(host);
+};
+
+/**
  * Clears the current visualization and re-draws the current model.
  */
 View.prototype.draw = function() {
-    
 
-    this.model = this.initialModel.clone();
+    this.model = this.initialModel.clone();	
     this.visualGraph = new VisualGraph(this.model, this.layout, this.hostPermutation);
     this.transformer.transform(this.visualGraph);
-
+	
     // Update the VisualGraph
     this.visualGraph.update();
 

@@ -34,6 +34,8 @@ function VisualNode(node) {
     this.$hiddenChildLine = Util.svgElement("line");
 
     this.$rect = Util.svgElement("rect");
+	
+    this.$diamond = Util.svgElement("polygon");
     
     this.$highlightRect = Util.svgElement("rect");
 
@@ -75,14 +77,14 @@ function VisualNode(node) {
 
     /** @private */
     this.hasHiddenChildInner = false;
-
+	
     /** @private */
     this._isHighlighted = false;
 
     /** @private */
     this._isSelected = false;
 
-    if (this.isStart()) {
+    if (this.isStart() && !this.isUniqueHost()) {
         this.$rect.attr({
             "width": Global.HOST_SQUARE_SIZE,
             "height": Global.HOST_SQUARE_SIZE
@@ -94,6 +96,13 @@ function VisualNode(node) {
             "stroke-width": "2px",
             "pointer-events": "none"
         });
+    } else if (this.isStart() && this.isUniqueHost()) {
+        this.$diamond.attr({
+            "width": 48,
+            "height": 48,
+            "points": "20,0 30,13 20,26 10,13"
+        });
+        this.$svg.append(this.$diamond);
     } else {
         this.$title.text(this.getText());
         this.$svg.append(this.$title);
@@ -123,7 +132,6 @@ function VisualNode(node) {
             "y1": 0
         });
     }
-
 }
 
 /**
@@ -172,7 +180,16 @@ VisualNode.prototype.getX = function() {
  * @param {Number} newX The new x-coordinate
  */
 VisualNode.prototype.setX = function(newX) {
-    var translateX = this.isStart() ? newX  - (Global.HOST_SQUARE_SIZE / 2) : newX;
+    var translateX;
+    if (this.isStart()) {
+        if (this.isUniqueHost()) {
+            translateX = newX - 20;
+        } else {
+            translateX = newX - (Global.HOST_SQUARE_SIZE / 2);
+        }
+    } else {
+        translateX = newX;
+    }
     this.x = newX;
     this.$svg.attr("transform", "translate(" + translateX + "," + this.getY() + ")");
 };
@@ -250,6 +267,7 @@ VisualNode.prototype.setFillColor = function(newFillColor) {
     this.fillColor = newFillColor;
     this.$circle.attr("fill", newFillColor);
     this.$rect.attr("fill", newFillColor);
+    this.$diamond.attr("fill", newFillColor);
 };
 
 /**
@@ -272,6 +290,7 @@ VisualNode.prototype.setStrokeColor = function(newStrokeColor) {
     this.strokeColor = newStrokeColor;
     this.$circle.attr("stroke", newStrokeColor);
     this.$rect.attr("stroke", newStrokeColor);
+    this.$diamond.attr("stroke", newStrokeColor);
 };
 
 /**
@@ -283,6 +302,7 @@ VisualNode.prototype.setStrokeWidth = function(newStrokeWidth) {
     this.strokeWidth = newStrokeWidth;
     this.$circle.attr("stroke-width", newStrokeWidth + "px");
     this.$rect.attr("stroke-width", newStrokeWidth + "px");
+    this.$diamond.attr("stroke-wdith", newStrokeWidth + "px");
 };
 
 /**
@@ -383,6 +403,14 @@ VisualNode.prototype.getLineNumber = function() {
 VisualNode.prototype.isStart = function() {
     return this.node.isHead();
 };
+
+/**
+ * Determines if this VisualNode is a unique starting node.
+ * (unique meaning it only shows up in one of the two active views)
+ */
+VisualNode.prototype.isUniqueHost = function() {
+    return this.node.isUniqueHead();
+}
 
 /**
  * Determines if this should be drawn with an edge to a hidden parent.
@@ -498,4 +526,19 @@ VisualNode.prototype.isSelected = function() {
  */
 VisualNode.prototype.setSelected = function(val) {
     this._isSelected = val;
+};
+
+/**
+ * Update the shape of the unique head node
+ * (unique meaning it only shows up in one of the two active views)
+ */
+
+VisualNode.prototype.update = function() {
+    this.$diamond.attr({
+      "width": 48,
+      "height": 48,
+      "points": "20,0 30,13 20,26 10,13"
+     });
+     this.$svg.children("*").remove();
+     this.$svg.append(this.$diamond);
 };
