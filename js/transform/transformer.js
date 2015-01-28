@@ -243,6 +243,15 @@ Transformer.prototype.getHighlightedMotif = function() {
 };
 
 /**
+ * Sets this transformer to highlight different hosts in the View
+ * this transformer belongs to and the given View
+ */
+ Transformer.prototype.showDiff = function(view) {
+    var trans = new ShowDiffTransformation(view);
+    this.transformations.push(trans);
+}
+
+/**
  * Transforms the specified {@link VisualGraph} and the underlying
  * {@link ModelGraph} based on the settings of this transformer. Note that this
  * method is solely responsible for modifying visual and model graphs

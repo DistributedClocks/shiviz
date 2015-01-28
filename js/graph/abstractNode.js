@@ -131,6 +131,9 @@ function AbstractNode() {
 
     /** @private */
     this.isTailInner = false;
+	
+    /** @private */
+    this.isUniqueStart = false;
 
     /** @private */
     this.graph = null;
@@ -188,6 +191,24 @@ AbstractNode.prototype.isTail = function() {
  */
 AbstractNode.prototype.isDummy = function() {
     return this.isHead() || this.isTail();
+};
+
+/**
+ * Determines whether the node is a unique dummy head
+ * (unique meaning it only occurs in one of the executions)
+ * 
+ * @returns {Boolean} True if node is a unique dummy head
+ */
+AbstractNode.prototype.isUniqueHead = function() {
+    return this.isUniqueStart;
+};
+
+/**
+ * Sets the value of the isUniqueStart field to
+ * indicate if this node is a unique dummy head
+ */
+AbstractNode.prototype.setUnique = function(value) {
+    this.isUniqueStart = value;
 };
 
 /**

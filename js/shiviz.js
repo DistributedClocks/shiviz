@@ -75,14 +75,11 @@ function Shiviz() {
     $("#versionContainer").html(versionText);
 
     $("#visualize").on("click", function() {
-        $("#diff_button").html("Show Differences");
         context.go(2, true, true);
     });
 	
-	$("#diff_button").on("click", function() {
-		if (this.innerHTML == "Show Differences") this.innerHTML = "Hide Differences";
-		else this.innerHTML = "Show Differences";
-	});
+    // Hide the "Show Differences" button initially
+    $("#diff_button").hide();
 	
 	// Clears the file input value whenever 'Choose File' is clicked
 	$("#file").on("click", function() {
@@ -164,8 +161,6 @@ Shiviz.prototype.resetView = function() {
         $("#visualize").prop("disabled", false);
         $(".icon .tabs li:last-child").removeClass("disabled");
     }
-    $("#diff_button").html("Show Differences");
-    $("#diff_button").prop("disabled", true);
     $(".event").text("");
     $(".fields").html("");
 
@@ -274,6 +269,12 @@ Shiviz.prototype.go = function(index, store, force) {
             $(".visualization").show();
             try {
                 if (!$("#vizContainer svg").length || force)
+                    // Reset properties for the diff_button
+                    $("#diff_button").hide();
+                    $("#diff_button").html("Show Differences");
+                    $("#diff_button").css ({
+                      opacity: 1
+                    });
                     this.visualize($("#input").val(), $("#parser").val(),  $("#delimiter").val(), $("input[name=host_sort]:checked").val().trim(), $("#ordering option:selected").val().trim() == "descending");
             } catch(e) {
                 $(".visualization").hide();
