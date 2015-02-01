@@ -6,4 +6,6 @@ ShiViz is a tool for studying executions of distributed systems.
 
 * [JS docs](http://bestchai.bitbucket.org/shiviz/docs/): documentation extracted from code
 
-* [ShiVector](https://bitbucket.org/bestchai/shivector/wiki/): instruments distributed systems to output logs in ShiViz format
+* [ShiVector](https://bitbucket.org/bestchai/shivector/wiki/): instruments Java programs to output logs in ShiViz format
+
+* [GoVector](https://github.com/arcaneiceman/GoVector): instruments Go programs to output logs in ShiViz format
