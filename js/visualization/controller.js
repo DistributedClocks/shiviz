@@ -101,15 +101,18 @@ function Controller(global) {
             $(this).css ({
               opacity: 0.6
             });
+            global.setShowDiff(true);
             self.showDiff();
+            global.drawAll();
         }			
         else {
             this.innerHTML = "Show Differences";
             $(this).css ({
               opacity: 1
             });
-            // TODO
-            //self.hideDifferences();			
+            global.setShowDiff(false);
+            self.hideDiff();
+            global.drawAll();
         }
     });
 }
@@ -215,6 +218,7 @@ Controller.prototype.toggleCollapseNode = function(node) {
 
 /**
  * Highlights different hosts among the current active views
+ * This method should only be called when there are > 1 execution
  * @see {@link ShowDiffTransformation}
  */
 
@@ -224,17 +228,21 @@ Controller.prototype.showDiff = function() {
 	var view2 = views[1];
     view1.getTransformer().showDiff(view2);
 	view2.getTransformer().showDiff(view1);
-    this.global.drawAll();	
 };
 
-// TODO
-/**Controller.prototype.hideDifferences = function() {
-    this.global.getViews().forEach(function(view) {
-        view.getTransformer().hideDifferences();
-    });
-
-    this.global.drawAll();	
-};**/
+/**
+ * Re-draws the graph to not highlight different hosts
+ * This method should only be called when there are > 1 execution
+ * @see {@link ShowDiffTransformation}
+ */
+ 
+Controller.prototype.hideDiff = function() {
+    var views = this.global.getActiveViews();
+    var view1 = views[0];
+    var view2 = views[1];
+    view1.getTransformer().hideDiff(view2);
+    view2.getTransformer().hideDiff(view1);
+};
 
 /**
  * Binds events to the nodes.

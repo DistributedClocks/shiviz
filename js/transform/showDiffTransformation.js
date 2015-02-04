@@ -40,9 +40,11 @@ ShowDiffTransformation.prototype.compare = function(model, view) {
         // If none of the hosts in the other view match this host, mark it as unique
         if (!view.hasHost(hosts[i])) {
           var head = graph.getHead(hosts[i]);
-          if (head) head.setUnique(true);
-		  var visualNode = model.getVisualNodeByNode(head);
-		  visualNode.update();
+          if (head) {
+            head.setUnique(true);
+		    var visualNode = model.getVisualNodeByNode(head);
+		    visualNode.update();
+          }
         }
     }
 };

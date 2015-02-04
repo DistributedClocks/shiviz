@@ -43,6 +43,9 @@ function Global($vizContainer, $sidebar, $hostBar, $logTable, views) {
     
     /** @private */
     this.$logTable = $logTable;
+	
+    /** @private */
+    this.show = false;
 
     this.$sidebar.css({
         width: Global.SIDE_BAR_WIDTH + "px"
@@ -157,6 +160,14 @@ Global.prototype.getViewByLabel = function(label) {
 Global.prototype.setHostPermutation = function(hostPermutation) {
     this.hostPermutation = hostPermutation;
 };
+
+Global.prototype.setShowDiff = function(show) {
+    this.show = show;
+}
+
+Global.prototype.isShow = function() {
+    return this.show;
+}
 
 /**
  * Gets the {@link Controller}
@@ -278,33 +289,52 @@ Global.prototype.drawSideBar = function() {
         
         viewSelect1.unbind().on("change", function(e) {
            var val = $("#viewSelect1 option:selected").val();
+           global.controller.hideDiff();
            global.view1 = global.getViewByLabel(val);
+           if (global.show) {
+              global.controller.showDiff();
+           }
            global.drawAll();
         });
         
         viewSelect2.unbind().on("change", function(e) {
             var val = $("#viewSelect2 option:selected").val();
+            global.controller.hideDiff()
             global.view2 = global.getViewByLabel(val);
+            if (global.show) {
+              global.controller.showDiff();
+            }
             global.drawAll();
-         });
-        
+         });	 
     }
 
     
     var hiddenHosts = {};
+    var uniqueHosts = {};
     this.view1.getTransformer().getHiddenHosts().forEach(function(host) {
         hiddenHosts[host] = true;
     });
     
-    if(this.view2 != null) {
+    if (this.view2 != null) {
         this.view2.getTransformer().getHiddenHosts().forEach(function(host) {
             hiddenHosts[host] = true;
+        });
+    }
+	
+    this.view1.getTransformer().getUniqueHosts().forEach(function(host) {
+        uniqueHosts[host] = true;
+    });
+    
+    if (this.view2 != null) {
+        this.view2.getTransformer().getUniqueHosts().forEach(function(host) {
+            uniqueHosts[host] = true;
         });
     }
     
     // Draw hidden hosts
     var hh = Object.keys(hiddenHosts);
-    if (hh.length <= 0) {
+    var uh = Object.keys(uniqueHosts);
+    if (hh.length <= 0 && uh.length <= 0) {
         return;
     }
 
@@ -328,12 +358,23 @@ Global.prototype.drawSideBar = function() {
     hiddenHostsGroup.append("title").text("Double click to view");
 
     var rect = hiddenHosts.selectAll().data(hh).enter().append("rect");
+    var diamond = hiddenHosts.selectAll().data(uh).enter().append("polygon");
     rect.attr("width", Global.HOST_SQUARE_SIZE);
     rect.attr("height", Global.HOST_SQUARE_SIZE);
     rect.style("fill", function(host) {
         return global.hostPermutation.getHostColor(host);
     });
     rect.append("title").text("Double click to view");
+	
+    diamond.attr({
+       "points": "20,0 30,13 20,26 10,13",
+       "width" : 48,
+       "height" : 48
+     });
+	 
+    diamond.style("fill", function(host) {
+       return global.hostPermutation.getHostColor(host);
+    });
 
     rect.attr("y", function(host) {
         count++;
@@ -344,7 +385,26 @@ Global.prototype.drawSideBar = function() {
 
         return y;
     });
+	
     rect.attr("x", function(host) {
+        x += Global.HOST_SQUARE_SIZE + 5;
+        if (x + Global.HOST_SQUARE_SIZE > Global.SIDE_BAR_WIDTH) {
+            x = 0;
+        }
+        return x;
+    });
+	
+    diamond.attr("y", function(host) {
+        count++;
+        if (count > hostsPerLine) {
+            y += Global.HOST_SQUARE_SIZE + 5;
+            count = 1;
+        }
+
+		return y;
+    });
+	
+    diamond.attr("x", function(host) {
         x += Global.HOST_SQUARE_SIZE + 5;
         if (x + Global.HOST_SQUARE_SIZE > Global.SIDE_BAR_WIDTH) {
             x = 0;
@@ -353,4 +413,5 @@ Global.prototype.drawSideBar = function() {
     });
 
     this.controller.bindHiddenHosts(rect);
+    this.controller.bindHiddenHosts(diamond);
 };

@@ -117,9 +117,9 @@ View.prototype.setLogTableWidth = function(newWidth) {
 };
 
 /**
- * Gets the hosts as an array
+ * Returns whether this modelGraph has the given host
  * 
- * @returns {Array<String>} The hosts
+ * @returns {Boolean} True if the graph has this particular host
  */
 View.prototype.hasHost = function(host) {
     return this.initialModel.hasHost(host);
