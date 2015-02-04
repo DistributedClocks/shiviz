@@ -34,6 +34,9 @@ function Transformer() {
 
     /** @private */
     this.hostToHidingTransform = {};
+	
+    /** @private */
+    this.viewToDiffTransform = {};
 
     /** @private */
     this.collapseSequentialNodesTransformation = new CollapseSequentialNodesTransformation(2);
@@ -49,6 +52,9 @@ function Transformer() {
 
     /** @private */
     this.hiddenHosts = [];
+	
+    /** @private */
+    this.uniqueHosts = [];
 
     /** @private */
     this.highlighted = null;
@@ -122,6 +128,18 @@ Transformer.prototype.getSpecifiedHiddenHosts = function() {
  */
 Transformer.prototype.getHiddenHosts = function() {
     return this.hiddenHosts.slice();
+};
+
+/**
+ * Get all of the unique hosts hidden by this transformer by the last invocation of
+ * {@link Transformer#transform}. If the transform method has never been
+ * called, this method returns an empty array.
+ * 
+ * @returns {Array<String>} the unique hosts that have been hidden by this
+ *          transformer.
+ */
+Transformer.prototype.getUniqueHosts = function() {
+    return this.uniqueHosts.slice();
 };
 
 /**
@@ -243,12 +261,27 @@ Transformer.prototype.getHighlightedMotif = function() {
 };
 
 /**
- * Sets this transformer to highlight different hosts in the View
- * this transformer belongs to and the given View
+ * Sets this transformer to not highlight different hosts in the View
+ * this transformer belongs to and the given View passed to the function
  */
  Transformer.prototype.showDiff = function(view) {
+    if (this.viewToDiffTransform[view]) return;
+ 
     var trans = new ShowDiffTransformation(view);
+    this.viewToDiffTransform[view] = trans;
     this.transformations.push(trans);
+}
+
+/**
+ * Sets this transformer to not highlight different hosts 
+ */
+ Transformer.prototype.hideDiff = function(view) {
+    var trans = this.viewToDiffTransform[view];
+    if (trans) {
+       var index = this.transformations.indexOf(trans);
+       this.transformations.splice(index, 1);
+	   delete this.viewToDiffTransform[view];
+    }
 }
 
 /**
@@ -258,6 +291,8 @@ Transformer.prototype.getHighlightedMotif = function() {
  */
 Transformer.prototype.transform = function(visualModel) {
     var originalHosts = visualModel.getHosts();
+    // get the underlying modelGraph
+    var graph = visualModel.getGraph();
 
     this.collapseSequentialNodesTransformation.transform(visualModel);
 
@@ -284,10 +319,16 @@ Transformer.prototype.transform = function(visualModel) {
     }
 
     var hidden = {};
+	var unique = {};
     for (var i = 0; i < originalHosts.length; i++) {
         var host = originalHosts[i];
+        var head = graph.getHead(host);
         if (this.hostToHidingTransform[host]) {
-            hidden[host] = true;
+            if (head && head.isUniqueHead) {
+               unique[host] = true;
+            } else {
+               hidden[host] = true;
+            }
         }
     }
 
@@ -296,4 +337,5 @@ Transformer.prototype.transform = function(visualModel) {
     });
 
     this.hiddenHosts = Object.keys(hidden);
+    this.uniqueHosts = Object.keys(unique);
 };
