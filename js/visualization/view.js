@@ -190,7 +190,7 @@ View.prototype.draw = function() {
         
         view.$hostSVG.attr({
             "width": view.visualGraph.getWidth(),
-            "height": Global.HOST_SQUARE_SIZE,
+            "height": Global.HOST_SIZE,
             "class": view.id
         });
         

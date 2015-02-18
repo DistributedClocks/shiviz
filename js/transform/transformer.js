@@ -266,8 +266,9 @@ Transformer.prototype.getHighlightedMotif = function() {
  */
  Transformer.prototype.showDiff = function(view) {
     if (this.viewToDiffTransform[view]) return;
- 
-    var trans = new ShowDiffTransformation(view);
+	
+    while (this.uniqueHosts.length) { this.uniqueHosts.pop(); }
+    var trans = new ShowDiffTransformation(view, this.uniqueHosts, this.hiddenHosts);
     this.viewToDiffTransform[view] = trans;
     this.transformations.push(trans);
 }
@@ -280,7 +281,8 @@ Transformer.prototype.getHighlightedMotif = function() {
     if (trans) {
        var index = this.transformations.indexOf(trans);
        this.transformations.splice(index, 1);
-	   delete this.viewToDiffTransform[view];
+       delete this.viewToDiffTransform[view];
+       while (this.uniqueHosts.length) { this.uniqueHosts.pop(); }
     }
 }
 
@@ -319,16 +321,10 @@ Transformer.prototype.transform = function(visualModel) {
     }
 
     var hidden = {};
-	var unique = {};
     for (var i = 0; i < originalHosts.length; i++) {
         var host = originalHosts[i];
-        var head = graph.getHead(host);
         if (this.hostToHidingTransform[host]) {
-            if (head && head.isUniqueHead) {
-               unique[host] = true;
-            } else {
-               hidden[host] = true;
-            }
+            hidden[host] = true;
         }
     }
 
@@ -337,5 +333,4 @@ Transformer.prototype.transform = function(visualModel) {
     });
 
     this.hiddenHosts = Object.keys(hidden);
-    this.uniqueHosts = Object.keys(unique);
 };
