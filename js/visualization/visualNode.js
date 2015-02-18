@@ -84,10 +84,10 @@ function VisualNode(node) {
     /** @private */
     this._isSelected = false;
 
-    if (this.isStart() && !this.isUniqueHost()) {
+    if (this.isStart()) {
         this.$rect.attr({
-            "width": Global.HOST_SQUARE_SIZE,
-            "height": Global.HOST_SQUARE_SIZE
+            "width": Global.HOST_SIZE,
+            "height": Global.HOST_SIZE
         });
         this.$svg.append(this.$rect);
         this.$highlightRect.attr({
@@ -96,13 +96,6 @@ function VisualNode(node) {
             "stroke-width": "2px",
             "pointer-events": "none"
         });
-    } else if (this.isStart() && this.isUniqueHost()) {
-        this.$diamond.attr({
-            "width": 48,
-            "height": 48,
-            "points": "20,0 30,13 20,26 10,13"
-        });
-        this.$svg.append(this.$diamond);
     } else {
         this.$title.text(this.getText());
         this.$svg.append(this.$title);
@@ -180,16 +173,7 @@ VisualNode.prototype.getX = function() {
  * @param {Number} newX The new x-coordinate
  */
 VisualNode.prototype.setX = function(newX) {
-    var translateX;
-    if (this.isStart()) {
-        if (this.isUniqueHost()) {
-            translateX = newX - 20;
-        } else {
-            translateX = newX - (Global.HOST_SQUARE_SIZE / 2);
-        }
-    } else {
-        translateX = newX;
-    }
+    var translateX = this.isStart() ? newX - (Global.HOST_SIZE / 2) : newX;
     this.x = newX;
     this.$svg.attr("transform", "translate(" + translateX + "," + this.getY() + ")");
 };
@@ -405,14 +389,6 @@ VisualNode.prototype.isStart = function() {
 };
 
 /**
- * Determines if this VisualNode is a unique starting node.
- * (unique meaning it only shows up in one of the two active views)
- */
-VisualNode.prototype.isUniqueHost = function() {
-    return this.node.isUniqueHead();
-}
-
-/**
  * Determines if this should be drawn with an edge to a hidden parent.
  * 
  * @returns {Boolean} True if edge should be drawn
@@ -529,15 +505,15 @@ VisualNode.prototype.setSelected = function(val) {
 };
 
 /**
- * Update the shape of the unique head node
+ * Update the shape of the unique head node to a diamond shape
  * (unique meaning it only shows up in one of the two active views)
  */
 
 VisualNode.prototype.update = function() {
     this.$diamond.attr({
-      "width": 48,
-      "height": 48,
-      "points": "20,0 30,13 20,26 10,13"
+      "width": Global.HOST_SIZE,
+      "height": Global.HOST_SIZE,
+      "points": "12,0 22,12 12,24 2,12"
      });
      this.$svg.children("*").remove();
      this.$svg.append(this.$diamond);

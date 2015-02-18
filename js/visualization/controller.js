@@ -405,23 +405,24 @@ Controller.prototype.bindLines = function(lines) {
 /**
  * Binds unhide to double-click event on hidden hosts.
  * 
- * @param {d3.selection} hh The hidden hosts
+ * @param {String} host The host that is hidden
+ * @param {d3.selection} node The visualNode that was hidden
  */
-Controller.prototype.bindHiddenHosts = function(hh) {
+Controller.prototype.bindHiddenHosts = function(host, node) {
     var controller = this;
-    hh.on("dblclick", function(e) {
+    node.on("dblclick", function(e) {
 
         var views = controller.global.getViews();
         views.forEach(function(view) {
-            view.getTransformer().unhideHost(e);
+            view.getTransformer().unhideHost(host);
         });
         controller.global.drawAll();
 
     }).on("mouseover", function(e) {
-        $(".event").text(e);
+        $(".event").text(host);
         $(".fields").children().remove();
     }).on("click", function(e) {
-        controller.showDialog(e, 2, this);
+        controller.showDialog(host, 2, this);
     });
 };
 
@@ -499,7 +500,7 @@ Controller.prototype.showDialog = function(e, type, elem) {
     // Set fill color, etc.
     if (type)
         $dialog.css({
-            "top": $(elem).offset().top - $(window).scrollTop() + Global.HOST_SQUARE_SIZE / 2,
+            "top": $(elem).offset().top - $(window).scrollTop() + Global.HOST_SIZE / 2,
             "background": type == 2 ? $(elem).css("fill") : e.getFillColor(),
             "border-color": type == 2 ? $(elem).css("fill") : e.getFillColor()
         }).data("element", type == 2 ? e : e.getHost());
