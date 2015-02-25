@@ -509,11 +509,24 @@ VisualNode.prototype.setSelected = function(val) {
  * (unique meaning it only shows up in one of the two active views)
  */
 
-VisualNode.prototype.update = function() {
+VisualNode.prototype.updateHostShape = function() {
     this.$diamond.attr({
       "width": Global.HOST_SIZE,
       "height": Global.HOST_SIZE,
       "points": "12,0 22,12 12,24 2,12"
+     });
+     this.$svg.children("*").remove();
+     this.$svg.append(this.$diamond);
+};
+
+/**
+ * Update the shape of the unique non-start node to a diamond shape
+ * (unique meaning it only shows up in one of the two active views)
+ */
+
+VisualNode.prototype.updateNodeShape = function() {
+    this.$diamond.attr({
+      "points": "0,-9 7,0 0,9 -7,0"
      });
      this.$svg.children("*").remove();
      this.$svg.append(this.$diamond);

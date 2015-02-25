@@ -261,13 +261,13 @@ Transformer.prototype.getHighlightedMotif = function() {
 };
 
 /**
- * Sets this transformer to not highlight different hosts in the View
+ * Sets this transformer to highlight different hosts in the View
  * this transformer belongs to and the given View passed to the function
  */
  Transformer.prototype.showDiff = function(view) {
     if (this.viewToDiffTransform[view]) return;
-	
     while (this.uniqueHosts.length) { this.uniqueHosts.pop(); }
+	
     var trans = new ShowDiffTransformation(view, this.uniqueHosts, this.hiddenHosts);
     this.viewToDiffTransform[view] = trans;
     this.transformations.push(trans);
@@ -282,6 +282,7 @@ Transformer.prototype.getHighlightedMotif = function() {
        var index = this.transformations.indexOf(trans);
        this.transformations.splice(index, 1);
        delete this.viewToDiffTransform[view];
+       // empty uniqueHosts array so that hosts in sidebar return to rectangle shapes
        while (this.uniqueHosts.length) { this.uniqueHosts.pop(); }
     }
 }

@@ -313,7 +313,6 @@ Global.prototype.drawSideBar = function() {
            global.controller.hideDiff();
            global.view1 = global.getViewByLabel(val);
            if (global.show) {
-              global.drawAll();
               global.controller.showDiff();
            }
            global.drawAll();
@@ -324,7 +323,6 @@ Global.prototype.drawSideBar = function() {
             global.controller.hideDiff()
             global.view2 = global.getViewByLabel(val);
             if (global.show) {
-               global.drawAll();
                global.controller.showDiff();
             }
             global.drawAll();
@@ -362,7 +360,7 @@ Global.prototype.drawSideBar = function() {
     var hiddenHostsGroup = hiddenHosts.append("g");
     hiddenHostsGroup.append("title").text("Double click to view");
 	
-    var first = true;
+    var first = true; var count = 0;
     // initial points for a unique host (ie. x and y coordinates for each corner of the diamond shape)
     var x1 = 12; var y1 = 0; var x2 = 22; var y2 = 12;
     var x3 = 12; var y3 = 24; var x4 = 2; var y4 = 12;
@@ -391,25 +389,16 @@ Global.prototype.drawSideBar = function() {
        hiddenHost.style("fill", global.hostPermutation.getHostColor(host));
        hiddenHost.append("title").text("Double click to view");
 
-       /**if (ycount > hostsPerLine) {
-           y1 += Global.HOST_SIZE + 5;
-           y2 += Global.HOST_SIZE + 5;
-           y3 += Global.HOST_SIZE + 5;
-           y4 += Global.HOST_SIZE + 5;
-           recty += Global.HOST_SIZE + 5;
-           first = true;		   
-           ycount = 1;
-       }**/
-
        // start over on a new line once the hidden hosts have taken up the side bar width
-       if (x4 + Global.HOST_SIZE > Global.SIDE_BAR_WIDTH) { 
+       if (count == hostsPerLine) { 
            x1 = 12; y1 += Global.HOST_SIZE + 5; 
            x2 = 22; y2 += Global.HOST_SIZE + 5; 
            x3 = 12; y3 += Global.HOST_SIZE + 5; 
-           x4 = 2; y4 += Global.HOST_SIZE + 5; 
+           x4 = 2; y4 += Global.HOST_SIZE + 5;
+           rectx = 0; recty += Global.HOST_SIZE + 5;
            first = true;
+           count = 0;
        }
-       if (rectx + Global.HOST_SIZE > Global.SIDE_BAR_WIDTH) { rectx = 0; recty += Global.HOST_SIZE + 5; first = true; }
 
        // increment x coordinates so that the next hidden host will be drawn
        // next to the currently hidden hosts without any overlap
@@ -427,6 +416,7 @@ Global.prototype.drawSideBar = function() {
        hiddenHost.attr("points", points.join());
        hiddenHost.attr("x", rectx);
        hiddenHost.attr("y", recty);
+       count++;
 	   
        // bind the hidden host nodes to user input
        global.controller.bindHiddenHosts(host, hiddenHost);

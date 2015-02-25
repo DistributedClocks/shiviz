@@ -103,7 +103,6 @@ function Controller(global) {
             });
             global.setShowDiff(true);
             self.showDiff();
-            global.drawAll();
         }			
         else {
             this.innerHTML = "Show Differences";
@@ -112,7 +111,6 @@ function Controller(global) {
             });
             global.setShowDiff(false);
             self.hideDiff();
-            global.drawAll();
         }
     });
 }
@@ -224,10 +222,12 @@ Controller.prototype.toggleCollapseNode = function(node) {
 
 Controller.prototype.showDiff = function() {
     var views = this.global.getActiveViews();
-	var view1 = views[0];
-	var view2 = views[1];
+    var view1 = views[0];
+    var view2 = views[1];
+    this.global.drawAll();
     view1.getTransformer().showDiff(view2);
-	view2.getTransformer().showDiff(view1);
+    view2.getTransformer().showDiff(view1);
+    this.global.drawAll();
 };
 
 /**
@@ -242,6 +242,7 @@ Controller.prototype.hideDiff = function() {
     var view2 = views[1];
     view1.getTransformer().hideDiff(view2);
     view2.getTransformer().hideDiff(view1);
+    this.global.drawAll();
 };
 
 /**

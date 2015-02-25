@@ -26,9 +26,6 @@ function ShowDiffTransformation(view, uniqueHosts, hiddenHosts) {
 	
     /** @private */
     this.hiddenHosts = hiddenHosts;
-	
-    /** @private */
-    this.commonHosts = [];
 }
 
 // ShowDiffTransformation extends Transformation
@@ -38,10 +35,12 @@ ShowDiffTransformation.prototype.constructor = ShowDiffTransformation;
 
 /**
 * Compares the hosts of this model with the hosts of the given view.
+* Dissimilar hosts are updated to have a diamond shape and hosts that
+* appear in both models have their processes compared node by node.
 * 
 * @param {VisualGraph} model The VisualGraph to transform
 */
-ShowDiffTransformation.prototype.compareHosts = function(model) {
+ShowDiffTransformation.prototype.compare = function(model) {
 
     // get the underlying ModelGraph and its hosts
     var graph = model.getGraph();
@@ -56,18 +55,23 @@ ShowDiffTransformation.prototype.compareHosts = function(model) {
         var currHost = hosts[i];
         var head = graph.getHead(currHost);
         // check if any of the hosts in the other view match this host
+        // if not, add this host to the uniqueHosts array
         if (!view.hasHost(currHost)) {
              if (head) {
-                this.uniqueHosts.push(currHost);
+                if (this.uniqueHosts.indexOf(currHost) == -1) { 
+                   this.uniqueHosts.push(currHost);
+                }
                 var visualNode = model.getVisualNodeByNode(head);
-                // update the node to have a diamond shape
-                visualNode.update();
+                // update the host to have a diamond shape
+                visualNode.updateHostShape();
              }
+        // if the other view also has this host and it's not hidden,
+        // compare these two processes node by node
         } else {
-            if (this.commonHosts.indexOf(currHost) == -1) {
-                this.commonHosts.push(currHost);
+            if (otherHiddenHosts.indexOf(currHost) == -1) {
+               this.compareNodes(model, currHost);
             }
-        }			
+        }
     }
 
     // Add any hidden hosts that are unique to the uniqueHosts array
@@ -76,22 +80,80 @@ ShowDiffTransformation.prototype.compareHosts = function(model) {
         // Have to check all hosts here, including hidden ones, because
         // if a host common to both views is hidden, it's not unique
         if (allHosts.indexOf(hh) == -1) {
-            this.uniqueHosts.push(hh);
-        } else {
-            if (this.commonHosts.indexOf(hh) == -1) {
-                this.commonHosts.push(hh);
+            if (this.uniqueHosts.indexOf(hh) == -1) { 
+                this.uniqueHosts.push(hh);
             }
-        }			
+        }		
     }
 };
 
 /**
- * Compares events by content for processes that appear in both views
+ * Compares events by content (text and date) in processes with the same host
  *
  * @param {VisualGraph} model The VisualGraph to transform
+ * @param {String} host A host that's common to both executions
+ *
  */
-ShowDiffTransformation.prototype.compareEventsByContent = function(model) {
-	// TODO
+ShowDiffTransformation.prototype.compareNodes = function(model, host) {
+	
+    // get the starting nodes for the two graphs being compared
+    var head = model.getGraph().getHead(host);
+    var otherHead = this.view.getModel().getHead(host);
+		
+    var next = head.getNext();
+    var otherNext = otherHead.getNext();
+    this.compareNodeContent(model, next, otherNext);
+		
+    next = head.getNext();
+    otherNext = otherHead.getNext();
+    this.compareNodeContent(this.view.getVisualModel(), otherNext, next);
+}
+
+/**
+  * Compares processes node by node to find events that are dissimilar. Nodes are
+  * compared by the text and date fields in their log events. Different nodes are
+  * updated to have a diamond shape.
+  * 
+  * @param {VisualGraph} model The VisualGraph to transform
+  * @param {ModelNode} next The first non-start node after the host in this graph
+  * @param {ModelNode} otherNext The first non-start node after the host in the graph 
+  *                    of the other execution
+  */
+
+ShowDiffTransformation.prototype.compareNodeContent = function(model, next, otherNext) {
+	
+    var otherNextCopy = otherNext;	
+    while (!next.isTail()) {
+        var logEvents = next.getLogEvents();
+		
+        for (var i = 0; i < logEvents.length; i++) {			
+            var text = logEvents[i].getText();
+            var date = logEvents[i].getFields()["date"];
+            var match = false;
+			
+            while (!otherNext.isTail()) {
+                var otherLogEvents = otherNext.getLogEvents();
+                for (var j = 0; j < otherLogEvents.length; j++) {
+                    var otherText = otherLogEvents[j].getText();
+                    var otherDate = otherLogEvents[j].getFields()["date"];
+                    if (text == otherText && date == otherDate) { 
+                       match = true; 
+                       break; 
+                    }
+                }
+                if (match) { break; }
+                else { otherNext = otherNext.getNext(); }
+            }
+			
+            if (!match) {
+                var visualNode = model.getVisualNodeByNode(next);
+                // update the node to have a diamond shape
+                visualNode.updateNodeShape();
+            }
+            otherNext = otherNextCopy;
+        }               
+        next = next.getNext();
+    }
 }
 
 /**
@@ -101,6 +163,5 @@ ShowDiffTransformation.prototype.compareEventsByContent = function(model) {
  * @param {VisualGraph} visualGraph The VisualGraph to transform
  */
 ShowDiffTransformation.prototype.transform = function(model) {
-    this.compareHosts(model);
-    this.compareEventsByContent(model);
+    this.compare(model);
 };
