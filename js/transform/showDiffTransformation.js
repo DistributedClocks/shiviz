@@ -17,7 +17,7 @@
  * 
  * @constructor
  */
-function ShowDiffTransformation(view, uniqueHosts, hiddenHosts) {
+function ShowDiffTransformation(view, uniqueHosts, hiddenHosts, uniqueEvents) {
     /** @private */
     this.view = view;
 	
@@ -26,6 +26,9 @@ function ShowDiffTransformation(view, uniqueHosts, hiddenHosts) {
 	
     /** @private */
     this.hiddenHosts = hiddenHosts;
+	
+    /** @private */
+    this.uniqueEvents = uniqueEvents;
 }
 
 // ShowDiffTransformation extends Transformation
@@ -128,15 +131,13 @@ ShowDiffTransformation.prototype.compareNodeContent = function(model, next, othe
 		
         for (var i = 0; i < logEvents.length; i++) {			
             var text = logEvents[i].getText();
-            var date = logEvents[i].getFields()["date"];
             var match = false;
 			
             while (!otherNext.isTail()) {
                 var otherLogEvents = otherNext.getLogEvents();
                 for (var j = 0; j < otherLogEvents.length; j++) {
                     var otherText = otherLogEvents[j].getText();
-                    var otherDate = otherLogEvents[j].getFields()["date"];
-                    if (text == otherText && date == otherDate) { 
+                    if (text == otherText) { 
                        match = true; 
                        break; 
                     }
@@ -147,8 +148,15 @@ ShowDiffTransformation.prototype.compareNodeContent = function(model, next, othe
 			
             if (!match) {
                 var visualNode = model.getVisualNodeByNode(next);
+                this.uniqueEvents.push(visualNode.getId());
                 // update the node to have a diamond shape
-                visualNode.updateNodeShape();
+                if (!visualNode.isCollapsed()) { 
+                    visualNode.updateNodeShape(7,9); 
+                } else {
+                    // if the node is collapsed, draw a bigger diamond with the number of collapsed nodes displayed inside
+                    visualNode.updateNodeShape(15,17);
+                    visualNode.setLabel(visualNode.getNode().getLogEvents().length); 
+                }
             }
             otherNext = otherNextCopy;
         }               
