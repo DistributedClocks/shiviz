@@ -55,6 +55,9 @@ function Transformer() {
 	
     /** @private */
     this.uniqueHosts = [];
+	
+    /** @private */
+    this.uniqueEvents = [];
 
     /** @private */
     this.highlighted = null;
@@ -140,6 +143,18 @@ Transformer.prototype.getHiddenHosts = function() {
  */
 Transformer.prototype.getUniqueHosts = function() {
     return this.uniqueHosts.slice();
+};
+
+/**
+ * Get all of the unique events transformed by this transformer by the last invocation of
+ * {@link Transformer#transform}. If the transform method has never been
+ * called, this method returns an empty array.
+ * 
+ * @returns {Array<String>} the unique events that have been transformed by this
+ *          transformer.
+ */
+Transformer.prototype.getUniqueEvents = function() {
+    return this.uniqueEvents.slice();
 };
 
 /**
@@ -268,7 +283,7 @@ Transformer.prototype.getHighlightedMotif = function() {
     if (this.viewToDiffTransform[view]) return;
     while (this.uniqueHosts.length) { this.uniqueHosts.pop(); }
 	
-    var trans = new ShowDiffTransformation(view, this.uniqueHosts, this.hiddenHosts);
+    var trans = new ShowDiffTransformation(view, this.uniqueHosts, this.hiddenHosts, this.uniqueEvents);
     this.viewToDiffTransform[view] = trans;
     this.transformations.push(trans);
 }
@@ -284,6 +299,7 @@ Transformer.prototype.getHighlightedMotif = function() {
        delete this.viewToDiffTransform[view];
        // empty uniqueHosts array so that hosts in sidebar return to rectangle shapes
        while (this.uniqueHosts.length) { this.uniqueHosts.pop(); }
+       while (this.uniqueEvents.length) { this.uniqueEvents.pop(); }
     }
 }
 

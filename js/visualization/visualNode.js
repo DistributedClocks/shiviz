@@ -51,6 +51,9 @@ function VisualNode(node) {
     /** @private */
     this.radius = 0;
     this.setRadius(5);
+	
+    /** @private */
+    this.points = [0,0,0,0,0,0,0,0];
 
     /** @private */
     this.fillColor;
@@ -227,6 +230,39 @@ VisualNode.prototype.setRadius = function(newRadius) {
         this.$hiddenChildLine.attr({
             "x2": Global.HIDDEN_EDGE_LENGTH + newRadius,
             "y2": Global.HIDDEN_EDGE_LENGTH + newRadius
+        });
+    }
+};
+
+/**
+ * Gets the polygon points of a unique VisualNode
+ * 
+ * @returns {Array[Number]} The polygon points
+ */
+VisualNode.prototype.getPoints = function() {
+    return this.points;
+};
+
+/**
+ * Sets the polygon points of a unique VisualNode
+ * 
+ * @param {Number} x, the new non-zero x coordinates (see updateNodeShape method)
+ * @param {Number} y, the new non-zero y coordinates
+ */
+VisualNode.prototype.setPoints = function(x,y) {
+    this.updateNodeShape(x,y);
+    
+    if(this.hasHiddenParent()) {
+        this.$hiddenParentLine.attr({
+            "x2": Global.HIDDEN_EDGE_LENGTH + x,
+            "y2": -(Global.HIDDEN_EDGE_LENGTH + y)
+        });
+    }
+    
+    if(this.hasHiddenChild()) {
+        this.$hiddenChildLine.attr({
+            "x2": Global.HIDDEN_EDGE_LENGTH + x,
+            "y2": Global.HIDDEN_EDGE_LENGTH + y
         });
     }
 };
@@ -510,12 +546,13 @@ VisualNode.prototype.setSelected = function(val) {
  */
 
 VisualNode.prototype.updateHostShape = function() {
+    this.points = [12,0,22,12,12,24,2,12];
     this.$diamond.attr({
       "width": Global.HOST_SIZE,
       "height": Global.HOST_SIZE,
-      "points": "12,0 22,12 12,24 2,12"
+      "points": this.points.join()
      });
-     this.$svg.children("*").remove();
+     this.$rect.remove();
      this.$svg.append(this.$diamond);
 };
 
@@ -524,10 +561,10 @@ VisualNode.prototype.updateHostShape = function() {
  * (unique meaning it only shows up in one of the two active views)
  */
 
-VisualNode.prototype.updateNodeShape = function() {
-    this.$diamond.attr({
-      "points": "0,-9 7,0 0,9 -7,0"
-     });
-     this.$svg.children("*").remove();
-     this.$svg.append(this.$diamond);
+VisualNode.prototype.updateNodeShape = function(x,y) {
+    this.points = [0,-y,x,0,0,y,-x,0];
+    this.$diamond.attr("points", this.points.join());
+    this.$circle.remove();
+    this.$svg.append(this.$diamond);
+    this.$svg.append(this.$text);
 };
