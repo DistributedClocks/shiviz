@@ -99,13 +99,25 @@
                         filtered process. You can filter by more than
                         one process.
                     </li>
-                    <li>
+                  <li>
                         <strong>Expand/collapse non-communicating events</strong>
                         <br>
                         ShiViz collapses adjacent process events not
                         incident on any communication edges into
                         larger circles. Click on one of these nodes
                         and select "expand" to undo this collapsing.
+                    </li>
+                  <li>
+                    <strong>Search for keywords or motifs</strong>
+                        <br>
+                        ShiViz supports keyword search across the
+                        parsed fields. Search supports logical
+                        connectives and regular expressions. You can
+                        also search for <emph>motifs</emph>, or
+                        communication topologies of interest. You can
+                        search for a pre-defined motif like broadcast
+                        or request-response, or you can define and
+                        search for a custom motif.
                     </li>
                 </ul>
             </p>
@@ -162,16 +174,27 @@
 
             <h3>How can I generate logs to use in ShiViz?</h3>
             <p>
-                Any program that produces logs able to be parsed using the RegExp mechanism above can be used with ShiViz.
+                You can study the execution of any system that
+                produces logs in a format that can be parsed using the
+                RegExp mechanism above.
             </p>
-                If you are looking for such a program, try <a href="http://bitbucket.org/bestchai/shivector/wiki/Home">ShiVector</a>. ShiVector intercepts network messages and wraps those messages to include a vector timestamp. ShiVector also intercepts logging statements to add the current vector timestamp to each existing logged message.
+            <p>
+              We recommend two instrumentation libraries that output
+              ShiViz-compatible logs:
+              <ul>
+                <li><a href="http://bitbucket.org/bestchai/shivector/wiki/Home">ShiVector</a>:
+                  instruments Java programs</li>
+                <li><a href="https://github.com/arcaneiceman/GoVector">GoVector</a>:
+                  instruments Go programs</li>
+              </ul>
             </p>
         </div>
         <div class="shivizexample">
 	  <img src="images/shiviz-example.png" style="padding-top: 0px;"/><br/>
           <img src="images/event-selection.png"/><br/>
           <img src="images/process-selection.png"/><br/>
-          <img src="images/event-expand-menu.png"/>
+          <img src="images/event-expand-menu.png"/><br/>
+          <img src="images/search.png"/>
         </div>
     </section>
 
@@ -291,7 +314,7 @@
                                     <button name="gather">Gather</button>
                                 </div></li>
                                 <li><b>Search for a custom motif:</b> draw a
-                                   graph motif to the right (add
+                                   graph motif on the left (add
                                    processes, events, click and drag to
                                    add inter-event edges).
                                 </li>
