@@ -64,6 +64,11 @@ function Controller(global) {
             $(this).remove();
             d.setSelected(false);
         });
+		
+        d3.select("polygon.sel").each(function(d) {
+            $(this).remove();
+            d.setSelected(false);
+        });
     });
 
     $(".dialog button").unbind().click(function() {
@@ -93,6 +98,25 @@ function Controller(global) {
                 break;
         }
 
+    });
+	
+    $("#diff_button").unbind().click(function() {
+        if (this.innerHTML == "Show Differences") {
+            this.innerHTML = "Hide Differences";
+            $(this).css ({
+              opacity: 0.6
+            });
+            global.setShowDiff(true);
+            self.showDiff();
+        }			
+        else {
+            this.innerHTML = "Show Differences";
+            $(this).css ({
+              opacity: 1
+            });
+            global.setShowDiff(false);
+            self.hideDiff();
+        }
     });
 }
 
@@ -192,6 +216,37 @@ Controller.prototype.toggleCollapseNode = function(node) {
         view.getTransformer().toggleCollapseNode(node);
     });
 
+    this.global.drawAll();
+};
+
+/**
+ * Highlights different hosts among the current active views
+ * This method should only be called when there are > 1 execution
+ * @see {@link ShowDiffTransformation}
+ */
+
+Controller.prototype.showDiff = function() {
+    var views = this.global.getActiveViews();
+    var view1 = views[0];
+    var view2 = views[1];
+    this.global.drawAll();
+    view1.getTransformer().showDiff(view2);
+    view2.getTransformer().showDiff(view1);
+    this.global.drawAll();
+};
+
+/**
+ * Re-draws the graph to not highlight different hosts
+ * This method should only be called when there are > 1 execution
+ * @see {@link ShowDiffTransformation}
+ */
+ 
+Controller.prototype.hideDiff = function() {
+    var views = this.global.getActiveViews();
+    var view1 = views[0];
+    var view2 = views[1];
+    view1.getTransformer().hideDiff(view2);
+    view2.getTransformer().hideDiff(view1);
     this.global.drawAll();
 };
 
@@ -356,23 +411,24 @@ Controller.prototype.bindLines = function(lines) {
 /**
  * Binds unhide to double-click event on hidden hosts.
  * 
- * @param {d3.selection} hh The hidden hosts
+ * @param {String} host The host that is hidden
+ * @param {d3.selection} node The visualNode that was hidden
  */
-Controller.prototype.bindHiddenHosts = function(hh) {
+Controller.prototype.bindHiddenHosts = function(host, node) {
     var controller = this;
-    hh.on("dblclick", function(e) {
+    node.on("dblclick", function(e) {
 
         var views = controller.global.getViews();
         views.forEach(function(view) {
-            view.getTransformer().unhideHost(e);
+            view.getTransformer().unhideHost(host);
         });
         controller.global.drawAll();
 
     }).on("mouseover", function(e) {
-        $(".event").text(e);
+        $(".event").text(host);
         $(".fields").children().remove();
     }).on("click", function(e) {
-        controller.showDialog(e, 2, this);
+        controller.showDialog(host, 2, this);
     });
 };
 
@@ -408,23 +464,53 @@ Controller.prototype.showDialog = function(e, type, elem) {
         $(this).remove();
         d.setSelected(false);
     });
+	
+    d3.select("polygon.sel").each(function(d) {
+        $(this).remove();
+        d.setSelected(false);
+    });
 
-    // Highlight the node with circular outline
+    // Highlight the node with an appropriate outline
     if (!type) {
+		
         e.setSelected(true);
-
-        var selcirc = d3.select("#node" + e.getId()).insert("circle", "circle");
-        selcirc.style({
-            "fill": function(d) {
-                return d.getFillColor();
-            }
-        });
-        selcirc.attr({
-            "class": "sel",
-            "r": function(d) {
-                return d.getRadius() + 6;
-            }
-        });
+        var id = e.getId();
+        var views = this.global.getActiveViews();
+        var uniqueEvents1 = views[0].getTransformer().getUniqueEvents();
+        var uniqueEvents2 = views[1].getTransformer().getUniqueEvents();
+		
+        // If this node is not a unique event, highlight the node with a circular outline
+        if (uniqueEvents1.indexOf(id) == -1 && uniqueEvents2.indexOf(id) == -1) {
+           var selcirc = d3.select("#node" + e.getId()).insert("circle", "circle");
+           selcirc.style({
+              "fill": function(d) {
+                 return d.getFillColor();
+               }
+           });
+           selcirc.attr({
+              "class": "sel",
+              "r": function(d) {
+                 return d.getRadius() + 6;
+               }
+           });
+        // If this node is a unique event, highlight it with a diamond outline
+        } else {
+           var seldiamond = d3.select("#node" + e.getId()).insert("polygon", "polygon");
+           seldiamond.style({
+			  "stroke": function(d) { return d.getFillColor(); },
+			  "stroke-width": 2,
+              "fill": "white"
+           });
+           seldiamond.attr({
+              "class": "sel",
+              "points": function(d) {
+                  var points = d.getPoints();
+                  var newPoints = [points[0], points[1]-3, points[2]+3, points[3], points[4],
+				            points[5]+3, points[6]-3, points[7]];
+                  return newPoints.join();
+               }
+           });
+        }
     }
 
     var $dialog = $(".dialog");
@@ -450,7 +536,7 @@ Controller.prototype.showDialog = function(e, type, elem) {
     // Set fill color, etc.
     if (type)
         $dialog.css({
-            "top": $(elem).offset().top - $(window).scrollTop() + Global.HOST_SQUARE_SIZE / 2,
+            "top": $(elem).offset().top - $(window).scrollTop() + Global.HOST_SIZE / 2,
             "background": type == 2 ? $(elem).css("fill") : e.getFillColor(),
             "border-color": type == 2 ? $(elem).css("fill") : e.getFillColor()
         }).data("element", type == 2 ? e : e.getHost());

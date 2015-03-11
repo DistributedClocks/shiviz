@@ -119,6 +119,18 @@
                         or request-response, or you can define and
                         search for a custom motif.
                     </li>
+                 <li>
+                    <strong>Show and hide differences between executions</strong>
+                        <br>
+                        When viewing two executions side-by-side,
+                        click on "show differences" to highlight the
+                        differences between two executions. Hosts that
+                        are not common to both executions are
+                        represented as rhombuses. Processes present in
+                        both executions have their events compared by
+                        the <code>event</code> capture group. Different
+                        events are drawn as rhombuses.
+                    </li>
                 </ul>
             </p>
 
@@ -140,6 +152,17 @@
                         <strong>Analyzing activity at processes that matter</strong>.
                         <br>
                         Hide processes (and their log lines) for a more focused visualization. Filter by communication to a process to see only those events at other processes that were likely to have influenced the execution of a process you care about.
+                    </li>
+
+                    <li>
+                      <strong>Execution comparison and
+                      differencing</strong>
+                      <br>
+                      Use ShiViz to process logs containing multiple
+                      executions. Compare executions pairwise,
+                      side-by-side. Use ShiViz to highlight event and
+                      host differences between two executions to
+                      understand where the executions diverge.
                     </li>
                 </ul>
             </p>
@@ -194,7 +217,8 @@
           <img src="images/event-selection.png"/><br/>
           <img src="images/process-selection.png"/><br/>
           <img src="images/event-expand-menu.png"/><br/>
-          <img src="images/search.png"/>
+          <img src="images/search.png"/><br/>
+          <img src="images/diff.png"/>
         </div>
     </section>
 
@@ -347,6 +371,7 @@
             <div id="vizContainer"></div>
         </div>
         <div id="sidebar">
+            <button id="diff_button">Show Differences</button>
             <div class="info">
                 <div class="event"></div>
                 <table class="fields"></table>
@@ -424,6 +449,7 @@
     <script type="text/javascript" src="js/transform/hideHostTransformation.js"></script>
     <script type="text/javascript" src="js/transform/highlightHostTransformation.js"></script>
     <script type="text/javascript" src="js/transform/highlightMotifTransformation.js"></script>
+    <script type="text/javascript" src="js/transform/showDiffTransformation.js"></script>
     <script type="text/javascript" src="js/transform/transformer.js"></script>
 
     <script type="text/javascript" src="js/util/exception.js"></script>

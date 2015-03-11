@@ -117,15 +117,23 @@ View.prototype.setLogTableWidth = function(newWidth) {
 };
 
 /**
+ * Returns whether this modelGraph has the given host
+ * 
+ * @returns {Boolean} True if the graph has this particular host
+ */
+View.prototype.hasHost = function(host) {
+    return this.initialModel.hasHost(host);
+};
+
+/**
  * Clears the current visualization and re-draws the current model.
  */
 View.prototype.draw = function() {
-    
 
-    this.model = this.initialModel.clone();
+    this.model = this.initialModel.clone();	
     this.visualGraph = new VisualGraph(this.model, this.layout, this.hostPermutation);
     this.transformer.transform(this.visualGraph);
-
+	
     // Update the VisualGraph
     this.visualGraph.update();
 
@@ -182,7 +190,7 @@ View.prototype.draw = function() {
         
         view.$hostSVG.attr({
             "width": view.visualGraph.getWidth(),
-            "height": Global.HOST_SQUARE_SIZE,
+            "height": Global.HOST_SIZE,
             "class": view.id
         });
         
