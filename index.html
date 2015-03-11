@@ -122,14 +122,14 @@
                  <li>
                     <strong>Show and hide differences between executions</strong>
                         <br>
-                        Click on the "show differences" button to highlight
-                        dissimilarities between two executions. Processes
-                        are compared by name and ones that are not common to 
-                        both executions have their host boxes updated to
-                        rhombuses. Processes that are present in both executions, 
-                        have their individual events compared by the event capture
-                        group. Different events are then drawn as rhombuses.
-                        Click on the button again to hide these differences.
+                        When viewing two executions side-by-side,
+                        click on "show differences" to highlight the
+                        differences between two executions. Hosts that
+                        are not common to both executions are
+                        represented as rhombuses. Processes present in
+                        both executions have their events compared by
+                        the <code>event</code> capture group. Different
+                        events are drawn as rhombuses.
                     </li>
                 </ul>
             </p>
@@ -152,6 +152,17 @@
                         <strong>Analyzing activity at processes that matter</strong>.
                         <br>
                         Hide processes (and their log lines) for a more focused visualization. Filter by communication to a process to see only those events at other processes that were likely to have influenced the execution of a process you care about.
+                    </li>
+
+                    <li>
+                      <strong>Execution comparison and
+                      differencing</strong>
+                      <br>
+                      Use ShiViz to process logs containing multiple
+                      executions. Compare executions pairwise,
+                      side-by-side. Use ShiViz to highlight event and
+                      host differences between two executions to
+                      understand where the executions diverge.
                     </li>
                 </ul>
             </p>
