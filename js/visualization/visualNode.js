@@ -34,6 +34,8 @@ function VisualNode(node) {
     this.$hiddenChildLine = Util.svgElement("line");
 
     this.$rect = Util.svgElement("rect");
+	
+    this.$diamond = Util.svgElement("polygon");
     
     this.$highlightRect = Util.svgElement("rect");
 
@@ -49,6 +51,9 @@ function VisualNode(node) {
     /** @private */
     this.radius = 0;
     this.setRadius(5);
+	
+    /** @private */
+    this.points = [0,0,0,0,0,0,0,0];
 
     /** @private */
     this.fillColor;
@@ -75,7 +80,7 @@ function VisualNode(node) {
 
     /** @private */
     this.hasHiddenChildInner = false;
-
+	
     /** @private */
     this._isHighlighted = false;
 
@@ -84,8 +89,8 @@ function VisualNode(node) {
 
     if (this.isStart()) {
         this.$rect.attr({
-            "width": Global.HOST_SQUARE_SIZE,
-            "height": Global.HOST_SQUARE_SIZE
+            "width": Global.HOST_SIZE,
+            "height": Global.HOST_SIZE
         });
         this.$svg.append(this.$rect);
         this.$highlightRect.attr({
@@ -123,7 +128,6 @@ function VisualNode(node) {
             "y1": 0
         });
     }
-
 }
 
 /**
@@ -172,7 +176,7 @@ VisualNode.prototype.getX = function() {
  * @param {Number} newX The new x-coordinate
  */
 VisualNode.prototype.setX = function(newX) {
-    var translateX = this.isStart() ? newX  - (Global.HOST_SQUARE_SIZE / 2) : newX;
+    var translateX = this.isStart() ? newX - (Global.HOST_SIZE / 2) : newX;
     this.x = newX;
     this.$svg.attr("transform", "translate(" + translateX + "," + this.getY() + ")");
 };
@@ -231,6 +235,39 @@ VisualNode.prototype.setRadius = function(newRadius) {
 };
 
 /**
+ * Gets the polygon points of a unique VisualNode
+ * 
+ * @returns {Array[Number]} The polygon points
+ */
+VisualNode.prototype.getPoints = function() {
+    return this.points;
+};
+
+/**
+ * Sets the polygon points of a unique VisualNode
+ * 
+ * @param {Number} x, the new non-zero x coordinates (see updateNodeShape method)
+ * @param {Number} y, the new non-zero y coordinates
+ */
+VisualNode.prototype.setPoints = function(x,y) {
+    this.updateNodeShape(x,y);
+    
+    if(this.hasHiddenParent()) {
+        this.$hiddenParentLine.attr({
+            "x2": Global.HIDDEN_EDGE_LENGTH + x,
+            "y2": -(Global.HIDDEN_EDGE_LENGTH + y)
+        });
+    }
+    
+    if(this.hasHiddenChild()) {
+        this.$hiddenChildLine.attr({
+            "x2": Global.HIDDEN_EDGE_LENGTH + x,
+            "y2": Global.HIDDEN_EDGE_LENGTH + y
+        });
+    }
+};
+
+/**
  * Gets the fill color of the VisualNode.
  * 
  * @returns {String} The fill color
@@ -250,6 +287,7 @@ VisualNode.prototype.setFillColor = function(newFillColor) {
     this.fillColor = newFillColor;
     this.$circle.attr("fill", newFillColor);
     this.$rect.attr("fill", newFillColor);
+    this.$diamond.attr("fill", newFillColor);
 };
 
 /**
@@ -272,6 +310,7 @@ VisualNode.prototype.setStrokeColor = function(newStrokeColor) {
     this.strokeColor = newStrokeColor;
     this.$circle.attr("stroke", newStrokeColor);
     this.$rect.attr("stroke", newStrokeColor);
+    this.$diamond.attr("stroke", newStrokeColor);
 };
 
 /**
@@ -283,6 +322,7 @@ VisualNode.prototype.setStrokeWidth = function(newStrokeWidth) {
     this.strokeWidth = newStrokeWidth;
     this.$circle.attr("stroke-width", newStrokeWidth + "px");
     this.$rect.attr("stroke-width", newStrokeWidth + "px");
+    this.$diamond.attr("stroke-wdith", newStrokeWidth + "px");
 };
 
 /**
@@ -498,4 +538,33 @@ VisualNode.prototype.isSelected = function() {
  */
 VisualNode.prototype.setSelected = function(val) {
     this._isSelected = val;
+};
+
+/**
+ * Update the shape of the unique head node to a diamond shape
+ * (unique meaning it only shows up in one of the two active views)
+ */
+
+VisualNode.prototype.updateHostShape = function() {
+    this.points = [12,0,22,12,12,24,2,12];
+    this.$diamond.attr({
+      "width": Global.HOST_SIZE,
+      "height": Global.HOST_SIZE,
+      "points": this.points.join()
+     });
+     this.$rect.remove();
+     this.$svg.append(this.$diamond);
+};
+
+/**
+ * Update the shape of the unique non-start node to a diamond shape
+ * (unique meaning it only shows up in one of the two active views)
+ */
+
+VisualNode.prototype.updateNodeShape = function(x,y) {
+    this.points = [0,-y,x,0,0,y,-x,0];
+    this.$diamond.attr("points", this.points.join());
+    this.$circle.remove();
+    this.$svg.append(this.$diamond);
+    this.$svg.append(this.$text);
 };

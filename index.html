@@ -119,6 +119,18 @@
                         or request-response, or you can define and
                         search for a custom motif.
                     </li>
+                 <li>
+                    <strong>Show and hide differences between executions</strong>
+                        <br>
+                        Click on the "show differences" button to highlight
+                        dissimilarities between two executions. Processes
+                        are compared by name and ones that are not common to 
+                        both executions have their host boxes updated to
+                        rhombuses. Processes that are present in both executions, 
+                        have their individual events compared by the event capture
+                        group. Different events are then drawn as rhombuses.
+                        Click on the button again to hide these differences.
+                    </li>
                 </ul>
             </p>
 
@@ -194,7 +206,8 @@
           <img src="images/event-selection.png"/><br/>
           <img src="images/process-selection.png"/><br/>
           <img src="images/event-expand-menu.png"/><br/>
-          <img src="images/search.png"/>
+          <img src="images/search.png"/><br/>
+          <img src="images/diff.png"/>
         </div>
     </section>
 
@@ -347,6 +360,7 @@
             <div id="vizContainer"></div>
         </div>
         <div id="sidebar">
+            <button id="diff_button">Show Differences</button>
             <div class="info">
                 <div class="event"></div>
                 <table class="fields"></table>
@@ -424,6 +438,7 @@
     <script type="text/javascript" src="js/transform/hideHostTransformation.js"></script>
     <script type="text/javascript" src="js/transform/highlightHostTransformation.js"></script>
     <script type="text/javascript" src="js/transform/highlightMotifTransformation.js"></script>
+    <script type="text/javascript" src="js/transform/showDiffTransformation.js"></script>
     <script type="text/javascript" src="js/transform/transformer.js"></script>
 
     <script type="text/javascript" src="js/util/exception.js"></script>

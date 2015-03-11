@@ -34,6 +34,9 @@ function Transformer() {
 
     /** @private */
     this.hostToHidingTransform = {};
+	
+    /** @private */
+    this.viewToDiffTransform = {};
 
     /** @private */
     this.collapseSequentialNodesTransformation = new CollapseSequentialNodesTransformation(2);
@@ -49,6 +52,12 @@ function Transformer() {
 
     /** @private */
     this.hiddenHosts = [];
+	
+    /** @private */
+    this.uniqueHosts = [];
+	
+    /** @private */
+    this.uniqueEvents = [];
 
     /** @private */
     this.highlighted = null;
@@ -122,6 +131,30 @@ Transformer.prototype.getSpecifiedHiddenHosts = function() {
  */
 Transformer.prototype.getHiddenHosts = function() {
     return this.hiddenHosts.slice();
+};
+
+/**
+ * Get all of the unique hosts hidden by this transformer by the last invocation of
+ * {@link Transformer#transform}. If the transform method has never been
+ * called, this method returns an empty array.
+ * 
+ * @returns {Array<String>} the unique hosts that have been hidden by this
+ *          transformer.
+ */
+Transformer.prototype.getUniqueHosts = function() {
+    return this.uniqueHosts.slice();
+};
+
+/**
+ * Get all of the unique events transformed by this transformer by the last invocation of
+ * {@link Transformer#transform}. If the transform method has never been
+ * called, this method returns an empty array.
+ * 
+ * @returns {Array<String>} the unique events that have been transformed by this
+ *          transformer.
+ */
+Transformer.prototype.getUniqueEvents = function() {
+    return this.uniqueEvents.slice();
 };
 
 /**
@@ -243,12 +276,42 @@ Transformer.prototype.getHighlightedMotif = function() {
 };
 
 /**
+ * Sets this transformer to highlight different hosts in the View
+ * this transformer belongs to and the given View passed to the function
+ */
+ Transformer.prototype.showDiff = function(view) {
+    if (this.viewToDiffTransform[view]) return;
+    while (this.uniqueHosts.length) { this.uniqueHosts.pop(); }
+	
+    var trans = new ShowDiffTransformation(view, this.uniqueHosts, this.hiddenHosts, this.uniqueEvents);
+    this.viewToDiffTransform[view] = trans;
+    this.transformations.push(trans);
+}
+
+/**
+ * Sets this transformer to not highlight different hosts 
+ */
+ Transformer.prototype.hideDiff = function(view) {
+    var trans = this.viewToDiffTransform[view];
+    if (trans) {
+       var index = this.transformations.indexOf(trans);
+       this.transformations.splice(index, 1);
+       delete this.viewToDiffTransform[view];
+       // empty uniqueHosts array so that hosts in sidebar return to rectangle shapes
+       while (this.uniqueHosts.length) { this.uniqueHosts.pop(); }
+       while (this.uniqueEvents.length) { this.uniqueEvents.pop(); }
+    }
+}
+
+/**
  * Transforms the specified {@link VisualGraph} and the underlying
  * {@link ModelGraph} based on the settings of this transformer. Note that this
  * method is solely responsible for modifying visual and model graphs
  */
 Transformer.prototype.transform = function(visualModel) {
     var originalHosts = visualModel.getHosts();
+    // get the underlying modelGraph
+    var graph = visualModel.getGraph();
 
     this.collapseSequentialNodesTransformation.transform(visualModel);
 
