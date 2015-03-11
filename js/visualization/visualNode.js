@@ -237,7 +237,7 @@ VisualNode.prototype.setRadius = function(newRadius) {
 /**
  * Gets the polygon points of a unique VisualNode
  * 
- * @returns {Array[Number]} The polygon points
+ * @returns {Array.<Number>} The polygon points
  */
 VisualNode.prototype.getPoints = function() {
     return this.points;
