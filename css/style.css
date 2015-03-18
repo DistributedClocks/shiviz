@@ -583,6 +583,7 @@ svg {
 
 #vizContainer svg {
     vertical-align: top;
+    margin-top: 45px;
 }
 #vizContainer svg:last-child {
     padding-right: 240px;
@@ -620,6 +621,26 @@ svg {
     position: fixed;
     background: white;
     z-index: 1;
+}
+
+#viewSelect1 {
+    position: fixed;
+    padding: 0.15em;
+    font-family: monospace;
+    opacity: 0.8;
+}
+
+#viewSelect2 {
+    position: fixed;
+    right: 240px;
+    padding: 0.15em;
+    font-family: monospace;
+    opacity: 0.8;
+}
+
+#viewSeparator {
+    display: inline-block;
+    border-right: 1px solid #a5a5a5;
 }
 
 #sidebar {
