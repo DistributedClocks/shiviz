@@ -1,7 +1,7 @@
 /**
  * Constructs a ShowDiffTransformation that will re-draw all dissimilar
- * hosts (comparison based on hosts' names) among multiple executions
- * as diamonds.
+ * hosts (comparison based on hosts' names) and events (comparison based
+ * on the event capture group) among multiple executions, as diamonds.
  * 
  * @classdesc
  * 
@@ -148,6 +148,7 @@ ShowDiffTransformation.prototype.compareNodeContent = function(model, next, othe
 			
             if (!match) {
                 var visualNode = model.getVisualNodeByNode(next);
+                // keep track of unique events so that they're drawn differently when clicked on
                 this.uniqueEvents.push(visualNode.getId());
                 // update the node to have a diamond shape
                 if (!visualNode.isCollapsed()) { 
