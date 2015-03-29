@@ -19,10 +19,12 @@ function Global($vizContainer, $sidebar, $hostBar, $logTable, views) {
 
     /** @private */
     this.views = views.slice();
-    
+
+    // TODO: rename to viewL
     /** @private */
     this.view1 = this.views.length > 0 ? this.views[0] : null;
     
+    // TODO: rename to viewR
     /** @private */
     this.view2 = this.views.length > 1 ? this.views[1] : null;
 
@@ -94,17 +96,21 @@ Global.prototype.drawAll = function() {
     
     this.$vizContainer.height(global.getMaxViewHeight());
 	
-    if (this.views.length > 2) {
+    if (this.views.length >= 2) {
         var viewSelectDiv = $('<div id="viewSelectDiv"></div>');
         this.$hostBar.append(viewSelectDiv);
 
+        // TODO: do not show drop-down when (this.views.length == 2),
+        // just show labels.
+        
+        // TODO: rename viewSelect1 to viewSelectL and viewSelect2 to viewSelectR
         var viewSelect1 = $('<select id="viewSelect1"></select>');
+        // TODO: move CSS into the style file.
         viewSelect1.css({"position": "relative", "left": "5 * this.view1.getHosts().length"});
         viewSelectDiv.append(viewSelect1);
 
         var viewSelect2 = $('<select id="viewSelect2"></select>');
         viewSelectDiv.append(viewSelect2);
-        viewSelectDiv.append('<p></p>');
 		
         this.views.forEach(function(view) {
             var label = view.getLabel();
