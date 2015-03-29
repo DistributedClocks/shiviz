@@ -623,11 +623,16 @@ svg {
     z-index: 1;
 }
 
+#viewSelectDiv {
+    margin-bottom: 1em;
+}
+
 #viewSelect1 {
     position: fixed;
     padding: 0.15em;
     font-family: monospace;
     opacity: 0.8;
+    margin-left: 0.5em;
 }
 
 #viewSelect2 {
@@ -636,11 +641,14 @@ svg {
     padding: 0.15em;
     font-family: monospace;
     opacity: 0.8;
+    margin-right: 0.5em;
 }
 
 #viewSeparator {
     display: inline-block;
-    border-right: 1px solid #a5a5a5;
+    border-right: 2px dotted rgba(3, 3, 3, 0.24);
+    position: relative;
+    z-index: 2; /* make this div sit on top of the hostBar div */
 }
 
 #sidebar {
