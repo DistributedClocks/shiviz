@@ -476,40 +476,55 @@ Controller.prototype.showDialog = function(e, type, elem) {
         e.setSelected(true);
         var id = e.getId();
         var views = this.global.getActiveViews();
-        var uniqueEvents1 = views[0].getTransformer().getUniqueEvents();
-        var uniqueEvents2 = views[1].getTransformer().getUniqueEvents();
+        if (views.length == 2) {
+          var uniqueEvents1 = views[0].getTransformer().getUniqueEvents();
+          var uniqueEvents2 = views[1].getTransformer().getUniqueEvents();
 		
-        // If this node is not a unique event, highlight the node with a circular outline
-        if (uniqueEvents1.indexOf(id) == -1 && uniqueEvents2.indexOf(id) == -1) {
-           var selcirc = d3.select("#node" + e.getId()).insert("circle", "circle");
-           selcirc.style({
-              "fill": function(d) {
-                 return d.getFillColor();
-               }
-           });
-           selcirc.attr({
-              "class": "sel",
-              "r": function(d) {
-                 return d.getRadius() + 6;
-               }
-           });
-        // If this node is a unique event, highlight it with a diamond outline
-        } else {
-           var seldiamond = d3.select("#node" + e.getId()).insert("polygon", "polygon");
-           seldiamond.style({
-			  "stroke": function(d) { return d.getFillColor(); },
-			  "stroke-width": 2,
+          // If this node is not a unique event, highlight the node with a circular outline
+          if (uniqueEvents1.indexOf(id) == -1 && uniqueEvents2.indexOf(id) == -1) {
+            var selcirc = d3.select("#node" + e.getId()).insert("circle", "circle");
+            selcirc.style({
+               "fill": function(d) {
+                  return d.getFillColor();
+                }
+            });
+            selcirc.attr({
+               "class": "sel",
+               "r": function(d) {
+                  return d.getRadius() + 6;
+                }
+            });
+          // If this node is a unique event, highlight it with a diamond outline
+          } else {
+            var seldiamond = d3.select("#node" + e.getId()).insert("polygon", "polygon");
+            seldiamond.style({
+              "stroke": function(d) { return d.getFillColor(); },
+              "stroke-width": 2,
               "fill": "white"
-           });
-           seldiamond.attr({
+            });
+            seldiamond.attr({
               "class": "sel",
               "points": function(d) {
                   var points = d.getPoints();
                   var newPoints = [points[0], points[1]-3, points[2]+3, points[3], points[4],
-				            points[5]+3, points[6]-3, points[7]];
+                                   points[5]+3, points[6]-3, points[7]];
                   return newPoints.join();
                }
-           });
+            });
+          }
+        } else {
+            var selcirc = d3.select("#node" + e.getId()).insert("circle", "circle");
+            selcirc.style({
+                "fill": function(d) {
+                   return d.getFillColor();
+                }
+            });
+            selcirc.attr({
+               "class": "sel",
+               "r": function(d) {
+                  return d.getRadius() + 6;
+                }
+            });
         }
     }
 

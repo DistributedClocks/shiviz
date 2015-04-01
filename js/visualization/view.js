@@ -221,6 +221,7 @@ View.prototype.draw = function() {
         }
 
         delete lines[0];
+        var first = true;
 
         for (var y in lines) {
             var overflow = null;
@@ -230,6 +231,16 @@ View.prototype.draw = function() {
             if (vn.length > 3)
                 overflow = vn.splice(2, vn.length);
 
+            if (first && view.getLabel().trim()) {
+                var $div = $("<div></div>", {
+                }).addClass("logLabel").css({
+                      "top": y + "px"
+                }).text(view.getLabel());
+                view.logTable.append($div);
+                startMargin++;
+                first = false;
+            }
+			
             for (var i in vn) {
                 var text = vn[i].getText();
                 var $div = $("<div></div>", {

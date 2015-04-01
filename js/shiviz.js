@@ -43,8 +43,8 @@ function Shiviz() {
             $("#parser").val($(e.target).data("parser") || defaultParser);
             $("#ordering").val($(e.target).data("ordering") || defaultOrdering);
             $($(e.target).data("hostsort") || defaultHostSort).prop("checked", true);
-	     // Clears the file input value by replacing the file input component with a clone
-	     $("#file").replaceWith($("#file").clone(true));
+            // Clears the file input value by replacing the file input component with a clone
+            $("#file").replaceWith($("#file").clone(true));
 
             $(e.target).css({
                 color: "gray",

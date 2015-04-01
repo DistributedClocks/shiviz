@@ -311,7 +311,6 @@ section.input .left {
     border-spacing: 0;
     font-size: 10pt;
     font-family: monospace;
-    margin-top: -6px;
     line-height: 1em;
 }
 
@@ -330,6 +329,15 @@ section.input .left {
     transition: margin;
     transition-duration: .1s;
     transition-timing-function: ease-out;
+}
+
+.visualization .log .logLabel {
+    width: inherit;
+    position: absolute;
+    margin-top: -1.5em;
+    color: black;
+    margin-bottom: 1em;
+    white-space: pre-wrap;
 }
 
 .visualization .log .line.more:hover,
@@ -627,15 +635,36 @@ svg {
     margin-bottom: 1em;
 }
 
-#viewSelect1 {
+#viewLabelDiv {
+    margin-bottom: 1em;
+    margin-top: -1em;
+}
+
+#viewLabelL {
+    position: relative;
+    font-family: monospace;
+    opacity: 0.8;
+    margin-left: 0.5em;
+}
+
+#viewLabelR {
     position: fixed;
+    right: 240px;
+    font-family: monospace;
+    opacity: 0.8;
+    margin-top: -2.2em;
+    margin-right: 0.5em;
+}
+
+#viewSelectL {
+    position: relative;
     padding: 0.15em;
     font-family: monospace;
     opacity: 0.8;
     margin-left: 0.5em;
 }
 
-#viewSelect2 {
+#viewSelectR {
     position: fixed;
     right: 240px;
     padding: 0.15em;
