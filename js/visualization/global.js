@@ -20,13 +20,11 @@ function Global($vizContainer, $sidebar, $hostBar, $logTable, views) {
     /** @private */
     this.views = views.slice();
 
-    // TODO: rename to viewL
     /** @private */
-    this.view1 = this.views.length > 0 ? this.views[0] : null;
+    this.viewL = this.views.length > 0 ? this.views[0] : null;
     
-    // TODO: rename to viewR
     /** @private */
-    this.view2 = this.views.length > 1 ? this.views[1] : null;
+    this.viewR = this.views.length > 1 ? this.views[1] : null;
 
     /** @private */
     this.hostPermutation = null;
@@ -88,6 +86,7 @@ Global.MIN_HOST_WIDTH = 40;
  */
 Global.prototype.drawAll = function() {
     var global = this;
+    var numViews = this.views.length;
     this.resize();
 
     this.$logTable.empty(); //TODO: check
@@ -96,81 +95,88 @@ Global.prototype.drawAll = function() {
     
     this.$vizContainer.height(global.getMaxViewHeight());
 	
-    if (this.views.length >= 2) {
-        var viewSelectDiv = $('<div id="viewSelectDiv"></div>');
-        this.$hostBar.append(viewSelectDiv);
+    if (numViews >= 2) {
 
-        // TODO: do not show drop-down when (this.views.length == 2),
-        // just show labels.
-        
-        // TODO: rename viewSelect1 to viewSelectL and viewSelect2 to viewSelectR
-        var viewSelect1 = $('<select id="viewSelect1"></select>');
-        // TODO: move CSS into the style file.
-        viewSelect1.css({"position": "relative", "left": "5 * this.view1.getHosts().length"});
-        viewSelectDiv.append(viewSelect1);
+        if (numViews == 2) {
+            var viewLabelDiv = $('<div id="viewLabelDiv"></div>');
+            this.$hostBar.append(viewLabelDiv);	
+            var viewLabelL = $('<p id="viewLabelL"></p>');
+            viewLabelL.append(this.viewL.getLabel());
+            viewLabelDiv.append(viewLabelL);
 
-        var viewSelect2 = $('<select id="viewSelect2"></select>');
-        viewSelectDiv.append(viewSelect2);
-		
-        this.views.forEach(function(view) {
-            var label = view.getLabel();
-            
-            if(label != global.view2.getLabel()) {
-                viewSelect1.append('<option value="' + label + '">' + label + '</option>');
-            }
-            
-            if(label != global.view1.getLabel()) {
-                viewSelect2.append('<option value="' + label + '">' + label + '</option>');
-            }
-        });
-        
-        viewSelect1.children("option[value='" + this.view1.getLabel() + "']").prop("selected", true);
-        viewSelect2.children("option[value='" + this.view2.getLabel() + "']").prop("selected", true);
-		
-        viewSelect1.unbind().on("change", function(e) {
-           var val = $("#viewSelect1 option:selected").val();
-           global.controller.hideDiff();
-           global.view1 = global.getViewByLabel(val);
-           if (global.show) {
-              global.controller.showDiff();
-           }
-           global.drawAll();
-        });
-        
-        viewSelect2.unbind().on("change", function(e) {
-            var val = $("#viewSelect2 option:selected").val();
-            global.controller.hideDiff()
-            global.view2 = global.getViewByLabel(val);
-            if (global.show) {
-               global.controller.showDiff();
-            }
-            global.drawAll();
-         });
+            var viewLabelR = $('<p id="viewLabelR"></p>');
+            viewLabelR.append(this.viewR.getLabel());
+            viewLabelDiv.append(viewLabelR);
+			
+        } else {
+            var viewSelectDiv = $('<div id="viewSelectDiv"></div>');
+            this.$hostBar.append(viewSelectDiv);			
+			var viewSelectL = $('<select id="viewSelectL"></select>');
+			viewSelectDiv.append(viewSelectL);
+
+			var viewSelectR = $('<select id="viewSelectR"></select>');
+			viewSelectDiv.append(viewSelectR);
+			
+			this.views.forEach(function(view) {
+				var label = view.getLabel();
+				
+				if (label != global.viewR.getLabel()) {
+					viewSelectL.append('<option value="' + label + '">' + label + '</option>');
+				}
+				
+				if (label != global.viewL.getLabel()) {
+					viewSelectR.append('<option value="' + label + '">' + label + '</option>');
+				}
+			});
+			
+			viewSelectL.children("option[value='" + this.viewL.getLabel() + "']").prop("selected", true);
+			viewSelectR.children("option[value='" + this.viewR.getLabel() + "']").prop("selected", true);
+			
+			viewSelectL.unbind().on("change", function(e) {
+			   var val = $("#viewSelectL option:selected").val();
+			   global.controller.hideDiff();
+			   global.viewL = global.getViewByLabel(val);
+			   if (global.show) {
+				  global.controller.showDiff();
+			   }
+			   global.drawAll();
+			});
+			
+			viewSelectR.unbind().on("change", function(e) {
+				var val = $("#viewSelectR option:selected").val();
+				global.controller.hideDiff()
+				global.viewR = global.getViewByLabel(val);
+				if (global.show) {
+				   global.controller.showDiff();
+				}
+				global.drawAll();
+			 });
+		}
 	}
     
-    this.view1.draw();
-    this.$vizContainer.append(this.view1.getSVG());
-    this.$hostBar.append(this.view1.getHostSVG());
-    this.$logTable.append(this.view1.getLogTable());
-    this.controller.bindLines(this.view1.getLogTable().find(".line:not(.more)"));
+    this.viewL.draw();
+    this.$vizContainer.append(this.viewL.getSVG());
+    this.$hostBar.append(this.viewL.getHostSVG());
+    this.$logTable.append(this.viewL.getLogTable());
+    this.controller.bindLines(this.viewL.getLogTable().find(".line:not(.more)"));
 	
-    if (this.view2 != null) {
+    if (this.viewR != null) {
         // the "Show Differences" button is only visible when there are multiple executions
         $("#diff_button").show();
-        this.view2.draw();
+        this.viewR.draw();
         // Draw the separator between the two views - this separator is only visible when
         // at least one process is present (not hidden) in both views
-		if ((this.view1.getTransformer().getHiddenHosts().length < this.view1.getHosts().length) &&
-            (this.view2.getTransformer().getHiddenHosts().length < this.view2.getHosts().length)) {
+		if ((this.viewL.getTransformer().getHiddenHosts().length < this.viewL.getHosts().length) &&
+            (this.viewR.getTransformer().getHiddenHosts().length < this.viewR.getHosts().length)) {
             var viewSeparator = $('<div id="viewSeparator"></div>');
             viewSeparator.css("height", global.getMaxViewHeight());
             this.$vizContainer.append(viewSeparator);
-        }		   
-        this.$vizContainer.append(this.view2.getSVG());
-        this.$hostBar.append(this.view2.getHostSVG());
+        }		
+        this.$vizContainer.append(this.viewR.getSVG());
+        this.$hostBar.append(this.viewR.getHostSVG());
         this.$logTable.append($("<td></td>").addClass("spacer"));
-        this.$logTable.append(this.view2.getLogTable());
-        this.controller.bindLines(this.view2.getLogTable().find(".line:not(.more)"));
+        this.$logTable.append(this.viewR.getLogTable());
+        this.controller.bindLines(this.viewR.getLogTable().find(".line:not(.more)"));
     }
 	
     this.$vizContainer.height("auto");
@@ -186,11 +192,11 @@ Global.prototype.drawAll = function() {
   * @returns {Number} the max height between the two active views
   */
 Global.prototype.getMaxViewHeight = function() {
-    this.view1.getVisualModel().update();
-    var maxHeight = this.view1.getVisualModel().getHeight();
-    if (this.view2 != null) {
-        this.view2.getVisualModel().update();
-        maxHeight = Math.max(maxHeight, this.view2.getVisualModel().getHeight());
+    this.viewL.getVisualModel().update();
+    var maxHeight = this.viewL.getVisualModel().getHeight();
+    if (this.viewR != null) {
+        this.viewR.getVisualModel().update();
+        maxHeight = Math.max(maxHeight, this.viewR.getVisualModel().getHeight());
     }
     return maxHeight;
 }
@@ -205,9 +211,9 @@ Global.prototype.getViews = function() {
 };
 
 Global.prototype.getActiveViews = function() {
-    var result = [this.view1];
-    if(this.view2 != null) {
-        result.push(this.view2);
+    var result = [this.viewL];
+    if(this.viewR != null) {
+        result.push(this.viewR);
     }
     return result;
 };
@@ -251,14 +257,14 @@ Global.prototype.getController = function() {
  */
 Global.prototype.resize = function() {
     
-    var view1NumHosts = getNumVisibleHosts(this.view1.getHosts(), this.view1.getTransformer().getSpecifiedHiddenHosts());
+    var viewLNumHosts = getNumVisibleHosts(this.viewL.getHosts(), this.viewL.getTransformer().getSpecifiedHiddenHosts());
     
-    var view2NumHosts = 0;
-    if(this.view2 != null) {
-        view2NumHosts = getNumVisibleHosts(this.view2.getHosts(), this.view2.getTransformer().getSpecifiedHiddenHosts());
+    var viewRNumHosts = 0;
+    if(this.viewR != null) {
+        viewRNumHosts = getNumVisibleHosts(this.viewR.getHosts(), this.viewR.getTransformer().getSpecifiedHiddenHosts());
     }
     
-    var visibleHosts = view1NumHosts + view2NumHosts;
+    var visibleHosts = viewLNumHosts + viewRNumHosts;
 
     // TODO: rename to sidebarLeft sidebarRight middleWidth
     var headerWidth = $(".visualization header").outerWidth();
@@ -268,14 +274,14 @@ Global.prototype.resize = function() {
     $("#searchbar").width(globalWidth);
 
     var widthPerHost = Math.max(Global.MIN_HOST_WIDTH, globalWidth / visibleHosts);
-    var logTableWidth = this.view2 == null ? Global.SIDE_BAR_WIDTH : (Global.SIDE_BAR_WIDTH - 12) / 2;
+    var logTableWidth = this.viewR == null ? Global.SIDE_BAR_WIDTH : (Global.SIDE_BAR_WIDTH - 12) / 2;
 
-    this.view1.setWidth(view1NumHosts * widthPerHost);
-    this.view1.setLogTableWidth(logTableWidth);
+    this.viewL.setWidth(viewLNumHosts * widthPerHost);
+    this.viewL.setLogTableWidth(logTableWidth);
     
-    if(this.view2 != null) {
-        this.view2.setWidth(view2NumHosts * widthPerHost);
-        this.view2.setLogTableWidth(logTableWidth);
+    if(this.viewR != null) {
+        this.viewR.setWidth(viewRNumHosts * widthPerHost);
+        this.viewR.setLogTableWidth(logTableWidth);
     }
     
     var sel = d3.select("circle.sel").data()[0];
@@ -343,69 +349,15 @@ Global.prototype.drawSideBar = function() {
     var global = this;  
     this.$sidebar.children("#hiddenHosts").remove();
     this.$sidebar.children("#viewSelectDiv").remove();
-    
-    /**if (this.views.length > 2) {
-        var viewSelectDiv = $('<div id="viewSelectDiv"></div>');
-        this.$sidebar.append(viewSelectDiv);
-        
-        viewSelectDiv.append('<p>View 1:</p>');
-        
-        var viewSelect1 = $('<select id="viewSelect1"></select>');
-        viewSelect1.css("width", Global.SIDE_BAR_WIDTH - 50);
-        viewSelectDiv.append(viewSelect1);
-        
-        viewSelectDiv.append('<p>View 2:</p>');
-        
-        var viewSelect2 = $('<select id="viewSelect2"></select>');
-        viewSelect2.css("width", Global.SIDE_BAR_WIDTH - 50);
-        viewSelectDiv.append(viewSelect2);
-
-        viewSelectDiv.append('<p></p>');
-        
-        this.views.forEach(function(view) {
-            var label = view.getLabel();
-            
-            if(label != global.view2.getLabel()) {
-                viewSelect1.append('<option value="' + label + '">' + label + '</option>');
-            }
-            
-            if(label != global.view1.getLabel()) {
-                viewSelect2.append('<option value="' + label + '">' + label + '</option>');
-            }
-        });
-        
-        viewSelect1.children("option[value='" + this.view1.getLabel() + "']").prop("selected", true);
-        viewSelect2.children("option[value='" + this.view2.getLabel() + "']").prop("selected", true);
-        
-        viewSelect1.unbind().on("change", function(e) {
-           var val = $("#viewSelect1 option:selected").val();
-           global.controller.hideDiff();
-           global.view1 = global.getViewByLabel(val);
-           if (global.show) {
-              global.controller.showDiff();
-           }
-           global.drawAll();
-        });
-        
-        viewSelect2.unbind().on("change", function(e) {
-            var val = $("#viewSelect2 option:selected").val();
-            global.controller.hideDiff()
-            global.view2 = global.getViewByLabel(val);
-            if (global.show) {
-               global.controller.showDiff();
-            }
-            global.drawAll();
-         }); 
-    }**/
 
     // Draw hidden hosts
     var hiddenHosts = {};
-    this.view1.getTransformer().getHiddenHosts().forEach(function(host) {
+    this.viewL.getTransformer().getHiddenHosts().forEach(function(host) {
         hiddenHosts[host] = true;
     });
     
-    if (this.view2 != null) {
-        this.view2.getTransformer().getHiddenHosts().forEach(function(host) {
+    if (this.viewR != null) {
+        this.viewR.getTransformer().getHiddenHosts().forEach(function(host) {
             hiddenHosts[host] = true;
         });
     }
@@ -438,16 +390,16 @@ Global.prototype.drawSideBar = function() {
 	
     hh.forEach(function(host) {
 
-       var uniqueHosts1 = global.view1.getTransformer().getUniqueHosts();
+       var uniqueHosts1 = global.viewL.getTransformer().getUniqueHosts();
        var hiddenHost = global.drawHiddenHost(hiddenHosts);	
 
-       //check if this hidden host is in the list of unique hosts for View1	   
+       //check if this hidden host is in the list of unique hosts for viewL	   
        if (uniqueHosts1 && uniqueHosts1.indexOf(host) != -1) {
            hiddenHost = global.drawUniqueHiddenHost(hiddenHosts);
        }
-       else if (global.view2 != null) {
-          //check if this hidden host is in the list of unique hosts for View2
-          var uniqueHosts2 = global.view2.getTransformer().getUniqueHosts();
+       else if (global.viewR != null) {
+          //check if this hidden host is in the list of unique hosts for viewR
+          var uniqueHosts2 = global.viewR.getTransformer().getUniqueHosts();
           if (uniqueHosts2 && uniqueHosts2.indexOf(host) != -1) {
              hiddenHost = global.drawUniqueHiddenHost(hiddenHosts);
           }
