@@ -12,6 +12,8 @@
  * @constructor
  */
 function Shiviz() {
+	
+    var defaultParser = "(?<event>.*)\\n(?<host>\\S*) (?<clock>{.*})";
 
     if (!!Shiviz.instance) {
         throw new Exception("Cannot instantiate Shiviz. Shiviz is a singleton; use Shiviz.getInstance()");
@@ -29,7 +31,6 @@ function Shiviz() {
         // logUrlPrefix is defined in dev.js & deployed.js
         var prefix = (dev ? "https://api.github.com/repos/bestchai/shiviz-logs/contents/" : "/shiviz/log/");
         var url = prefix + $(this).data("log");
-        var defaultParser = "(?<event>.*)\\n(?<host>\\S*) (?<clock>{.*})";
         var defaultOrdering = "descending";
         var defaultHostSort = "#hostsortLength";
 
@@ -88,48 +89,47 @@ function Shiviz() {
 	
 	$("#file").on("change", function(e) {
 	
-	   var file = e.target.files[0];
-	   var reader = new FileReader();
+	var file = e.target.files[0];
+	var reader = new FileReader();
 	   
-	   reader.onload = function(e) {   
-	      // Get the text string containing the file's data
-	      var text = reader.result;
-		  // Split the text string by the new line character 
-		  // to get the first 2 lines as substrings in an array
-		  var lines = text.split("\n",2);
+	reader.onload = function(e) {   
+		// Get the text string containing the file's data
+		var text = reader.result;
+		// Split the text string by the new line character 
+		// to get the first 2 lines as substrings in an array
+		var lines = text.split("\n",2);
 		  
-		  var defaultParser = "(?<event>.*)\\n(?<host>\\S*) (?<clock>{.*})";
-          var defaultOrdering = "descending";
+		var defaultOrdering = "descending";
 		 
-		  // If the first line is not empty and not just white space, 
-		  // set it as the 'log parsing regular expression' value.
-		  // Otherwise, use the default log parsing regular expression
-		  if (lines[0].trim()) { $("#parser").val(lines[0]);}
-		  else { $("#parser").val(defaultParser);}
+		// If the first line is not empty and not just white space, 
+		// set it as the 'log parsing regular expression' value.
+		// Otherwise, use the default log parsing regular expression
+		if (lines[0].trim()) { $("#parser").val(lines[0]);}
+		else { $("#parser").val(defaultParser);}
 		  
-		  // Set the 'multiple executions regular expression delimiter' field
-		  // to the second line and set the ordering of the processes to descending
-	      $("#delimiter").val(lines[1].trim());
-		  $("#ordering").val(defaultOrdering);
+		// Set the 'multiple executions regular expression delimiter' field
+		// to the second line and set the ordering of the processes to descending
+		$("#delimiter").val(lines[1].trim());
+		$("#ordering").val(defaultOrdering);
 		  
-		  // Get the position of the new line character that occurs at the end of the second line
-		  var startOfLog = text.indexOf("\n", (text.indexOf("\n")) + 1);
-		  // The log will start at the position above + 1; 
-		  // fill in the log text area with the rest of the lines of the file
-	      $("#input").val(text.substr(startOfLog + 1));
+		// Get the position of the new line character that occurs at the end of the second line
+		var startOfLog = text.indexOf("\n", (text.indexOf("\n")) + 1);
+		// The log will start at the position above + 1; 
+		// fill in the log text area with the rest of the lines of the file
+		$("#input").val(text.substr(startOfLog + 1));
 		  
-		  context.resetView();
-		  $("#visualize").click();
+		context.resetView();
+		$("#visualize").click();
 		  
-		  // Clears the file input value whenever the log text area or regular expression
-		  // fields are modified
-		  $("#input, #parser, #delimiter").on("input", function() {
-		     $("#file").replaceWith($("#file").clone(true));
-		  });
-	   }
+		// Clears the file input value whenever the log text area or regular expression
+		// fields are modified
+		$("#input, #parser, #delimiter").on("input", function() {
+			$("#file").replaceWith($("#file").clone(true));
+		});
+	}
 	   
-	   reader.readAsText(file);
-    });
+		reader.readAsText(file);
+	});
 }
 
 /**
