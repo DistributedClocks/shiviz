@@ -17,11 +17,11 @@
  * 
  * Note: uniqueHosts is an empty array that's populated in showDiffTransformation.compare()
  * with host names for hosts that only show up in viewL or viewR. This is used in global.js
- * to draw these unique hosts as rhombuses vs squares
+ * to draw hidden hosts that are unique as rhombuses.
  * 
  * Similarly, uniqueEvents is an empty array that's populated in showDiffTransformation.
  * compareNodeContent() with the id of visual nodes that should be drawn with an outline 
- * of a rhombus when clicked on
+ * of a rhombus when clicked on. This is used in controller.showDialog()
  *
  * The hiddenHosts array is passed in because this transformation also needs to compare hosts that
  * are hidden and redraw them as rhombuses if they only appear in one of viewL or viewR
