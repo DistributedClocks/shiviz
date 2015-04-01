@@ -227,11 +227,11 @@ Controller.prototype.toggleCollapseNode = function(node) {
 
 Controller.prototype.showDiff = function() {
     var views = this.global.getActiveViews();
-    var view1 = views[0];
-    var view2 = views[1];
+    var viewL = views[0];
+    var viewR = views[1];
     this.global.drawAll();
-    view1.getTransformer().showDiff(view2);
-    view2.getTransformer().showDiff(view1);
+    viewL.getTransformer().showDiff(viewR);
+    viewR.getTransformer().showDiff(viewL);
     this.global.drawAll();
 };
 
@@ -243,10 +243,10 @@ Controller.prototype.showDiff = function() {
  
 Controller.prototype.hideDiff = function() {
     var views = this.global.getActiveViews();
-    var view1 = views[0];
-    var view2 = views[1];
-    view1.getTransformer().hideDiff(view2);
-    view2.getTransformer().hideDiff(view1);
+    var viewL = views[0];
+    var viewR = views[1];
+    viewL.getTransformer().hideDiff(viewR);
+    viewR.getTransformer().hideDiff(viewL);
     this.global.drawAll();
 };
 
@@ -476,55 +476,44 @@ Controller.prototype.showDialog = function(e, type, elem) {
         e.setSelected(true);
         var id = e.getId();
         var views = this.global.getActiveViews();
-        if (views.length == 2) {
-          var uniqueEvents1 = views[0].getTransformer().getUniqueEvents();
-          var uniqueEvents2 = views[1].getTransformer().getUniqueEvents();
 		
-          // If this node is not a unique event, highlight the node with a circular outline
-          if (uniqueEvents1.indexOf(id) == -1 && uniqueEvents2.indexOf(id) == -1) {
-            var selcirc = d3.select("#node" + e.getId()).insert("circle", "circle");
-            selcirc.style({
-               "fill": function(d) {
-                  return d.getFillColor();
-                }
-            });
-            selcirc.attr({
-               "class": "sel",
-               "r": function(d) {
-                  return d.getRadius() + 6;
-                }
-            });
-          // If this node is a unique event, highlight it with a diamond outline
-          } else {
-            var seldiamond = d3.select("#node" + e.getId()).insert("polygon", "polygon");
-            seldiamond.style({
-              "stroke": function(d) { return d.getFillColor(); },
-              "stroke-width": 2,
-              "fill": "white"
-            });
-            seldiamond.attr({
-              "class": "sel",
-              "points": function(d) {
-                  var points = d.getPoints();
-                  var newPoints = [points[0], points[1]-3, points[2]+3, points[3], points[4],
-                                   points[5]+3, points[6]-3, points[7]];
-                  return newPoints.join();
-               }
-            });
-          }
-        } else {
-            var selcirc = d3.select("#node" + e.getId()).insert("circle", "circle");
-            selcirc.style({
-                "fill": function(d) {
-                   return d.getFillColor();
-                }
-            });
-            selcirc.attr({
-               "class": "sel",
-               "r": function(d) {
-                  return d.getRadius() + 6;
-                }
-            });
+        var selcirc = d3.select("#node" + e.getId()).insert("circle", "circle");
+        selcirc.style({
+            "fill": function(d) {
+            return d.getFillColor();
+            }
+        });
+        selcirc.attr({
+            "class": "sel",
+            "r": function(d) {
+                return d.getRadius() + 6;
+            }
+        });
+
+        if (this.global.getShowDiff()) {
+            var uniqueEventsL = views[0].getTransformer().getUniqueEvents();
+            var uniqueEventsR = views[1].getTransformer().getUniqueEvents();
+		
+            // If this node is a unique event, highlight it with a rhombus outline
+            if (uniqueEventsL.indexOf(id) != -1 || uniqueEventsR.indexOf(id) != -1) {
+                // remove previous circle svg element
+                d3.select("#node" + e.getId()).selectAll("circle").remove();
+				
+                var selrhombus = d3.select("#node" + e.getId()).insert("polygon", "polygon");
+                selrhombus.style({
+                    "stroke": function(d) { return d.getFillColor(); },
+                    "stroke-width": 2,
+                    "fill": "white"
+                });
+                selrhombus.attr({
+                    "class": "sel",
+                    "points": function(d) {
+                       var points = d.getPoints();
+                       var newPoints = [points[0], points[1]-3, points[2]+3, points[3], points[4], points[5]+3, points[6]-3, points[7]];
+                       return newPoints.join();
+                    }
+                });
+            }
         }
     }
 
