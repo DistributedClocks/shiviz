@@ -95,63 +95,62 @@ Global.prototype.drawAll = function() {
     
     this.$vizContainer.height(global.getMaxViewHeight());
 	
-    if (numViews >= 2) {
+    if (numViews > 2) {
+		
+        var viewSelectDiv = $('<div id="viewSelectDiv"></div>');
+        this.$hostBar.append(viewSelectDiv);			
+        var viewSelectL = $('<select id="viewSelectL"></select>');
+        viewSelectDiv.append(viewSelectL);
+
+        var viewSelectR = $('<select id="viewSelectR"></select>');
+        viewSelectDiv.append(viewSelectR);
+			
+        this.views.forEach(function(view) {
+            var label = view.getLabel();
+				
+            if (label != global.viewR.getLabel()) {
+                viewSelectL.append('<option value="' + label + '">' + label + '</option>');
+            }			
+            if (label != global.viewL.getLabel()) {
+                viewSelectR.append('<option value="' + label + '">' + label + '</option>');
+            }
+        });
+			
+        viewSelectL.children("option[value='" + this.viewL.getLabel() + "']").prop("selected", true);
+        viewSelectR.children("option[value='" + this.viewR.getLabel() + "']").prop("selected", true);
+			
+        viewSelectL.unbind().on("change", function(e) {
+            var val = $("#viewSelectL option:selected").val();
+            global.controller.hideDiff();
+            global.viewL = global.getViewByLabel(val);
+            if (global.show) {
+               global.controller.showDiff();
+            }
+            global.drawAll();
+        });
+			
+        viewSelectR.unbind().on("change", function(e) {
+			var val = $("#viewSelectR option:selected").val();
+			global.controller.hideDiff()
+			global.viewR = global.getViewByLabel(val);
+			if (global.show) {
+				global.controller.showDiff();
+			}
+			global.drawAll();
+		});
+	} else {
+		
+        var viewLabelDiv = $('<div id="viewLabelDiv"></div>');
+        this.$hostBar.append(viewLabelDiv);	
+        var viewLabelL = $('<p id="viewLabelL"></p>');
+        viewLabelL.append(this.viewL.getLabel());
+        viewLabelDiv.append(viewLabelL);
 
         if (numViews == 2) {
-            var viewLabelDiv = $('<div id="viewLabelDiv"></div>');
-            this.$hostBar.append(viewLabelDiv);	
-            var viewLabelL = $('<p id="viewLabelL"></p>');
-            viewLabelL.append(this.viewL.getLabel());
-            viewLabelDiv.append(viewLabelL);
-
             var viewLabelR = $('<p id="viewLabelR"></p>');
             viewLabelR.append(this.viewR.getLabel());
             viewLabelDiv.append(viewLabelR);
-			
-        } else {
-            var viewSelectDiv = $('<div id="viewSelectDiv"></div>');
-            this.$hostBar.append(viewSelectDiv);			
-			var viewSelectL = $('<select id="viewSelectL"></select>');
-			viewSelectDiv.append(viewSelectL);
-
-			var viewSelectR = $('<select id="viewSelectR"></select>');
-			viewSelectDiv.append(viewSelectR);
-			
-			this.views.forEach(function(view) {
-				var label = view.getLabel();
-				
-				if (label != global.viewR.getLabel()) {
-					viewSelectL.append('<option value="' + label + '">' + label + '</option>');
-				}
-				
-				if (label != global.viewL.getLabel()) {
-					viewSelectR.append('<option value="' + label + '">' + label + '</option>');
-				}
-			});
-			
-			viewSelectL.children("option[value='" + this.viewL.getLabel() + "']").prop("selected", true);
-			viewSelectR.children("option[value='" + this.viewR.getLabel() + "']").prop("selected", true);
-			
-			viewSelectL.unbind().on("change", function(e) {
-			   var val = $("#viewSelectL option:selected").val();
-			   global.controller.hideDiff();
-			   global.viewL = global.getViewByLabel(val);
-			   if (global.show) {
-				  global.controller.showDiff();
-			   }
-			   global.drawAll();
-			});
-			
-			viewSelectR.unbind().on("change", function(e) {
-				var val = $("#viewSelectR option:selected").val();
-				global.controller.hideDiff()
-				global.viewR = global.getViewByLabel(val);
-				if (global.show) {
-				   global.controller.showDiff();
-				}
-				global.drawAll();
-			 });
-		}
+        }
 	}
     
     this.viewL.draw();
@@ -171,6 +170,12 @@ Global.prototype.drawAll = function() {
             var viewSeparator = $('<div id="viewSeparator"></div>');
             viewSeparator.css("height", global.getMaxViewHeight());
             this.$vizContainer.append(viewSeparator);
+			
+            // a different separator that only spans the height of the host bar
+            // this allows the dialog boxes to be above the view separator (see z-index in style.css)
+            // and below the host bar while retaining a division in the host bar
+            //var hostBarSeparator = $('<div id="hostBarSeparator"></div>');
+            //this.$hostBar.append(hostBarSeparator);
         }		
         this.$vizContainer.append(this.viewR.getSVG());
         this.$hostBar.append(this.viewR.getHostSVG());

@@ -312,6 +312,7 @@ section.input .left {
     font-size: 10pt;
     font-family: monospace;
     line-height: 1em;
+    top: 1em;
 }
 
 .visualization .log td.spacer {
@@ -338,6 +339,9 @@ section.input .left {
     color: black;
     margin-bottom: 1em;
     white-space: pre-wrap;
+    font-family: monospace;
+    font-size: 11pt;
+    opacity: 0.8;
 }
 
 .visualization .log .line.more:hover,
@@ -628,7 +632,7 @@ svg {
 #hostBar {
     position: fixed;
     background: white;
-    z-index: 1;
+    z-index: 2;
 }
 
 #viewSelectDiv {
@@ -637,12 +641,11 @@ svg {
 
 #viewLabelDiv {
     margin-bottom: 1em;
-    margin-top: -1em;
 }
 
 #viewLabelL {
     position: relative;
-    font-family: monospace;
+    font-family: sans-serif;
     opacity: 0.8;
     margin-left: 0.5em;
 }
@@ -650,7 +653,7 @@ svg {
 #viewLabelR {
     position: fixed;
     right: 240px;
-    font-family: monospace;
+    font-family: sans-serif;
     opacity: 0.8;
     margin-top: -2.2em;
     margin-right: 0.5em;
@@ -659,7 +662,7 @@ svg {
 #viewSelectL {
     position: relative;
     padding: 0.15em;
-    font-family: monospace;
+    font-family: sans-serif;
     opacity: 0.8;
     margin-left: 0.5em;
 }
@@ -668,7 +671,7 @@ svg {
     position: fixed;
     right: 240px;
     padding: 0.15em;
-    font-family: monospace;
+    font-family: sans-serif;
     opacity: 0.8;
     margin-right: 0.5em;
 }
@@ -678,6 +681,14 @@ svg {
     border-right: 2px dotted rgba(3, 3, 3, 0.24);
     position: relative;
     z-index: 2; /* make this div sit on top of the hostBar div */
+}
+
+#hostBarSeparator {
+    height: 62px;
+    display: inline;
+    border-right: 2px dotted rgba(3, 3, 3, 0.24);
+    position: fixed;
+    margin-top: -2em;
 }
 
 #sidebar {
@@ -751,12 +762,12 @@ svg#defs {
     background: #eee;
     font-family: sans-serif;
     position: absolute;
-    z-index: 0;
+    z-index: 2;
     display: none;
 }
 .dialog.host {
     position: fixed;
-    z-index: 1;
+    z-index: 3;
 }
 .dialog.hidden {
     z-index: 3;
