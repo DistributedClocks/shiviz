@@ -60,6 +60,9 @@ function Controller(global) {
             return;
 
         $(".dialog").hide();
+        // remove the scrolling behavior for hiding/showing dialog boxes once we click outside the box
+        $(window).unbind("scroll");	
+		
         d3.select("circle.sel").each(function(d) {
             $(this).remove();
             d.setSelected(false);
@@ -101,6 +104,9 @@ function Controller(global) {
     });
 	
     $("#diff_button").unbind().click(function() {
+		
+        // remove the scrolling behavior for hiding/showing dialog boxes when the diff button is clicked
+        $(window).unbind("scroll");
         if (this.innerHTML == "Show Differences") {
             this.innerHTML = "Hide Differences";
             $(this).css ({
@@ -171,6 +177,7 @@ Controller.prototype.hasHighlight = function() {
  * @param {String} host The host to hide.
  */
 Controller.prototype.hideHost = function(host) {
+    $(window).unbind("scroll");
     this.global.getViews().forEach(function(view) {
         view.getTransformer().hideHost(host);
     });
@@ -185,6 +192,7 @@ Controller.prototype.hideHost = function(host) {
  * @param {String} host The host to unhide.
  */
 Controller.prototype.unhideHost = function(host) {
+    $(window).unbind("scroll");
     this.global.getViews().forEach(function(view) {
         view.getTransformer().unhideHost(host);
     });
@@ -212,6 +220,7 @@ Controller.prototype.toggleHostHighlight = function(host) {
  * @param {ModelNode} node
  */
 Controller.prototype.toggleCollapseNode = function(node) {
+    $(window).unbind("scroll");
     this.global.getViews().forEach(function(view) {
         view.getTransformer().toggleCollapseNode(node);
     });
@@ -418,6 +427,7 @@ Controller.prototype.bindHiddenHosts = function(host, node) {
     var controller = this;
     node.on("dblclick", function(e) {
 
+        $(window).unbind("scroll");
         var views = controller.global.getViews();
         views.forEach(function(view) {
             view.getTransformer().unhideHost(host);
@@ -634,4 +644,28 @@ Controller.prototype.showDialog = function(e, type, elem) {
         // Hide collapse button
         $dialog.find(".collapse").hide();
     }
+	
+    // keep a copy of the dialog box's top coordinate
+    var copyOfDialogTop = $dialog.offset().top;
+	
+	$(window).scroll(function() {
+		// get the current top coordinate of the dialog box and the current bottom coordinate of the hostbar 
+		// (both values change with scrolling)
+		var dialogTop = $dialog.offset().top;
+		var hostBarBottom = $("#hostBar").offset().top + $("#hostBar").height();
+		// get the vertical position of the scrollbar (position = 0 when scrollbar at very top)
+		var scrollbarTop = $(window).scrollTop();
+		
+		// when a dialog box is hidden, its top coordinate is set to 0 so dialogTop starts having the same value as scrollbarTop
+		// we don't want it to be hidden forever after the first time it's hidden so we check for this condition below. We also check
+		// if we've scrolled past the distance between the dialog box and host bar, this is when we want to hide it. 
+		// Note: the 20 in the second condition is hardcoded for host dialog boxes so that they're never hidden when scrolling
+		if ((scrollbarTop != dialogTop) && (scrollbarTop - 20 > (dialogTop - (hostBarBottom - scrollbarTop)))) { 
+			$dialog.hide();
+		// otherwise, if we haven't scrolled past the distance, show the dialog. Note: we use copyOfDialogTop here
+		// because dialogTop has already changed with scrolling and we want the original distance
+		} else if ($(window).scrollTop() <= (copyOfDialogTop - (hostBarBottom - $(window).scrollTop()))){
+			$dialog.show();
+		}
+	});
 }

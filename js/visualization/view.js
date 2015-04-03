@@ -231,13 +231,13 @@ View.prototype.draw = function() {
             if (vn.length > 3)
                 overflow = vn.splice(2, vn.length);
 
-            if (first && view.getLabel().trim()) {
+            if (first) {
                 var $div = $("<div></div>", {
                 }).addClass("logLabel").css({
                       "top": y + "px"
                 }).text(view.getLabel());
                 view.logTable.append($div);
-                startMargin++;
+                startMargin = startMargin + 2;
                 first = false;
             }
 			
