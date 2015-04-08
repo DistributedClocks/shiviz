@@ -153,7 +153,7 @@ Global.prototype.drawAll = function() {
         }
 	}
     
-    this.viewL.draw();
+    this.viewL.draw("L");
     this.$vizContainer.append(this.viewL.getSVG());
     this.$hostBar.append(this.viewL.getHostSVG());
     this.$logTable.append(this.viewL.getLogTable());
@@ -162,7 +162,7 @@ Global.prototype.drawAll = function() {
     if (this.viewR != null) {
         // the "Show Differences" button is only visible when there are multiple executions
         $("#diff_button").show();
-        this.viewR.draw();
+        this.viewR.draw("R");
         // Draw the separator between the two views - this separator is only visible when
         // at least one process is present (not hidden) in both views
 		if ((this.viewL.getTransformer().getHiddenHosts().length < this.viewL.getHosts().length) &&
@@ -170,12 +170,6 @@ Global.prototype.drawAll = function() {
             var viewSeparator = $('<div id="viewSeparator"></div>');
             viewSeparator.css("height", global.getMaxViewHeight());
             this.$vizContainer.append(viewSeparator);
-			
-            // a different separator that only spans the height of the host bar
-            // this allows the dialog boxes to be above the view separator (see z-index in style.css)
-            // and below the host bar while retaining a division in the host bar
-            //var hostBarSeparator = $('<div id="hostBarSeparator"></div>');
-            //this.$hostBar.append(hostBarSeparator);
         }		
         this.$vizContainer.append(this.viewR.getSVG());
         this.$hostBar.append(this.viewR.getHostSVG());

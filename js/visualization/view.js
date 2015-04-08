@@ -128,7 +128,7 @@ View.prototype.hasHost = function(host) {
 /**
  * Clears the current visualization and re-draws the current model.
  */
-View.prototype.draw = function() {
+View.prototype.draw = function(viewPosition) {
 
     this.model = this.initialModel.clone();	
     this.visualGraph = new VisualGraph(this.model, this.layout, this.hostPermutation);
@@ -216,30 +216,27 @@ View.prototype.draw = function() {
             var y = node.getY();
             if (lines[y] === undefined)
                 lines[y] = [ node ];
+            // nodes with the same y coordinate saved in lines[y]
             else
                 lines[y].push(node);
         }
 
         delete lines[0];
-        var first = true;
-
+		
+        var $div = $("<div></div>");
+        $div.addClass("logLabel" + viewPosition);
+        $div.text(view.getLabel());
+        view.logTable.append($div);
+			
         for (var y in lines) {
             var overflow = null;
             var vn = lines[y];
+            // shift the log lines down by adding 20px or about 1.5em to the y coordinate
+            var top = (Number(y) + 20).toString();
             var startMargin = (1 - Math.min(vn.length, 3)) / 2;
 
             if (vn.length > 3)
                 overflow = vn.splice(2, vn.length);
-
-            if (first) {
-                var $div = $("<div></div>", {
-                }).addClass("logLabel").css({
-                      "top": y + "px"
-                }).text(view.getLabel());
-                view.logTable.append($div);
-                startMargin = startMargin + 2;
-                first = false;
-            }
 			
             for (var i in vn) {
                 var text = vn[i].getText();
@@ -248,7 +245,7 @@ View.prototype.draw = function() {
                 }).data({
                     "id": vn[i].getId()
                 }).addClass("line").css({
-                    "top": y + "px",
+                    "top": top + "px",
                     "margin-top": startMargin + "em",
                     "color": vn[i].getFillColor(),
                     "opacity": vn[i].getOpacity()
