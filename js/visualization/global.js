@@ -154,6 +154,7 @@ Global.prototype.drawAll = function() {
 	}
     
     this.viewL.draw("L");
+    $(".visualization .left #tabs").css("height", "2.5em");
     this.$vizContainer.append(this.viewL.getSVG());
     this.$hostBar.append(this.viewL.getHostSVG());
     this.$logTable.append(this.viewL.getLogTable());
@@ -176,6 +177,7 @@ Global.prototype.drawAll = function() {
         this.$logTable.append($("<td></td>").addClass("spacer"));
         this.$logTable.append(this.viewR.getLogTable());
         this.controller.bindLines(this.viewR.getLogTable().find(".line:not(.more)"));
+        $(".visualization .left #tabs").css("height", "4.5em");
     }
 	
     this.$vizContainer.height("auto");

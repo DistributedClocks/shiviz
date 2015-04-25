@@ -1,0 +1,94 @@
+=== Base execution ===
+72.14.255.255 4/24/2015 12:03:50 PM INFO Initiating sync dest=204.15.23.252
+mountainView {"mountainView":1}
+72.14.255.255 4/24/2015 12:04:11 PM INFO Sync confirmed src=204.15.23.252
+mountainView {"mountainView":2, "paloAlto": 2}
+72.14.255.255 4/24/2015 12:04:28 PM INFO Received sync request src=204.15.23.252
+mountainView {"mountainView":3, "paloAlto": 3}
+72.14.255.255 4/24/2015 12:04:30 PM INFO Sending confirmation dest=204.15.23.252
+mountainView {"mountainView":4, "paloAlto": 3}
+
+204.15.23.252 4/24/2015 12:03:52 PM INFO Received sync request src=72.14.255.255
+paloAlto {"paloAlto":1, "mountainView": 1}
+204.15.23.252 4/24/2015 12:04:08 PM INFO Sending confirmation dest=72.14.255.255
+paloAlto {"paloAlto":2, "mountainView": 1}
+204.15.23.252 4/24/2015 12:04:23 PM INFO Initiating sync dest=72.14.255.255
+paloAlto {"paloAlto":3, "mountainView": 1}
+204.15.23.252 4/24/2015 12:04:32 PM INFO Sync confirmed src=72.14.255.255
+paloAlto {"paloAlto":4, "mountainView": 4}
+
+=== Same as base ===
+72.14.255.255 4/24/2015 12:03:50 PM INFO Initiating sync dest=204.15.23.252
+mountainView {"mountainView":1}
+72.14.255.255 4/24/2015 12:04:11 PM INFO Sync confirmed src=204.15.23.252
+mountainView {"mountainView":2, "paloAlto": 2}
+72.14.255.255 4/24/2015 12:04:28 PM INFO Received sync request src=204.15.23.252
+mountainView {"mountainView":3, "paloAlto": 3}
+72.14.255.255 4/24/2015 12:04:30 PM INFO Sending confirmation dest=204.15.23.252
+mountainView {"mountainView":4, "paloAlto": 3}
+
+204.15.23.252 4/24/2015 12:03:52 PM INFO Received sync request src=72.14.255.255
+paloAlto {"paloAlto":1, "mountainView": 1}
+204.15.23.252 4/24/2015 12:04:08 PM INFO Sending confirmation dest=72.14.255.255
+paloAlto {"paloAlto":2, "mountainView": 1}
+204.15.23.252 4/24/2015 12:04:23 PM INFO Initiating sync dest=72.14.255.255
+paloAlto {"paloAlto":3, "mountainView": 1}
+204.15.23.252 4/24/2015 12:04:32 PM INFO Sync confirmed src=72.14.255.255
+paloAlto {"paloAlto":4, "mountainView": 4}
+
+=== Different host from base ===
+24.22.130.14 4/24/2015 12:03:50 PM INFO Initiating sync dest=204.15.23.252
+seattle {"seattle":1}
+24.22.130.14 4/24/2015 12:04:11 PM INFO Sync confirmed src=204.15.23.252
+seattle {"seattle":2, "paloAlto": 2}
+24.22.130.14 4/24/2015 12:04:28 PM INFO Received sync request src=204.15.23.252
+seattle {"seattle":3, "paloAlto": 3}
+24.22.130.14 4/24/2015 12:04:30 PM INFO Sending confirmation dest=204.15.23.252
+seattle {"seattle":4, "paloAlto": 3}
+
+204.15.23.252 4/24/2015 12:03:52 PM INFO Received sync request src=24.22.130.14
+paloAlto {"paloAlto":1, "seattle": 1}
+204.15.23.252 4/24/2015 12:04:08 PM INFO Sending confirmation dest=24.22.130.14
+paloAlto {"paloAlto":2, "seattle": 1}
+204.15.23.252 4/24/2015 12:04:23 PM INFO Initiating sync dest=24.22.130.14
+paloAlto {"paloAlto":3, "seattle": 1}
+204.15.23.252 4/24/2015 12:04:32 PM INFO Sync confirmed src=24.22.130.14
+paloAlto {"paloAlto":4, "seattle": 4}
+
+=== All events are different from base ===
+72.14.255.255 4/24/2015 12:03:50 PM GET /timeline id=mountainView location=california
+mountainView {"mountainView":1}
+72.14.255.255 4/24/2015 12:04:08 PM INFO Timeline received: [] src=204.15.23.252
+mountainView {"mountainView":2, "paloAlto": 2}
+72.14.255.255 4/24/2015 12:04:23 PM INFO New status=“Lunch” id=paloAlto location=california src=204.15.23.252
+mountainView {"mountainView":3, "paloAlto": 3}
+72.14.255.255 4/24/2015 12:04:30 PM INFO Send confirmation dest=204.15.23.252
+mountainView {"mountainView":4, "paloAlto": 3}
+
+204.15.23.252 4/24/2015 12:03:52 PM INFO Request for timeline id=mountainView location=california src=72.14.255.255
+paloAlto {"paloAlto":1, "mountainView": 1}
+204.15.23.252 4/24/2015 12:03:55 PM INFO Sending page dest=72.14.255.255
+paloAlto {"paloAlto":2, "mountainView": 1}
+204.15.23.252 4/24/2015 12:04:20 PM POST status=“Lunch” id=paloAlto location=california
+paloAlto {"paloAlto":3, "mountainView": 1}
+204.15.23.252 4/24/2015 12:04:32 PM INFO Status confirmed src=72.14.255.255
+paloAlto {"paloAlto":4, "mountainView": 4}
+
+=== Some events are different from base ===
+72.14.255.255 4/24/2015 12:03:50 PM INFO Initiating sync dest=204.15.23.252
+mountainView {"mountainView":1}
+72.14.255.255 4/24/2015 12:04:11 PM INFO Sync confirmed src=204.15.23.252
+mountainView {"mountainView":2, "paloAlto": 2}
+72.14.255.255 4/24/2015 12:04:28 PM INFO Request for timeline id=paloAlto location=california src=204.15.23.252
+mountainView {"mountainView":3, "paloAlto": 3}
+72.14.255.255 4/24/2015 12:04:30 PM INFO Sending page dest=204.15.23.252
+mountainView {"mountainView":4, "paloAlto": 3}
+
+204.15.23.252 4/24/2015 12:03:52 PM INFO Received sync request src=72.14.255.255
+paloAlto {"paloAlto":1, "mountainView": 1}
+204.15.23.252 4/24/2015 12:04:08 PM INFO Sending confirmation dest=72.14.255.255
+paloAlto {"paloAlto":2, "mountainView": 1}
+204.15.23.252 4/24/2015 12:04:23 PM GET /timeline id=paloAlto location=california
+paloAlto {"paloAlto":3, "mountainView": 1}
+204.15.23.252 4/24/2015 12:04:32 PM INFO Timeline received: [] src=72.14.255.255
+paloAlto {"paloAlto":4, "mountainView": 4}

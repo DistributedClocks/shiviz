@@ -256,7 +256,7 @@ View.prototype.draw = function(viewPosition) {
 
             if (overflow != null) {
                 var $div = $("<div></div>").addClass("line more").css({
-                    "top": y + "px",
+                    "top": top + "px",
                     "margin-top": (startMargin * 10) + "pt",
                     "color": "#ddd"
                 }).text("+ " + overflow.length + " more");
