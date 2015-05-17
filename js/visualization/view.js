@@ -82,7 +82,7 @@ View.prototype.getHosts = function() {
  * @returns {Graph} The model
  */
 View.prototype.getModel = function() {
-    return this.model;
+    return this.initialModel;
 };
 
 /**
@@ -193,7 +193,14 @@ View.prototype.draw = function(viewPosition) {
             "height": Global.HOST_SIZE,
             "class": view.id
         });
+
+        if (viewPosition == "R") {
+            view.$hostSVG.css("margin-left", "1px");
+        }
         
+        else {
+            view.$hostSVG.css("margin-left", "0px");
+        }
         var startNodes = view.visualGraph.getStartVisualNodes();
         var arr = [];
         startNodes.forEach(function(visualNode) {

@@ -238,7 +238,6 @@ Controller.prototype.showDiff = function() {
     var views = this.global.getActiveViews();
     var view1 = views[0];
     var view2 = views[1];
-    this.global.drawAll();
     view1.getTransformer().showDiff(view2);
     view2.getTransformer().showDiff(view1);
     this.global.drawAll();

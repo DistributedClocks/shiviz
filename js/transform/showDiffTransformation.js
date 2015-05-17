@@ -1,7 +1,7 @@
 /**
  * Constructs a ShowDiffTransformation that will re-draw all dissimilar
  * hosts (comparison based on hosts' names) and events (comparison based
- * on the event capture group) among multiple executions, as diamonds.
+ * on the event capture group) among multiple executions, as rhombuses.
  * 
  * @classdesc
  * 
@@ -9,10 +9,9 @@
  * This transformation generates a transformed model by comparing the
  * hosts of the given model with the hosts of the model in the other
  * execution. Nodes in these models that represent dissimilar hosts
- * are updated to have a diamond shape. A comparison for processes
- * that appear in both graphs is also made and dissimilar events
- * (in terms of content) in these processes are updated to have
- * a diamond shape.
+ * are re-drawn as rhombuses. 
+ * A comparison for processes that appear in both graphs is also made 
+ * and dissimilar events in these processes are re-drawn as rhombuses
  * </p>
  * 
  * @constructor
@@ -20,13 +19,13 @@
 function ShowDiffTransformation(view, uniqueHosts, hiddenHosts, uniqueEvents) {
     /** @private */
     this.view = view;
-	
+    
     /** @private */
     this.uniqueHosts = uniqueHosts;
-	
+    
     /** @private */
     this.hiddenHosts = hiddenHosts;
-	
+    
     /** @private */
     this.uniqueEvents = uniqueEvents;
 }
@@ -45,15 +44,15 @@ ShowDiffTransformation.prototype.constructor = ShowDiffTransformation;
 */
 ShowDiffTransformation.prototype.compare = function(model) {
 
-    // get the underlying ModelGraph and its hosts
+    // get the underlying ModelGraph and its non-hidden hosts
     var graph = model.getGraph();
     var hosts = graph.getHosts();
-    // get all hosts, including the ones hidden, for this modelGraph
-    var allHosts = hosts.concat(this.hiddenHosts);
-    // get the hidden hosts for the view this modelGraph is being compared to
+    // get all of the hosts (including hidden ones) for the view this modelGraph is being compared to
     var view = this.view;
     var otherHiddenHosts = view.getTransformer().getHiddenHosts();
-	
+    var allOtherHosts = view.getModel().getHosts().concat(otherHiddenHosts);
+    
+    // This for loop only checks non-hidden hosts
     for (var i = 0; i < hosts.length; i++) {
         var currHost = hosts[i];
         var head = graph.getHead(currHost);
@@ -69,7 +68,9 @@ ShowDiffTransformation.prototype.compare = function(model) {
                 visualNode.updateHostShape();
              }
         // if the other view also has this host and it's not hidden,
-        // compare these two processes node by node
+        // compare these two processes node by node - have to check
+        // hidden hosts here because when you unhide a host, it might
+        // not be added to the list of visible hosts yet
         } else {
             if (otherHiddenHosts.indexOf(currHost) == -1) {
                this.compareNodes(model, currHost);
@@ -78,15 +79,16 @@ ShowDiffTransformation.prototype.compare = function(model) {
     }
 
     // Add any hidden hosts that are unique to the uniqueHosts array
-    for (i = 0; i < otherHiddenHosts.length; i++) {
-        var hh = otherHiddenHosts[i];
-        // Have to check all hosts here, including hidden ones, because
-        // if a host common to both views is hidden, it's not unique
-        if (allHosts.indexOf(hh) == -1) {
+    for (i = 0; i < this.hiddenHosts.length; i++) {
+        var hh = this.hiddenHosts[i];
+        // Have to check all hosts here because sometimes when a host
+        // is hidden, it isn't added to the list of hidden hosts before
+        // a comparison is made so it'll be seen as unique when it's not
+        if (allOtherHosts.indexOf(hh) == -1) {
             if (this.uniqueHosts.indexOf(hh) == -1) { 
                 this.uniqueHosts.push(hh);
             }
-        }		
+        }       
     }
 };
 
@@ -98,11 +100,11 @@ ShowDiffTransformation.prototype.compare = function(model) {
  *
  */
 ShowDiffTransformation.prototype.compareNodes = function(model, host) {
-	
+    
     // get the starting nodes for the two graphs being compared
     var head = model.getGraph().getHead(host);
     var otherHead = this.view.getModel().getHead(host);
-		
+        
     var next = head.getNext();
     var otherNext = otherHead.getNext();
     this.compareNodeContent(model, next, otherNext);
@@ -120,15 +122,15 @@ ShowDiffTransformation.prototype.compareNodes = function(model, host) {
   */
 
 ShowDiffTransformation.prototype.compareNodeContent = function(model, next, otherNext) {
-	
-    var otherNextCopy = otherNext;	
+    
+    var otherNextCopy = otherNext;  
     while (!next.isTail()) {
         var logEvents = next.getLogEvents();
-		
-        for (var i = 0; i < logEvents.length; i++) {			
+        
+        for (var i = 0; i < logEvents.length; i++) {            
             var text = logEvents[i].getText();
             var match = false;
-			
+            
             while (!otherNext.isTail()) {
                 var otherLogEvents = otherNext.getLogEvents();
                 for (var j = 0; j < otherLogEvents.length; j++) {
@@ -141,7 +143,7 @@ ShowDiffTransformation.prototype.compareNodeContent = function(model, next, othe
                 if (match) { break; }
                 else { otherNext = otherNext.getNext(); }
             }
-			
+            
             if (!match) {
                 var visualNode = model.getVisualNodeByNode(next);
                 // keep track of unique events so that they're drawn differently when clicked on
