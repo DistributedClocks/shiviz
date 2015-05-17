@@ -278,6 +278,7 @@
                         <a class="log-link" href="" data-log="voldemort-simple-threadnames.log" data-parser="\[(?<date>\d{4}-\d{2}-\d{2} (\d{2}:){2}\d{2},\d{3}) (?<path>\S*)\] (?<priority>(INFO|WARN)) (?<event>.*)\n(?<host>\S*) (?<clock>{.*})">Voldemort log</a>
                         <a class="log-link" href="" data-log="simpledb.log">SimpleDB log</a>
                         <a class="log-link" href="" data-log="facebook-multiple-study.log" data-delimiter="^=== (?<trace>.*) ===$" data-parser="(?<ip>(\d{1,3}\.){3}\d{1,3}) (?<date>(\d{1,2}/){2}\d{4} (\d{2}:){2}\d{2} (AM|PM)) (?<action>(INFO|GET|POST)) (?<event>.*)\n(?<host>\w*) (?<clock>.*)">Facebook log with multiple executions</a>
+                        <a class="log-link" href="" data-log="multiple-comparison.log" data-delimiter="^=== (?<trace>.*) ===$" data-parser="(?<ip>(\d{1,3}\.){3}\d{1,3}) (?<date>(\d{1,2}/){2}\d{4} (\d{2}:){2}\d{2} (AM|PM)) (?<action>(INFO|GET|POST)) (?<event>.*)\n(?<host>\w*) (?<clock>.*)">Comparison log</a>
                     </div>
                     <textarea id="input" spellcheck="false"></textarea>
                 </td>
@@ -352,11 +353,11 @@
                                     <dl>
                                       <dt><code>sync</code></dt>
                                       <dd>find events containing the text "sync"</dd>
-                                      <dt><code>priority=CRITICAL &amp;&amp; text=/p?liu.*shiviz/</code></dt>
+                                      <dt><code>priority=CRITICAL &amp;&amp; text=/fail.*/</code></dt>
                                       <dd>find events with "priority" field set to "CRITICAL" and with "text" field matching the specified regex. Supported logical operators are: <code>&amp;&amp;</code>, <code>||</code>, <code>^</code></dd>
-                                      <dt><code>ip="24.22.130.14"</code></dt>
+                                      <dt><code>ip="216.58.216.174"</code></dt>
                                       <dd>String literals containing non-alphanumeric symbols must be surrounded by quotes</dd>
-                                      <dt><code>text="vancouver" || (ubc &amp;&amp; priority=INFO)</code></dt>
+                                      <dt><code>location="EC2" || (isMobile &amp;&amp; useragent=/.*Webkit.*/)</code></dt>
                                       <dd>Use parenthesis to specify order of operations</dd>
                                     </dl>
                                   </p>

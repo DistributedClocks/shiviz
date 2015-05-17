@@ -296,7 +296,6 @@ section.input .left {
 }
 
 .visualization .left #tabs {
-    height: 2em;
     background: #fff;
     width: 288pt;
     top: 6em;
@@ -332,16 +331,30 @@ section.input .left {
     transition-timing-function: ease-out;
 }
 
-.visualization .log .logLabel {
+.visualization .log .logLabelL {
     width: inherit;
-    position: absolute;
-    margin-top: -1.5em;
+    position: fixed;
+    margin-top: 1em;
     color: black;
     margin-bottom: 1em;
     white-space: pre-wrap;
-    font-family: monospace;
+    font-family: sans-serif;
     font-size: 11pt;
     opacity: 0.8;
+    z-index: 4;
+}
+
+.visualization .log .logLabelR {
+    width: inherit;
+    position: fixed;
+    margin-top: 1em;
+    color: black;
+    margin-bottom: 1em;
+    white-space: pre-wrap;
+    font-family: sans-serif;
+    font-size: 11pt;
+    opacity: 0.8;
+    z-index: 4;
 }
 
 .visualization .log .line.more:hover,
