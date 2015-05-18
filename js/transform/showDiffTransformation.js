@@ -12,13 +12,25 @@
  * are re-drawn as rhombuses. 
  * A comparison for processes that appear in both graphs is also made 
  * and dissimilar events in these processes are re-drawn as rhombuses
+ *
+ * uniqueHosts is an empty array that's populated in showDiffTransformation.compare()
+ * with host names for hosts that only show up in viewL or viewR. This is used in global.js
+ * to draw these unique hosts as rhombuses vs squares
+ * 
+ * Similarly, uniqueEvents is an empty array that's populated in showDiffTransformation.
+ * compareNodeContent() with the id of visual nodes that should be drawn with an outline 
+ * of a rhombus when clicked on
+ *
+ * The hiddenHosts array is passed in because this transformation also needs to compare hosts that
+ * are hidden and redraw them as rhombuses if they only appear in one of viewL or viewR
+ *
  * </p>
  * 
  * @constructor
  */
-function ShowDiffTransformation(view, uniqueHosts, hiddenHosts, uniqueEvents) {
+function ShowDiffTransformation(viewBeingComparedTo, uniqueHosts, hiddenHosts, uniqueEvents) {
     /** @private */
-    this.view = view;
+    this.viewBeingComparedTo = viewBeingComparedTo;
     
     /** @private */
     this.uniqueHosts = uniqueHosts;
@@ -36,7 +48,7 @@ ShowDiffTransformation.prototype.constructor = ShowDiffTransformation;
 
 
 /**
-* Compares the hosts of this model with the hosts of the given view.
+* Compares the hosts of the given model with the hosts of viewBeingComparedTo.
 * Dissimilar hosts are updated to have a diamond shape and hosts that
 * appear in both models have their processes compared node by node.
 * 
@@ -47,10 +59,10 @@ ShowDiffTransformation.prototype.compare = function(model) {
     // get the underlying ModelGraph and its non-hidden hosts
     var graph = model.getGraph();
     var hosts = graph.getHosts();
-    // get all of the hosts (including hidden ones) for the view this modelGraph is being compared to
-    var view = this.view;
-    var otherHiddenHosts = view.getTransformer().getHiddenHosts();
-    var allOtherHosts = view.getModel().getHosts().concat(otherHiddenHosts);
+    // get all of the hosts (including hidden ones) for viewBeingComparedTo
+    var viewBeingComparedTo = this.viewBeingComparedTo;
+    var otherHiddenHosts = viewBeingComparedTo.getTransformer().getHiddenHosts();
+    var allOtherHosts = viewBeingComparedTo.getModel().getHosts().concat(otherHiddenHosts);
     
     // This for loop only checks non-hidden hosts
     for (var i = 0; i < hosts.length; i++) {
@@ -58,14 +70,14 @@ ShowDiffTransformation.prototype.compare = function(model) {
         var head = graph.getHead(currHost);
         // check if any of the hosts in the other view match this host
         // if not, add this host to the uniqueHosts array
-        if (!view.hasHost(currHost)) {
+        if (!viewBeingComparedTo.hasHost(currHost)) {
              if (head) {
                 if (this.uniqueHosts.indexOf(currHost) == -1) { 
                    this.uniqueHosts.push(currHost);
                 }
                 var visualNode = model.getVisualNodeByNode(head);
-                // update the host to have a diamond shape
-                visualNode.updateHostShape();
+                // re-draw the host as a rhombus
+                visualNode.drawHostAsRhombus();
              }
         // if the other view also has this host and it's not hidden,
         // compare these two processes node by node - have to check
@@ -103,7 +115,7 @@ ShowDiffTransformation.prototype.compareNodes = function(model, host) {
     
     // get the starting nodes for the two graphs being compared
     var head = model.getGraph().getHead(host);
-    var otherHead = this.view.getModel().getHead(host);
+    var otherHead = this.viewBeingComparedTo.getModel().getHead(host);
         
     var next = head.getNext();
     var otherNext = otherHead.getNext();
@@ -148,12 +160,12 @@ ShowDiffTransformation.prototype.compareNodeContent = function(model, next, othe
                 var visualNode = model.getVisualNodeByNode(next);
                 // keep track of unique events so that they're drawn differently when clicked on
                 this.uniqueEvents.push(visualNode.getId());
-                // update the node to have a diamond shape
+                // re-draw the node as a rhombus
                 if (!visualNode.isCollapsed()) { 
-                    visualNode.updateNodeShape(7,9); 
+                    visualNode.drawEventAsRhombus(7,9); 
                 } else {
-                    // if the node is collapsed, draw a bigger diamond with the number of collapsed nodes displayed inside
-                    visualNode.updateNodeShape(15,17);
+                    // if the node is collapsed, draw a bigger rhombus with the number of collapsed nodes displayed inside
+                    visualNode.drawEventAsRhombus(15,17);
                     visualNode.setLabel(visualNode.getNode().getLogEvents().length); 
                 }
             }
@@ -167,7 +179,7 @@ ShowDiffTransformation.prototype.compareNodeContent = function(model, next, othe
  * Performs the transformation on the given VisualGraph. The VisualGraph and its
  * underlying Graph are modified in place
  * 
- * @param {VisualGraph} visualGraph The VisualGraph to transform
+ * @param {VisualGraph} model The VisualGraph to transform
  */
 ShowDiffTransformation.prototype.transform = function(model) {
     this.compare(model);

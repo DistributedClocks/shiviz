@@ -335,7 +335,7 @@ Global.prototype.drawHiddenHost = function(container) {
   * @param {d3.selection} container The selection to append the new element to
   * @returns {d3.selection} The new selection containing the appended polygon
   */
-Global.prototype.drawUniqueHiddenHost = function(container) {
+Global.prototype.drawHiddenHostAsRhombus = function(container) {
     var hiddenHost = container.append("polygon");
     return hiddenHost;
 }
@@ -369,17 +369,17 @@ Global.prototype.drawSideBar = function() {
     }
 
     this.$sidebar.append('<div id="hiddenHosts">Hidden processes:</div>');
-    var hidden = d3.select("#hiddenHosts");
-    var hiddenHosts = hidden.append("svg");
+    var hiddenHostsSelection = d3.select("#hiddenHosts");
+    var hiddenHostsSVG = hiddenHostsSelection.append("svg");
 	
     var hostsPerLine = Math.floor((Global.SIDE_BAR_WIDTH + 5) / (Global.HOST_SIZE + 5));
-    hiddenHosts.attr({
+    hiddenHostsSVG.attr({
         "width": this.$sidebar.width(),
         "height": Math.ceil(hh.length / hostsPerLine) * (Global.HOST_SIZE + 5) - 5,
         "class": "hidden-hosts"
     });
 
-    var hiddenHostsGroup = hiddenHosts.append("g");
+    var hiddenHostsGroup = hiddenHostsSVG.append("g");
     hiddenHostsGroup.append("title").text("Double click to view");
 	
     var first = true; var count = 0;
@@ -392,17 +392,17 @@ Global.prototype.drawSideBar = function() {
     hh.forEach(function(host) {
 
        var uniqueHosts1 = global.viewL.getTransformer().getUniqueHosts();
-       var hiddenHost = global.drawHiddenHost(hiddenHosts);	
+       var hiddenHost = global.drawHiddenHost(hiddenHostsSVG);	
 
        //check if this hidden host is in the list of unique hosts for viewL	   
        if (uniqueHosts1 && uniqueHosts1.indexOf(host) != -1) {
-           hiddenHost = global.drawUniqueHiddenHost(hiddenHosts);
+           hiddenHost = global.drawHiddenHostAsRhombus(hiddenHostsSVG);
        }
        else if (global.viewR != null) {
           //check if this hidden host is in the list of unique hosts for viewR
           var uniqueHosts2 = global.viewR.getTransformer().getUniqueHosts();
           if (uniqueHosts2 && uniqueHosts2.indexOf(host) != -1) {
-             hiddenHost = global.drawUniqueHiddenHost(hiddenHosts);
+             hiddenHost = global.drawHiddenHostAsRhombus(hiddenHostsSVG);
           }
        }
 	   
