@@ -545,7 +545,7 @@ VisualNode.prototype.setSelected = function(val) {
  * (unique meaning it only shows up in one of the two active views)
  */
 
-VisualNode.prototype.updateHostShape = function() {
+VisualNode.prototype.drawHostAsRhombus = function() {
     this.points = [12,0,22,12,12,24,2,12];
     this.$diamond.attr({
       "width": Global.HOST_SIZE,
@@ -561,7 +561,7 @@ VisualNode.prototype.updateHostShape = function() {
  * (unique meaning it only shows up in one of the two active views)
  */
 
-VisualNode.prototype.updateNodeShape = function(x,y) {
+VisualNode.prototype.drawEventAsRhombus = function(x,y) {
     this.points = [0,-y,x,0,0,y,-x,0];
     this.$diamond.attr("points", this.points.join());
     this.$circle.remove();

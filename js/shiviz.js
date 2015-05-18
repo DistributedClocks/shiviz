@@ -13,6 +13,8 @@
  */
 function Shiviz() {
 
+    var defaultParser = "(?<event>.*)\\n(?<host>\\S*) (?<clock>{.*})";
+
     if (!!Shiviz.instance) {
         throw new Exception("Cannot instantiate Shiviz. Shiviz is a singleton; use Shiviz.getInstance()");
     }
@@ -29,7 +31,6 @@ function Shiviz() {
         // logUrlPrefix is defined in dev.js & deployed.js
         var prefix = (dev ? "https://api.github.com/repos/bestchai/shiviz-logs/contents/" : "/shiviz/log/");
         var url = prefix + $(this).data("log");
-        var defaultParser = "(?<event>.*)\\n(?<host>\\S*) (?<clock>{.*})";
         var defaultOrdering = "descending";
         var defaultHostSort = "#hostsortLength";
 
@@ -98,7 +99,6 @@ function Shiviz() {
 		  // to get the first 2 lines as substrings in an array
 		  var lines = text.split("\n",2);
 		  
-		  var defaultParser = "(?<event>.*)\\n(?<host>\\S*) (?<clock>{.*})";
           var defaultOrdering = "descending";
 		 
 		  // If the first line is not empty and not just white space, 
