@@ -45,7 +45,7 @@ function Global($vizContainer, $sidebar, $hostBar, $logTable, views) {
     this.$logTable = $logTable;
 	
     /** @private */
-    this.show = false;
+    this.showDiff = false;
 
     this.$sidebar.css({
         width: Global.SIDE_BAR_WIDTH + "px"
@@ -123,7 +123,7 @@ Global.prototype.drawAll = function() {
             var val = $("#viewSelectL option:selected").val();
             global.controller.hideDiff();
             global.viewL = global.getViewByLabel(val);
-            if (global.show) {
+            if (global.getShowDiff()) {
                global.controller.showDiff();
             }
             global.drawAll();
@@ -133,7 +133,7 @@ Global.prototype.drawAll = function() {
 			var val = $("#viewSelectR option:selected").val();
 			global.controller.hideDiff()
 			global.viewR = global.getViewByLabel(val);
-			if (global.show) {
+			if (global.getShowDiff()) {
 				global.controller.showDiff();
 			}
 			global.drawAll();
@@ -237,12 +237,20 @@ Global.prototype.setHostPermutation = function(hostPermutation) {
     this.hostPermutation = hostPermutation;
 };
 
-Global.prototype.setShowDiff = function(show) {
-    this.show = show;
+/**
+ * Sets the showDiff boolean value
+ * @param {Boolean} showDiff
+ */
+Global.prototype.setShowDiff = function(showDiff) {
+    this.showDiff = showDiff;
 }
 
-Global.prototype.isShow = function() {
-    return this.show;
+/**
+ * Gets the showDiff boolean value
+ * @returns {Boolean} True if "Show Differences" was selected
+ */
+Global.prototype.getShowDiff = function() {
+    return this.showDiff;
 }
 
 /**
@@ -383,65 +391,73 @@ Global.prototype.drawSideBar = function() {
     hiddenHostsGroup.append("title").text("Double click to view");
 	
     var first = true; var count = 0;
-    // initial points for a unique host (ie. x and y coordinates for each corner of the diamond shape)
+    // initial points for a unique host (ie. x and y coordinates for each corner of the rhombus shape)
     var x1 = 12; var y1 = 0; var x2 = 22; var y2 = 12;
     var x3 = 12; var y3 = 24; var x4 = 2; var y4 = 12;
     // initial x and y coordinates for a normal host
     var rectx = 0; var recty = 0;	
 	
     hh.forEach(function(host) {
-
-       var uniqueHosts1 = global.viewL.getTransformer().getUniqueHosts();
        var hiddenHost = global.drawHiddenHost(hiddenHostsSVG);	
 
-       //check if this hidden host is in the list of unique hosts for viewL	   
-       if (uniqueHosts1 && uniqueHosts1.indexOf(host) != -1) {
-           hiddenHost = global.drawHiddenHostAsRhombus(hiddenHostsSVG);
-       }
-       else if (global.viewR != null) {
-          //check if this hidden host is in the list of unique hosts for viewR
-          var uniqueHosts2 = global.viewR.getTransformer().getUniqueHosts();
-          if (uniqueHosts2 && uniqueHosts2.indexOf(host) != -1) {
-             hiddenHost = global.drawHiddenHostAsRhombus(hiddenHostsSVG);
+      // If showDiff is true, check if this hidden host needs to be drawn as a rhombus
+      if (global.getShowDiff()) {
+          var uniqueHostsL = global.viewL.getTransformer().getUniqueHosts();
+          //check if this hidden host is in the list of unique hosts for viewL     
+          if (uniqueHostsL && uniqueHostsL.indexOf(host) != -1) {
+              hiddenHost = global.drawHiddenHostAsRhombus(hiddenHostsSVG);
           }
-       }
-	   
-       hiddenHost.attr("width", Global.HOST_SIZE);
-       hiddenHost.attr("height", Global.HOST_SIZE);
-       hiddenHost.style("fill", global.hostPermutation.getHostColor(host));
-       hiddenHost.append("title").text("Double click to view");
+          else if (global.viewR != null) {
+              //check if this hidden host is in the list of unique hosts for viewR
+              var uniqueHostsR = global.viewR.getTransformer().getUniqueHosts();
+              if (uniqueHostsR && uniqueHostsR.indexOf(host) != -1) {
+                  hiddenHost = global.drawHiddenHostAsRhombus(hiddenHostsSVG);
+              }
+          }
+      }
+      
+      hiddenHost.attr("width", Global.HOST_SIZE);
+      hiddenHost.attr("height", Global.HOST_SIZE);
+      hiddenHost.style("fill", global.hostPermutation.getHostColor(host));
+      hiddenHost.append("title").text("Double click to view");
 
-       // start over on a new line once the hidden hosts have taken up the side bar width
-       if (count == hostsPerLine) { 
-           x1 = 12; y1 += Global.HOST_SIZE + 5; 
-           x2 = 22; y2 += Global.HOST_SIZE + 5; 
-           x3 = 12; y3 += Global.HOST_SIZE + 5; 
-           x4 = 2; y4 += Global.HOST_SIZE + 5;
-           rectx = 0; recty += Global.HOST_SIZE + 5;
-           first = true;
-           count = 0;
-       }
+      // start over on a new line once the hidden hosts have taken up the side bar width
+      if (count == hostsPerLine) { 
+          if (global.getShowDiff()) {
+            x1 = 12; y1 += Global.HOST_SIZE + 5; 
+            x2 = 22; y2 += Global.HOST_SIZE + 5; 
+            x3 = 12; y3 += Global.HOST_SIZE + 5; 
+            x4 = 2; y4 += Global.HOST_SIZE + 5;
+          }
+          rectx = 0; recty += Global.HOST_SIZE + 5;
+          first = true;
+          count = 0;
+      }
 
-       // increment x coordinates so that the next hidden host will be drawn
-       // next to the currently hidden hosts without any overlap
-       if (!first) { 
-          x1 += Global.HOST_SIZE + 5;
-          x2 += Global.HOST_SIZE + 5;
-          x3 += Global.HOST_SIZE + 5;
-          x4 += Global.HOST_SIZE + 5;
-          rectx += Global.HOST_SIZE + 5;		  
-       }
-       first = false;
+      // increment x coordinates so that the next hidden host will be drawn
+      // next to the currently hidden hosts without any overlap
+      if (!first) { 
+          if (global.getShowDiff()) {
+            x1 += Global.HOST_SIZE + 5;
+            x2 += Global.HOST_SIZE + 5;
+            x3 += Global.HOST_SIZE + 5;
+            x4 += Global.HOST_SIZE + 5;
+          }
+          rectx += Global.HOST_SIZE + 5;	  
+      }
+      first = false;
 	   
-       // update attributes of the drawn node
-       var points = [x1,y1,x2,y2,x3,y3,x4,y4];
-       hiddenHost.attr("points", points.join());
-       hiddenHost.attr("x", rectx);
-       hiddenHost.attr("y", recty);
-       count++;
+      // update attributes of the drawn node
+      if (global.getShowDiff()) {
+        var points = [x1,y1,x2,y2,x3,y3,x4,y4];
+        hiddenHost.attr("points", points.join());
+      }
+      hiddenHost.attr("x", rectx);
+      hiddenHost.attr("y", recty);
+      count++;
 	   
-       // bind the hidden host nodes to user input
-       global.controller.bindHiddenHosts(host, hiddenHost);
-	   
+      // bind the hidden host nodes to user input
+      global.controller.bindHiddenHosts(host, hiddenHost);	   
 	});
+
 };
