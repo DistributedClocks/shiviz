@@ -1,25 +1,25 @@
 /**
  * Constructs a ShowDiffTransformation that will re-draw all dissimilar
  * hosts (comparison based on hosts' names) and events (comparison based
- * on the event capture group) among multiple executions, as rhombuses.
+ * on the event capture group) between two executions, as rhombuses.
  * 
  * @classdesc
  * 
  * <p>
  * This transformation generates a transformed model by comparing the
  * hosts of the given model with the hosts of the model in the other
- * execution. Nodes in these models that represent dissimilar hosts
- * are re-drawn as rhombuses. 
+ * execution. Dissimilar hosts are re-drawn as rhombuses. 
+
  * A comparison for processes that appear in both graphs is also made 
  * and dissimilar events in these processes are re-drawn as rhombuses
  *
  * uniqueHosts is an empty array that's populated in showDiffTransformation.compare()
  * with host names for hosts that only show up in viewL or viewR. This is used in global.js
- * to draw these unique hosts as rhombuses vs squares
+ * to draw these unique hosts as rhombuses vs squares when they are hidden by the user
  * 
  * Similarly, uniqueEvents is an empty array that's populated in showDiffTransformation.
  * compareNodeContent() with the id of visual nodes that should be drawn with an outline 
- * of a rhombus when clicked on
+ * of a rhombus when clicked on. This is used in controller.showDialog()
  *
  * The hiddenHosts array is passed in because this transformation also needs to compare hosts that
  * are hidden and redraw them as rhombuses if they only appear in one of viewL or viewR
@@ -49,8 +49,8 @@ ShowDiffTransformation.prototype.constructor = ShowDiffTransformation;
 
 /**
 * Compares the hosts of the given model with the hosts of viewBeingComparedTo.
-* Dissimilar hosts are updated to have a diamond shape and hosts that
-* appear in both models have their processes compared node by node.
+* Dissimilar hosts are re-drawn as rhombuses and hosts that appear in both models 
+* have their processes compared node by node.
 * 
 * @param {VisualGraph} model The VisualGraph to transform
 */
@@ -105,7 +105,7 @@ ShowDiffTransformation.prototype.compare = function(model) {
 };
 
 /**
- * Compares events by content (text and date) in processes with the same host
+ * Compares events in processes with the same host
  *
  * @param {VisualGraph} model The VisualGraph to transform
  * @param {String} host A host that's common to both executions
@@ -124,13 +124,11 @@ ShowDiffTransformation.prototype.compareNodes = function(model, host) {
 
 /**
   * Compares processes node by node to find events that are dissimilar. Nodes are
-  * compared by the text and date fields in their log events. Different nodes are
-  * updated to have a diamond shape.
+  * compared by the event capture group and different nodes are re-drawn as a rhombus
   * 
   * @param {VisualGraph} model The VisualGraph to transform
-  * @param {ModelNode} next The first non-start node after the host in this graph
-  * @param {ModelNode} otherNext The first non-start node after the host in the graph 
-  *                    of the other execution
+  * @param {ModelNode} next The first non-start node in this graph
+  * @param {ModelNode} otherNext The first non-start node in the graph of the other execution
   */
 
 ShowDiffTransformation.prototype.compareNodeContent = function(model, next, otherNext) {
