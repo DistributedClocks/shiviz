@@ -162,7 +162,7 @@ Global.prototype.drawAll = function() {
 	
     if (this.viewR != null) {
         // the "Show Differences" button is only visible when there are multiple executions
-        $("#diff_button").show();
+        $(".diffButton").show();
         this.viewR.draw("R");
         // Draw the separator between the two views - this separator is only visible when
         // at least one process is present (not hidden) in both views

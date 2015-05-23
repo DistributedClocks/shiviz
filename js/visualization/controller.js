@@ -103,23 +103,18 @@ function Controller(global) {
 
     });
 	
-    $("#diff_button").unbind().click(function() {
-		
+    $(".diffButton").unbind().click(function() {    
         // remove the scrolling behavior for hiding/showing dialog boxes when the diff button is clicked
         $(window).unbind("scroll");
-        if (this.innerHTML == "Show Differences") {
-            this.innerHTML = "Hide Differences";
-            $(this).css ({
-              opacity: 0.6
-            });
+        $(this).toggleClass("fade");
+
+        if ($(this).text() == "Show Differences") {
+            $(this).text("Hide Differences");
             global.setShowDiff(true);
             self.showDiff();
-        }			
+        }           
         else {
-            this.innerHTML = "Show Differences";
-            $(this).css ({
-              opacity: 1
-            });
+            $(this).text("Show Differences");
             global.setShowDiff(false);
             self.hideDiff();
         }
