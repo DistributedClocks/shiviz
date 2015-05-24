@@ -306,16 +306,21 @@ function testQuery(description, query, log, fields, expected) {
  * Global
  */
 beginSection("Global.js");
-$("body").append($("<div id='sideBar'></div>"));
-$("body").append($("<div id='reference'></div>"));
-var global = new Global();
-var view = new View(graph, global, hostPermutation, "lable");
 
+$("body").append("<div id='vizContainer'></div>");
+$("body").append("<div id='sideBar'></div>");
+$("body").append("<div id='hostBar'></div>");
+$("body").append("<div id='logTable'></div>");
+
+var views = [];
+var view = new View(graph, hostPermutation, "label");
+views.push(view);
+
+var global = new Global($("#vizContainer"), $("#sidebar"), $("#hostBar"), $("logTable"), views);
 global.setHostPermutation(hostPermutation);
 
-assert("addView", function () {
-    global.addView(view);
-    return global.views.length == 1;
+assert("getViewByLabel", function () {
+    return global.getViewByLabel("label").getLabel() == "label";
 });
 
 /**
@@ -323,21 +328,15 @@ assert("addView", function () {
  */
 beginSection("View.js");
 
-assert("getGlobal", function () {
-    return view.getGlobal() === global;
-});
-
 assert("getHosts", function () {
     var hosts = view.getHosts();
     return hosts.length == 2 && hosts[0] == "a" && hosts[1] == "b";
 });
 
-$("body").append("<div id='vizContainer'></div>");
-$("body").append("<div id='hostBar'></div>");
-view.draw();
+global.drawAll();
 var $svg = $("#vizContainer svg");
 var $hostBar = $("#hostBar");
-var $hosts = $("#hostBar rect:not(:first-child)");
+var $hosts = $("#hostBar rect");
 var $circles = $("svg circle");
 var $lines = $("svg line");
 
