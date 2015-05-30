@@ -34,14 +34,18 @@ function beginSection (section) {
 
 var start = Date.now();
 
-var log = 'a1\na {"a":1}\na2\na {"a":2,"b":2}\nb1\nb {"b":1,"a":1}\nb2\nb {"b":2,"a":1}';
-var lines = log.split('\n');
+var log = 'a1\na {"a":1}\na2\na {"a":2, "b":2}\nb1\nb {"b":1,"a":1}\nb2\nb {"b":2,"a":1}';
 var parser = new LogParser(log, null, new NamedRegExp('(?<event>.*)\\n(?<host>\\S*) (?<clock>{.*})', 'm'));
 var hostPermutation = new LengthPermutation(true);
 var graph = new ModelGraph(parser.getLogEvents(""));
 
 hostPermutation.addGraph(graph);
 hostPermutation.update();
+
+$("body").append("<div id='vizContainer'></div>");
+$("body").append("<div id='sideBar'></div>");
+$("body").append("<div id='hostBar'></div>");
+$("body").append("<div id='logTable'></div>");
 
 /**
  * Graph.js
@@ -302,70 +306,88 @@ function testQuery(description, query, log, fields, expected) {
     });
 }
 
-/**
- * Global
- */
-beginSection("Global.js");
-$("body").append($("<div id='sideBar'></div>"));
-$("body").append($("<div id='reference'></div>"));
-var global = new Global();
-var view = new View(graph, global, hostPermutation, "lable");
+graph = new ModelGraph(parser.getLogEvents(""));
+var viewL = new View(graph, hostPermutation, "viewL");
+var viewR = new View(graph, hostPermutation, "viewR");
+var views = [viewL, viewR];
 
+var global = new Global($("#vizContainer"), $("#sidebar"), $("#hostBar"), $("#logTable"), views);
 global.setHostPermutation(hostPermutation);
-
-assert("addView", function () {
-    global.addView(view);
-    return global.views.length == 1;
-});
 
 /**
  * View
  */
 beginSection("View.js");
+viewL.draw("L");
 
-assert("getGlobal", function () {
-    return view.getGlobal() === global;
-});
+var $hosts = $("rect", viewL.getHostSVG());
+var $circles = $("circle", viewL.getSVG());
+var $links = $("line", viewL.getSVG());
 
 assert("getHosts", function () {
-    var hosts = view.getHosts();
+    var hosts = viewL.getHosts();
     return hosts.length == 2 && hosts[0] == "a" && hosts[1] == "b";
 });
 
-$("body").append("<div id='vizContainer'></div>");
-$("body").append("<div id='hostBar'></div>");
-view.draw();
-var $svg = $("#vizContainer svg");
-var $hostBar = $("#hostBar");
-var $hosts = $("#hostBar rect:not(:first-child)");
-var $circles = $("svg circle");
-var $lines = $("svg line");
+assert("getModel", function () {
+    return viewL.getModel() == graph;
+});
 
 assert("draw: component count", function () {
     var h = $hosts.length == 2;
     var c = $circles.length == 4;
-    var l = $lines.length == 6;
-
+    var l = $links.length == 6;
     return h && c && l;
 });
 
-assert("draw: host ordering", function () {
-    var first = $circles.sort(function (a, b) {
-        return a.getAttribute("cx") < b.getAttribute("cx");
-    })[0];
-    return first.__data__.node.host == "a";
+
+/**
+ * Global
+ */
+beginSection("Global.js");
+
+global.drawAll();
+
+var hostAColor = global.hostPermutation.getHostColors().a;
+var hostBColor = global.hostPermutation.getHostColors().b;
+
+var $hosts = $("#hostBar rect");
+var $circles = $("svg circle");
+var $links = $("svg line");
+
+assert("getViews", function () {
+    var views = global.getViews();
+    return views.length == 2 && views[0] == viewL && views[1] == viewR;
+});
+
+assert("draw: component count", function () {
+    var h = $hosts.length == 4;
+    var c = $circles.length == 8;
+    var l = $links.length == 12;
+    return h && c && l;
 });
 
 assert("draw: host colors", function () {
-    return $hosts[0].getAttribute("fill") == global.hostPermutation.getHostColors().a;
+    return $hosts[0].getAttribute("fill") == hostAColor
+    && $hosts[1].getAttribute("fill") == hostBColor;
+});
+
+assert("draw: host ordering", function () {
+    var sortedHosts = $hosts.sort(function (a, b) {
+        return a.getAttribute("cx") < b.getAttribute("cx");
+    });
+    var first = sortedHosts[0];
+    var second = sortedHosts[1];
+    return first.getAttribute("fill") == hostAColor
+    && second.getAttribute("fill") == hostBColor;
 });
 
 assert("draw: node ordering", function () {
     var a = $circles.filter(function (i, c) {
-        return c.getAttribute("class") == "a";
+        return c.getAttribute("fill") == hostAColor
     });
     var b = $circles.filter(function (i, c) {
-        return c.getAttribute("class") == "b";
+        return c.getAttribute("fill") == hostBColor
     });
 
     var la = $(a[0]).offset().top < $(a[1]).offset().top;
@@ -376,7 +398,89 @@ assert("draw: node ordering", function () {
     return la && lb && ab && ba;
 });
 
+/**
+ * ShowDiffTransformation
+ */
+beginSection("ShowDiffTransformation.js");
+
+global.getController().showDiff();
+
+// viewL and viewR have no different hosts or events right now
+assert("draw: no differences", function () {
+    var squareHosts = $("#hostBar rect").length == 4;
+    var rhombusHosts = $("#hostBar polygon").length == 0;
+    var circleEvents = $("#vizContainer circle").length == 8;
+    var rhombusEvents = $("#vizContainer polygon").length == 0;
+    var lines = $("svg line").length == 12;
+    return squareHosts && rhombusHosts && circleEvents
+    && rhombusEvents && lines;
+});
+
+log = 'a1\na {"a":1}\na2\na {"a":2, "b":2}\nb1\nb {"b":1,"a":1}\nb2\nb {"b":2,"a":1}\nc1\nc {"c":1}\nd1\nd {"d":1}';
+drawNewLogAndShowDiff(log);
+
+assert("draw: different hosts", function() {
+    var squareHosts = $("#hostBar rect").length == 4;
+    var rhombusHosts = $("#hostBar polygon").length == 2;
+    var circleEvents = $("#vizContainer circle").length == 10;
+    var rhombusEvents = $("#vizContainer polygon").length == 0;
+    var lines = $("svg line").length == 14;
+    return squareHosts && rhombusHosts && circleEvents
+    && rhombusEvents && lines;
+});
+
+log = 'a1\na {"a":1}\na2\na {"a":2, "b":2}\nb1\nb {"b":1,"a":1}\nb2\nb {"b":2,"a":1}\nb3\nb {"b":3,"a":1}';
+drawNewLogAndShowDiff(log);
+
+assert("draw: some different events", function() {
+    var squareHosts = $("#hostBar rect").length == 4;
+    var rhombusHosts = $("#hostBar polygon").length == 0;
+    var circleEvents = $("#vizContainer circle").length == 8;
+    var rhombusEvents = $("#vizContainer polygon").length == 1;
+    var lines = $("svg line").length == 13;
+    return squareHosts && rhombusHosts && circleEvents
+    && rhombusEvents && lines;
+});
+
+log = 'a_event1\na {"a":1}\na_event2\na {"a":2, "b":2}\nb_event1\nb {"b":1,"a":1}\nb_event2\nb {"b":2,"a":1}';
+drawNewLogAndShowDiff(log);
+
+assert("draw: all different events", function() {
+    var squareHosts = $("#hostBar rect").length == 4;
+    var rhombusHosts = $("#hostBar polygon").length == 0;
+    var circleEvents = $("#vizContainer circle").length == 0;
+    var rhombusEvents = $("#vizContainer polygon").length == 8;
+    var lines = $("svg line").length == 12;
+    return squareHosts && rhombusHosts && circleEvents
+    && rhombusEvents && lines;
+});
+
+/**
+  * This function takes in a new log and draws the corresponding graph in viewR.
+  * It then compares it with the graph in viewL using the showDiff transformation
+  */
+function drawNewLogAndShowDiff (log) {
+    /** have to call hideDiff here first because we're using the same viewL for each comparison
+     *  so showDiff won't apply to it (because it already has a showDiff transformation) otherwise
+     */
+    global.getController().hideDiff();
+
+    parser = new LogParser(log, null, new NamedRegExp('(?<event>.*)\\n(?<host>\\S*) (?<clock>{.*})', 'm'));
+    var graph = new ModelGraph(parser.getLogEvents(""));
+    hostPermutation.addGraph(graph);
+    hostPermutation.update();
+
+    viewR = new View(graph, hostPermutation, "viewR");
+    views = [viewL, viewR];
+
+    global = new Global($("#vizContainer"), $("#sidebar"), $("#hostBar"), $("#logTable"), views);
+    global.setHostPermutation(hostPermutation);
+    global.getController().showDiff();
+}
+
 $("#vizContainer").remove();
-$hostBar.remove();
+$("#hostBar").remove();
+$("#sideBar").remove();
+$("#logTable").remove();
 
 console.log(Date.now() - start);
