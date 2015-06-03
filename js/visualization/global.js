@@ -90,6 +90,7 @@ Global.MIN_HOST_WIDTH = 40;
 Global.prototype.drawAll = function() {
     var global = this;
     var numViews = this.views.length;
+    var searchbar = SearchBar.getInstance();
     this.resize();
 
     this.$logTable.empty(); //TODO: check
@@ -143,6 +144,7 @@ Global.prototype.drawAll = function() {
                   global.controller.showDiff();
               }
               global.drawAll();
+              searchbar.countMotifs();
            });
       
           viewSelectR.unbind().on("change", function(e) {
@@ -153,6 +155,7 @@ Global.prototype.drawAll = function() {
                 global.controller.showDiff();
             }
             global.drawAll();
+            searchbar.countMotifs();
           });
        }          
     }
@@ -186,6 +189,7 @@ Global.prototype.drawAll = function() {
                    global.controller.showDiff();
                 }
                 global.drawAll();
+                searchbar.countMotifs();
              });
          }
     }

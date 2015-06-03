@@ -540,8 +540,8 @@ section.input .left {
     vertical-align: top;
 }
 #searchbar #panel svg {
-    height: 100%;
-    min-height: 500px;
+    min-height: 400px;
+    padding: .5em 0 0 .5em;
 }
 #searchbar #panel circle.hover {
     opacity: .6;
@@ -558,7 +558,7 @@ section.input .left {
     border: none;
     cursor: pointer;
     padding: 0;
-    margin: 0 2em 0 0;
+    margin: .5em 2em 0 0;
 }
 #searchbar #panel .add:hover {
     opacity: .8;
@@ -569,18 +569,38 @@ section.input .left {
 #searchbar #panel .add:disabled {
     display: none;
 }
-#searchbar #panel ul {
+#searchbar #panel .tabLinks {
     margin: 0;
-    padding: 0;
+    display: table;
+    padding: 0 0 .5em 0;
+    border-collapse: separate;
+    border-spacing: .3em;
+}
+#searchbar #panel .tabLinks a {
+    display: block;
+    padding: 9px 15px;
+    color: #4c4c4c;
+}
+#searchbar #panel .tabLinks a:hover {
+    text-decoration: none;
 }
 #searchbar #panel li {
-    margin-top: 1em;
+    display: table-cell;
+    background: #7fb5da;
+    text-align: center;
+    transition: all linear 0.15s;
+}
+#searchbar #panel li.default {
+    background: #72a2c4;
+}
+#searchbar #panel li.default a{
+    color: #ffffff;
 }
 #searchbar #panel li:first-child {
     margin-top: 0;
 }
 #searchbar #panel .predefined {
-    margin-top: .5em;
+    margin: .5em 0 0 .5em;
 }
 #searchbar #panel .predefined button {
     display: table-cell;
@@ -589,9 +609,20 @@ section.input .left {
 }
 #searchbar #panel .out {
     font-size: 10pt;
+    margin-left: .5em;
 }
 #searchbar #panel .out dt {
     margin: 1em 0 .2em;
+}
+
+#searchbar #panel .tab {
+    margin: 0 0 0 .5em;
+    display: none;
+}
+ 
+#searchbar #panel .defaultTab {
+    margin: 0 0 0 .5em;
+    display: block;
 }
 
 svg {

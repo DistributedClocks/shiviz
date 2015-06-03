@@ -129,8 +129,24 @@ function SearchBar() {
         context.motifNavigator.prev();
     });
 
-    // this.update();
+    $("#searchbar .tabLinks a").on("click", function(e) {
+        context.clear();
 
+        // Show the clicked on tab and hide the others
+        var currentTab = $(this).attr("href");
+        $("#searchbar #" + currentTab).show().siblings("div").hide();
+        $(this).parent("li").addClass("default").siblings("li").removeClass("default");
+        // prevent id of div from being added to URL
+        e.preventDefault();
+        
+        // Prevent users from typing into input area unless Text Search is selected
+        var $input = $("#searchbar .mono");
+        if (currentTab == "textTab") {
+            $input.removeAttr("readonly");
+        } else {
+            $input.attr("readonly", true);
+        }
+    });
 }
 
 /**
@@ -457,16 +473,26 @@ SearchBar.prototype.query = function() {
     catch (e) {
         Shiviz.getInstance().handleException(e);
     }
-
-    var views = this.global.getActiveViews();
-    this.motifNavigator = new MotifNavigator();
-    for (var i = 0; i < views.length; i++) {
-        this.motifNavigator.addMotif(views[i].getVisualModel(), views[i].getTransformer().getHighlightedMotif());
-    }
-    this.motifNavigator.start();
-    
-    var numMotifs = this.motifNavigator.getNumMotifs();
     $("#searchbar").addClass("results");
-    $("#numFound").text(numMotifs + " instances");
+    this.countMotifs();
+};
 
+/**
+  * This function creates a new MotifNavigator to count the number of times a highlighted motif occurs in the active views
+  */
+SearchBar.prototype.countMotifs = function() {
+    // Only compute and display the motif count if a search is being performed
+    if ($("#searchbar").hasClass("results")) {
+    var views = this.global.getActiveViews();
+        this.motifNavigator = new MotifNavigator();
+        this.motifNavigator.addMotif(views[0].getVisualModel(), views[0].getTransformer().getHighlightedMotif());
+        // getHighlightedMotif is null until a view is drawn and viewR or views[1] is only drawn when a user selects pairwise view
+        if (this.global.getPairwiseView()) {
+            this.motifNavigator.addMotif(views[1].getVisualModel(), views[1].getTransformer().getHighlightedMotif());    
+        }
+        this.motifNavigator.start();
+    
+        var numMotifs = this.motifNavigator.getNumMotifs();
+        $("#numFound").text(numMotifs + " instances");
+    }
 };
