@@ -723,6 +723,13 @@ svg {
     margin-bottom: 2em;
 }
 
+#sidebar .pairwiseButton {
+    height: 24pt;
+    padding: 0;
+    margin-top: 0;
+    margin-bottom: 1em;
+}
+
 .fade {
     opacity: 0.6;
 }
