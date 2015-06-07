@@ -309,7 +309,7 @@
         <div id="graph">
             <div id="searchbar">
                 <div id="bar">
-                    <input type="text" class="mono" placeholder="Search the visualization">
+                    <input type="text" class="mono" placeholder="Search the visualization" readonly>
                     <div class="clear">
                         <div class="one"></div>
                         <div class="two"></div>
@@ -320,52 +320,62 @@
                     <button class="nav" id="nextButton">&gt;</button>
                 </div>
                 <div id="panel">
-                    <table>
-                        <tr>
-                            <td>
-                                <svg>
-                                    <circle r="5" class="hover"></circle>
-                                </svg>
-                            </td>
-                            <td>
-                                <button id="addButton" class="add">+</button>
-                            </td>
-                            <td>
-                            <ul>
-                                <li><b>Search for a pre-defined motif:</b>
+                    <ul class="searchTabLinks">
+                        <li class="default"><a href="textTab">Text Search</a></li>
+                        <li><a href="structuredTab">Structured Search</a> </li>
+                        <li><a href="networkTab">Network Motif Search</a></li>
+                    </ul>
+                    <div id="textTab" class="defaultTab">
+                        <b>Text search</b>: search for log lines/events that match a text query.
+                        <div class="out">
+                            <p>
+                                <dl>
+                                    <dt><code>sync</code></dt>
+                                    <dd>find events containing the text "sync"</dd>
+                                    <dt><code>priority=CRITICAL &amp;&amp; text=/fail.*/</code></dt>
+                                    <dd>find events with "priority" field set to "CRITICAL" and with "text" field matching the specified regex. Supported logical operators are: <code>&amp;&amp;</code>, <code>||</code>, <code>^</code></dd>
+                                    <dt><code>ip="216.58.216.174"</code></dt>
+                                    <dd>String literals containing non-alphanumeric symbols must be surrounded by quotes</dd>
+                                    <dt><code>location="EC2" || (isMobile &amp;&amp; useragent=/.*Webkit.*/)</code></dt>
+                                    <dd>Use parenthesis to specify order of operations</dd>
+                                </dl>
+                            </p>
+                        </div>
+                    </div>
+                    <div id="structuredTab" class="tab">
+                        <ul class="structuredSearches">
+                            <li id="customStructure">
+                                <b>Search for a custom structure:</b>
+                                draw a graph structure below (add
+                                processes, events, click and drag to
+                                add inter-event edges).<br>
+                                <table>
+                                        <tr>
+                                        <td>
+                                            <svg>
+                                                <circle r="5" class="hover"></circle>
+                                            </svg>
+                                        </td>
+                                        <td>
+                                            <button id="addButton" class="add">+</button>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </li>
+                            <li id="predefinedStructure">
+                                <b>Search for a pre-defined structure:</b>
+                                Select one of the options below to find
+                                the specified structure.
                                 <div class="predefined">
                                     <button name="request-response">Request-response</button>
                                     <button name="broadcast">Broadcast</button>
                                     <button name="gather">Gather</button>
-                                </div></li>
-                                <li><b>Search for a custom motif:</b> draw a
-                                   graph motif on the left (add
-                                   processes, events, click and drag to
-                                   add inter-event edges).
-                                </li>
-                                <li>
-                                  <b>Text search</b>: search for
-                                  log lines/events that match a text
-                                  query.
-                                </li>
-                                <div class="out">
-                                  <p>
-                                    <dl>
-                                      <dt><code>sync</code></dt>
-                                      <dd>find events containing the text "sync"</dd>
-                                      <dt><code>priority=CRITICAL &amp;&amp; text=/fail.*/</code></dt>
-                                      <dd>find events with "priority" field set to "CRITICAL" and with "text" field matching the specified regex. Supported logical operators are: <code>&amp;&amp;</code>, <code>||</code>, <code>^</code></dd>
-                                      <dt><code>ip="216.58.216.174"</code></dt>
-                                      <dd>String literals containing non-alphanumeric symbols must be surrounded by quotes</dd>
-                                      <dt><code>location="EC2" || (isMobile &amp;&amp; useragent=/.*Webkit.*/)</code></dt>
-                                      <dd>Use parenthesis to specify order of operations</dd>
-                                    </dl>
-                                  </p>
                                 </div>
-                            </ul>
-                            </td>
-                        </tr>
-                    </table>
+                            </li>
+                        </ul>
+                    </div>
+                    <div id="networkTab" class="tab">
+                    </div>
                 </div>
             </div>
             <div id="hostBar"></div>

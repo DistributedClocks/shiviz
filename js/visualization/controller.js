@@ -14,6 +14,7 @@ function Controller(global) {
     this.global = global;
 
     var self = this;
+    var searchbar = SearchBar.getInstance();
 
     $(window).unbind("scroll");
     $(window).bind("scroll", self.onScroll);
@@ -140,6 +141,7 @@ function Controller(global) {
             global.setPairwiseView(false);
             global.drawAll();
         }
+        searchbar.countMotifs();
     });
 }
 
