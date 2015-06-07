@@ -236,8 +236,9 @@ Shiviz.prototype.visualize = function(log, regexpString, delimiterString, sortTy
         $(".pairwiseButton").removeClass("fade");
 
         // reset search tabs
-        $("#customTab").show().siblings("div").hide();
-        $(".tabLinks li:first").addClass("default").siblings("li").removeClass("default");
+        $("#textTab").show().siblings("div").hide();
+        $(".searchTabLinks li:first").addClass("default").siblings("li").removeClass("default");
+        $("#searchbar .mono").prop("readonly", false);
 
         var global = new Global($("#vizContainer"), $("#sidebar"), $("#hostBar"), $("table.log"), views);
         var searchbar = SearchBar.getInstance();
