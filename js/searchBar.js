@@ -129,7 +129,7 @@ function SearchBar() {
         context.motifNavigator.prev();
     });
 
-    $("#searchbar .tabLinks a").on("click", function(e) {
+    $("#searchbar .searchTabLinks a").on("click", function(e) {
         context.clear();
 
         // Show the clicked on tab and hide the others
@@ -142,9 +142,9 @@ function SearchBar() {
         // Prevent users from typing into input area unless Text Search is selected
         var $input = $("#searchbar .mono");
         if (currentTab == "textTab") {
-            $input.removeAttr("readonly");
+            $input.prop("readonly", false);
         } else {
-            $input.attr("readonly", true);
+            $input.prop("readonly", true);
         }
     });
 }

@@ -320,43 +320,12 @@
                     <button class="nav" id="nextButton">&gt;</button>
                 </div>
                 <div id="panel">
-                    <ul class="tabLinks">
-                        <li class="default"><a href="customTab">Custom Structured Search</a></li>
-                        <li><a href="predefinedTab">Pre-defined Structured Search</a> </li>
+                    <ul class="searchTabLinks">
+                        <li class="default"><a href="textTab">Text Search</a></li>
+                        <li><a href="structuredTab">Structured Search</a> </li>
                         <li><a href="networkTab">Network Motif Search</a></li>
-                        <li><a href="textTab">Text Search</a></li>
                     </ul>
-                    <div id="customTab" class="defaultTab">
-                        <b>Search for a custom structure:</b>
-                        draw a graph structure below (add
-                        processes, events, click and drag to
-                        add inter-event edges).<br>
-                        <table>
-                            <tr>
-                                <td>
-                                    <svg>
-                                        <circle r="5" class="hover"></circle>
-                                    </svg>
-                                </td>
-                                <td>
-                                    <button id="addButton" class="add">+</button>
-                                </td>
-                            </tr>
-                        </table>
-                    </div>
-                    <div id="predefinedTab" class="tab">
-                        <b>Search for a pre-defined structure:</b>
-                        Select one of the options below to find
-                        the specified structure.
-                        <div class="predefined">
-                            <button name="request-response">Request-response</button>
-                            <button name="broadcast">Broadcast</button>
-                            <button name="gather">Gather</button>
-                        </div>
-                    </div>
-                    <div id="networkTab" class="tab">
-                    </div>
-                    <div id="textTab" class="tab">
+                    <div id="textTab" class="defaultTab">
                         <b>Text search</b>: search for log lines/events that match a text query.
                         <div class="out">
                             <p>
@@ -372,6 +341,40 @@
                                 </dl>
                             </p>
                         </div>
+                    </div>
+                    <div id="structuredTab" class="tab">
+                        <ul class="structuredSearches">
+                            <li id="customStructure">
+                                <b>Search for a custom structure:</b>
+                                draw a graph structure below (add
+                                processes, events, click and drag to
+                                add inter-event edges).<br>
+                                <table>
+                                        <tr>
+                                        <td>
+                                            <svg>
+                                                <circle r="5" class="hover"></circle>
+                                            </svg>
+                                        </td>
+                                        <td>
+                                            <button id="addButton" class="add">+</button>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </li>
+                            <li id="predefinedStructure">
+                                <b>Search for a pre-defined structure:</b>
+                                Select one of the options below to find
+                                the specified structure.
+                                <div class="predefined">
+                                    <button name="request-response">Request-response</button>
+                                    <button name="broadcast">Broadcast</button>
+                                    <button name="gather">Gather</button>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                    <div id="networkTab" class="tab">
                     </div>
                 </div>
             </div>
