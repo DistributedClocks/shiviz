@@ -43,9 +43,12 @@ function Global($vizContainer, $sidebar, $hostBar, $logTable, views) {
     
     /** @private */
     this.$logTable = $logTable;
-	
+  
     /** @private */
     this.showDiff = false;
+
+    /** @private */
+    this.pairwiseView = false;
 
     this.$sidebar.css({
         width: Global.SIDE_BAR_WIDTH + "px"
@@ -94,64 +97,98 @@ Global.prototype.drawAll = function() {
     this.$hostBar.children("*").remove();
     
     this.$vizContainer.height(global.getMaxViewHeight());
-	
-    if (numViews > 2) {
-		
-        var viewSelectDiv = $('<div id="viewSelectDiv"></div>');
-        this.$hostBar.append(viewSelectDiv);			
-        var viewSelectL = $('<select id="viewSelectL"></select>');
-        viewSelectDiv.append(viewSelectL);
+    var viewLabelDiv = $('<div id="viewLabelDiv"></div>');
+    var viewLabelL = $('<p id="viewLabelL"></p>');
 
-        var viewSelectR = $('<select id="viewSelectR"></select>');
-        viewSelectDiv.append(viewSelectR);
-			
-        this.views.forEach(function(view) {
-            var label = view.getLabel();
-				
-            if (label != global.viewR.getLabel()) {
-                viewSelectL.append('<option value="' + label + '">' + label + '</option>');
-            }			
-            if (label != global.viewL.getLabel()) {
-                viewSelectR.append('<option value="' + label + '">' + label + '</option>');
-            }
-        });
-			
-        viewSelectL.children("option[value='" + this.viewL.getLabel() + "']").prop("selected", true);
-        viewSelectR.children("option[value='" + this.viewR.getLabel() + "']").prop("selected", true);
-			
-        viewSelectL.unbind().on("change", function(e) {
-            var val = $("#viewSelectL option:selected").val();
-            global.controller.hideDiff();
-            global.viewL = global.getViewByLabel(val);
+    var viewSelectDiv = $('<div id="viewSelectDiv"></div>');
+    var viewSelectL = $('<select id="viewSelectL"></select>');
+
+    if (this.getPairwiseView()) {
+       // If there are only two executions, use labels instead of drop-downs
+       if (numViews == 2) {
+          this.$hostBar.append(viewLabelDiv);
+          viewLabelL.append(this.viewL.getLabel());
+          viewLabelDiv.append(viewLabelL);
+
+          var viewLabelR = $('<p id="viewLabelR"></p>');
+          viewLabelR.append(this.viewR.getLabel());
+          viewLabelDiv.append(viewLabelR);
+       // Otherwise, use drop-downs
+       } else {
+            this.$hostBar.append(viewSelectDiv);      
+            viewSelectDiv.append(viewSelectL);
+
+            var viewSelectR = $('<select id="viewSelectR"></select>');
+            viewSelectDiv.append(viewSelectR);
+      
+            this.views.forEach(function(view) {
+               var label = view.getLabel();
+        
+               if (label != global.viewR.getLabel()) {
+                  viewSelectL.append('<option value="' + label + '">' + label + '</option>');
+               }      
+               if (label != global.viewL.getLabel()) {
+                  viewSelectR.append('<option value="' + label + '">' + label + '</option>');
+               }
+            });
+      
+           viewSelectL.children("option[value='" + this.viewL.getLabel() + "']").prop("selected", true);
+           viewSelectR.children("option[value='" + this.viewR.getLabel() + "']").prop("selected", true);
+      
+           viewSelectL.unbind().on("change", function(e) {
+              var val = $("#viewSelectL option:selected").val();
+              global.controller.hideDiff();
+              global.viewL = global.getViewByLabel(val);
+              if (global.getShowDiff()) {
+                  global.controller.showDiff();
+              }
+              global.drawAll();
+           });
+      
+          viewSelectR.unbind().on("change", function(e) {
+            var val = $("#viewSelectR option:selected").val();
+            global.controller.hideDiff()
+            global.viewR = global.getViewByLabel(val);
             if (global.getShowDiff()) {
-               global.controller.showDiff();
+                global.controller.showDiff();
             }
             global.drawAll();
-        });
-			
-        viewSelectR.unbind().on("change", function(e) {
-			var val = $("#viewSelectR option:selected").val();
-			global.controller.hideDiff()
-			global.viewR = global.getViewByLabel(val);
-			if (global.getShowDiff()) {
-				global.controller.showDiff();
-			}
-			global.drawAll();
-		});
-	} else {
-		
-        var viewLabelDiv = $('<div id="viewLabelDiv"></div>');
-        this.$hostBar.append(viewLabelDiv);	
-        var viewLabelL = $('<p id="viewLabelL"></p>');
-        viewLabelL.append(this.viewL.getLabel());
-        viewLabelDiv.append(viewLabelL);
+          });
+       }          
+    }
+    // If viewing executions individually
+    else {
+       if (numViews == 1) {
+          // The label here is "" but it'll help shift the hostbar down
+          this.$hostBar.append(viewLabelDiv); 
+          viewLabelL.append(this.viewL.getLabel());
+          viewLabelDiv.append(viewLabelL);
+        } else {
+             this.$hostBar.append(viewSelectDiv);     
+             viewSelectDiv.append(viewSelectL);
 
-        if (numViews == 2) {
-            var viewLabelR = $('<p id="viewLabelR"></p>');
-            viewLabelR.append(this.viewR.getLabel());
-            viewLabelDiv.append(viewLabelR);
-        }
-	}
+             this.views.forEach(function(view) {
+                var label = view.getLabel();
+                viewSelectL.append('<option value="' + label + '">' + label + '</option>');     
+             });
+      
+             viewSelectL.children("option[value='" + this.viewL.getLabel() + "']").prop("selected", true);      
+             viewSelectL.unbind().on("change", function(e) {
+                var val = $("#viewSelectL option:selected").val();
+                global.controller.hideDiff();
+                // If the selected view for viewL is the same as the current (hidden) viewR, change viewR to viewL so that
+                // when a user changes to pairwise view, viewL and viewR are not the same (this leads to only one view being drawn)
+                if (val == global.viewR.getLabel()) {
+                   global.viewR = global.viewL;
+                }
+                global.viewL = global.getViewByLabel(val);
+                if (global.getShowDiff()) {
+                   global.controller.showDiff();
+                }
+                global.drawAll();
+             });
+         }
+    }
     
     this.viewL.draw("L");
     $(".visualization .left #tabs").css("height", "2.5em");
@@ -159,27 +196,31 @@ Global.prototype.drawAll = function() {
     this.$hostBar.append(this.viewL.getHostSVG());
     this.$logTable.append(this.viewL.getLogTable());
     this.controller.bindLines(this.viewL.getLogTable().find(".line:not(.more)"));
-	
+  
     if (this.viewR != null) {
-        // the "Show Differences" button is only visible when there are multiple executions
-        $(".diffButton").show();
-        this.viewR.draw("R");
-        // Draw the separator between the two views - this separator is only visible when
-        // at least one process is present (not hidden) in both views
-		if ((this.viewL.getTransformer().getHiddenHosts().length < this.viewL.getHosts().length) &&
-            (this.viewR.getTransformer().getHiddenHosts().length < this.viewR.getHosts().length)) {
-            var viewSeparator = $('<div id="viewSeparator"></div>');
-            viewSeparator.css("height", global.getMaxViewHeight());
-            this.$vizContainer.append(viewSeparator);
-        }		
-        this.$vizContainer.append(this.viewR.getSVG());
-        this.$hostBar.append(this.viewR.getHostSVG());
-        this.$logTable.append($("<td></td>").addClass("spacer"));
-        this.$logTable.append(this.viewR.getLogTable());
-        this.controller.bindLines(this.viewR.getLogTable().find(".line:not(.more)"));
-        $(".visualization .left #tabs").css("height", "4.5em");
+        // the "Pairwise" button is only visible when there are > 1 executions
+        $(".pairwiseButton").show();
+        if (this.getPairwiseView()) {
+            // the "Show Differences" button is only visible when executions are displayed side-by-side
+            $(".diffButton").show();
+            this.viewR.draw("R");
+            // Draw the separator between the two views - this separator is only visible when
+            // at least one process is present (not hidden) in both views
+            if ((this.viewL.getTransformer().getHiddenHosts().length < this.viewL.getHosts().length) &&
+               (this.viewR.getTransformer().getHiddenHosts().length < this.viewR.getHosts().length)) {
+                  var viewSeparator = $('<div id="viewSeparator"></div>');
+                  viewSeparator.css("height", global.getMaxViewHeight());
+                  this.$vizContainer.append(viewSeparator);
+            }   
+            this.$vizContainer.append(this.viewR.getSVG());
+            this.$hostBar.append(this.viewR.getHostSVG());
+            this.$logTable.append($("<td></td>").addClass("spacer"));
+            this.$logTable.append(this.viewR.getLogTable());
+            this.controller.bindLines(this.viewR.getLogTable().find(".line:not(.more)"));
+            $(".visualization .left #tabs").css("height", "4.5em");
+        }
     }
-	
+  
     this.$vizContainer.height("auto");
 
     $(".dialog").hide();
@@ -254,6 +295,23 @@ Global.prototype.getShowDiff = function() {
 }
 
 /**
+ * Sets the pairwiseView boolean value
+
+ * @param {Boolean} pairwiseView
+ */
+Global.prototype.setPairwiseView = function(pairwiseView) {
+    this.pairwiseView = pairwiseView;
+}
+
+/**
+ * Gets the pairwiseView boolean value
+ * @returns {Boolean} True if "Pairwise" was selected
+ */
+Global.prototype.getPairwiseView = function() {
+    return this.pairwiseView;
+}
+
+/**
  * Gets the {@link Controller}
  * @returns {Controller} The controller
  */
@@ -269,7 +327,7 @@ Global.prototype.resize = function() {
     var viewLNumHosts = getNumVisibleHosts(this.viewL.getHosts(), this.viewL.getTransformer().getSpecifiedHiddenHosts());
     
     var viewRNumHosts = 0;
-    if(this.viewR != null) {
+    if (this.viewR != null && this.getPairwiseView()) {
         viewRNumHosts = getNumVisibleHosts(this.viewR.getHosts(), this.viewR.getTransformer().getSpecifiedHiddenHosts());
     }
     
@@ -283,12 +341,12 @@ Global.prototype.resize = function() {
     $("#searchbar").width(globalWidth);
 
     var widthPerHost = Math.max(Global.MIN_HOST_WIDTH, globalWidth / visibleHosts);
-    var logTableWidth = this.viewR == null ? Global.SIDE_BAR_WIDTH : (Global.SIDE_BAR_WIDTH - 12) / 2;
+    var logTableWidth = this.viewR != null && this.getPairwiseView() ? (Global.SIDE_BAR_WIDTH - 12) / 2 : Global.SIDE_BAR_WIDTH;
 
     this.viewL.setWidth(viewLNumHosts * widthPerHost);
     this.viewL.setLogTableWidth(logTableWidth);
     
-    if(this.viewR != null) {
+    if (this.viewR != null && this.getPairwiseView()) {
         this.viewR.setWidth(viewRNumHosts * widthPerHost);
         this.viewR.setLogTableWidth(logTableWidth);
     }
@@ -365,12 +423,12 @@ Global.prototype.drawSideBar = function() {
         hiddenHosts[host] = true;
     });
     
-    if (this.viewR != null) {
+    if (this.viewR != null && this.getPairwiseView()) {
         this.viewR.getTransformer().getHiddenHosts().forEach(function(host) {
             hiddenHosts[host] = true;
         });
     }
-	
+  
     var hh = Object.keys(hiddenHosts);
     if (hh.length <= 0) {
         return;
@@ -379,7 +437,7 @@ Global.prototype.drawSideBar = function() {
     this.$sidebar.append('<div id="hiddenHosts">Hidden processes:</div>');
     var hiddenHostsSelection = d3.select("#hiddenHosts");
     var hiddenHostsSVG = hiddenHostsSelection.append("svg");
-	
+  
     var hostsPerLine = Math.floor((Global.SIDE_BAR_WIDTH + 5) / (Global.HOST_SIZE + 5));
     hiddenHostsSVG.attr({
         "width": this.$sidebar.width(),
@@ -389,16 +447,16 @@ Global.prototype.drawSideBar = function() {
 
     var hiddenHostsGroup = hiddenHostsSVG.append("g");
     hiddenHostsGroup.append("title").text("Double click to view");
-	
+  
     var first = true; var count = 0;
     // initial points for a unique host (ie. x and y coordinates for each corner of the rhombus shape)
     var x1 = 12; var y1 = 0; var x2 = 22; var y2 = 12;
     var x3 = 12; var y3 = 24; var x4 = 2; var y4 = 12;
     // initial x and y coordinates for a normal host
-    var rectx = 0; var recty = 0;	
-	
+    var rectx = 0; var recty = 0; 
+  
     hh.forEach(function(host) {
-       var hiddenHost = global.drawHiddenHost(hiddenHostsSVG);	
+       var hiddenHost = global.drawHiddenHost(hiddenHostsSVG);  
 
       // If showDiff is true, check if this hidden host needs to be drawn as a rhombus
       if (global.getShowDiff()) {
@@ -407,7 +465,7 @@ Global.prototype.drawSideBar = function() {
           if (uniqueHostsL && uniqueHostsL.indexOf(host) != -1) {
               hiddenHost = global.drawHiddenHostAsRhombus(hiddenHostsSVG);
           }
-          else if (global.viewR != null) {
+          else if (global.viewR != null && global.getPairwiseView()) {
               //check if this hidden host is in the list of unique hosts for viewR
               var uniqueHostsR = global.viewR.getTransformer().getUniqueHosts();
               if (uniqueHostsR && uniqueHostsR.indexOf(host) != -1) {
@@ -443,10 +501,10 @@ Global.prototype.drawSideBar = function() {
             x3 += Global.HOST_SIZE + 5;
             x4 += Global.HOST_SIZE + 5;
           }
-          rectx += Global.HOST_SIZE + 5;	  
+          rectx += Global.HOST_SIZE + 5;    
       }
       first = false;
-	   
+     
       // update attributes of the drawn node
       if (global.getShowDiff()) {
         var points = [x1,y1,x2,y2,x3,y3,x4,y4];
@@ -455,9 +513,9 @@ Global.prototype.drawSideBar = function() {
       hiddenHost.attr("x", rectx);
       hiddenHost.attr("y", recty);
       count++;
-	   
+     
       // bind the hidden host nodes to user input
-      global.controller.bindHiddenHosts(host, hiddenHost);	   
-	});
+      global.controller.bindHiddenHosts(host, hiddenHost);     
+  });
 
 };

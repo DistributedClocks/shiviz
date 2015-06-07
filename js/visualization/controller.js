@@ -61,13 +61,13 @@ function Controller(global) {
 
         $(".dialog").hide();
         // remove the scrolling behavior for hiding/showing dialog boxes once we click outside the box
-        $(window).unbind("scroll");	
-		
+        $(window).unbind("scroll"); 
+        
         d3.select("circle.sel").each(function(d) {
             $(this).remove();
             d.setSelected(false);
         });
-		
+        
         d3.select("polygon.sel").each(function(d) {
             $(this).remove();
             d.setSelected(false);
@@ -102,7 +102,7 @@ function Controller(global) {
         }
 
     });
-	
+    
     $(".diffButton").unbind().click(function() {    
         // remove the scrolling behavior for hiding/showing dialog boxes when the diff button is clicked
         $(window).unbind("scroll");
@@ -117,6 +117,28 @@ function Controller(global) {
             $(this).text("Show Differences");
             global.setShowDiff(false);
             self.hideDiff();
+        }
+    });
+
+    $(".pairwiseButton").unbind().click(function() {    
+        // remove the scrolling behavior for hiding/showing dialog boxes when the pairwise button is clicked
+        $(window).unbind("scroll");
+        $(this).toggleClass("fade");
+
+        if ($(this).text() == "Pairwise") {
+            $(this).text("Individual");
+            global.setPairwiseView(true);
+            global.drawAll();
+        }           
+        else {
+            $(this).text("Pairwise");
+            // Remove differences when viewing graphs individually
+            if (global.getShowDiff()) {
+               $(".diffButton").click();
+            }
+            $(".diffButton").hide();
+            global.setPairwiseView(false);
+            global.drawAll();
         }
     });
 }
@@ -226,6 +248,7 @@ Controller.prototype.toggleCollapseNode = function(node) {
 /**
  * Highlights different hosts among the current active views
  * This method should only be called when there are > 1 execution
+ * and graphs are displayed pairwise
  * @see {@link ShowDiffTransformation}
  */
 
@@ -241,6 +264,7 @@ Controller.prototype.showDiff = function() {
 /**
  * Re-draws the graph to not highlight different hosts
  * This method should only be called when there are > 1 execution
+ * and graphs are displayed pairwise
  * @see {@link ShowDiffTransformation}
  */
  
@@ -468,7 +492,7 @@ Controller.prototype.showDialog = function(e, type, elem) {
         $(this).remove();
         d.setSelected(false);
     });
-	
+    
     d3.select("polygon.sel").each(function(d) {
         $(this).remove();
         d.setSelected(false);
@@ -476,7 +500,7 @@ Controller.prototype.showDialog = function(e, type, elem) {
 
     // Highlight the node with an appropriate outline
     if (!type) {
-		
+        
         e.setSelected(true);
         var id = e.getId();
         var views = this.global.getActiveViews();
@@ -485,7 +509,7 @@ Controller.prototype.showDialog = function(e, type, elem) {
         if (this.global.getShowDiff()) {
           var uniqueEventsL = views[0].getTransformer().getUniqueEvents();
           var uniqueEventsR = views[1].getTransformer().getUniqueEvents();
-		
+        
           // If this node is not a unique event, highlight the node with a circular outline
           if (uniqueEventsL.indexOf(id) == -1 && uniqueEventsR.indexOf(id) == -1) {
             var selcirc = d3.select("#node" + e.getId()).insert("circle", "circle");
@@ -641,28 +665,28 @@ Controller.prototype.showDialog = function(e, type, elem) {
         // Hide collapse button
         $dialog.find(".collapse").hide();
     }
-	
+    
     // keep a copy of the dialog box's top coordinate
     var copyOfDialogTop = $dialog.offset().top;
-	
-	$(window).scroll(function() {
-		// get the current top coordinate of the dialog box and the current bottom coordinate of the hostbar 
-		// (both values change with scrolling)
-		var dialogTop = $dialog.offset().top;
-		var hostBarBottom = $("#hostBar").offset().top + $("#hostBar").height();
-		// get the vertical position of the scrollbar (position = 0 when scrollbar at very top)
-		var scrollbarTop = $(window).scrollTop();
-		
-		// when a dialog box is hidden, its top coordinate is set to 0 so dialogTop starts having the same value as scrollbarTop
-		// we don't want it to be hidden forever after the first time it's hidden so we check for this condition below. We also check
-		// if we've scrolled past the distance between the dialog box and host bar, this is when we want to hide it. 
-		// Note: the 20 in the second condition is hardcoded for host dialog boxes so that they're never hidden when scrolling
-		if ((scrollbarTop != dialogTop) && (scrollbarTop - 20 > (dialogTop - (hostBarBottom - scrollbarTop)))) { 
-			$dialog.hide();
-		// otherwise, if we haven't scrolled past the distance, show the dialog. Note: we use copyOfDialogTop here
-		// because dialogTop has already changed with scrolling and we want the original distance
-		} else if ($(window).scrollTop() <= (copyOfDialogTop - (hostBarBottom - $(window).scrollTop()))){
-			$dialog.show();
-		}
-	});
+    
+    $(window).scroll(function() {
+        // get the current top coordinate of the dialog box and the current bottom coordinate of the hostbar 
+        // (both values change with scrolling)
+        var dialogTop = $dialog.offset().top;
+        var hostBarBottom = $("#hostBar").offset().top + $("#hostBar").height();
+        // get the vertical position of the scrollbar (position = 0 when scrollbar at very top)
+        var scrollbarTop = $(window).scrollTop();
+        
+        // when a dialog box is hidden, its top coordinate is set to 0 so dialogTop starts having the same value as scrollbarTop
+        // we don't want it to be hidden forever after the first time it's hidden so we check for this condition below. We also check
+        // if we've scrolled past the distance between the dialog box and host bar, this is when we want to hide it. 
+        // Note: the 20 in the second condition is hardcoded for host dialog boxes so that they're never hidden when scrolling
+        if ((scrollbarTop != dialogTop) && (scrollbarTop - 20 > (dialogTop - (hostBarBottom - scrollbarTop)))) { 
+            $dialog.hide();
+        // otherwise, if we haven't scrolled past the distance, show the dialog. Note: we use copyOfDialogTop here
+        // because dialogTop has already changed with scrolling and we want the original distance
+        } else if ($(window).scrollTop() <= (copyOfDialogTop - (hostBarBottom - $(window).scrollTop()))){
+            $dialog.show();
+        }
+    });
 }
