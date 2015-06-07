@@ -346,6 +346,7 @@ assert("draw: component count", function () {
  */
 beginSection("Global.js");
 
+global.setPairwiseView(true);
 global.drawAll();
 
 var hostAColor = global.hostPermutation.getHostColors().a;
@@ -474,6 +475,8 @@ function drawNewLogAndShowDiff (log) {
     views = [viewL, viewR];
 
     global = new Global($("#vizContainer"), $("#sidebar"), $("#hostBar"), $("#logTable"), views);
+    global.setPairwiseView(true);
+
     global.setHostPermutation(hostPermutation);
     global.getController().showDiff();
 }
