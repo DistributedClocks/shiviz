@@ -268,6 +268,10 @@
                         <label><input id="hostsortLength" name="host_sort" type="radio" checked value="length"> # events</label>
                         <label><input id="hostsortOrder" name="host_sort" type="radio" value="order"> appearance in log</label>
                     </div>
+                    <div class="option">
+                        Cluster executions by:
+                        <label><input id="clusterProcess" type="checkbox"> # processes</label> 
+                    </div>
                     <button id="visualize" disabled>Visualize</button>
                 </td>
                 <td class="right">
@@ -301,9 +305,22 @@
                 </ul>
             </header>
             <div id="tabs"></div>
-            <table class="log">
-                <tr></tr>
-            </table>
+            <ul class="leftTabLinks">
+               <li class="default"><a href="logTab">Log lines</a></li>
+               <li><a href="clusterTab">Clusters</a></li>
+            </ul>
+            <div id="leftTabContent">
+                <div id="logTab" class="defaultTab">
+                    <table class="log">
+                        <tr></tr>
+                    </table>
+                </div>
+                <div id="clusterTab" class="tab">
+                    <table class="clusterResults">
+                        <tr></tr>
+                    </table>
+                </div>
+            </div>
             <div class="highlight"></div>
         </div>
         <div id="graph">
@@ -418,7 +435,8 @@
     <!-- -->
     
     <script type="text/javascript" src="js/searchBar.js"></script>
-    
+    <script type="text/javascript" src="js/clusterer.js"></script>
+
     <script type="text/javascript" src="js/graph/graphEvent.js"></script>
     <script type="text/javascript" src="js/graph/abstractGraph.js"></script>
     <script type="text/javascript" src="js/graph/abstractNode.js"></script>

@@ -13,13 +13,15 @@
  */
 function Shiviz() {
 
-    var defaultParser = "(?<event>.*)\\n(?<host>\\S*) (?<clock>{.*})";
+    /** @private */
+    this.clusterer = null;
 
     if (!!Shiviz.instance) {
         throw new Exception("Cannot instantiate Shiviz. Shiviz is a singleton; use Shiviz.getInstance()");
     }
 
     var context = this;
+    var defaultParser = "(?<event>.*)\\n(?<host>\\S*) (?<clock>{.*})";
 
     $(".input input, .input textarea").on('input propertychange', function(e) {
         context.resetView();
@@ -44,8 +46,8 @@ function Shiviz() {
             $("#parser").val($(e.target).data("parser") || defaultParser);
             $("#ordering").val($(e.target).data("ordering") || defaultOrdering);
             $($(e.target).data("hostsort") || defaultHostSort).prop("checked", true);
-	     // Clears the file input value by replacing the file input component with a clone
-	     $("#file").replaceWith($("#file").clone(true));
+            // Clears the file input value by replacing the file input component with a clone
+            $("#file").replaceWith($("#file").clone(true));
 
             $(e.target).css({
                 color: "gray",
@@ -78,55 +80,73 @@ function Shiviz() {
     $("#visualize").on("click", function() {
         context.go(2, true, true);
     });
-	
-	// Clears the file input value whenever 'Choose File' is clicked
-	$("#file").on("click", function() {
-	   this.value = "";
-	});
-	
-	$("#file").on("change", function(e) {
-	
-	   var file = e.target.files[0];
-	   var reader = new FileReader();
-	   
-	   reader.onload = function(e) {   
-	      // Get the text string containing the file's data
-	      var text = reader.result;
-		  // Split the text string by the new line character 
-		  // to get the first 2 lines as substrings in an array
-		  var lines = text.split("\n",2);
-		  
-          var defaultOrdering = "descending";
-		 
-		  // If the first line is not empty and not just white space, 
-		  // set it as the 'log parsing regular expression' value.
-		  // Otherwise, use the default log parsing regular expression
-		  if (lines[0].trim()) { $("#parser").val(lines[0]);}
-		  else { $("#parser").val(defaultParser);}
-		  
-		  // Set the 'multiple executions regular expression delimiter' field
-		  // to the second line and set the ordering of the processes to descending
-	      $("#delimiter").val(lines[1].trim());
-		  $("#ordering").val(defaultOrdering);
-		  
-		  // Get the position of the new line character that occurs at the end of the second line
-		  var startOfLog = text.indexOf("\n", (text.indexOf("\n")) + 1);
-		  // The log will start at the position above + 1; 
-		  // fill in the log text area with the rest of the lines of the file
-	      $("#input").val(text.substr(startOfLog + 1));
-		  
-		  context.resetView();
-		  $("#visualize").click();
-		  
-		  // Clears the file input value whenever the log text area or regular expression
-		  // fields are modified
-		  $("#input, #parser, #delimiter").on("input", function() {
-		     $("#file").replaceWith($("#file").clone(true));
-		  });
-	   }
-	   
-	   reader.readAsText(file);
+    
+    // Clears the file input value whenever 'Choose File' is clicked
+    $("#file").on("click", function() {
+       this.value = "";
     });
+    
+    $("#file").on("change", function(e) {
+    
+       var file = e.target.files[0];
+       var reader = new FileReader();
+       
+       reader.onload = function(e) {   
+          // Get the text string containing the file's data
+          var text = reader.result;
+          // Split the text string by the new line character 
+          // to get the first 2 lines as substrings in an array
+          var lines = text.split("\n",2);
+          
+          var defaultOrdering = "descending";
+         
+          // If the first line is not empty and not just white space, 
+          // set it as the 'log parsing regular expression' value.
+          // Otherwise, use the default log parsing regular expression
+          if (lines[0].trim()) { $("#parser").val(lines[0]);}
+          else { $("#parser").val(defaultParser);}
+          
+          // Set the 'multiple executions regular expression delimiter' field
+          // to the second line and set the ordering of the processes to descending
+          $("#delimiter").val(lines[1].trim());
+          $("#ordering").val(defaultOrdering);
+          
+          // Get the position of the new line character that occurs at the end of the second line
+          var startOfLog = text.indexOf("\n", (text.indexOf("\n")) + 1);
+          // The log will start at the position above + 1; 
+          // fill in the log text area with the rest of the lines of the file
+          $("#input").val(text.substr(startOfLog + 1));
+          
+          context.resetView();
+          $("#visualize").click();
+          
+          // Clears the file input value whenever the log text area or regular expression
+          // fields are modified
+          $("#input, #parser, #delimiter").on("input", function() {
+             $("#file").replaceWith($("#file").clone(true));
+          });
+       }
+       
+       reader.readAsText(file);
+    });
+
+    $("section.input #clusterProcess").on("click", function() {
+        if ($(this).is(":checked")) {
+            $(".leftTabLinks").children().show();
+            context.clusterer = new Clusterer("numprocess");
+        } else {
+            context.clusterer = null;
+            $(".leftTabLinks").children().hide();  
+        }
+    });
+
+    $(".visualization .leftTabLinks a").on("click", function(e) {
+        $(".visualization #" + $(this).attr("href")).show().siblings().hide();
+        $(this).parent("li").addClass("default").siblings("li").removeClass("default");
+        e.preventDefault();
+    });
+
+    $(".leftTabLinks").children().hide();
 }
 
 /**
@@ -215,6 +235,10 @@ Shiviz.prototype.visualize = function(log, regexpString, delimiterString, sortTy
         
         hostPermutation.update();
 
+        if ($("#clusterProcess").is(":checked") && labels.length < 2) {
+            throw new Exception("The clustering option can only be selected for logs with multiple executions.", true);
+        }
+
         var views = [];
         
         for(var i = 0; i < labels.length; i++) {
@@ -240,6 +264,10 @@ Shiviz.prototype.visualize = function(log, regexpString, delimiterString, sortTy
         $(".searchTabLinks li:first").addClass("default").siblings("li").removeClass("default");
         $("#searchbar .mono").prop("readonly", false);
 
+        // reset left sidebar tabs
+        $("#logTab").show().siblings().hide();
+        $(".leftTabLinks li:first").addClass("default").siblings().removeClass("default");
+
         var global = new Global($("#vizContainer"), $("#sidebar"), $("#hostBar"), $("table.log"), views);
         var searchbar = SearchBar.getInstance();
         searchbar.setGlobal(global);
@@ -247,6 +275,13 @@ Shiviz.prototype.visualize = function(log, regexpString, delimiterString, sortTy
 
         global.setHostPermutation(hostPermutation);
         global.drawAll();
+
+        if (this.clusterer != null) {
+            // clear the cluster table
+            $(".visualization .clusterResults td").empty();
+            this.clusterer.setGlobal(global);
+            this.clusterer.cluster();
+        }
     }
     catch (err) {
         this.handleException(err);
