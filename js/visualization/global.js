@@ -221,8 +221,8 @@ Global.prototype.drawAll = function() {
             this.$logTable.append($("<td></td>").addClass("spacer"));
             this.$logTable.append(this.viewR.getLogTable());
             this.controller.bindLines(this.viewR.getLogTable().find(".line:not(.more)"));
-            $(".visualization .left #tabs").css("height", "4.5em");
         }
+        $(".visualization .left #tabs").css("height", "4.5em");
     }
   
     this.$vizContainer.height("auto");

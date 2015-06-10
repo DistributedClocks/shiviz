@@ -60,51 +60,51 @@ input[type="text"], textarea, button {
 }
 
 .option, button {
-    margin: 2em 0;
+    margin: 1.5em 0;
 }
 
 #file_input {
-	position: relative;
+    position: relative;
 }
 
 #file_input li {
-	list-style-position: inside;
-	text-indent: -9.5pt;
-	padding-left: 1em;
+    list-style-position: inside;
+    text-indent: -9.5pt;
+    padding-left: 1em;
 }
 
 #file_icon {
-	font-family: "Icon";
-	font-size: 24pt;
-	position:relative;
-	top: 10px;
-	left: 5px;
-	opacity: 0.35;
+    font-family: "Icon";
+    font-size: 24pt;
+    position:relative;
+    top: 10px;
+    left: 5px;
+    opacity: 0.35;
 }
 
 #file_desc {
-	display: none;
-	position: absolute;
-	left: 90%;
-	background-color: #fff;
-	padding: .5em;
+    display: none;
+    position: absolute;
+    left: 90%;
+    background-color: #fff;
+    padding: .5em;
 }
 
 #file_icon:hover + #file_desc {
-	display: block;
-	border: 1px solid #aaa;
-	width: 170%;
-	font-size: 11pt;
+    display: block;
+    border: 1px solid #aaa;
+    width: 170%;
+    font-size: 11pt;
 }
 
 #file_icon:hover {
-	opacity: 0.4;
-	cursor: default;
+    opacity: 0.4;
+    cursor: default;
 }
 
 .regex {
-	font-family: monospace;
-	font-size: .9em;
+    font-family: monospace;
+    font-size: .9em;
 }
 
 input, textarea {
@@ -304,14 +304,55 @@ section.input .left {
     left: 0;
 }
 
-.visualization .log {
-    position: absolute;
+.visualization .left .leftTabLinks {
+    list-style-type: none;
+}
+
+.visualization .left .leftTabLinks a {
+    display: block;
+    padding: 7px 15px;
+    color: #ffffff;
+}
+.visualization .left .leftTabLinks a:hover {
+    text-decoration: none;
+}
+.visualization .left .leftTabLinks li {
+    position: fixed;
+    z-index: 4;
+    background: #bfbfbf;
+    margin-left: 3.5em;
+}
+.visualization .left .leftTabLinks li:first-child {
+    left: -1.6em;
+}
+.visualization .left .leftTabLinks li.default {
+    background: #acacac;
+}
+.visualization .left .leftTabLinks .tab {
+    display: none;
+}
+.visualization .left .leftTabLinks .defaultTab {
+    display: block;
+}
+
+.visualization .log,
+.visualization .clusterResults {
     border-collapse: collapse;
     border-spacing: 0;
     font-size: 10pt;
     font-family: monospace;
     line-height: 1em;
+}
+
+.visualization .log {
+    position: absolute;
     top: 1em;
+}
+
+.visualization .clusterResults {
+    position: fixed;
+    z-index: 4;
+    top: 11em;
 }
 
 .visualization .log td.spacer {
@@ -331,23 +372,11 @@ section.input .left {
     transition-timing-function: ease-out;
 }
 
-.visualization .log .logLabelL {
-    width: inherit;
-    position: fixed;
-    margin-top: 1em;
-    color: black;
-    margin-bottom: 1em;
-    white-space: pre-wrap;
-    font-family: sans-serif;
-    font-size: 11pt;
-    opacity: 0.8;
-    z-index: 4;
-}
-
+.visualization .log .logLabelL, 
 .visualization .log .logLabelR {
     width: inherit;
     position: fixed;
-    margin-top: 1em;
+    margin-top: 2.5em;
     color: black;
     margin-bottom: 1em;
     white-space: pre-wrap;
