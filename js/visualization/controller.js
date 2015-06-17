@@ -130,6 +130,7 @@ function Controller(global) {
             $(this).text("Individual");
             global.setPairwiseView(true);
             global.drawAll();
+            $("#viewSelectR").change();
         }           
         else {
             $(this).text("Pairwise");
@@ -140,8 +141,16 @@ function Controller(global) {
             $(".diffButton").hide();
             global.setPairwiseView(false);
             global.drawAll();
+            $("#viewSelectL").change();
         }
         searchbar.countMotifs();
+    });
+
+    $(".visualization .leftTabLinks a").unbind().on("click", function(e) {
+        $(".visualization #" + $(this).attr("href")).show().siblings().hide();
+        $(this).parent("li").addClass("default").siblings("li").removeClass("default");
+        global.drawAll();
+        e.preventDefault();
     });
 }
 
@@ -359,29 +368,33 @@ Controller.prototype.bindNodes = function(nodes) {
             "width": "calc(" + $line.width() + "px - 1em)"
         }).data("fill", e.getFillColor());
 
-        $(".highlight").css({
-            "width": $line.width(),
-            "height": $line.height(),
-            "opacity": e.getOpacity()
-        });
+        if ($(".leftTabLinks li").first().hasClass("default")) {
 
-        var top = parseFloat($line.css("top")) || 0;
-        var ptop = parseFloat($parent.css("top")) || 0;
-        var margin = parseFloat($line.css("margin-top")) || 0;
-        var pmargin = parseFloat($parent.css("margin-top")) || 0;
-        var vleft = $(".visualization .left").offset().left;
-        var vtop = $(".visualization .left").offset().top;
-        var offset = $(".log").offset().top - vtop;
+            $(".highlight").css({
+                "width": $line.width(),
+                "height": $line.height(),
+                "opacity": e.getOpacity()
+            });
 
-        $(".highlight").css({
-            "background": e.getFillColor(),
-            "top": top + ptop + margin + pmargin + offset,
-            "left": $line.offset().left - parseFloat($line.css("margin-left")) - vleft
-        }).attr({
-            "data-ln": e.getLineNumber()
-        }).data({
-            "id": e.getId()
-        }).show();
+            var top = parseFloat($line.css("top")) || 0;
+            var ptop = parseFloat($parent.css("top")) || 0;
+            var margin = parseFloat($line.css("margin-top")) || 0;
+            var pmargin = parseFloat($parent.css("margin-top")) || 0;
+            var vleft = $(".visualization .left").offset().left;
+            var vtop = $(".visualization .left").offset().top;
+            var offset = $(".log").offset().top - vtop;
+
+            $(".highlight").css({
+                "background": e.getFillColor(),
+                "top": top + ptop + margin + pmargin + offset,
+                "left": $line.offset().left - parseFloat($line.css("margin-left")) - vleft
+            }).attr({
+                "data-ln": e.getLineNumber()
+            }).data({
+                "id": e.getId()
+            }).show();
+        }
+
     });
 };
 

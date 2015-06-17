@@ -21,6 +21,12 @@ function Clusterer(metric) {
 
     /** @private */
     this.table = $("<td></td>");
+
+    /** @private */
+    this.headings = [];
+
+    /** @private */
+    this.executionLabels = [];
  
 }
 
@@ -37,13 +43,38 @@ Clusterer.prototype.setGlobal = function(global) {
 /**
   * This function delegates clustering to the appropriate helper function based on
   * the metric that was set when the Clusterer was constructed
+  *
+  * NOTE: This function should only be called after setGlobal() has been called
   */
 Clusterer.prototype.cluster = function() {
+
+    // Clear any existing headings and execution labels
+    this.headings = [];
+    this.executionLabels = [];
+
     switch (this.metric) {
         case "numprocess":
             this.clusterByNumProcesses();
             break;
+        case "comparison":
+            this.clusterByExecComparison();
+            break;
     }
+
+    this.drawClusterLines();
+
+    $("table.clusterResults a").on("click", function(e) {
+        if ($(this).text() == "Show all") {
+            $(this).text("Condense");
+            $(this).prevAll("br.condense:first").nextUntil("br.stop").show();
+        } else if ($(this).text() == "Condense") {
+            $(this).text("Show all");
+            $(this).prevAll("br.condense:first").nextUntil("br.stop").hide();
+        } else {
+          $("#viewSelectL").children("option[value='" + $(this).attr("href") + "']").prop("selected", true).change();
+        }
+        e.preventDefault();
+    });
 };
 
 /**
@@ -54,67 +85,135 @@ Clusterer.prototype.cluster = function() {
   * one heading and ones with > midpoint processes are grouped into another
   */
 Clusterer.prototype.clusterByNumProcesses = function() {
-    var context = this;
     var views = this.global.getViews();
+    var headings = this.headings;
+    var executionLabels = this.executionLabels;
     var numProcesses = [];
 
+    // Get the number of processes in each view and save the results in numProcesses
     for (var i=0; i < views.length; i++) {
         numProcesses[i] = views[i].getHosts().length;
     }
     var max = Math.max.apply(Math, numProcesses);
     var min = Math.min.apply(Math, numProcesses);
-    var table = this.table;
-    var currLabel = "";
 
-    // TODO: if more than 15 labels, condense list and allow users to search within clusters
+    // If all the executions have the same number of processes, they get grouped into a single cluster
     if (max == min) {
-       var $heading = $("<div></div>").text("All executions have " + max + " processes:");
-       table.append($heading, "<br>");
+       headings.push("All executions have " + max + " processes:");
+       var labels = [];
 
        for (var i=0; i < views.length; i++) {
-            currLabel = views[i].getLabel();
-            var $label = $("<a></a>").text(currLabel).attr("href", currLabel);
-            table.append($label, "<br>");
+            labels.push(views[i].getLabel());
        }
+       executionLabels.push(labels);
     }
+    // Otherwise, the midpoint is calculated and executions are sorted into two different clusters
     else {
        var mid = min + Math.floor((max-min)/2);
        var lessThanMid = [];
        var moreThanMid = [];
+
        for (var i=0; i < numProcesses.length; i++) {
             var currNumProcess = numProcesses[i]
+            var currLabel = views[i].getLabel();
             if (currNumProcess <= mid) {
-                if (currNumProcess == 1) {
-                  lessThanMid.push(views[i].getLabel() + " - " + currNumProcess + " process");
-                } else {
-                  lessThanMid.push(views[i].getLabel() + " - " + currNumProcess + " processes");
-                }
+                lessThanMid.push(currLabel);
             } else {
-                moreThanMid.push(views[i].getLabel() + " - " + currNumProcess + " processes");
+                moreThanMid.push(currLabel);
             }
        }
-       var $less = $("<div></div>").text("Executions with " + mid + " or less processes:");
-       var $more = $("<div></div>").text("Executions with more than " + mid + " processes:");
-       table.append($less, "<br>");
-      
-       for (var i=0; i < lessThanMid.length; i++) {
-            currLabel = lessThanMid[i];
-            table.append($("<a></a>").text(currLabel).attr("href", currLabel.split(" - ")[0]), "<br>");
-       }
+       headings.push("Executions with " + mid + " or less processes:", "Executions with more than " + mid + " processes:");
+       executionLabels.push(lessThanMid, moreThanMid);
+    }
+};
 
-       table.append("<br>", $more, "<br>");
-       for (var i=0; i < moreThanMid.length; i++) {
-            currLabel = moreThanMid[i];
-            table.append($("<a></a>").text(currLabel).attr("href", currLabel.split(" - ")[0]), "<br>");
+/**
+  * This function clusters executions into different groups by comparing them to a user-specified base execution.
+  */
+Clusterer.prototype.clusterByExecComparison = function() {
+    var context = this;
+    var table = this.table;
+
+    table.append($("<input class='clusterBase' type='text'></input>").attr("placeholder", "Specify a base execution"));
+    table.children("input.clusterBase").on("keyup", function(e) {
+       if (e.keyCode == 13) {
+           var val = $(this).val();
+           var base = context.global.getViewByLabel(val);
        }
+    });
+}
+
+/**
+  * This function sorts an array of execution labels based on the chosen metric for clustering:
+  * When clustering by the number of processes, the labels are ordered by increasing number of processes.
+  *
+  * @param {Array<String>} labels The execution labels to be sorted
+  */
+Clusterer.prototype.sortLabels = function(labels) {
+    var global = this.global;
+
+    switch (this.metric) {
+        case "numprocess":
+            labels.sort(function(a,b) {
+              var numA = global.getViewByLabel(a).getHosts().length;
+              var numB = global.getViewByLabel(b).getHosts().length;
+              return numA - numB;
+            });
+            break;
+    }
+    return labels;
+}
+
+/**
+  * This function is responsible for drawing and listing executions under the appropriate cluster headings
+  * For each cluster heading, it gets the corresponding execution labels and draws them underneath the heading.
+  * If the cluster has more than 10 executions, the extra labels are hidden until a user expands the list.
+  */
+Clusterer.prototype.drawClusterLines = function() {
+    var global = this.global;
+    var metric = this.metric;
+    var table = this.table;
+    var headings = this.headings;
+    var executionLabels = this.executionLabels;
+
+    for (var i=0; i < headings.length; i++) {
+          // Draw the cluster heading
+          var $currHeading = $("<div></div>").text(headings[i]);
+          table.append("<br>", $currHeading, "<br>");
+
+          // Sort the labels for the executions in this cluster
+          var currLabels = this.sortLabels(executionLabels[i]);
+
+          // List the executions under the cluster heading
+          for (var j=0; j < currLabels.length; j++) {
+               var currLabel = currLabels[j];
+               // Create a breakpoint for condensing cluster lines
+               if (j == 10) {
+                   table.append($("<br class=condense>").hide());
+               }
+               // Include the number of processes beside the label when clustering by number of processes
+               if (metric == "numprocess" && headings.length > 1) {
+                  var numProcess = global.getViewByLabel(currLabel).getHosts().length;
+                  if (numProcess == 1) {
+                      table.append($("<a></a>").text(currLabel + " - " + numProcess + " process").attr("href", currLabel), "<br>");
+                  } else {
+                      table.append($("<a></a>").text(currLabel + " - " + numProcess + " processes").attr("href", currLabel), "<br>");
+                  }
+               } else {
+                   table.append($("<a></a>").text(currLabel).attr("href", currLabel), "<br>");
+               }
+          }
+          table.append($("<br class=stop>").hide());
+
+          // Condense the list if there are more than 10 executions
+          if (currLabels.length > 10) {
+              condenseClusterLines($currHeading);
+          }
+    }
+
+    function condenseClusterLines(heading) {
+        heading.nextAll("br.condense:first").nextUntil("br.stop:first").hide();
+        table.append("<br>", $("<a></a>").text("Show all").attr("href", "expand").css("color","black"), "<br>");
     }
     $("table.clusterResults").append(table);
-
-    $("table.clusterResults a").on("click", function(e) {
-       if (context.global.getPairwiseView()) {
-           $(".pairwiseButton").click();
-       }
-       $("#viewSelectL").children("option[value='" + $(this).attr("href") + "']").prop("selected", true).change();
-       e.preventDefault();
-    });
-};
+}

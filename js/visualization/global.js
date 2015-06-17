@@ -114,6 +114,10 @@ Global.prototype.drawAll = function() {
           var viewLabelR = $('<p id="viewLabelR"></p>');
           viewLabelR.append(this.viewR.getLabel());
           viewLabelDiv.append(viewLabelR);
+        
+          if ($("#clusterProcess").is(":checked")) {
+              $("table.clusterResults a").removeClass("fade");
+          }
        // Otherwise, use drop-downs
        } else {
             this.$hostBar.append(viewSelectDiv);      
@@ -136,26 +140,21 @@ Global.prototype.drawAll = function() {
            viewSelectL.children("option[value='" + this.viewL.getLabel() + "']").prop("selected", true);
            viewSelectR.children("option[value='" + this.viewR.getLabel() + "']").prop("selected", true);
       
-           viewSelectL.unbind().on("change", function(e) {
-              var val = $("#viewSelectL option:selected").val();
-              global.controller.hideDiff();
-              global.viewL = global.getViewByLabel(val);
-              if (global.getShowDiff()) {
-                  global.controller.showDiff();
-              }
-              global.drawAll();
-              searchbar.countMotifs();
-           });
-      
           viewSelectR.unbind().on("change", function(e) {
-            var val = $("#viewSelectR option:selected").val();
-            global.controller.hideDiff()
-            global.viewR = global.getViewByLabel(val);
-            if (global.getShowDiff()) {
+             var valL = $("#viewSelectL option:selected").val();
+             var valR = $("#viewSelectR option:selected").val();
+             global.controller.hideDiff()
+             if ($("#clusterProcess").is(":checked")) {
+                 $("table.clusterResults a").filter(function() {
+                    return $(this).attr("href") == valR;  
+                 }).removeClass("fade").siblings("a:not([href='" + valL + "'])").addClass("fade");
+             }
+             global.viewR = global.getViewByLabel(valR);
+             if (global.getShowDiff()) {
                 global.controller.showDiff();
-            }
-            global.drawAll();
-            searchbar.countMotifs();
+             }
+             global.drawAll();
+             searchbar.countMotifs();
           });
        }          
     }
@@ -167,32 +166,47 @@ Global.prototype.drawAll = function() {
           viewLabelL.append(this.viewL.getLabel());
           viewLabelDiv.append(viewLabelL);
         } else {
-             this.$hostBar.append(viewSelectDiv);     
+             this.$hostBar.append(viewSelectDiv);
              viewSelectDiv.append(viewSelectL);
+             viewSelectL.hide();
 
              this.views.forEach(function(view) {
                 var label = view.getLabel();
                 viewSelectL.append('<option value="' + label + '">' + label + '</option>');     
              });
       
-             viewSelectL.children("option[value='" + this.viewL.getLabel() + "']").prop("selected", true);      
-             viewSelectL.unbind().on("change", function(e) {
-                var val = $("#viewSelectL option:selected").val();
-                global.controller.hideDiff();
-                // If the selected view for viewL is the same as the current (hidden) viewR, change viewR to viewL so that
-                // when a user changes to pairwise view, viewL and viewR are not the same (this leads to only one view being drawn)
-                if (val == global.viewR.getLabel()) {
-                   global.viewR = global.viewL;
-                }
-                global.viewL = global.getViewByLabel(val);
-                if (global.getShowDiff()) {
-                   global.controller.showDiff();
-                }
-                global.drawAll();
-                searchbar.countMotifs();
-             });
+             viewSelectL.children("option[value='" + this.viewL.getLabel() + "']").prop("selected", true);
+             if ($(".leftTabLinks li").first().hasClass("default")) {
+                 viewSelectL.show();
+             }
          }
     }
+
+    viewSelectL.unbind().on("change", function(e) {
+        var valL = $("#viewSelectL option:selected").val();
+        global.controller.hideDiff();
+        // If the selected view for viewL is the same as the current (hidden) viewR, change viewR to viewL so that
+        // when a user changes to pairwise view, viewL and viewR are not the same (this leads to only one view being drawn)
+        if (valL == global.viewR.getLabel()) {
+            global.viewR = global.viewL;
+        }
+        if ($("#clusterProcess").is(":checked")) {
+            var $selected = $("table.clusterResults a").filter(function() { return $(this).attr("href") == valL; });
+            $selected.removeClass("fade");
+            if ($("#viewSelectR").length) {
+                var valR = $("#viewSelectR option:selected").val();
+                $selected.siblings("a:not([href='" + valR + "'])").addClass("fade");
+            } else {
+               $selected.siblings("a").addClass("fade");
+            }
+        }
+        global.viewL = global.getViewByLabel(valL);
+        if (global.getShowDiff()) {
+            global.controller.showDiff();
+        }
+        global.drawAll();
+        searchbar.countMotifs();
+    });
     
     this.viewL.draw("L");
     $(".visualization .left #tabs").css("height", "2.5em");
