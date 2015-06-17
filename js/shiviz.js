@@ -130,20 +130,19 @@ function Shiviz() {
        reader.readAsText(file);
     });
 
-    $("section.input #clusterProcess").on("click", function() {
+    $("section.input #clusterProcess, section.input #clusterComparison").on("click", function() {
         if ($(this).is(":checked")) {
+            $(this).siblings("input").prop("checked", false);
             $(".leftTabLinks").children().show();
-            context.clusterer = new Clusterer("numprocess");
+            if ($(this).attr("id") == "clusterProcess") {
+                context.clusterer = new Clusterer("numprocess");
+            } else if ($(this).attr("id") == "clusterComparison") {
+                context.clusterer = new Clusterer("comparison");
+            }
         } else {
             context.clusterer = null;
             $(".leftTabLinks").children().hide();  
         }
-    });
-
-    $(".visualization .leftTabLinks a").on("click", function(e) {
-        $(".visualization #" + $(this).attr("href")).show().siblings().hide();
-        $(this).parent("li").addClass("default").siblings("li").removeClass("default");
-        e.preventDefault();
     });
 
     $(".leftTabLinks").children().hide();
@@ -235,7 +234,7 @@ Shiviz.prototype.visualize = function(log, regexpString, delimiterString, sortTy
         
         hostPermutation.update();
 
-        if ($("#clusterProcess").is(":checked") && labels.length < 2) {
+        if ($("#clusterProcess, #clusterComparison").is(":checked") && labels.length < 2) {
             throw new Exception("The clustering option can only be selected for logs with multiple executions.", true);
         }
 
@@ -281,6 +280,7 @@ Shiviz.prototype.visualize = function(log, regexpString, delimiterString, sortTy
             $(".visualization .clusterResults td").empty();
             this.clusterer.setGlobal(global);
             this.clusterer.cluster();
+            $("#viewSelectL").change();
         }
     }
     catch (err) {

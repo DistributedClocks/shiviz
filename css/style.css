@@ -321,12 +321,13 @@ section.input .left {
     z-index: 4;
     background: #bfbfbf;
     margin-left: 3.5em;
+    opacity: 0.6;
 }
 .visualization .left .leftTabLinks li:first-child {
     left: -1.6em;
 }
 .visualization .left .leftTabLinks li.default {
-    background: #acacac;
+    opacity: 1;
 }
 .visualization .left .leftTabLinks .tab {
     display: none;
@@ -352,7 +353,7 @@ section.input .left {
 .visualization .clusterResults {
     position: fixed;
     z-index: 4;
-    top: 11em;
+    top: 10em;
 }
 
 .visualization .log td.spacer {
@@ -793,7 +794,7 @@ svg {
 }
 
 .fade {
-    opacity: 0.6;
+    opacity: 0.5;
 }
 
 #sidebar .info {
