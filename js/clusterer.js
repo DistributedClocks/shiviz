@@ -52,12 +52,14 @@ Clusterer.prototype.cluster = function() {
     this.headings = [];
     this.executionLabels = [];
 
+    // clear the cluster table
+    $(".visualization .clusterResults td").empty();
+    $(".clusterResults td:empty").remove();
+
+    // Create the clusters by calling helper functions
     switch (this.metric) {
-        case "numprocess":
+        case "clusterNumProcess":
             this.clusterByNumProcesses();
-            break;
-        case "comparison":
-            this.clusterByExecComparison();
             break;
     }
 
@@ -128,22 +130,6 @@ Clusterer.prototype.clusterByNumProcesses = function() {
 };
 
 /**
-  * This function clusters executions into different groups by comparing them to a user-specified base execution.
-  */
-Clusterer.prototype.clusterByExecComparison = function() {
-    var context = this;
-    var table = this.table;
-
-    table.append($("<input class='clusterBase' type='text'></input>").attr("placeholder", "Specify a base execution"));
-    table.children("input.clusterBase").on("keyup", function(e) {
-       if (e.keyCode == 13) {
-           var val = $(this).val();
-           var base = context.global.getViewByLabel(val);
-       }
-    });
-}
-
-/**
   * This function sorts an array of execution labels based on the chosen metric for clustering:
   * When clustering by the number of processes, the labels are ordered by increasing number of processes.
   *
@@ -153,7 +139,7 @@ Clusterer.prototype.sortLabels = function(labels) {
     var global = this.global;
 
     switch (this.metric) {
-        case "numprocess":
+        case "clusterNumProcess":
             labels.sort(function(a,b) {
               var numA = global.getViewByLabel(a).getHosts().length;
               var numB = global.getViewByLabel(b).getHosts().length;
@@ -192,7 +178,7 @@ Clusterer.prototype.drawClusterLines = function() {
                    table.append($("<br class=condense>").hide());
                }
                // Include the number of processes beside the label when clustering by number of processes
-               if (metric == "numprocess" && headings.length > 1) {
+               if (metric == "clusterNumProcess" && headings.length > 1) {
                   var numProcess = global.getViewByLabel(currLabel).getHosts().length;
                   if (numProcess == 1) {
                       table.append($("<a></a>").text(currLabel + " - " + numProcess + " process").attr("href", currLabel), "<br>");
@@ -213,7 +199,7 @@ Clusterer.prototype.drawClusterLines = function() {
 
     function condenseClusterLines(heading) {
         heading.nextAll("br.condense:first").nextUntil("br.stop:first").hide();
-        table.append("<br>", $("<a></a>").text("Show all").attr("href", "expand").css("color","black"), "<br>");
+        table.append("<br>", $("<a></a>").text("Show all").attr("href", heading).css("color","black"), "<br>");
     }
     $("table.clusterResults").append(table);
 }

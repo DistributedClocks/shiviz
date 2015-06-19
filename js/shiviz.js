@@ -70,6 +70,10 @@ function Shiviz() {
         $(".error").hide();
     });
 
+    $(".input #hostsortLength, .input #hostsortOrder").on("click", function() {
+        d3.selectAll("#vizContainer svg").remove();        
+    });
+
     // Listener for history popstate
     $(window).on("popstate", function(e) {
         context.go(e.originalEvent.state == null ? 0 : e.originalEvent.state.index, false);
@@ -130,19 +134,16 @@ function Shiviz() {
        reader.readAsText(file);
     });
 
-    $("section.input #clusterProcess, section.input #clusterComparison").on("click", function() {
+    $("section.input #clusterNumProcess").on("click", function() {
         if ($(this).is(":checked")) {
             $(this).siblings("input").prop("checked", false);
             $(".leftTabLinks").children().show();
-            if ($(this).attr("id") == "clusterProcess") {
-                context.clusterer = new Clusterer("numprocess");
-            } else if ($(this).attr("id") == "clusterComparison") {
-                context.clusterer = new Clusterer("comparison");
-            }
+            context.clusterer = new Clusterer($(this).attr("id"));
         } else {
             context.clusterer = null;
             $(".leftTabLinks").children().hide();  
         }
+        d3.selectAll("#vizContainer svg").remove();    
     });
 
     $(".leftTabLinks").children().hide();
@@ -234,7 +235,7 @@ Shiviz.prototype.visualize = function(log, regexpString, delimiterString, sortTy
         
         hostPermutation.update();
 
-        if ($("#clusterProcess, #clusterComparison").is(":checked") && labels.length < 2) {
+        if ($("#clusterNumProcess").is(":checked") && labels.length < 2) {
             throw new Exception("The clustering option can only be selected for logs with multiple executions.", true);
         }
 
@@ -276,8 +277,6 @@ Shiviz.prototype.visualize = function(log, regexpString, delimiterString, sortTy
         global.drawAll();
 
         if (this.clusterer != null) {
-            // clear the cluster table
-            $(".visualization .clusterResults td").empty();
             this.clusterer.setGlobal(global);
             this.clusterer.cluster();
             $("#viewSelectL").change();

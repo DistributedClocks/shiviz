@@ -115,7 +115,7 @@ Global.prototype.drawAll = function() {
           viewLabelR.append(this.viewR.getLabel());
           viewLabelDiv.append(viewLabelR);
         
-          if ($("#clusterProcess").is(":checked")) {
+          if ($("#clusterNumProcess").is(":checked")) {
               $("table.clusterResults a").removeClass("fade");
           }
        // Otherwise, use drop-downs
@@ -144,7 +144,7 @@ Global.prototype.drawAll = function() {
              var valL = $("#viewSelectL option:selected").val();
              var valR = $("#viewSelectR option:selected").val();
              global.controller.hideDiff()
-             if ($("#clusterProcess").is(":checked")) {
+             if ($("#clusterNumProcess").is(":checked")) {
                  $("table.clusterResults a").filter(function() {
                     return $(this).attr("href") == valR;  
                  }).removeClass("fade").siblings("a:not([href='" + valL + "'])").addClass("fade");
@@ -168,17 +168,12 @@ Global.prototype.drawAll = function() {
         } else {
              this.$hostBar.append(viewSelectDiv);
              viewSelectDiv.append(viewSelectL);
-             viewSelectL.hide();
 
              this.views.forEach(function(view) {
                 var label = view.getLabel();
                 viewSelectL.append('<option value="' + label + '">' + label + '</option>');     
              });
-      
              viewSelectL.children("option[value='" + this.viewL.getLabel() + "']").prop("selected", true);
-             if ($(".leftTabLinks li").first().hasClass("default")) {
-                 viewSelectL.show();
-             }
          }
     }
 
@@ -190,7 +185,7 @@ Global.prototype.drawAll = function() {
         if (valL == global.viewR.getLabel()) {
             global.viewR = global.viewL;
         }
-        if ($("#clusterProcess").is(":checked")) {
+        if ($("#clusterNumProcess").is(":checked")) {
             var $selected = $("table.clusterResults a").filter(function() { return $(this).attr("href") == valL; });
             $selected.removeClass("fade");
             if ($("#viewSelectR").length) {
