@@ -351,6 +351,9 @@ section.input .left {
 }
 
 .visualization .clusterResults {
+    max-height: calc(100% - 15em);
+    overflow: auto;
+    display: block;
     position: fixed;
     z-index: 4;
     top: 10em;

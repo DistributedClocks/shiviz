@@ -195,11 +195,11 @@ View.prototype.draw = function(viewPosition) {
         });
 
         if (viewPosition == "R") {
-            view.$hostSVG.css("margin-left", "1px");
+            view.$hostSVG.css("margin-left", ".15em");
         }
         
         else {
-            view.$hostSVG.css("margin-left", "0px");
+            view.$hostSVG.css("margin-left", "0em");
         }
         var startNodes = view.visualGraph.getStartVisualNodes();
         var arr = [];
