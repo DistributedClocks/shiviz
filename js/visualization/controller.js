@@ -368,6 +368,7 @@ Controller.prototype.bindNodes = function(nodes) {
             "width": "calc(" + $line.width() + "px - 1em)"
         }).data("fill", e.getFillColor());
 
+        // Only highlight log lines on the Log Lines tab
         if ($(".leftTabLinks li").first().hasClass("default")) {
 
             $(".highlight").css({

@@ -134,7 +134,7 @@ function Shiviz() {
        reader.readAsText(file);
     });
 
-    $("section.input #clusterNumProcess").on("click", function() {
+    $("section.input #clusterNumProcess, section.input #clusterComparison").on("click", function() {
         if ($(this).is(":checked")) {
             $(this).siblings("input").prop("checked", false);
             $(".leftTabLinks").children().show();
@@ -235,7 +235,7 @@ Shiviz.prototype.visualize = function(log, regexpString, delimiterString, sortTy
         
         hostPermutation.update();
 
-        if ($("#clusterNumProcess").is(":checked") && labels.length < 2) {
+        if ($("#clusterNumProcess, #clusterComparison").is(":checked") && labels.length < 2) {
             throw new Exception("The clustering option can only be selected for logs with multiple executions.", true);
         }
 
@@ -279,7 +279,6 @@ Shiviz.prototype.visualize = function(log, regexpString, delimiterString, sortTy
         if (this.clusterer != null) {
             this.clusterer.setGlobal(global);
             this.clusterer.cluster();
-            $("#viewSelectL").change();
         }
     }
     catch (err) {
