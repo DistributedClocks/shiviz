@@ -284,7 +284,7 @@ Transformer.prototype.getHighlightedMotif = function() {
     this.uniqueHosts = [];
     this.uniqueEvents = [];
 	
-    var trans = new ShowDiffTransformation(view, this.uniqueHosts, this.hiddenHosts, this.uniqueEvents);
+    var trans = new ShowDiffTransformation(view, this.uniqueHosts, this.hiddenHosts, this.uniqueEvents, true);
     this.viewToDiffTransform[view] = trans;
     this.transformations.push(trans);
 }

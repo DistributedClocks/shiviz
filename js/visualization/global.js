@@ -108,14 +108,16 @@ Global.prototype.drawAll = function() {
        // If there are only two executions, use labels instead of drop-downs
        if (numViews == 2) {
           this.$hostBar.append(viewLabelDiv);
-          viewLabelL.append(this.viewL.getLabel());
+          var leftLabel = this.viewL.getLabel();
+          viewLabelL.append(leftLabel);
           viewLabelDiv.append(viewLabelL);
 
           var viewLabelR = $('<p id="viewLabelR"></p>');
-          viewLabelR.append(this.viewR.getLabel());
+          var rightLabel = this.viewR.getLabel();
+          viewLabelR.append(rightLabel);
           viewLabelDiv.append(viewLabelR);
         
-          if ($("#clusterNumProcess").is(":checked")) {
+          if ($("#clusterNumProcess, #clusterComparison").is(":checked")) {
               $("table.clusterResults a").removeClass("fade");
           }
        // Otherwise, use drop-downs
@@ -140,14 +142,20 @@ Global.prototype.drawAll = function() {
            viewSelectL.children("option[value='" + this.viewL.getLabel() + "']").prop("selected", true);
            viewSelectR.children("option[value='" + this.viewR.getLabel() + "']").prop("selected", true);
       
-          viewSelectR.unbind().on("change", function(e) {
+           viewSelectR.unbind().on("change", function(e) {
              var valL = $("#viewSelectL option:selected").val();
              var valR = $("#viewSelectR option:selected").val();
              global.controller.hideDiff()
-             if ($("#clusterNumProcess").is(":checked")) {
-                 $("table.clusterResults a").filter(function() {
-                    return $(this).attr("href") == valR;  
-                 }).removeClass("fade").siblings("a:not([href='" + valL + "'])").addClass("fade");
+
+             // When clustering, highlight the two active views in the clusters tab
+             if ($("#clusterNumProcess, #clusterComparison").is(":checked")) {
+               if (valR == $("input.clusterBase").val()) {
+                    $("table.clusterResults a:not([href='" + valL + "'])").addClass("fade");
+                 } else {
+                    $("table.clusterResults a").filter(function() {
+                       return $(this).attr("href") == valR;  
+                    }).removeClass("fade").siblings("a:not([href='" + valL + "'])").addClass("fade");
+                 }
              }
              global.viewR = global.getViewByLabel(valR);
              if (global.getShowDiff()) {
@@ -155,7 +163,7 @@ Global.prototype.drawAll = function() {
              }
              global.drawAll();
              searchbar.countMotifs();
-          });
+           });
        }          
     }
     // If viewing executions individually
@@ -185,14 +193,23 @@ Global.prototype.drawAll = function() {
         if (valL == global.viewR.getLabel()) {
             global.viewR = global.viewL;
         }
-        if ($("#clusterNumProcess").is(":checked")) {
-            var $selected = $("table.clusterResults a").filter(function() { return $(this).attr("href") == valL; });
-            $selected.removeClass("fade");
+
+        // When clustering, highlight the two active views in the clusters tab
+        if ($("#clusterNumProcess, #clusterComparison").is(":checked")) {
+            var $selected = $("table.clusterResults a").filter(function() { return $(this).attr("href") == valL; }).removeClass("fade");
             if ($("#viewSelectR").length) {
                 var valR = $("#viewSelectR option:selected").val();
-                $selected.siblings("a:not([href='" + valR + "'])").addClass("fade");
+                if (valL == $("input.clusterBase").val()) {
+                    $("table.clusterResults a:not([href='" + valR + "'])").addClass("fade");
+                } else {
+                    $selected.siblings("a:not([href='" + valR + "'])").addClass("fade");
+                }
             } else {
-               $selected.siblings("a").addClass("fade");
+                if (valL == $("input.clusterBase").val()) {
+                    $("table.clusterResults a").addClass("fade");
+                } else {
+                    $selected.siblings("a").addClass("fade");
+                }
             }
         }
         global.viewL = global.getViewByLabel(valL);
