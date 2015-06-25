@@ -117,7 +117,7 @@ Global.prototype.drawAll = function() {
           viewLabelR.append(rightLabel);
           viewLabelDiv.append(viewLabelR);
         
-          if ($("#clusterNumProcess, #clusterComparison").is(":checked")) {
+          if ($("#clusterNumProcess, #clusterComparison").is(":checked")) {          
               $("table.clusterResults a").removeClass("fade");
           }
        // Otherwise, use drop-downs
@@ -149,7 +149,7 @@ Global.prototype.drawAll = function() {
 
              // When clustering, highlight the two active views in the clusters tab
              if ($("#clusterNumProcess, #clusterComparison").is(":checked")) {
-               if (valR == $("input.clusterBase").val()) {
+               if (valR == $("select.clusterBase option:selected").val()) {
                     $("table.clusterResults a:not([href='" + valL + "'])").addClass("fade");
                  } else {
                     $("table.clusterResults a").filter(function() {
@@ -199,7 +199,7 @@ Global.prototype.drawAll = function() {
             var $selected = $("table.clusterResults a").filter(function() { return $(this).attr("href") == valL; }).removeClass("fade");
             if ($("#viewSelectR").length) {
                 var valR = $("#viewSelectR option:selected").val();
-                if (valL == $("input.clusterBase").val()) {
+                if (valL == $("select.clusterBase option:selected").val()) {
                     $("table.clusterResults a:not([href='" + valR + "'])").addClass("fade");
                 } else {
                     $selected.siblings("a:not([href='" + valR + "'])").addClass("fade");
