@@ -50,7 +50,7 @@ Clusterer.prototype.setGlobal = function(global) {
 Clusterer.prototype.cluster = function() {
 
     // clear the cluster table
-    $(".visualization .clusterBase").remove();
+    $(".visualization select.clusterBase").remove();
     this.clearResults();
 
     // Create the clusters by calling helper functions
@@ -122,90 +122,101 @@ Clusterer.prototype.clusterByExecComparison = function() {
     var context = this;
     var global = this.global;
 
-    $("table.clusterResults").append($("<input class='clusterBase' type='text'></input>").attr("placeholder", "Specify a base execution"));
+    /**$("table.clusterResults").append($("<input class='clusterBase' type='text'></input>").attr("placeholder", "Specify a base execution"));
     $("input.clusterBase").on("keyup", function(e) {
-       if (e.keyCode == 13) {
-           var base = global.getViewByLabel($(this).val());
-           try {
-              if (base != null) {
-                   var noDiffExecs = [];
-                   var sameHostsDiffEventsExecs = [];
-                   var diffHostsSameEventsExecs = [];
-                   var diffHostsDiffEventsExecs = [];
+       if (e.keyCode == 13) { **/
 
-                   context.clearResults();
+    var execsList = $("<select class='clusterBase'></select>");
+    // Set a placeholder for the drop-down
+    execsList.append($("<option value=''></option>").prop("disabled", true).prop("selected", true).css("display", "none").text("Select a base execution"));
+    $("table.clusterResults").append(execsList);
 
-                   var baseHosts = base.getHosts();
-                   var views = global.getViews();
-                   for (var i=0; i < views.length; i++) {
-                        var currView = views[i];
-                        if (currView != base) {
-                            var currViewLabel = currView.getLabel();
+    global.getViews().forEach(function(view) {
+        var label = view.getLabel();
+        execsList.append('<option value="' + label + '">' + label + '</option>');
+    });
 
-                            // Search for unique hosts and events in the non-base view
-                            var uniqueHosts = [], uniqueEvents = [];
-                            var hiddenHosts = currView.getTransformer().getHiddenHosts();
-                            var sdt = new ShowDiffTransformation(base, uniqueHosts, hiddenHosts, uniqueEvents, false);
-                            sdt.transform(currView.getVisualModel());
-                            
-                            // Search for unique hosts and events in the base
-                            var baseUniqueHosts = [], baseUniqueEvents = [];
-                            var baseHiddenHosts = base.getTransformer().getHiddenHosts();
-                            sdt = new ShowDiffTransformation(currView, baseUniqueHosts, baseHiddenHosts, baseUniqueEvents, false);
-                            sdt.transform(base.getVisualModel());
+    $("select.clusterBase").unbind().on("change", function() {
+         var base = global.getViewByLabel($(".clusterBase option:selected").val());
+         try {
+            if (base != null) {
+                 var noDiffExecs = [];
+                 var sameHostsDiffEventsExecs = [];
+                 var diffHostsSameEventsExecs = [];
+                 var diffHostsDiffEventsExecs = [];
 
-                            if (baseUniqueHosts.length > 0 || uniqueHosts.length > 0) {
-                               // The current view has different hosts and different events
-                               if (baseUniqueEvents.length > 0 || uniqueEvents.length > 0) {
-                                    diffHostsDiffEventsExecs.push(currViewLabel);
-                               }
-                               // The current view has only different hosts
-                               else {
-                                   diffHostsSameEventsExecs.push(currViewLabel);
-                               }
-                            } else {
-                               // The current view has the same hosts but different events
-                               if (baseUniqueEvents.length > 0 || uniqueEvents.length > 0) {
-                                   sameHostsDiffEventsExecs.push(currViewLabel);
-                               }
-                               // The current view has no differences 
-                               else {
-                                   noDiffExecs.push(currViewLabel);
-                               }
-                            }
-                        }
-                  }
-                  if (noDiffExecs.length > 0) {
-                       context.headings.push("Executions without any differences from the base:");
-                       context.executionLabels.push(noDiffExecs);
-                  }
-                  if (sameHostsDiffEventsExecs.length > 0) {
-                       context.headings.push("Executions with the same hosts and different events from the base:");
-                       context.executionLabels.push(sameHostsDiffEventsExecs);
-                  }
-                  if (diffHostsSameEventsExecs.length > 0) {
-                       context.headings.push("Executions with different hosts and the same events as the base:");
-                       context.executionLabels.push(diffHostsSameEventsExecs);
-                  }
-                  if (diffHostsDiffEventsExecs.length > 0) {
-                       context.headings.push("Executions with different hosts and different events from the base:");
-                       context.executionLabels.push(diffHostsDiffEventsExecs);
-                  }
-                  context.drawClusterLines();                  
-              } else {
-                  throw new Exception("The specified execution does not appear in the input log", true);
-              }
-           }
-           catch (err) {
-              context.clearResults();
-              var errhtml = err.getHTMLMessage();
-              if (!err.isUserFriendly()) {
-                  errhtml = "An unexpected error was encountered. Sorry!";
-              }
-              $("#errorbox").html(errhtml);
-              $(".error").show();
-           }
-       }        
+                 context.clearResults();
+
+                 var baseHosts = base.getHosts();
+                 var views = global.getViews();
+                 for (var i=0; i < views.length; i++) {
+                      var currView = views[i];
+                      if (currView != base) {
+                          var currViewLabel = currView.getLabel();
+
+                          // Search for unique hosts and events in the non-base view
+                          var uniqueHosts = [], uniqueEvents = [];
+                          var hiddenHosts = currView.getTransformer().getHiddenHosts();
+                          var sdt = new ShowDiffTransformation(base, uniqueHosts, hiddenHosts, uniqueEvents, false);
+                          sdt.transform(currView.getVisualModel());
+                          
+                          // Search for unique hosts and events in the base
+                          var baseUniqueHosts = [], baseUniqueEvents = [];
+                          var baseHiddenHosts = base.getTransformer().getHiddenHosts();
+                          sdt = new ShowDiffTransformation(currView, baseUniqueHosts, baseHiddenHosts, baseUniqueEvents, false);
+                          sdt.transform(base.getVisualModel());
+
+                          if (baseUniqueHosts.length > 0 || uniqueHosts.length > 0) {
+                             // The current view has different hosts and different events
+                             if (baseUniqueEvents.length > 0 || uniqueEvents.length > 0) {
+                                  diffHostsDiffEventsExecs.push(currViewLabel);
+                             }
+                             // The current view has only different hosts
+                             else {
+                                 diffHostsSameEventsExecs.push(currViewLabel);
+                             }
+                          } else {
+                             // The current view has the same hosts but different events
+                             if (baseUniqueEvents.length > 0 || uniqueEvents.length > 0) {
+                                 sameHostsDiffEventsExecs.push(currViewLabel);
+                             }
+                             // The current view has no differences 
+                             else {
+                                 noDiffExecs.push(currViewLabel);
+                             }
+                          }
+                      }
+                }
+                if (noDiffExecs.length > 0) {
+                     context.headings.push("Executions without any differences from the base:");
+                     context.executionLabels.push(noDiffExecs);
+                }
+                if (sameHostsDiffEventsExecs.length > 0) {
+                     context.headings.push("Executions with the same hosts and different events from the base:");
+                     context.executionLabels.push(sameHostsDiffEventsExecs);
+                }
+                if (diffHostsSameEventsExecs.length > 0) {
+                     context.headings.push("Executions with different hosts and the same events as the base:");
+                     context.executionLabels.push(diffHostsSameEventsExecs);
+                }
+                if (diffHostsDiffEventsExecs.length > 0) {
+                     context.headings.push("Executions with different hosts and different events from the base:");
+                     context.executionLabels.push(diffHostsDiffEventsExecs);
+                }
+                context.drawClusterLines();                  
+            } else {
+                throw new Exception("The specified execution does not appear in the input log", true);
+            }
+         }
+         catch (err) {
+            context.clearResults();
+            var errhtml = err.getHTMLMessage();
+            if (!err.isUserFriendly()) {
+                errhtml = "An unexpected error was encountered. Sorry!";
+            }
+            $("#errorbox").html(errhtml);
+            $(".error").show();
+         }     
    });
 }
 
