@@ -133,20 +133,6 @@ function Shiviz() {
        
        reader.readAsText(file);
     });
-
-    $("section.input #clusterNumProcess, section.input #clusterComparison").on("click", function() {
-        if ($(this).is(":checked")) {
-            $(this).siblings("input").prop("checked", false);
-            $(".leftTabLinks").children().show();
-            context.clusterer = new Clusterer($(this).attr("id"));
-        } else {
-            context.clusterer = null;
-            $(".leftTabLinks").children().hide();  
-        }
-        d3.selectAll("#vizContainer svg").remove();    
-    });
-
-    $(".leftTabLinks").children().hide();
 }
 
 /**
@@ -235,10 +221,6 @@ Shiviz.prototype.visualize = function(log, regexpString, delimiterString, sortTy
         
         hostPermutation.update();
 
-        if ($("#clusterNumProcess, #clusterComparison").is(":checked") && labels.length < 2) {
-            throw new Exception("The clustering option can only be selected for logs with multiple executions.", true);
-        }
-
         var views = [];
         
         for(var i = 0; i < labels.length; i++) {
@@ -265,8 +247,23 @@ Shiviz.prototype.visualize = function(log, regexpString, delimiterString, sortTy
         $("#searchbar .mono").prop("readonly", false);
 
         // reset left sidebar tabs
+        $(".leftTabLinks").children().hide();
         $("#logTab").show().siblings().hide();
-        $(".leftTabLinks li:first").addClass("default").siblings().removeClass("default");
+
+        if (views.length > 1) {
+            $(".leftTabLinks").children().show();
+            $(".leftTabLinks li:first").addClass("default").siblings().removeClass("default");
+            $("#clusterOption").remove();
+            $("table.clusterResults").children().remove(); 
+
+            var numProcessInput = $("<input></input>").attr("id", "clusterNumProcess").attr("type", "checkbox");
+            var comparisonInput = $("<input></input>").attr("id", "clusterComparison").attr("type", "checkbox");
+            var clusterOption = $("<div id='clusterOption'></div>").append($("<p></p>").text("Cluster executions by:"), 
+                numProcessInput, $("<label></label>").text("number of processes"), "<br>", comparisonInput, 
+                $("<label></label>").text("execution comparison"));
+
+            $("#clusterTab").append(clusterOption);
+        }
 
         var global = new Global($("#vizContainer"), $("#sidebar"), $("#hostBar"), $("table.log"), views);
         var searchbar = SearchBar.getInstance();

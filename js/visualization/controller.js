@@ -149,8 +149,24 @@ function Controller(global) {
     $(".visualization .leftTabLinks a").unbind().on("click", function(e) {
         $(".visualization #" + $(this).attr("href")).show().siblings().hide();
         $(this).parent("li").addClass("default").siblings("li").removeClass("default");
-        global.drawAll();
+
+        if ($(this).attr("href") == "clusterTab") {
+            // Remove any highlighting from Log lines tab
+            $(".highlight").css("opacity", 0);
+        }
         e.preventDefault();
+    });
+
+    $("#clusterNumProcess, #clusterComparison").unbind().on("click", function() {
+        if ($(this).is(":checked")) {
+            $(this).siblings("input").prop("checked", false);
+            var clusterer = new Clusterer($(this).attr("id"));
+            clusterer.setGlobal(self.global);
+            clusterer.cluster();
+        } else {
+            // Clear the results if no option is selected
+            $("table.clusterResults").children().remove(); 
+        }     
     });
 }
 
@@ -395,7 +411,6 @@ Controller.prototype.bindNodes = function(nodes) {
                 "id": e.getId()
             }).show();
         }
-
     });
 };
 

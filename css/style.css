@@ -351,14 +351,14 @@ section.input .left {
 }
 
 .visualization .clusterResults {
-    height: calc(100% - 15em);
+    height: calc(100% - 20em);
     max-width: 250pt;
     width: 250pt;
     overflow: auto;
     display: block;
     position: fixed;
     z-index: 4;
-    top: 10em;
+    top: 17em;
 }
 
 .visualization .clusterBase {
@@ -367,6 +367,14 @@ section.input .left {
     padding: .2em;
     font-size: 10pt;
     margin-top: 1em;
+}
+
+.visualization #clusterOption {
+    top: 9em;
+    position: fixed;
+    font-family: sans-serif;
+    font-size: 11pt;
+    z-index: 4;
 }
 
 .visualization .log td.spacer {
