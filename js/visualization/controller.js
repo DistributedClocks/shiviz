@@ -152,6 +152,15 @@ function Controller(global) {
         if ($(this).attr("href") == "clusterTab") {
             // Remove any highlighting from Log lines tab
             $(".highlight").css("opacity", 0);
+            if ($("#clusterNumProcess").is(":checked")) {
+                $("#labelIconL, #labelIconR, #selectIconL, #selectIconR").show();
+            } else {
+              if ($("#clusterComparison").is(":checked") && $(".clusterBase").val() != null) {
+                    $("#labelIconL, #labelIconR, #selectIconL, #selectIconR").show();
+              }
+            }
+        } else {
+            $("#labelIconL, #labelIconR, #selectIconL, #selectIconR").hide();
         }
         e.preventDefault();
     });
