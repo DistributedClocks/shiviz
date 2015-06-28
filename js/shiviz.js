@@ -13,9 +13,6 @@
  */
 function Shiviz() {
 
-    /** @private */
-    this.clusterer = null;
-
     if (!!Shiviz.instance) {
         throw new Exception("Cannot instantiate Shiviz. Shiviz is a singleton; use Shiviz.getInstance()");
     }
@@ -251,11 +248,15 @@ Shiviz.prototype.visualize = function(log, regexpString, delimiterString, sortTy
         $("#logTab").show().siblings().hide();
 
         if (views.length > 1) {
+            // Show the Log lines and Clusters tab for logs with multiple executions
             $(".leftTabLinks").children().show();
             $(".leftTabLinks li:first").addClass("default").siblings().removeClass("default");
-            $("#clusterOption").remove();
-            $("table.clusterResults").children().remove(); 
 
+            // Clear the Clusters tab
+            $("#clusterOption").remove();
+            $("table.clusterResults").children().remove();
+
+            // Add the clustering options to the Clusters tab
             var numProcessInput = $("<input></input>").attr("id", "clusterNumProcess").attr("type", "checkbox");
             var comparisonInput = $("<input></input>").attr("id", "clusterComparison").attr("type", "checkbox");
             var clusterOption = $("<div id='clusterOption'></div>").append($("<p></p>").text("Cluster executions by:"), 
@@ -272,11 +273,6 @@ Shiviz.prototype.visualize = function(log, regexpString, delimiterString, sortTy
 
         global.setHostPermutation(hostPermutation);
         global.drawAll();
-
-        if (this.clusterer != null) {
-            this.clusterer.setGlobal(global);
-            this.clusterer.cluster();
-        }
     }
     catch (err) {
         this.handleException(err);
