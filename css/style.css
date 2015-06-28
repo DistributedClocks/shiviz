@@ -358,7 +358,7 @@ section.input .left {
     display: block;
     position: fixed;
     z-index: 4;
-    top: 17em;
+    top: 16.5em;
 }
 
 .visualization .clusterBase {
@@ -375,6 +375,11 @@ section.input .left {
     font-family: sans-serif;
     font-size: 11pt;
     z-index: 4;
+}
+
+.visualization #clusterOption p,
+.visualization .clusterResults p {
+    margin-bottom: 0.5em;
 }
 
 .visualization .log td.spacer {
@@ -816,6 +821,11 @@ svg {
 
 .fade {
     opacity: 0.5;
+}
+
+.indent {
+    margin-left: 1.5em;
+    font-size: 9.5pt;
 }
 
 #sidebar .info {
