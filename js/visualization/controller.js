@@ -157,6 +157,7 @@ function Controller(global) {
     });
 
     $("#clusterNumProcess, #clusterComparison").unbind().on("change", function() {
+        $("#labelIconL, #labelIconR, #selectIconL, #selectIconR").hide();
 
         if ($(this).is(":checked")) {
             $(this).siblings("input").prop("checked", false);
