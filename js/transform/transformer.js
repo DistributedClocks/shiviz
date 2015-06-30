@@ -276,6 +276,16 @@ Transformer.prototype.getHighlightedMotif = function() {
 };
 
 /**
+  * Returns the highlightMotifTransformation for this transformer. 
+  * If highlightMotif has not been called, this method returns null
+  *
+  * @returns {HighlightMotifTransformation}
+  */
+Transformer.prototype.getHighlightMotifTransformation = function() {
+    return this.highlightMotifTransformation;
+}
+
+/**
  * Sets this transformer to highlight different hosts in the View
  * this transformer belongs to and the given View passed to the function
  */

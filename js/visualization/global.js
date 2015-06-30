@@ -115,12 +115,35 @@ Global.prototype.drawAll = function() {
     var viewSelectDiv = $('<div id="viewSelectDiv"></div>');
     var viewSelectL = $('<select id="viewSelectL"></select>');
 
-    if ($("#clusterNumProcess").is(":checked")) {
-        labelIconL.show(); labelIconR.show(); selectIconL.show(); selectIconR.show();
-    } else {
-      if ($("#clusterComparison").is(":checked") && $(".clusterBase").val() != null) {
-          labelIconL.show(); labelIconR.show(); selectIconL.show(); selectIconR.show();  
-      }
+    // Show arrow icons and highlight cluster results that match a search term when on the Clusters tab
+    if (!$(".leftTabLinks li").first().hasClass("default")) {
+        if ($("#clusterNumProcess").is(":checked") || ($("#clusterComparison").is(":checked") && $(".clusterBase").val() != null)) {
+            labelIconL.show(); labelIconR.show(); selectIconL.show(); selectIconR.show();
+            var selected = $("select.clusterBase option:selected");
+
+            // If the searchbar is not empty, fade out all executions in Clusters tab
+            if (searchbar.getMode() != 0) {
+                $("table.clusterResults a").filter(function() {
+                    var text = $(this).text();
+                    return text != "Show all" && text != "Condense";
+                }).addClass("fade");
+                $(".clusterBase").addClass("fade");
+
+                // Remove fading for executions that match the search term
+                this.views.forEach(function(view) {
+                  if (view.hasQueryMatch()) {
+                      var label = view.getLabel();
+                      if (selected && selected.val() == label) {
+                          $(".clusterBase").removeClass("fade");
+                      } else {
+                        $("table.clusterResults a").filter(function() {
+                            return $(this).attr("href") == label;
+                        }).removeClass("fade");
+                      }
+                  }
+                });
+            }
+        }
     }
 
     if (this.getPairwiseView()) {

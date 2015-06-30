@@ -14,7 +14,7 @@ function HighlightMotifTransformation(finder, ignoreEdges) {
     /** @private */
     this.finder = finder;
 
-    this.highlighted = null;
+    this.motifGroup = null;
 
     this.setIgnoreEdges(ignoreEdges);
 }
@@ -40,23 +40,37 @@ HighlightMotifTransformation.prototype.setIgnoreEdges = function(val) {
  * @returns {MotifGroup}
  */
 HighlightMotifTransformation.prototype.getHighlighted = function() {
-    return this.highlighted;
+    return this.motifGroup;
 };
+
+/**
+ * This function searches for motifs in the given graph using the MotifFinder 
+ * that was specified in the constructor
+ *
+ * @param {ModelGraph} graph The graph to search within
+ */
+HighlightMotifTransformation.prototype.findMotifs = function(graph) {
+    this.motifGroup = this.finder.find(graph);
+}
 
 /**
  * Overrides {@link Transformation#transform}
  */
 HighlightMotifTransformation.prototype.transform = function(model) {
-    var motifGroup = this.finder.find(model.getGraph());
+
+    this.findMotifs(model.getGraph());
 
     model.getVisualNodes().forEach(function(node) {
-        node.setOpacity(0.2);
+        // Only fade out non-host nodes
+        if (!node.isStart()) {
+            node.setOpacity(0.2);
+        }
     });
     model.getVisualEdges().forEach(function(edge) {
         edge.setOpacity(0.2);
     });
 
-    var nodes = motifGroup.getNodes();
+    var nodes = this.motifGroup.getNodes();
     for (var i = 0; i < nodes.length; i++) {
         var node = nodes[i];
         var visualNode = model.getVisualNodeByNode(node);
@@ -64,7 +78,7 @@ HighlightMotifTransformation.prototype.transform = function(model) {
         visualNode.setOpacity(1);
     }
 
-    var edges = motifGroup.getEdges();
+    var edges = this.motifGroup.getEdges();
     for (var i = 0; i < edges.length; i++) {
         var edge = edges[i];
         var visualEdge = model.getVisualEdgeByNodes(edge[0], edge[1]);
@@ -72,6 +86,4 @@ HighlightMotifTransformation.prototype.transform = function(model) {
         visualEdge.setOpacity(1);
         // visualEdge.setWidth(visualEdge.getWidth() * 1.5);
     }
-
-    this.highlighted = motifGroup;
 };
