@@ -389,14 +389,15 @@ Controller.prototype.bindNodes = function(nodes) {
         var $line = $("#line" + e.getId());
         var $parent = $line.parent(".line").addClass("reveal");
 
-        $line.addClass("focus").css({
-            "background": "transparent",
-            "color": "white",
-            "width": "calc(" + $line.width() + "px - 1em)"
-        }).data("fill", e.getFillColor());
-
         // Only highlight log lines on the Log Lines tab
+
         if ($(".leftTabLinks li").first().hasClass("default")) {
+            
+            $line.addClass("focus").css({
+                "background": "transparent",
+                "color": "white",
+                "width": "calc(" + $line.width() + "px - 1em)"
+            }).data("fill", e.getFillColor());
 
             $(".highlight").css({
                 "width": $line.width(),

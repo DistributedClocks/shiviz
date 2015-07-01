@@ -377,6 +377,7 @@ SearchBar.prototype.clearResults = function() {
         this.global.getController().clearHighlight();
         this.global.drawAll();
     }
+    $("table.clusterResults a, .clusterBase").removeClass("fade");
 };
 
 /**
@@ -445,7 +446,7 @@ SearchBar.prototype.query = function() {
                 else
                     broadcast = false;
 
-                this.global.getActiveViews().forEach(function(view) {
+                this.global.getViews().forEach(function(view) {
 
                     var hiddenHosts = view.getTransformer().getHiddenHosts();
                     var hiddenHosts = view.getTransformer().getHiddenHosts();
@@ -483,7 +484,7 @@ SearchBar.prototype.query = function() {
 SearchBar.prototype.countMotifs = function() {
     // Only compute and display the motif count if a search is being performed
     if ($("#searchbar").hasClass("results")) {
-    var views = this.global.getActiveViews();
+        var views = this.global.getActiveViews();
         this.motifNavigator = new MotifNavigator();
         this.motifNavigator.addMotif(views[0].getVisualModel(), views[0].getTransformer().getHighlightedMotif());
         // getHighlightedMotif is null until a view is drawn and viewR or views[1] is only drawn when a user selects pairwise view
