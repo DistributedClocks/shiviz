@@ -116,7 +116,7 @@ Global.prototype.drawAll = function() {
     var viewSelectL = $('<select id="viewSelectL"></select>');
 
     // Show arrow icons and highlight cluster results that match a search term when on the Clusters tab
-    if (!$(".leftTabLinks li").first().hasClass("default")) {
+    if ($(".leftTabLinks li").is(":visible")) {
         if ($("#clusterNumProcess").is(":checked") || ($("#clusterComparison").is(":checked") && $(".clusterBase").val() != null)) {
             labelIconL.show(); labelIconR.show(); selectIconL.show(); selectIconR.show();
             var selected = $("select.clusterBase option:selected");
@@ -153,27 +153,7 @@ Global.prototype.drawAll = function() {
           this.$hostBar.append(viewLabelDiv);
           var viewLabelR = $('<p id="viewLabelR"></p>').text(rightLabel).append(labelIconR);
           viewLabelDiv.append(viewLabelL, viewLabelR);
-          $("table.clusterResults label").remove();
 
-          // Draw the arrow icons next to the base execution dropdown or the execution labels
-          if ($("#clusterComparison").is(":checked")) {
-              var selected = $("select.clusterBase option:selected");
-              if (selected.val() == leftLabel) {
-                  $("select.clusterBase").before(clusterIconL).css("margin-left", "1.5em");;
-                  $("table.clusterResults a").before(clusterIconR);   
-              } else if (selected.val() == rightLabel) {
-                  $(".clusterBase").before(clusterIconR).css("margin-left", "1.5em");;
-                  $("table.clusterResults a").before(clusterIconL);           
-              }
-          } else if ($("#clusterNumProcess").is(":checked")) {
-              $("table.clusterResults a").filter(function () {
-                  return $(this).attr("href") == leftLabel;
-              }).before(clusterIconL);
-
-              $("table.clusterResults a").filter(function () {
-                  return $(this).attr("href") == rightLabel;
-              }).before(clusterIconR);
-          }
        // Otherwise, use drop-downs
        } else {
             this.$hostBar.append(viewSelectDiv); 
@@ -498,6 +478,32 @@ Global.prototype.drawHiddenHost = function(container) {
 Global.prototype.drawHiddenHostAsRhombus = function(container) {
     var hiddenHost = container.append("polygon");
     return hiddenHost;
+}
+
+/**
+  * Draws arrow icons next to execution labels in the cluster view. This function
+  * is called specifically for logs with exactly two executions in pairwise view
+  * because graph labels are not dropdowns and therefore do not trigger the
+  * event handler for drawing arrow icons.
+  *
+  */
+Global.prototype.drawClusterIcons = function() {
+    $("table.clusterResults label").remove();
+    var leftLabel = this.viewL.getLabel();
+    var rightLabel = this.viewR.getLabel();
+    var clusterIconL = $('<label id="clusterIconL"></label>').text("l");
+    var clusterIconR = $('<label id="clusterIconR"></label>').text("r");
+
+    if (leftLabel == $("select.clusterBase").val()) {
+        $(".clusterBase").before(clusterIconL).css("margin-left", "1.5em");
+        $("table.clusterResults a").before(clusterIconR);
+    } else if (rightLabel == $("select.clusterBase").val()) {
+        $(".clusterBase").before(clusterIconR).css("margin-left", "1.5em");
+        $("table.clusterResults a").before(clusterIconL);
+    } else {
+      $("table.clusterResults a").filter(function() { return $(this).attr("href") == leftLabel; }).before(clusterIconL);
+      $("table.clusterResults a").filter(function() { return $(this).attr("href") == rightLabel; }).before(clusterIconR);
+    }
 }
 
 /**

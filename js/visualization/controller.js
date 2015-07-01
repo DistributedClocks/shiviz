@@ -130,6 +130,13 @@ function Controller(global) {
             $(this).text("Individual");
             global.setPairwiseView(true);
             global.drawAll();
+
+            // Draw the arrow icons for logs with exactly two executions in pairwise view
+            if (global.getViews().length == 2) {
+                if ($("#clusterNumProcess").is(":checked") || ($("#clusterComparison").is(":checked") && $(".clusterBase").val() != null))  {
+                    global.drawClusterIcons();
+                }
+            } 
             $("#viewSelectR").change();
         }           
         else {
@@ -152,12 +159,8 @@ function Controller(global) {
         if ($(this).attr("href") == "clusterTab") {
             // Remove any highlighting from Log lines tab
             $(".highlight").css("opacity", 0);
-            if ($("#clusterNumProcess").is(":checked")) {
+            if ($("#clusterNumProcess").is(":checked") || $("#clusterComparison").is(":checked") && $(".clusterBase").val() != null) {
                 $("#labelIconL, #labelIconR, #selectIconL, #selectIconR").show();
-            } else {
-              if ($("#clusterComparison").is(":checked") && $(".clusterBase").val() != null) {
-                    $("#labelIconL, #labelIconR, #selectIconL, #selectIconR").show();
-              }
             }
         } else {
             $("#labelIconL, #labelIconR, #selectIconL, #selectIconR").hide();
