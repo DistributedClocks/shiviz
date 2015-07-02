@@ -244,13 +244,13 @@ Shiviz.prototype.visualize = function(log, regexpString, delimiterString, sortTy
         $("#searchbar .mono").prop("readonly", false);
 
         // reset left sidebar tabs
+        $(".leftTabLinks li:first").addClass("default").siblings().removeClass("default");
         $(".leftTabLinks").children().hide();
         $("#logTab").show().siblings().hide();
 
         if (views.length > 1) {
             // Show the Log lines and Clusters tab for logs with multiple executions
             $(".leftTabLinks").children().show();
-            $(".leftTabLinks li:first").addClass("default").siblings().removeClass("default");
 
             // Clear the Clusters tab
             $("#clusterOption").remove();

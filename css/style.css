@@ -3,6 +3,11 @@
     src: url("../fonts/icons.woff") format("woff");
 }
 
+@font-face {
+    font-family: "Icomoon";
+    src: url("../fonts/icomoon.woff");
+}
+
 body {
     font-size: 12pt;
     font-family: "Helvetica Neue", Helvetica, sans-serif;
@@ -362,11 +367,12 @@ section.input .left {
 }
 
 .visualization .clusterBase {
-    width: 230pt;
-    max-width: 230pt;
+    width: 210pt;
+    max-width: 210pt;
     padding: .2em;
     font-size: 10pt;
-    margin-top: 1em;
+    margin-top: .5em;
+    margin-left: 0em;
 }
 
 .visualization #clusterOption {
@@ -749,7 +755,7 @@ svg {
     position: relative;
     font-family: sans-serif;
     opacity: 0.8;
-    margin-left: 0.5em;
+    margin-right: 0.5em;
 }
 
 #viewLabelR {
@@ -761,21 +767,54 @@ svg {
     margin-right: 0.5em;
 }
 
+#labelIconL {
+    font-family: "Icomoon";
+    margin-left: .5em;
+    margin-right: .5em;
+}
+
+#labelIconR {
+    font-family: "Icomoon";
+    margin-left: .5em;
+    margin-right: .5em;   
+}
+
+#selectIconL {
+    font-family: "Icomoon";
+    float: left;
+    margin-right: -1em;
+    margin-left: 0.2em;
+    margin-top: 0.2em;
+}
+
+#selectIconR {
+    font-family: "Icomoon";
+    position: fixed;
+    right: 250px;
+    margin-top: 0.2em;
+}
+
+#clusterIconL, #clusterIconR {
+    font-family: "Icomoon";
+    font-size: 10px;
+    margin-right: -1em;
+}
+
 #viewSelectL {
     position: relative;
     padding: 0.15em;
     font-family: sans-serif;
     opacity: 0.8;
-    margin-left: 0.5em;
+    margin-left: 1.5em;
 }
 
 #viewSelectR {
     position: fixed;
-    right: 240px;
     padding: 0.15em;
+    right: 260px;
     font-family: sans-serif;
     opacity: 0.8;
-    margin-right: 0.5em;
+    margin-right: 0.8em;
 }
 
 #viewSeparator {

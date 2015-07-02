@@ -342,6 +342,12 @@ Clusterer.prototype.drawClusterLines = function() {
     table.find("a").addClass("indent");
     $("table.clusterResults").append(table);
 
+    // When there are only two executions in pairwise view, the labels are not dropdowns
+    // so the event handlers won't be triggered -- have to draw the arrow icons separately
+    if (global.getViews().length == 2 && global.getPairwiseView()) {
+        global.drawClusterIcons();
+    }
+
     // Bind the click event to the cluster lines
     $("table.clusterResults a").on("click", function(e) {
         if ($(this).text() == "Show all") {
@@ -356,15 +362,14 @@ Clusterer.prototype.drawClusterLines = function() {
         e.preventDefault();
     });
 
+    $("#labelIconL, #labelIconR, #selectIconL, #selectIconR").show();
     // Change the left view graph to be that of the first execution that's not in the right view
     var first = $("table.clusterResults a").filter(function() {
         return $(this).attr("href") != $("#viewSelectR option:selected").val();
     });
     $("#viewSelectL").children("option[value='" + first.attr("href") + "']").prop("selected", true).change();;
-
     // Trigger changes in dropdowns to draw arrow icons beside execution labels
     $("#viewSelectR").change();
-    global.drawAll();
 }
 
 /**
