@@ -377,7 +377,8 @@ SearchBar.prototype.clearResults = function() {
         this.global.getController().clearHighlight();
         this.global.drawAll();
     }
-    $("table.clusterResults a, .clusterBase").removeClass("fade");
+    $("select.clusterBase").removeClass("fade");
+    $("table.clusterResults a").removeClass("execFade");
 };
 
 /**
