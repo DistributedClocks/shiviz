@@ -130,6 +130,13 @@ function Controller(global) {
             $(this).text("Individual");
             global.setPairwiseView(true);
             global.drawAll();
+
+            // Draw the arrow icons for logs with exactly two executions in pairwise view
+            if (global.getViews().length == 2) {
+                if ($("#clusterNumProcess").is(":checked") || ($("#clusterComparison").is(":checked") && $(".clusterBase").val() != null))  {
+                    global.drawClusterIcons();
+                }
+            } 
             $("#viewSelectR").change();
         }           
         else {
@@ -152,11 +159,17 @@ function Controller(global) {
         if ($(this).attr("href") == "clusterTab") {
             // Remove any highlighting from Log lines tab
             $(".highlight").css("opacity", 0);
+            if ($("#clusterNumProcess").is(":checked") || $("#clusterComparison").is(":checked") && $(".clusterBase").val() != null) {
+                $("#labelIconL, #labelIconR, #selectIconL, #selectIconR").show();
+            }
+        } else {
+            $("#labelIconL, #labelIconR, #selectIconL, #selectIconR").hide();
         }
         e.preventDefault();
     });
 
     $("#clusterNumProcess, #clusterComparison").unbind().on("change", function() {
+        $("#labelIconL, #labelIconR, #selectIconL, #selectIconR").hide();
 
         if ($(this).is(":checked")) {
             $(this).siblings("input").prop("checked", false);
@@ -379,14 +392,15 @@ Controller.prototype.bindNodes = function(nodes) {
         var $line = $("#line" + e.getId());
         var $parent = $line.parent(".line").addClass("reveal");
 
-        $line.addClass("focus").css({
-            "background": "transparent",
-            "color": "white",
-            "width": "calc(" + $line.width() + "px - 1em)"
-        }).data("fill", e.getFillColor());
-
         // Only highlight log lines on the Log Lines tab
+
         if ($(".leftTabLinks li").first().hasClass("default")) {
+            
+            $line.addClass("focus").css({
+                "background": "transparent",
+                "color": "white",
+                "width": "calc(" + $line.width() + "px - 1em)"
+            }).data("fill", e.getFillColor());
 
             $(".highlight").css({
                 "width": $line.width(),
