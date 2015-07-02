@@ -38,10 +38,10 @@ h3 {
 a {
     color: #04a;
 }
-a:hover {
+a:hover:not(.execFade) {
     color: #15b;
 }
-a:active {
+a:active:not(.execFade) {
     color: #048;
 }
 a:not(:hover) {
@@ -364,6 +364,11 @@ section.input .left {
     position: fixed;
     z-index: 4;
     top: 16.5em;
+}
+
+.visualization #baseLabel {
+    display: inline-block;
+    margin-top: 0.5em;
 }
 
 .visualization .clusterBase {
@@ -860,6 +865,11 @@ svg {
 
 .fade {
     opacity: 0.5;
+}
+
+.execFade {
+    opacity: 0.3;
+    color: #676767;
 }
 
 .indent {

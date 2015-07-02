@@ -126,7 +126,7 @@ Global.prototype.drawAll = function() {
                 $("table.clusterResults a").filter(function() {
                     var text = $(this).text();
                     return text != "Show all" && text != "Condense";
-                }).addClass("fade");
+                }).addClass("execFade");
                 $(".clusterBase").addClass("fade");
 
                 // Remove fading for executions that match the search term
@@ -138,7 +138,7 @@ Global.prototype.drawAll = function() {
                       } else {
                         $("table.clusterResults a").filter(function() {
                             return $(this).attr("href") == label;
-                        }).removeClass("fade");
+                        }).removeClass("execFade");
                       }
                   }
                 });
@@ -175,7 +175,7 @@ Global.prototype.drawAll = function() {
            viewSelectR.children("option[value='" + rightLabel + "']").prop("selected", true);
       
            viewSelectR.unbind().on("change", function(e) {
-             $("table.clusterResults #clusterIconR").remove();
+             $("table.clusterResults #clusterIconR, br.spaceR").remove();
              var valR = $("#viewSelectR option:selected").val();
              var valL = $("#viewSelectL option:selected").val();
              global.controller.hideDiff();
@@ -183,6 +183,8 @@ Global.prototype.drawAll = function() {
              // When clustering, draw the arrow icons next to the execution dropdown or label
              if ($("#clusterNumProcess, #clusterComparison").is(":checked")) {
                 if (valR == $("select.clusterBase option:selected").val()) {
+                    $("br.spaceL").remove();
+                    $("#baseLabel").after("<br class='spaceR'>");
                     $(".clusterBase").before(clusterIconR).css("margin-left", "1.5em");
                  } else {
                     var selected = $("table.clusterResults a").filter(function() { return $(this).attr("href") == valR; });
@@ -195,6 +197,7 @@ Global.prototype.drawAll = function() {
                     selected.before(clusterIconR);
                     if (valL != $("select.clusterBase option:selected").val()) {
                         $(".clusterBase").css("margin-left", "0em");
+                        $("br.spaceL").remove();
                     }
                  }
              }
@@ -228,7 +231,7 @@ Global.prototype.drawAll = function() {
     }
 
     viewSelectL.unbind().on("change", function(e) {
-        $("table.clusterResults #clusterIconL").remove();
+        $("table.clusterResults #clusterIconL, br.spaceL").remove();
         var valR = $("#viewSelectR option:selected").val();
         var valL = $("#viewSelectL option:selected").val();
         global.controller.hideDiff();
@@ -241,6 +244,8 @@ Global.prototype.drawAll = function() {
         // When clustering, draw the arrow icons next to the execution dropdown or label
         if ($("#clusterNumProcess, #clusterComparison").is(":checked")) {
             if (valL == $("select.clusterBase").val()) {
+                $("br.spaceR").remove();
+                $("#baseLabel").after("<br class='spaceL'>");
                 $(".clusterBase").before(clusterIconL).css("margin-left", "1.5em");;
             } else {
               var selected = $("table.clusterResults a").filter(function() { return $(this).attr("href") == valL; });
@@ -253,6 +258,7 @@ Global.prototype.drawAll = function() {
               selected.before(clusterIconL);
               if (valR != $("select.clusterBase").val()) {
                   $(".clusterBase").css("margin-left", "0em");
+                  $("br.spaceR").remove();
               }
             }
         }
@@ -488,16 +494,18 @@ Global.prototype.drawHiddenHostAsRhombus = function(container) {
   *
   */
 Global.prototype.drawClusterIcons = function() {
-    $("table.clusterResults label").remove();
+    $("#clusterIconL, #clusterIconR, br.spaceL, br.spaceR").remove();
     var leftLabel = this.viewL.getLabel();
     var rightLabel = this.viewR.getLabel();
     var clusterIconL = $('<label id="clusterIconL"></label>').text("l");
     var clusterIconR = $('<label id="clusterIconR"></label>').text("r");
 
     if (leftLabel == $("select.clusterBase").val()) {
+        $("#baseLabel").after("<br class='spaceL'>");
         $(".clusterBase").before(clusterIconL).css("margin-left", "1.5em");
         $("table.clusterResults a").before(clusterIconR);
     } else if (rightLabel == $("select.clusterBase").val()) {
+        $("#baseLabel").after("<br class='spaceR'>");
         $(".clusterBase").before(clusterIconR).css("margin-left", "1.5em");
         $("table.clusterResults a").before(clusterIconL);
     } else {
