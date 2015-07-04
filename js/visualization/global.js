@@ -175,45 +175,25 @@ Global.prototype.drawAll = function() {
            viewSelectR.children("option[value='" + rightLabel + "']").prop("selected", true);
       
            viewSelectR.unbind().on("change", function(e) {
-             $("table.clusterResults #clusterIconR, br.spaceR").remove();
-             var valR = $("#viewSelectR option:selected").val();
-             var valL = $("#viewSelectL option:selected").val();
-             global.controller.hideDiff();
+                var valR = $("#viewSelectR option:selected").val();
+                var valL = $("#viewSelectL option:selected").val();
+                global.controller.hideDiff();
 
-             // When clustering, draw the arrow icons next to the execution dropdown or label
-             if ($("#clusterNumProcess, #clusterComparison").is(":checked")) {
-                if (valR == $("select.clusterBase option:selected").val()) {
-                    $("br.spaceL").remove();
-                    $("#baseLabel").after("<br class='spaceR'>");
-                    $(".clusterBase").before(clusterIconR).css("margin-left", "1.5em");
-                 } else {
-                    var selected = $("table.clusterResults a").filter(function() { return $(this).attr("href") == valR; });
-                    // If the selected execution is hidden in a condensed list, click the Show all button to make it visible
-                    if (!selected.is(":visible")) {
-                      $(selected.nextAll("a").filter(function() {
-                          return $(this).text() == "Show all";
-                      })[0]).click();
-                    }
-                    selected.before(clusterIconR);
-                    if (valL != $("select.clusterBase option:selected").val()) {
-                        $(".clusterBase").css("margin-left", "0em");
-                        $("br.spaceL").remove();
-                    }
-                 }
-             }
-             global.viewR = global.getViewByLabel(valR);
-             if (global.getShowDiff()) {
-                global.controller.showDiff();
-             }
-             global.drawAll();
-             searchbar.countMotifs();
+                global.viewR = global.getViewByLabel(valR);
+                // When clustering, draw cluster icons next to the execution dropdown or label
+                if ($("#clusterNumProcess").is(":checked") || $("#clusterComparison").is(":checked")) {
+                    global.drawClusterIcons();
+                }
+                if (global.getShowDiff()) {
+                    global.controller.showDiff();
+                }
+                global.drawAll();
+                searchbar.countMotifs();
            });
        }          
     }
     // If viewing executions individually
     else {
-       // Remove the right view arrow
-       $("table.clusterResults #clusterIconR").remove();
        if (numViews == 1) {
           // The label here is "" but it'll help shift the hostbar down
           this.$hostBar.append(viewLabelDiv); 
@@ -231,7 +211,6 @@ Global.prototype.drawAll = function() {
     }
 
     viewSelectL.unbind().on("change", function(e) {
-        $("table.clusterResults #clusterIconL, br.spaceL").remove();
         var valR = $("#viewSelectR option:selected").val();
         var valL = $("#viewSelectL option:selected").val();
         global.controller.hideDiff();
@@ -240,29 +219,11 @@ Global.prototype.drawAll = function() {
         if (valL == global.viewR.getLabel()) {
             global.viewR = global.viewL;
         }
-
-        // When clustering, draw the arrow icons next to the execution dropdown or label
-        if ($("#clusterNumProcess, #clusterComparison").is(":checked")) {
-            if (valL == $("select.clusterBase").val()) {
-                $("br.spaceR").remove();
-                $("#baseLabel").after("<br class='spaceL'>");
-                $(".clusterBase").before(clusterIconL).css("margin-left", "1.5em");;
-            } else {
-              var selected = $("table.clusterResults a").filter(function() { return $(this).attr("href") == valL; });
-              // If the selected execution is hidden in a condensed list, click the Show all button to make it visible
-              if (!selected.is(":visible")) {
-                  $(selected.nextAll("a").filter(function() {
-                    return $(this).text() == "Show all";
-                  })[0]).click();
-              }
-              selected.before(clusterIconL);
-              if (valR != $("select.clusterBase").val()) {
-                  $(".clusterBase").css("margin-left", "0em");
-                  $("br.spaceR").remove();
-              }
-            }
-        }
         global.viewL = global.getViewByLabel(valL);
+        // When clustering, draw cluster icons next to the execution dropdown or label
+        if ($("#clusterNumProcess").is(":checked") || $("#clusterComparison").is(":checked")) {
+            global.drawClusterIcons();
+        }
         if (global.getShowDiff()) {
             global.controller.showDiff();
         }
@@ -300,11 +261,9 @@ Global.prototype.drawAll = function() {
         }
         $(".visualization .left #tabs").css("height", "4.5em");
     }
-  
+
     this.$vizContainer.height("auto");
-
     $(".dialog").hide();
-
     this.drawSideBar();
 };
 
@@ -359,6 +318,22 @@ Global.prototype.setHostPermutation = function(hostPermutation) {
 };
 
 /**
+  * Sets the right view. This function will only redraw the visualization
+  * with the newly set right view when graphs are viewed pairwise.
+  *
+  * @param {View} view The new view to set for this global's viewR
+  */
+Global.prototype.setRightView = function(view) {
+    // This prevents a right view from being set for logs with one execution
+    if (this.viewR != null) {
+        this.viewR = view;
+        if (this.getPairwiseView()) {
+            this.drawAll();
+        }
+    }
+}
+
+/**
  * Sets the showDiff boolean value
  * @param {Boolean} showDiff
  */
@@ -389,6 +364,23 @@ Global.prototype.setPairwiseView = function(pairwiseView) {
  */
 Global.prototype.getPairwiseView = function() {
     return this.pairwiseView;
+}
+
+/**
+  * Redraws the visualization with the two active views swapped
+  */
+Global.prototype.swapViews = function() {
+    // This checks to see that there are indeed two views to swap
+    if (this.viewL != null && this.viewR != null) {
+        var viewL = this.viewL;
+        this.viewL = this.viewR;
+        this.viewR = viewL;
+        this.drawAll();
+        // When clustering, draw cluster icons next to the execution dropdown or label
+        if ($("#clusterNumProcess").is(":checked") || $("#clusterComparison").is(":checked")) {
+            this.drawClusterIcons();
+        }
+    }
 }
 
 /**
@@ -487,11 +479,7 @@ Global.prototype.drawHiddenHostAsRhombus = function(container) {
 }
 
 /**
-  * Draws arrow icons next to execution labels in the cluster view. This function
-  * is called specifically for logs with exactly two executions in pairwise view
-  * because graph labels are not dropdowns and therefore do not trigger the
-  * event handler for drawing arrow icons.
-  *
+  * Draws arrow icons next to the base dropdown or next to execution labels in the Clusters tab.
   */
 Global.prototype.drawClusterIcons = function() {
     $("#clusterIconL, #clusterIconR, br.spaceL, br.spaceR").remove();
@@ -500,18 +488,46 @@ Global.prototype.drawClusterIcons = function() {
     var clusterIconL = $('<label id="clusterIconL"></label>').text("l");
     var clusterIconR = $('<label id="clusterIconR"></label>').text("r");
 
+    var leftLink = $("table.clusterResults a").filter(function() { return $(this).attr("href") == leftLabel; });
+    var rightLink = $("table.clusterResults a").filter(function() { return $(this).attr("href") == rightLabel; });
+    $("table.clusterResults a").removeClass("disabled");
+
+    // Set margin for base dropdown to zero initially
+    $(".clusterBase").css("margin-left", "0em");
+    
+    // If the selected execution is hidden in a condensed list, click the Show all button to make it visible
+    if (!leftLink.is(":visible")) {
+        $(leftLink.nextAll("a").filter(function() {
+            return $(this).text() == "Show all";
+        })[0]).click();
+    }
+
+    if (!rightLink.is(":visible")) {
+        $(rightLink.nextAll("a").filter(function() {
+            return $(this).text() == "Show all";
+        })[0]).click();
+    }
+
+    // If the left graph is the specified base execution, draw the left arrow icon next to the dropdown
     if (leftLabel == $("select.clusterBase").val()) {
         $("#baseLabel").after("<br class='spaceL'>");
         $(".clusterBase").before(clusterIconL).css("margin-left", "1.5em");
-        $("table.clusterResults a").before(clusterIconR);
-    } else if (rightLabel == $("select.clusterBase").val()) {
+        if (this.getPairwiseView()) {
+            rightLink.before(clusterIconR);
+        }
+    // If the right graph is the specified base execution, draw the right arrow icon next to the dropdown
+    } else if (this.getPairwiseView() && rightLabel == $("select.clusterBase").val()) {
         $("#baseLabel").after("<br class='spaceR'>");
         $(".clusterBase").before(clusterIconR).css("margin-left", "1.5em");
-        $("table.clusterResults a").before(clusterIconL);
+        leftLink.before(clusterIconL);
+    // Otherwise, draw the appropriate arrow beside the correct execution label
     } else {
-      $("table.clusterResults a").filter(function() { return $(this).attr("href") == leftLabel; }).before(clusterIconL);
-      $("table.clusterResults a").filter(function() { return $(this).attr("href") == rightLabel; }).before(clusterIconR);
+        leftLink.before(clusterIconL);
+        if (this.getPairwiseView()) {
+            rightLink.before(clusterIconR);
+        }
     }
+    leftLink.addClass("disabled");
 }
 
 /**

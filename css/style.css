@@ -38,10 +38,10 @@ h3 {
 a {
     color: #04a;
 }
-a:hover:not(.execFade) {
+a:hover:not(.execFade):not(.disabled) {
     color: #15b;
 }
-a:active:not(.execFade) {
+a:active:not(.execFade):not(.disabled) {
     color: #048;
 }
 a:not(:hover) {
@@ -870,6 +870,11 @@ svg {
 .execFade {
     opacity: 0.3;
     color: #676767;
+}
+
+.disabled {
+    text-decoration: none;
+    cursor: default;
 }
 
 .indent {
