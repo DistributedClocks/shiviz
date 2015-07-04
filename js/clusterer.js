@@ -343,34 +343,63 @@ Clusterer.prototype.drawClusterLines = function() {
     table.find("a").addClass("indent");
     $("table.clusterResults").append(table);
 
-    // When there are only two executions in pairwise view, the execution labels are not dropdowns
-    // so the event handlers won't be triggered -- have to draw the arrow icons separately
-    if (global.getViews().length == 2 && global.getPairwiseView()) {
-        global.drawClusterIcons();
-    }
-
     // Bind the click event to the cluster lines
     $("table.clusterResults a").on("click", function(e) {
-        if ($(this).text() == "Show all") {
+        var anchorText = $(this).text();
+        var anchorHref = $(this).attr("href");
+
+        if (anchorText == "Show all") {
             $(this).text("Condense");
             $(this).prevAll("br.condense:first").nextUntil("br.stop").show();
-        } else if ($(this).text() == "Condense") {
+        } else if (anchorText == "Condense") {
             $(this).text("Show all");
             $(this).prevAll("br.condense:first").nextUntil("br.stop").hide();
         } else {
-          $("#viewSelectL").children("option[value='" + $(this).attr("href") + "']").prop("selected", true).change();
+            // If the execution label corresponds to the graph on the right, swap the two graphs
+            if (global.getPairwiseView() && anchorHref == global.getActiveViews()[1].getLabel()) {
+                global.swapViews();
+            // Otherwise, draw the clicked on execution on the left graph
+            } else {
+                $("#viewSelectL").children("option[value='" + anchorHref + "']").prop("selected", true).change();
+            }
         }
         e.preventDefault();
     });
 
     $("#labelIconL, #labelIconR, #selectIconL, #selectIconR").show();
-    // Change the left view graph to be that of the first execution that's not in the right view
-    var first = $("table.clusterResults a").filter(function() {
-        return $(this).attr("href") != $("#viewSelectR option:selected").val();
-    });
-    $("#viewSelectL").children("option[value='" + first.attr("href") + "']").prop("selected", true).change();;
-    // Trigger changes in dropdowns to draw arrow icons beside execution labels
-    $("#viewSelectR").change();
+
+    // For comparison clustering, by default, make the graph on the right the base execution
+    if (metric == "clusterComparison") {
+        var baseExec = $(".clusterBase option:selected").val();
+        if (baseExec == global.getActiveViews()[0].getLabel()) {
+            global.swapViews();
+        } else {
+            global.setRightView(global.getViewByLabel(baseExec));
+            //$("#viewSelectR").children("option[value='" + baseExec + "']").prop("selected", true).change();
+        }
+    // For other clustering options, make the graph on the right the second execution in the results
+    } else {
+        var secondExec = $("table.clusterResults a").first().nextAll("a:first").attr("href");
+        if (secondExec == global.getActiveViews()[0].getLabel()) {
+            global.swapViews();
+        } else {
+            global.setRightView(global.getViewByLabel(secondExec));
+            //$("#viewSelectR").children("option[value='" + secondExec + "']").prop("selected", true).change();
+        }
+    }
+
+    // Change the left graph to be that of the first execution in the first cluster
+    var firstExec = $("table.clusterResults a").first().attr("href");
+    // If the first execution happens to already be in the right graph, swap the views so that the left graph is still the first execution
+    if (firstExec == global.getActiveViews()[1].getLabel()) {
+        global.swapViews();
+    } else {
+        $("#viewSelectL").children("option[value='" + firstExec + "']").prop("selected", true).change();
+    }
+
+    if (global.getPairwiseView() && global.getViews().length == 2) {
+        global.drawClusterIcons();
+    }
 }
 
 /**

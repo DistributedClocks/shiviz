@@ -130,17 +130,14 @@ function Controller(global) {
             $(this).text("Individual");
             global.setPairwiseView(true);
             global.drawAll();
-
-            // Draw the arrow icons for logs with exactly two executions in pairwise view
-            if (global.getViews().length == 2) {
-                if ($("#clusterNumProcess").is(":checked") || ($("#clusterComparison").is(":checked") && $(".clusterBase").val() != null))  {
-                    global.drawClusterIcons();
-                }
-            } 
-            $("#viewSelectR").change();
+            if ($("#clusterNumProcess").is(":checked") || $("#clusterComparison").is(":checked")) {
+                global.drawClusterIcons();
+            }
         }           
         else {
             $(this).text("Pairwise");
+            // Remove the right view arrow when viewing graphs individually
+            $("table.clusterResults #clusterIconR").remove();
             // Remove differences when viewing graphs individually
             if (global.getShowDiff()) {
                $(".diffButton").click();
@@ -148,7 +145,9 @@ function Controller(global) {
             $(".diffButton").hide();
             global.setPairwiseView(false);
             global.drawAll();
-            $("#viewSelectL").change();
+            if ($("#clusterNumProcess").is(":checked") || $("#clusterComparison").is(":checked")) {
+                global.drawClusterIcons();
+            }
         }
         searchbar.countMotifs();
     });
