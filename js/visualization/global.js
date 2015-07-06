@@ -101,14 +101,10 @@ Global.prototype.drawAll = function() {
     var viewLabelDiv = $('<div id="viewLabelDiv"></div>');
 
     // Icons for left and right view, styled differently for labels and dropdowns
-    var labelIconL = $('<label id="labelIconL"></label>').text("l").hide();
+    var labelIconL = $('<label id="labelIconL"></label>').text("r").hide();
     var labelIconR = $('<label id="labelIconR"></label>').text("r").hide();
-    var selectIconL = $('<label id="selectIconL"></label>').text("l").hide();
+    var selectIconL = $('<label id="selectIconL"></label>').text("r").hide();
     var selectIconR = $('<label id="selectIconR"></label>').text("r").hide();
-
-    // Icons for clusters tab
-    var clusterIconL = $('<label id="clusterIconL"></label>').text("l");
-    var clusterIconR = $('<label id="clusterIconR"></label>').text("r");
 
     var leftLabel = this.viewL.getLabel();
     var viewLabelL = $('<p id="viewLabelL"></p>').text(leftLabel).prepend(labelIconL);
@@ -485,7 +481,7 @@ Global.prototype.drawClusterIcons = function() {
     $("#clusterIconL, #clusterIconR, br.spaceL, br.spaceR").remove();
     var leftLabel = this.viewL.getLabel();
     var rightLabel = this.viewR.getLabel();
-    var clusterIconL = $('<label id="clusterIconL"></label>').text("l");
+    var clusterIconL = $('<label id="clusterIconL"></label>').text("r");
     var clusterIconR = $('<label id="clusterIconR"></label>').text("r");
 
     var leftLink = $("table.clusterResults a").filter(function() { return $(this).attr("href") == leftLabel; });
@@ -511,14 +507,14 @@ Global.prototype.drawClusterIcons = function() {
     // If the left graph is the specified base execution, draw the left arrow icon next to the dropdown
     if (leftLabel == $("select.clusterBase").val()) {
         $("#baseLabel").after("<br class='spaceL'>");
-        $(".clusterBase").before(clusterIconL).css("margin-left", "1.5em");
+        $(".clusterBase").before(clusterIconL.css("margin-top", "1.3em")).css("margin-left", "1.5em");
         if (this.getPairwiseView()) {
             rightLink.before(clusterIconR);
         }
     // If the right graph is the specified base execution, draw the right arrow icon next to the dropdown
     } else if (this.getPairwiseView() && rightLabel == $("select.clusterBase").val()) {
         $("#baseLabel").after("<br class='spaceR'>");
-        $(".clusterBase").before(clusterIconR).css("margin-left", "1.5em");
+        $(".clusterBase").before(clusterIconR.css("margin-top", "1.3em")).css("margin-left", "1.5em");
         leftLink.before(clusterIconL);
     // Otherwise, draw the appropriate arrow beside the correct execution label
     } else {
