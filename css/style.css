@@ -776,6 +776,8 @@ svg {
     font-family: "Icomoon";
     margin-left: .5em;
     margin-right: .5em;
+    float: left;
+    transform: rotate(180deg);
 }
 
 #labelIconR {
@@ -790,6 +792,7 @@ svg {
     margin-right: -1em;
     margin-left: 0.2em;
     margin-top: 0.2em;
+    transform: rotate(180deg);
 }
 
 #selectIconR {
@@ -803,6 +806,11 @@ svg {
     font-family: "Icomoon";
     font-size: 10px;
     margin-right: -1em;
+    float: left;
+}
+
+#clusterIconL {
+    transform: rotate(180deg);
 }
 
 #viewSelectL {
