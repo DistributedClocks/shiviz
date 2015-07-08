@@ -295,7 +295,7 @@ Clusterer.prototype.drawExecLabels = function(currLabels, currHeading) {
     }
     table.append($("<br class=stop>").hide());
 
-    // Condense the list if there are more than 10 executions
+    // Condense the list if there are more than 5 executions
     if (currLabels.length > 5) {
         this.condenseExecLabels(currHeading);
     }
@@ -350,10 +350,21 @@ Clusterer.prototype.drawClusterLines = function() {
 
         if (anchorText == "Show all") {
             $(this).text("Condense");
-            $(this).prevAll("br.condense:first").nextUntil("br.stop").show();
+            $(this).prevAll("br.condense:first").nextUntil("br.stop").not("br.left, br.right").show();
         } else if (anchorText == "Condense") {
             $(this).text("Show all");
-            $(this).prevAll("br.condense:first").nextUntil("br.stop").hide();
+            // Condense up to the nearest left or right arrow icon instead of all the way up
+            if ($(this).prevAll("br.condense:first").nextUntil("br.stop", "br.left").length > 0) {
+                if ($(this).prevAll("br.left").nextUntil("br.stop", "br.right").length > 0) {
+                    $(this).prevAll("br.right").nextUntil("br.stop").hide();
+                } else {
+                    $(this).prevAll("br.left").nextUntil("br.stop").hide();
+                }
+            } else if ($(this).prevAll("br.condense:first").nextUntil("br.stop", "br.right").length > 0) {
+                $(this).prevAll("br.right").nextUntil("br.stop").hide();
+            } else {
+                $(this).prevAll("br.condense:first").nextUntil("br.stop").hide();              
+            }
         } else {
             // If the execution label corresponds to the graph on the right, swap the two graphs
             if (global.getPairwiseView() && anchorHref == global.getActiveViews()[1].getLabel()) {
@@ -375,7 +386,6 @@ Clusterer.prototype.drawClusterLines = function() {
             global.swapViews();
         } else {
             global.setRightView(global.getViewByLabel(baseExec));
-            //$("#viewSelectR").children("option[value='" + baseExec + "']").prop("selected", true).change();
         }
     // For other clustering options, make the graph on the right the second execution in the results
     } else {
@@ -384,7 +394,6 @@ Clusterer.prototype.drawClusterLines = function() {
             global.swapViews();
         } else {
             global.setRightView(global.getViewByLabel(secondExec));
-            //$("#viewSelectR").children("option[value='" + secondExec + "']").prop("selected", true).change();
         }
     }
 
