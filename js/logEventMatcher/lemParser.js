@@ -85,13 +85,13 @@ LEMParser.prototype.parse = function() {
     function parseExpression() {
         var curr = parseExpressionContents();
         while (context.tokenizer.hasNext()) {
-            if (checkAdvance(TokenType.PIPE)) {
+            if (checkAdvance(TokenType.PIPE) && checkAdvance(TokenType.PIPE)) {
                 curr = new BinaryOp(BinaryOp.OR, curr, parseExpressionContents());
             }
             else if (checkAdvance(TokenType.CARET)) {
                 curr = new BinaryOp(BinaryOp.XOR, curr, parseExpressionContents());
             }
-            else if (checkAdvance(TokenType.AMP)) {
+            else if (checkAdvance(TokenType.AMP) && checkAdvance(TokenType.AMP)) {
                 curr = new BinaryOp(BinaryOp.AND, curr, parseExpressionContents());
             }
             else if (check(TokenType.L_PAREN, TokenType.CHAR_SEQ, TokenType.STRING_LITERAL)) {
