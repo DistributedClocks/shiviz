@@ -38,10 +38,10 @@ h3 {
 a {
     color: #04a;
 }
-a:hover {
+a:hover:not(.execFade) {
     color: #15b;
 }
-a:active {
+a:active:not(.execFade) {
     color: #048;
 }
 a:not(:hover) {
@@ -364,6 +364,11 @@ section.input .left {
     position: fixed;
     z-index: 4;
     top: 16.5em;
+}
+
+.visualization #baseLabel {
+    display: inline-block;
+    margin-top: 0.5em;
 }
 
 .visualization .clusterBase {
@@ -771,6 +776,8 @@ svg {
     font-family: "Icomoon";
     margin-left: .5em;
     margin-right: .5em;
+    float: left;
+    transform: rotate(180deg);
 }
 
 #labelIconR {
@@ -785,6 +792,7 @@ svg {
     margin-right: -1em;
     margin-left: 0.2em;
     margin-top: 0.2em;
+    transform: rotate(180deg);
 }
 
 #selectIconR {
@@ -798,6 +806,11 @@ svg {
     font-family: "Icomoon";
     font-size: 10px;
     margin-right: -1em;
+    float: left;
+}
+
+#clusterIconL {
+    transform: rotate(180deg);
 }
 
 #viewSelectL {
@@ -860,6 +873,11 @@ svg {
 
 .fade {
     opacity: 0.5;
+}
+
+.execFade {
+    opacity: 0.3;
+    color: #676767;
 }
 
 .indent {
