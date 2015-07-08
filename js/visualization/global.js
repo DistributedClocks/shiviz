@@ -478,7 +478,7 @@ Global.prototype.drawHiddenHostAsRhombus = function(container) {
   * Draws arrow icons next to the base dropdown or next to execution labels in the Clusters tab.
   */
 Global.prototype.drawClusterIcons = function() {
-    $("#clusterIconL, #clusterIconR, br.spaceL, br.spaceR").remove();
+    $("#clusterIconL, #clusterIconR, br.spaceL, br.spaceR, br.left, br.right").remove();
     var leftLabel = this.viewL.getLabel();
     var rightLabel = this.viewR.getLabel();
     var clusterIconL = $('<label id="clusterIconL"></label>').text("r");
@@ -486,7 +486,6 @@ Global.prototype.drawClusterIcons = function() {
 
     var leftLink = $("table.clusterResults a").filter(function() { return $(this).attr("href") == leftLabel; });
     var rightLink = $("table.clusterResults a").filter(function() { return $(this).attr("href") == rightLabel; });
-    $("table.clusterResults a").removeClass("disabled");
 
     // Set margin for base dropdown to zero initially
     $(".clusterBase").css("margin-left", "0em");
@@ -509,21 +508,20 @@ Global.prototype.drawClusterIcons = function() {
         $("#baseLabel").after("<br class='spaceL'>");
         $(".clusterBase").before(clusterIconL.css("margin-top", "1.3em")).css("margin-left", "1.5em");
         if (this.getPairwiseView()) {
-            rightLink.before(clusterIconR);
+            $(rightLink.before(clusterIconR).next()).after($("<br class=right>").hide());;
         }
     // If the right graph is the specified base execution, draw the right arrow icon next to the dropdown
     } else if (this.getPairwiseView() && rightLabel == $("select.clusterBase").val()) {
         $("#baseLabel").after("<br class='spaceR'>");
         $(".clusterBase").before(clusterIconR.css("margin-top", "1.3em")).css("margin-left", "1.5em");
-        leftLink.before(clusterIconL);
+        $(leftLink.before(clusterIconL).next()).after($("<br class=left>").hide());
     // Otherwise, draw the appropriate arrow beside the correct execution label
     } else {
-        leftLink.before(clusterIconL);
+        $(leftLink.before(clusterIconL).next()).after($("<br class=left>").hide());
         if (this.getPairwiseView()) {
-            rightLink.before(clusterIconR);
+            $(rightLink.before(clusterIconR).next()).after($("<br class=right>").hide());
         }
     }
-    leftLink.addClass("disabled");
 }
 
 /**
