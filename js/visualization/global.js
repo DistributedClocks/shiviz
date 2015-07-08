@@ -112,7 +112,7 @@ Global.prototype.drawAll = function() {
     var viewSelectL = $('<select id="viewSelectL"></select>');
 
     // Show arrow icons and highlight cluster results that match a search term when on the Clusters tab
-    if ($(".leftTabLinks li").is(":visible")) {
+    if ($(".leftTabLinks li").is(":visible") && !$(".leftTabLinks li").first().hasClass("default")) {
         if ($("#clusterNumProcess").is(":checked") || ($("#clusterComparison").is(":checked") && $(".clusterBase").val() != null)) {
             labelIconL.show(); labelIconR.show(); selectIconL.show(); selectIconR.show();
             var selected = $("select.clusterBase option:selected");
