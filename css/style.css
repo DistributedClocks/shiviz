@@ -3,6 +3,11 @@
     src: url("../fonts/icons.woff") format("woff");
 }
 
+@font-face {
+    font-family: "Icomoon";
+    src: url("../fonts/icomoon.woff");
+}
+
 body {
     font-size: 12pt;
     font-family: "Helvetica Neue", Helvetica, sans-serif;
@@ -33,10 +38,10 @@ h3 {
 a {
     color: #04a;
 }
-a:hover {
+a:hover:not(.execFade) {
     color: #15b;
 }
-a:active {
+a:active:not(.execFade) {
     color: #048;
 }
 a:not(:hover) {
@@ -351,12 +356,41 @@ section.input .left {
 }
 
 .visualization .clusterResults {
-    max-height: calc(100% - 15em);
+    height: calc(100% - 20em);
+    max-width: 250pt;
+    width: 250pt;
     overflow: auto;
     display: block;
     position: fixed;
     z-index: 4;
-    top: 10em;
+    top: 16.5em;
+}
+
+.visualization #baseLabel {
+    display: inline-block;
+    margin-top: 0.5em;
+}
+
+.visualization .clusterBase {
+    width: 210pt;
+    max-width: 210pt;
+    padding: .2em;
+    font-size: 10pt;
+    margin-top: .5em;
+    margin-left: 0em;
+}
+
+.visualization #clusterOption {
+    top: 9em;
+    position: fixed;
+    font-family: sans-serif;
+    font-size: 11pt;
+    z-index: 4;
+}
+
+.visualization #clusterOption p,
+.visualization .clusterResults p {
+    margin-bottom: 0.5em;
 }
 
 .visualization .log td.spacer {
@@ -726,7 +760,7 @@ svg {
     position: relative;
     font-family: sans-serif;
     opacity: 0.8;
-    margin-left: 0.5em;
+    margin-right: 0.5em;
 }
 
 #viewLabelR {
@@ -738,21 +772,62 @@ svg {
     margin-right: 0.5em;
 }
 
+#labelIconL {
+    font-family: "Icomoon";
+    margin-left: .5em;
+    margin-right: .5em;
+    float: left;
+    transform: rotate(180deg);
+}
+
+#labelIconR {
+    font-family: "Icomoon";
+    margin-left: .5em;
+    margin-right: .5em;   
+}
+
+#selectIconL {
+    font-family: "Icomoon";
+    float: left;
+    margin-right: -1em;
+    margin-left: 0.2em;
+    margin-top: 0.2em;
+    transform: rotate(180deg);
+}
+
+#selectIconR {
+    font-family: "Icomoon";
+    position: fixed;
+    right: 250px;
+    margin-top: 0.2em;
+}
+
+#clusterIconL, #clusterIconR {
+    font-family: "Icomoon";
+    font-size: 10px;
+    margin-right: -1em;
+    float: left;
+}
+
+#clusterIconL {
+    transform: rotate(180deg);
+}
+
 #viewSelectL {
     position: relative;
     padding: 0.15em;
     font-family: sans-serif;
     opacity: 0.8;
-    margin-left: 0.5em;
+    margin-left: 1.5em;
 }
 
 #viewSelectR {
     position: fixed;
-    right: 240px;
     padding: 0.15em;
+    right: 260px;
     font-family: sans-serif;
     opacity: 0.8;
-    margin-right: 0.5em;
+    margin-right: 0.8em;
 }
 
 #viewSeparator {
@@ -798,6 +873,16 @@ svg {
 
 .fade {
     opacity: 0.5;
+}
+
+.execFade {
+    opacity: 0.3;
+    color: #676767;
+}
+
+.indent {
+    margin-left: 1.5em;
+    font-size: 9.5pt;
 }
 
 #sidebar .info {

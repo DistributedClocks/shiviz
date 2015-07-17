@@ -126,14 +126,29 @@ View.prototype.hasHost = function(host) {
 };
 
 /**
+ * Returns whether this modelGraph has structures matching the current query
+ *
+ * @returns {Boolean} True if this modelGraph has elements matching the current search
+ */
+View.prototype.hasQueryMatch = function() {
+    var hmt = this.getTransformer().getHighlightMotifTransformation();
+    if (hmt != null) { 
+        hmt.findMotifs(this.initialModel);
+        return hmt.getHighlighted().getMotifs().length > 0;
+    } else {
+        return false;
+    }
+}
+
+/**
  * Clears the current visualization and re-draws the current model.
  */
 View.prototype.draw = function(viewPosition) {
 
-    this.model = this.initialModel.clone();	
+    this.model = this.initialModel.clone();
     this.visualGraph = new VisualGraph(this.model, this.layout, this.hostPermutation);
     this.transformer.transform(this.visualGraph);
-	
+
     // Update the VisualGraph
     this.visualGraph.update();
 
@@ -215,7 +230,7 @@ View.prototype.draw = function(viewPosition) {
 
     function drawLogLines() {
         view.logTable.empty();
-        
+
         var lines = {};
         var visualNodes = view.getVisualModel().getVisualNodes();
         for (var i in visualNodes) {
@@ -229,12 +244,12 @@ View.prototype.draw = function(viewPosition) {
         }
 
         delete lines[0];
-		
+
         var $div = $("<div></div>");
         $div.addClass("logLabel" + viewPosition);
         $div.text(view.getLabel());
         view.logTable.append($div);
-			
+
         for (var y in lines) {
             var overflow = null;
             var vn = lines[y];
@@ -244,7 +259,7 @@ View.prototype.draw = function(viewPosition) {
 
             if (vn.length > 3)
                 overflow = vn.splice(2, vn.length);
-			
+
             for (var i in vn) {
                 var text = vn[i].getText();
                 var $div = $("<div></div>", {

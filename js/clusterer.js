@@ -4,8 +4,13 @@
   * @classdesc
   *
   * A clusterer separates the executions in the input log into different groups
-  * based on a chosen metric and displays the results in the cluster tab in the
-  * left sidebar
+  * based on a chosen metric. It then displays the results in the cluster tab in the
+  * left sidebar. The clustering mechanism is performed after the visualization has
+  * been drawn.
+  *
+  * The headingsToLabelsMap uses heading names as a key to get an array of corresponding
+  * subheadings and execution labels. The first item in the array is always the subheadings
+  * and the second item is always the execution labels.
   *
   * @constructor
   * @param {String} metric The chosen metric for clustering executions
@@ -26,8 +31,7 @@ function Clusterer(metric) {
     this.headings = [];
 
     /** @private */
-    this.executionLabels = [];
- 
+    this.headingsToLabelsMap = {};
 }
 
 /**
@@ -48,35 +52,19 @@ Clusterer.prototype.setGlobal = function(global) {
   */
 Clusterer.prototype.cluster = function() {
 
-    // Clear any existing headings and execution labels
-    this.headings = [];
-    this.executionLabels = [];
-
-    // clear the cluster table
-    $(".visualization .clusterResults td").empty();
-    $(".clusterResults td:empty").remove();
+    // clear this Clusterer's arrays and the results table
+    $(".visualization .clusterBase, #baseLabel").remove();
+    this.clearResults();
 
     // Create the clusters by calling helper functions
     switch (this.metric) {
         case "clusterNumProcess":
             this.clusterByNumProcesses();
             break;
+        case "clusterComparison":
+            this.clusterByExecComparison();
+            break;
     }
-
-    this.drawClusterLines();
-
-    $("table.clusterResults a").on("click", function(e) {
-        if ($(this).text() == "Show all") {
-            $(this).text("Condense");
-            $(this).prevAll("br.condense:first").nextUntil("br.stop").show();
-        } else if ($(this).text() == "Condense") {
-            $(this).text("Show all");
-            $(this).prevAll("br.condense:first").nextUntil("br.stop").hide();
-        } else {
-          $("#viewSelectL").children("option[value='" + $(this).attr("href") + "']").prop("selected", true).change();
-        }
-        e.preventDefault();
-    });
 };
 
 /**
@@ -89,7 +77,7 @@ Clusterer.prototype.cluster = function() {
 Clusterer.prototype.clusterByNumProcesses = function() {
     var views = this.global.getViews();
     var headings = this.headings;
-    var executionLabels = this.executionLabels;
+    var map = this.headingsToLabelsMap;
     var numProcesses = [];
 
     // Get the number of processes in each view and save the results in numProcesses
@@ -107,7 +95,7 @@ Clusterer.prototype.clusterByNumProcesses = function() {
        for (var i=0; i < views.length; i++) {
             labels.push(views[i].getLabel());
        }
-       executionLabels.push(labels);
+       map[headings[0]] = [[], [labels]];
     }
     // Otherwise, the midpoint is calculated and executions are sorted into two different clusters
     else {
@@ -125,12 +113,129 @@ Clusterer.prototype.clusterByNumProcesses = function() {
             }
        }
        headings.push("Executions with " + mid + " or less processes:", "Executions with more than " + mid + " processes:");
-       executionLabels.push(lessThanMid, moreThanMid);
+       map[headings[0]] = [[], [lessThanMid]]; map[headings[1]] = [[], [moreThanMid]];
+
     }
+    this.drawClusterLines();
 };
 
 /**
-  * This function sorts an array of execution labels based on the chosen metric for clustering:
+  * This function clusters executions into different groups by comparing them to a user-specified base execution.
+  * The two main headings are "Same hosts" and "Different hosts". The subheadings are "Same Events" and "Different Events".
+  */
+Clusterer.prototype.clusterByExecComparison = function() {
+    var context = this;
+    var global = this.global;
+
+    // Text input area for Issue 128
+    /**$("table.clusterResults").append($("<input class='clusterBase' type='text'></input>").attr("placeholder", "Specify a base execution"));
+    $("input.clusterBase").on("keyup", function(e) {
+       if (e.keyCode == 13) { **/
+
+    var baseLabel = $("<label id ='baseLabel'></label>").text("Base execution:");
+    var execsList = $("<select class='clusterBase'></select>");
+    // Set a placeholder for the drop-down
+    execsList.append($("<option value=''></option>").prop("disabled", true).prop("selected", true).css("display", "none").text("Select a base execution"));
+    $("table.clusterResults").append(baseLabel, execsList);
+
+    global.getViews().forEach(function(view) {
+        var label = view.getLabel();
+        execsList.append('<option value="' + label + '">' + label + '</option>');
+    });
+
+    $("select.clusterBase").unbind().on("change", function() {
+         var base = global.getViewByLabel($(".clusterBase option:selected").val());
+         var noDiffExecs = [];
+         var sameHostsDiffEventsExecs = [];
+         var diffHostsSameEventsExecs = [];
+         var diffHostsDiffEventsExecs = [];
+
+         // Clear the table results whenever a new base is selected
+         context.clearResults();
+
+         var baseHosts = base.getHosts();
+         var views = global.getViews();
+         for (var i=0; i < views.length; i++) {
+              var currView = views[i];
+
+              // Compare every view to the base
+              if (currView != base) {
+                  var currViewLabel = currView.getLabel();
+
+                  // Search for unique hosts and events in the non-base view
+                  var uniqueHosts = [], uniqueEvents = [];
+                  var hiddenHosts = currView.getTransformer().getHiddenHosts();
+                  var sdt = new ShowDiffTransformation(base, uniqueHosts, hiddenHosts, uniqueEvents, false);
+                  sdt.transform(currView.getVisualModel());
+                  
+                  // Search for unique hosts and events in the base
+                  var baseUniqueHosts = [], baseUniqueEvents = [];
+                  var baseHiddenHosts = base.getTransformer().getHiddenHosts();
+                  sdt = new ShowDiffTransformation(currView, baseUniqueHosts, baseHiddenHosts, baseUniqueEvents, false);
+                  sdt.transform(base.getVisualModel());
+
+                  if (baseUniqueHosts.length > 0 || uniqueHosts.length > 0) {
+                     // The current view has different hosts and different events
+                     if (baseUniqueEvents.length > 0 || uniqueEvents.length > 0) {
+                          diffHostsDiffEventsExecs.push(currViewLabel);
+                     }
+                     // The current view has only different hosts
+                     else {
+                         diffHostsSameEventsExecs.push(currViewLabel);
+                     }
+                  } else {
+                     // The current view has the same hosts but different events
+                     if (baseUniqueEvents.length > 0 || uniqueEvents.length > 0) {
+                         sameHostsDiffEventsExecs.push(currViewLabel);
+                     }
+                     // The current view has no differences 
+                     else {
+                         noDiffExecs.push(currViewLabel);
+                     }
+                  }
+              }
+        }
+        var headings = context.headings;
+        var map = context.headingsToLabelsMap;
+
+        // Determine which headings and subheadings should be drawn, map subheadings and execution labels to proper headings
+
+        if (noDiffExecs.length > 0 || sameHostsDiffEventsExecs.length > 0) {
+             headings.push("Same hosts as base:");
+             var sameHostsSubheadings = [];
+             var sameHostsExecLabels = [];
+
+             if (noDiffExecs.length > 0) {
+                 sameHostsSubheadings.push("Same events as base:");
+                 sameHostsExecLabels.push(noDiffExecs);
+             }
+             if (sameHostsDiffEventsExecs.length > 0) {
+                 sameHostsSubheadings.push("Different events from base:");
+                 sameHostsExecLabels.push(sameHostsDiffEventsExecs);
+             }
+             map["Same hosts as base:"] = [sameHostsSubheadings, sameHostsExecLabels];
+        }
+        if (diffHostsSameEventsExecs.length > 0 || diffHostsDiffEventsExecs.length > 0) {
+             headings.push("Different hosts from base:");
+             var diffHostsSubheadings = [];
+             var diffHostsExecLabels = [];
+
+             if (diffHostsSameEventsExecs.length > 0) {
+                 diffHostsSubheadings.push("Same events as base:");
+                 diffHostsExecLabels.push(diffHostsSameEventsExecs);
+             }
+             if (diffHostsDiffEventsExecs.length > 0) {
+                 diffHostsSubheadings.push("Different events from base:");
+                 diffHostsExecLabels.push(diffHostsDiffEventsExecs);
+             }
+             map["Different hosts from base:"] = [diffHostsSubheadings, diffHostsExecLabels];
+        }
+        context.drawClusterLines();
+   });
+}
+
+/**
+  * Sorts an array of execution labels based on the chosen metric for clustering:
   * When clustering by the number of processes, the labels are ordered by increasing number of processes.
   *
   * @param {Array<String>} labels The execution labels to be sorted
@@ -151,55 +256,170 @@ Clusterer.prototype.sortLabels = function(labels) {
 }
 
 /**
-  * This function is responsible for drawing and listing executions under the appropriate cluster headings
-  * For each cluster heading, it gets the corresponding execution labels and draws them underneath the heading.
-  * If the cluster has more than 10 executions, the extra labels are hidden until a user expands the list.
+  * Condenses the list of execution labels beloning to the given heading or subheading
+  *
+  * @param {jQuery.selection} heading A jQuery selection of the heading or subheading whose execution labels need to be condensed
+  */
+Clusterer.prototype.condenseExecLabels = function(heading) {
+    heading.nextAll("br.condense:first").nextUntil("br.stop:first").hide();
+    this.table.append("<br>", $("<a></a>").text("Show all").attr("href", heading).css("color","black"), "<br>");
+}
+
+/**
+  * Draws the given list of execution labels and calls condenseExecLabels() when appropriate
+  *
+  * @param {Array<String>} currLabels The execution labels to be drawn
+  * @param {jQuery.selection} currHeading A jQuery selection of the heading or subheading that currLabels is drawn under
+  */
+Clusterer.prototype.drawExecLabels = function(currLabels, currHeading) {
+    var table = this.table;
+    var global = this.global;
+
+    for (var k=0; k < currLabels.length; k++) {
+         var currLabel = currLabels[k];
+         // Create a breakpoint for condensing execution labels
+         if (k == 5) {
+             table.append($("<br class=condense>").hide());
+         }
+         // Include the number of processes beside the label when clustering by number of processes
+         if (this.metric == "clusterNumProcess" && this.headings.length > 1) {
+            var numProcess = global.getViewByLabel(currLabel).getHosts().length;
+            if (numProcess == 1) {
+                table.append($("<a></a>").text(currLabel + " - " + numProcess + " process").attr("href", currLabel), "<br>");
+            } else {
+                table.append($("<a></a>").text(currLabel + " - " + numProcess + " processes").attr("href", currLabel), "<br>");
+            }
+         } else {
+             table.append($("<a></a>").text(currLabel).attr("href", currLabel), "<br>");
+         }
+    }
+    table.append($("<br class=stop>").hide());
+
+    // Condense the list if there are more than 5 executions
+    if (currLabels.length > 5) {
+        this.condenseExecLabels(currHeading);
+    }
+}
+
+/**
+  * Draws the cluster headings and subheadings and passes the appropriate execution labels to drawExecLabels().
+  * Formats and binds events to results after all execution labels for all headings and subheadings have been drawn.
   */
 Clusterer.prototype.drawClusterLines = function() {
     var global = this.global;
     var metric = this.metric;
     var table = this.table;
     var headings = this.headings;
-    var executionLabels = this.executionLabels;
+    var map = this.headingsToLabelsMap;
 
     for (var i=0; i < headings.length; i++) {
           // Draw the cluster heading
-          var $currHeading = $("<div></div>").text(headings[i]);
-          table.append("<br>", $currHeading, "<br>");
+          var currHeading = headings[i];
+          var $currHeadingLabel = $("<p></p>").text(currHeading);
+          table.append($currHeadingLabel);
 
-          // Sort the labels for the executions in this cluster
-          var currLabels = this.sortLabels(executionLabels[i]);
+          // Get the subheadings for this heading
+          var subheadings = map[currHeading][0];
+          // Get the array of executions labels for this heading
+          var execLabelsArray = map[currHeading][1];
+          var currLabels = [];
 
-          // List the executions under the cluster heading
-          for (var j=0; j < currLabels.length; j++) {
-               var currLabel = currLabels[j];
-               // Create a breakpoint for condensing cluster lines
-               if (j == 10) {
-                   table.append($("<br class=condense>").hide());
-               }
-               // Include the number of processes beside the label when clustering by number of processes
-               if (metric == "clusterNumProcess" && headings.length > 1) {
-                  var numProcess = global.getViewByLabel(currLabel).getHosts().length;
-                  if (numProcess == 1) {
-                      table.append($("<a></a>").text(currLabel + " - " + numProcess + " process").attr("href", currLabel), "<br>");
-                  } else {
-                      table.append($("<a></a>").text(currLabel + " - " + numProcess + " processes").attr("href", currLabel), "<br>");
-                  }
-               } else {
-                   table.append($("<a></a>").text(currLabel).attr("href", currLabel), "<br>");
-               }
-          }
-          table.append($("<br class=stop>").hide());
+          // If the subheadings array is empty, there's only one array of execution labels
+          if (subheadings.length == 0) {
+              currLabels = this.sortLabels(execLabelsArray[0]);
+              this.drawExecLabels(currLabels, $currHeadingLabel);
 
-          // Condense the list if there are more than 10 executions
-          if (currLabels.length > 10) {
-              condenseClusterLines($currHeading);
+          // Otherwise, draw the subheadings and the corresponding execution labels beneath them
+          } else {
+              for (var j=0; j < subheadings.length; j++) {
+                  var $subheadingLabel = $("<p></p>").text(subheadings[j]).addClass("indent");
+                  table.append($subheadingLabel);
+                  currLabels = this.sortLabels(execLabelsArray[j])
+                  this.drawExecLabels(currLabels, $subheadingLabel);
+              }
           }
     }
 
-    function condenseClusterLines(heading) {
-        heading.nextAll("br.condense:first").nextUntil("br.stop:first").hide();
-        table.append("<br>", $("<a></a>").text("Show all").attr("href", heading).css("color","black"), "<br>");
-    }
+    table.find("a").addClass("indent");
     $("table.clusterResults").append(table);
+
+    // Bind the click event to the cluster lines
+    $("table.clusterResults a").on("click", function(e) {
+        var anchorText = $(this).text();
+        var anchorHref = $(this).attr("href");
+
+        if (anchorText == "Show all") {
+            $(this).text("Condense");
+            $(this).prevAll("br.condense:first").nextUntil("br.stop").not("br.left, br.right").show();
+        } else if (anchorText == "Condense") {
+            $(this).text("Show all");
+            // Condense up to the nearest left or right arrow icon instead of all the way up
+            if ($(this).prevAll("br.condense:first").nextUntil("br.stop", "br.left").length > 0) {
+                if ($(this).prevAll("br.left").nextUntil("br.stop", "br.right").length > 0) {
+                    $(this).prevAll("br.right").nextUntil("br.stop").hide();
+                } else {
+                    $(this).prevAll("br.left").nextUntil("br.stop").hide();
+                }
+            } else if ($(this).prevAll("br.condense:first").nextUntil("br.stop", "br.right").length > 0) {
+                $(this).prevAll("br.right").nextUntil("br.stop").hide();
+            } else {
+                $(this).prevAll("br.condense:first").nextUntil("br.stop").hide();              
+            }
+        } else {
+            // If the execution label corresponds to the graph on the right, swap the two graphs
+            if (global.getPairwiseView() && anchorHref == global.getActiveViews()[1].getLabel()) {
+                global.swapViews();
+            // Otherwise, draw the clicked on execution on the left graph
+            } else {
+                $("#viewSelectL").children("option[value='" + anchorHref + "']").prop("selected", true).change();
+            }
+        }
+        e.preventDefault();
+    });
+
+    $("#labelIconL, #labelIconR, #selectIconL, #selectIconR").show();
+
+    // For comparison clustering, by default, make the graph on the right the base execution
+    if (metric == "clusterComparison") {
+        var baseExec = $(".clusterBase option:selected").val();
+        if (baseExec == global.getActiveViews()[0].getLabel()) {
+            global.swapViews();
+        } else {
+            global.setRightView(global.getViewByLabel(baseExec));
+        }
+    // For other clustering options, make the graph on the right the second execution in the results
+    } else {
+        var secondExec = $("table.clusterResults a").first().nextAll("a:first").attr("href");
+        if (secondExec == global.getActiveViews()[0].getLabel()) {
+            global.swapViews();
+        } else {
+            global.setRightView(global.getViewByLabel(secondExec));
+        }
+    }
+
+    // Change the left graph to be that of the first execution in the first cluster
+    var firstExec = $("table.clusterResults a").first().attr("href");
+    // If the first execution happens to already be in the right graph, swap the views so that the left graph is still the first execution
+    if (firstExec == global.getActiveViews()[1].getLabel()) {
+        global.swapViews();
+    } else {
+        $("#viewSelectL").children("option[value='" + firstExec + "']").prop("selected", true).change();
+    }
+
+    if (global.getPairwiseView() && global.getViews().length == 2) {
+        global.drawClusterIcons();
+    }
+}
+
+/**
+  * Clears the results table as well as any existing headings, subheadings and executions labels
+  */
+Clusterer.prototype.clearResults = function() {
+    this.headings = [];
+    this.headingsToLabelsMap = {};
+
+    // clear the table cells
+    $("table.clusterResults td").empty();
+    $("table.clusterResults td:empty").remove();
+
 }

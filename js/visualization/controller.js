@@ -130,10 +130,14 @@ function Controller(global) {
             $(this).text("Individual");
             global.setPairwiseView(true);
             global.drawAll();
-            $("#viewSelectR").change();
+            if ($("#clusterNumProcess").is(":checked") || $("#clusterComparison").is(":checked")) {
+                global.drawClusterIcons();
+            }
         }           
         else {
             $(this).text("Pairwise");
+            // Remove the right view arrow when viewing graphs individually
+            $("table.clusterResults #clusterIconR").remove();
             // Remove differences when viewing graphs individually
             if (global.getShowDiff()) {
                $(".diffButton").click();
@@ -141,7 +145,9 @@ function Controller(global) {
             $(".diffButton").hide();
             global.setPairwiseView(false);
             global.drawAll();
-            $("#viewSelectL").change();
+            if ($("#clusterNumProcess").is(":checked") || $("#clusterComparison").is(":checked")) {
+                global.drawClusterIcons();
+            }
         }
         searchbar.countMotifs();
     });
@@ -149,8 +155,31 @@ function Controller(global) {
     $(".visualization .leftTabLinks a").unbind().on("click", function(e) {
         $(".visualization #" + $(this).attr("href")).show().siblings().hide();
         $(this).parent("li").addClass("default").siblings("li").removeClass("default");
-        global.drawAll();
+        if ($(this).attr("href") == "clusterTab") {
+            // Remove any highlighting from Log lines tab
+            $(".highlight").css("opacity", 0);
+            if ($("#clusterNumProcess").is(":checked") || $("#clusterComparison").is(":checked") && $(".clusterBase").val() != null) {
+                $("#labelIconL, #labelIconR, #selectIconL, #selectIconR").show();
+            }
+        } else {
+            $("#labelIconL, #labelIconR, #selectIconL, #selectIconR").hide();
+        }
         e.preventDefault();
+    });
+
+    $("#clusterNumProcess, #clusterComparison").unbind().on("change", function() {
+        $("#labelIconL, #labelIconR, #selectIconL, #selectIconR").hide();
+
+        if ($(this).is(":checked")) {
+            $(this).siblings("input").prop("checked", false);
+            // Generate clustering results
+            var clusterer = new Clusterer($(this).attr("id"));
+            clusterer.setGlobal(self.global);
+            clusterer.cluster();
+        } else {
+            // Clear the results if no option is selected
+            $("table.clusterResults").children().remove();
+        }     
     });
 }
 
@@ -362,13 +391,15 @@ Controller.prototype.bindNodes = function(nodes) {
         var $line = $("#line" + e.getId());
         var $parent = $line.parent(".line").addClass("reveal");
 
-        $line.addClass("focus").css({
-            "background": "transparent",
-            "color": "white",
-            "width": "calc(" + $line.width() + "px - 1em)"
-        }).data("fill", e.getFillColor());
+        // Only highlight log lines on the Log Lines tab
 
         if ($(".leftTabLinks li").first().hasClass("default")) {
+            
+            $line.addClass("focus").css({
+                "background": "transparent",
+                "color": "white",
+                "width": "calc(" + $line.width() + "px - 1em)"
+            }).data("fill", e.getFillColor());
 
             $(".highlight").css({
                 "width": $line.width(),
@@ -394,7 +425,6 @@ Controller.prototype.bindNodes = function(nodes) {
                 "id": e.getId()
             }).show();
         }
-
     });
 };
 
