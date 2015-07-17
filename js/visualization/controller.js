@@ -149,7 +149,6 @@ function Controller(global) {
                 global.drawClusterIcons();
             }
         }
-        searchbar.countMotifs();
     });
 
     $(".visualization .leftTabLinks a").unbind().on("click", function(e) {
