@@ -184,7 +184,6 @@ Global.prototype.drawAll = function() {
                     global.controller.showDiff();
                 }
                 global.drawAll();
-                searchbar.countMotifs();
            });
        }          
     }
@@ -224,7 +223,6 @@ Global.prototype.drawAll = function() {
             global.controller.showDiff();
         }
         global.drawAll();
-        searchbar.countMotifs();
     });
     
     this.viewL.draw("L");
@@ -261,6 +259,8 @@ Global.prototype.drawAll = function() {
     this.$vizContainer.height("auto");
     $(".dialog").hide();
     this.drawSideBar();
+
+    searchbar.countMotifs();
 };
 
 /**
