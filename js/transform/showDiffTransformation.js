@@ -28,7 +28,7 @@
  * 
  * @constructor
  */
-function ShowDiffTransformation(viewBeingComparedTo, uniqueHosts, hiddenHosts, uniqueEvents) {
+function ShowDiffTransformation(viewBeingComparedTo, uniqueHosts, hiddenHosts, uniqueEvents, redraw) {
     /** @private */
     this.viewBeingComparedTo = viewBeingComparedTo;
     
@@ -40,6 +40,9 @@ function ShowDiffTransformation(viewBeingComparedTo, uniqueHosts, hiddenHosts, u
     
     /** @private */
     this.uniqueEvents = uniqueEvents;
+
+    /** @private */
+    this.redraw = redraw;
 }
 
 // ShowDiffTransformation extends Transformation
@@ -75,9 +78,11 @@ ShowDiffTransformation.prototype.compare = function(model) {
                 if (this.uniqueHosts.indexOf(currHost) == -1) { 
                    this.uniqueHosts.push(currHost);
                 }
-                var visualNode = model.getVisualNodeByNode(head);
-                // re-draw the host as a rhombus
-                visualNode.drawHostAsRhombus();
+                if (this.redraw) {
+                    var visualNode = model.getVisualNodeByNode(head);
+                    // re-draw the host as a rhombus
+                    visualNode.drawHostAsRhombus();
+                }
              }
         // if the other view also has this host and it's not hidden,
         // compare these two processes node by node - have to check
@@ -158,13 +163,15 @@ ShowDiffTransformation.prototype.compareNodeContent = function(model, next, othe
                 var visualNode = model.getVisualNodeByNode(next);
                 // keep track of unique events so that they're drawn differently when clicked on
                 this.uniqueEvents.push(visualNode.getId());
-                // re-draw the node as a rhombus
-                if (!visualNode.isCollapsed()) { 
-                    visualNode.drawEventAsRhombus(7,9); 
-                } else {
-                    // if the node is collapsed, draw a bigger rhombus with the number of collapsed nodes displayed inside
-                    visualNode.drawEventAsRhombus(15,17);
-                    visualNode.setLabel(visualNode.getNode().getLogEvents().length); 
+                if (this.redraw) {
+                    // re-draw the node as a rhombus
+                    if (!visualNode.isCollapsed()) { 
+                        visualNode.drawEventAsRhombus(7,9); 
+                    } else {
+                        // if the node is collapsed, draw a bigger rhombus with the number of collapsed nodes displayed inside
+                        visualNode.drawEventAsRhombus(15,17);
+                        visualNode.setLabel(visualNode.getNode().getLogEvents().length); 
+                    }
                 }
             }
             otherNext = otherNextCopy;

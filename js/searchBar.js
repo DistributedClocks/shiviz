@@ -62,7 +62,7 @@ function SearchBar() {
         context.updateMode();
     });
 
-    $(window).unbind("keydown.search").on("keydown.search", function(e) {
+    $("#searchbar #bar input").unbind("keydown.search").on("keydown.search", function(e) {
         // Only act when panel is expanded
         if (!context.isPanelShown())
             return;
@@ -70,8 +70,10 @@ function SearchBar() {
         switch (e.which) {
         // Return
         case 13:
-            context.query();
-            context.hidePanel();
+            if (context.getValue().trim().length != 0) {
+                context.query();
+                context.hidePanel();
+            }
             break;
 
         // Escape
@@ -130,22 +132,12 @@ function SearchBar() {
     });
 
     $("#searchbar .searchTabLinks a").on("click", function(e) {
-        context.clear();
-
         // Show the clicked on tab and hide the others
         var currentTab = $(this).attr("href");
         $("#searchbar #" + currentTab).show().siblings("div").hide();
         $(this).parent("li").addClass("default").siblings("li").removeClass("default");
         // prevent id of div from being added to URL
         e.preventDefault();
-        
-        // Prevent users from typing into input area unless Text Search is selected
-        var $input = $("#searchbar .mono");
-        if (currentTab == "textTab") {
-            $input.prop("readonly", false);
-        } else {
-            $input.prop("readonly", true);
-        }
     });
 }
 
@@ -377,6 +369,8 @@ SearchBar.prototype.clearResults = function() {
         this.global.getController().clearHighlight();
         this.global.drawAll();
     }
+    $("select.clusterBase").removeClass("fade");
+    $("table.clusterResults a").removeClass("execFade");
 };
 
 /**
@@ -445,7 +439,7 @@ SearchBar.prototype.query = function() {
                 else
                     broadcast = false;
 
-                this.global.getActiveViews().forEach(function(view) {
+                this.global.getViews().forEach(function(view) {
 
                     var hiddenHosts = view.getTransformer().getHiddenHosts();
                     var hiddenHosts = view.getTransformer().getHiddenHosts();
@@ -483,7 +477,7 @@ SearchBar.prototype.query = function() {
 SearchBar.prototype.countMotifs = function() {
     // Only compute and display the motif count if a search is being performed
     if ($("#searchbar").hasClass("results")) {
-    var views = this.global.getActiveViews();
+        var views = this.global.getActiveViews();
         this.motifNavigator = new MotifNavigator();
         this.motifNavigator.addMotif(views[0].getVisualModel(), views[0].getTransformer().getHighlightedMotif());
         // getHighlightedMotif is null until a view is drawn and viewR or views[1] is only drawn when a user selects pairwise view

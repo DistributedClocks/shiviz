@@ -351,6 +351,7 @@ VisualNode.prototype.getOpacity = function() {
 VisualNode.prototype.setOpacity = function(opacity) {
     this.opacity = opacity;
     this.$circle.attr("opacity", opacity);
+    this.$diamond.attr("opacity", opacity);
 };
 
 /**
