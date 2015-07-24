@@ -114,7 +114,12 @@ Global.prototype.drawAll = function() {
     // Show arrow icons and highlight cluster results that match a search term when on the Clusters tab
     if ($(".leftTabLinks li").is(":visible") && !$(".leftTabLinks li").first().hasClass("default")) {
         if ($("#clusterNumProcess").is(":checked") || ($("#clusterComparison").is(":checked") && $(".clusterBase").val() != null)) {
-            labelIconL.show(); labelIconR.show(); selectIconL.show(); selectIconR.show();
+            labelIconL.show(); selectIconL.show(); 
+
+            if (global.getPairwiseView()) {
+                labelIconR.show();
+                selectIconR.show();
+            }
             var selected = $("select.clusterBase option:selected");
 
             // If the searchbar is not empty, fade out all executions in Clusters tab
@@ -142,10 +147,14 @@ Global.prototype.drawAll = function() {
         }
     }
 
-    if (this.getPairwiseView()) {
+    if (this.viewR != null) {
+        // the "Pairwise" button is only visible when there are > 1 executions
+        $(".pairwiseButton").show();
+        $(".visualization .left #tabs").css("height", "4.5em");
+
         var rightLabel = this.viewR.getLabel();
-       // If there are only two executions, use labels instead of drop-downs
-       if (numViews == 2) {
+       // If there are only two executions in pairwise view, use labels instead of drop-downs
+       if (numViews == 2 && global.getPairwiseView()) {
           this.$hostBar.append(viewLabelDiv);
           var viewLabelR = $('<p id="viewLabelR"></p>').text(rightLabel).append(labelIconR);
           viewLabelDiv.append(viewLabelL, viewLabelR);
@@ -153,15 +162,23 @@ Global.prototype.drawAll = function() {
        // Otherwise, use drop-downs
        } else {
             this.$hostBar.append(viewSelectDiv); 
-            var viewSelectR = $('<select id="viewSelectR"></select>');
-            viewSelectDiv.append(selectIconL, selectIconR, viewSelectL, viewSelectR);
+            var viewSelectR = $('<select id="viewSelectR"></select>').hide();
+            viewSelectDiv.append(selectIconL, selectIconR, viewSelectL);
+            if (numViews != 2) {
+                viewSelectDiv.append(viewSelectR);
+            }
       
             this.views.forEach(function(view) {
                var label = view.getLabel();
-        
-               if (label != rightLabel) {
-                  viewSelectL.append('<option value="' + label + '">' + label + '</option>');
-               }      
+
+               if (global.getPairwiseView()) {
+                  if (label != rightLabel) {
+                      viewSelectL.append('<option value="' + label + '">' + label + '</option>');
+                  }
+               // Include every view as an option for the left drop-down when not in pairwise view
+               } else {
+                    viewSelectL.append('<option value="' + label + '">' + label + '</option>');
+               }
                if (label != leftLabel) {
                   viewSelectR.append('<option value="' + label + '">' + label + '</option>');
                }
@@ -176,33 +193,24 @@ Global.prototype.drawAll = function() {
                 global.controller.hideDiff();
 
                 global.viewR = global.getViewByLabel(valR);
+                if (global.getShowDiff()) {
+                    global.controller.showDiff();
+                } else {
+                    global.drawAll();
+                }
                 // When clustering, draw cluster icons next to the execution dropdown or label
                 if ($("#clusterNumProcess").is(":checked") || $("#clusterComparison").is(":checked")) {
                     global.drawClusterIcons();
                 }
-                if (global.getShowDiff()) {
-                    global.controller.showDiff();
-                }
-                global.drawAll();
            });
        }          
     }
-    // If viewing executions individually
+    // If there is a single execution
     else {
-       if (numViews == 1) {
-          // The label here is "" but it'll help shift the hostbar down
-          this.$hostBar.append(viewLabelDiv); 
-          viewLabelDiv.append(viewLabelL);
-        } else {
-             this.$hostBar.append(viewSelectDiv);
-             viewSelectDiv.append(selectIconL, viewSelectL);
-
-             this.views.forEach(function(view) {
-                var label = view.getLabel();
-                viewSelectL.append('<option value="' + label + '">' + label + '</option>');     
-             });
-             viewSelectL.children("option[value='" + leftLabel + "']").prop("selected", true);
-         }
+        // The label here is "" but it'll help shift the hostbar down
+        this.$hostBar.append(viewLabelDiv); 
+        viewLabelDiv.append(viewLabelL);
+        $(".visualization .left #tabs").css("height", "2.5em");
     }
 
     viewSelectL.unbind().on("change", function(e) {
@@ -215,45 +223,40 @@ Global.prototype.drawAll = function() {
             global.viewR = global.viewL;
         }
         global.viewL = global.getViewByLabel(valL);
+        if (global.getShowDiff()) {
+            global.controller.showDiff();
+        } else {
+            global.drawAll();
+        }
         // When clustering, draw cluster icons next to the execution dropdown or label
         if ($("#clusterNumProcess").is(":checked") || $("#clusterComparison").is(":checked")) {
             global.drawClusterIcons();
         }
-        if (global.getShowDiff()) {
-            global.controller.showDiff();
-        }
-        global.drawAll();
     });
     
     this.viewL.draw("L");
-    $(".visualization .left #tabs").css("height", "2.5em");
     this.$vizContainer.append(this.viewL.getSVG());
     this.$hostBar.append(this.viewL.getHostSVG());
     this.$logTable.append(this.viewL.getLogTable());
     this.controller.bindLines(this.viewL.getLogTable().find(".line:not(.more)"));
   
-    if (this.viewR != null) {
-        // the "Pairwise" button is only visible when there are > 1 executions
-        $(".pairwiseButton").show();
-        if (this.getPairwiseView()) {
-            // the "Show Differences" button is only visible when executions are displayed side-by-side
-            $(".diffButton").show();
-            this.viewR.draw("R");
-            // Draw the separator between the two views - this separator is only visible when
-            // at least one process is present (not hidden) in both views
-            if ((this.viewL.getTransformer().getHiddenHosts().length < this.viewL.getHosts().length) &&
-               (this.viewR.getTransformer().getHiddenHosts().length < this.viewR.getHosts().length)) {
-                  var viewSeparator = $('<div id="viewSeparator"></div>');
-                  viewSeparator.css("height", global.getMaxViewHeight());
-                  this.$vizContainer.append(viewSeparator);
-            }   
-            this.$vizContainer.append(this.viewR.getSVG());
-            this.$hostBar.append(this.viewR.getHostSVG());
-            this.$logTable.append($("<td></td>").addClass("spacer"));
-            this.$logTable.append(this.viewR.getLogTable());
-            this.controller.bindLines(this.viewR.getLogTable().find(".line:not(.more)"));
-        }
-        $(".visualization .left #tabs").css("height", "4.5em");
+    if (this.getPairwiseView()) {
+        $(".diffButton").show(); $("#viewSelectR").show();
+
+        this.viewR.draw("R");
+        // Draw the separator between the two views - this separator is only visible when
+        // at least one process is present (not hidden) in both views
+        if ((this.viewL.getTransformer().getHiddenHosts().length < this.viewL.getHosts().length) &&
+           (this.viewR.getTransformer().getHiddenHosts().length < this.viewR.getHosts().length)) {
+              var viewSeparator = $('<div id="viewSeparator"></div>');
+              viewSeparator.css("height", global.getMaxViewHeight());
+              this.$vizContainer.append(viewSeparator);
+        }   
+        this.$vizContainer.append(this.viewR.getSVG());
+        this.$hostBar.append(this.viewR.getHostSVG());
+        this.$logTable.append($("<td></td>").addClass("spacer"));
+        this.$logTable.append(this.viewR.getLogTable());
+        this.controller.bindLines(this.viewR.getLogTable().find(".line:not(.more)"));
     }
 
     this.$vizContainer.height("auto");
@@ -312,22 +315,6 @@ Global.prototype.getViewByLabel = function(label) {
 Global.prototype.setHostPermutation = function(hostPermutation) {
     this.hostPermutation = hostPermutation;
 };
-
-/**
-  * Sets the right view. This function will only redraw the visualization
-  * with the newly set right view when graphs are viewed pairwise.
-  *
-  * @param {View} view The new view to set for this global's viewR
-  */
-Global.prototype.setRightView = function(view) {
-    // This prevents a right view from being set for logs with one execution
-    if (this.viewR != null) {
-        this.viewR = view;
-        if (this.getPairwiseView()) {
-            this.drawAll();
-        }
-    }
-}
 
 /**
  * Sets the showDiff boolean value
@@ -479,6 +466,12 @@ Global.prototype.drawHiddenHostAsRhombus = function(container) {
   */
 Global.prototype.drawClusterIcons = function() {
     $("#clusterIconL, #clusterIconR, br.spaceL, br.spaceR, br.left, br.right").remove();
+
+    // Condense any previously expanded results
+    $("table.clusterResults a").filter(function() {
+      return $(this).text() == "Condense";
+    }).click();
+
     var leftLabel = this.viewL.getLabel();
     var rightLabel = this.viewR.getLabel();
     var clusterIconL = $('<label id="clusterIconL"></label>').text("r");
