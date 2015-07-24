@@ -372,6 +372,10 @@ Clusterer.prototype.drawClusterLines = function() {
             // Otherwise, draw the clicked on execution on the left graph
             } else {
                 $("#viewSelectL").children("option[value='" + anchorHref + "']").prop("selected", true).change();
+                // For logs with exactly two executions, there are no execution drop-downs so have to call drawClusterIcons directly
+                if (global.getPairwiseView() && global.getViews().length == 2) {
+                    global.drawClusterIcons();
+                }
             }
         }
         e.preventDefault();
@@ -385,7 +389,11 @@ Clusterer.prototype.drawClusterLines = function() {
         if (baseExec == global.getActiveViews()[0].getLabel()) {
             global.swapViews();
         } else {
-            global.setRightView(global.getViewByLabel(baseExec));
+            $("#viewSelectR").children("option[value='" + baseExec + "']").prop("selected", true).change();
+            // For logs with exactly two executions, there are no execution drop-downs so have to call drawClusterIcons directly
+            if (global.getPairwiseView() && global.getViews().length == 2) {
+                global.drawClusterIcons();
+            }
         }
     // For other clustering options, make the graph on the right the second execution in the results
     } else {
@@ -393,22 +401,16 @@ Clusterer.prototype.drawClusterLines = function() {
         if (secondExec == global.getActiveViews()[0].getLabel()) {
             global.swapViews();
         } else {
-            global.setRightView(global.getViewByLabel(secondExec));
+            $("#viewSelectR").children("option[value='" + secondExec + "']").prop("selected", true).change();
+            // For logs with exactly two executions, there are no execution drop-downs so have to call drawClusterIcons directly
+            if (global.getPairwiseView() && global.getViews().length == 2) {
+                global.drawClusterIcons();
+            }
         }
     }
 
     // Change the left graph to be that of the first execution in the first cluster
-    var firstExec = $("table.clusterResults a").first().attr("href");
-    // If the first execution happens to already be in the right graph, swap the views so that the left graph is still the first execution
-    if (firstExec == global.getActiveViews()[1].getLabel()) {
-        global.swapViews();
-    } else {
-        $("#viewSelectL").children("option[value='" + firstExec + "']").prop("selected", true).change();
-    }
-
-    if (global.getPairwiseView() && global.getViews().length == 2) {
-        global.drawClusterIcons();
-    }
+    $("table.clusterResults a").first().click();
 }
 
 /**
