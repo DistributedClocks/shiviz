@@ -1,0 +1,1180 @@
+@font-face {
+    font-family: "Icon";
+    src: url("../fonts/icons.woff") format("woff");
+}
+
+@font-face {
+    font-family: "Icomoon";
+    src: url("../fonts/icomoon.woff");
+}
+
+body {
+    font-size: 12pt;
+    font-family: "Helvetica Neue", Helvetica, sans-serif;
+    margin: 0;
+    padding: 2em;
+    box-sizing: border-box;
+    text-rendering: optimizeLegibility;
+}
+
+h1 {
+    font-size: 48pt;
+    font-weight: 300;
+    letter-spacing: -2px;
+    margin: 24pt 0 24pt -2px;
+}
+
+h2 {
+    font-weight: 300;
+    margin: 24pt 0;
+    -webkit-hyphens: auto;
+    -moz-hyphens: auto;
+}
+
+h3 {
+    margin: 2em 0 1em;
+}
+
+a {
+    color: #04a;
+
+    &:hover:not(.execFade) {
+    	color: #15b;
+    }
+    &:active:not(.execFade) {
+    	color: #048;
+    }
+    &:not(:hover) {
+    	text-decoration: none;
+    }
+}
+
+header > a,
+#examples a:not(:first-child) {
+    margin-left: 1em;
+}
+
+section:not(.home) {
+    display: none;
+}
+
+input[type="text"], textarea, button {
+    display: block;
+    box-sizing: border-box;
+    width: 100%;
+    margin: 1em 0;
+}
+
+.option, button {
+    margin: 1.5em 0;
+}
+
+.regex {
+    font-family: monospace;
+    font-size: .9em;
+}
+
+.fade {
+    opacity: 0.5;
+}
+
+input, textarea {
+    outline: none;
+    border: 1px solid #aaa;
+    padding: .4em;
+}
+input.mono {
+    font-family: monospace;
+}
+
+select {
+    outline: none;
+    font-size: 12pt;
+    margin: 0;
+    padding: 0;
+}
+
+input:focus,
+input.focus,
+textarea:focus {
+    border-color: black;
+}
+
+button {
+    background: #04a;
+    border: none;
+    color: rgba(255,255,255,.9);
+    padding: 1em;
+    outline: none;
+    text-transform: uppercase;
+    cursor: pointer;
+
+    &:hover {
+        background: #15b;
+        color: #fff;    
+    }
+    &:active {
+        background: #048;
+        color: rgba(255,255,255,.6);
+    }
+    &:disabled {
+        background: #aaa;
+        pointer-events: none;   
+    }
+}
+
+.load {
+    visibility: hidden;
+    font-family: "Icon";
+    position: absolute;
+}
+
+/* Icon nav */
+
+header.icon {
+    width: 10.1em;
+    font-family: "Icon";
+    font-size: 24pt;
+    overflow: hidden;
+    margin-left: -.1em;
+
+    ul {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+
+        li {
+            float: left;
+            color: #aaa;
+            cursor: pointer;
+
+            &:hover {
+                color: #04a;
+            }
+            &.active {
+                color: #04a;
+                pointer-events: none;    
+            }
+        }
+
+        &.tabs {
+            li {
+                margin-right: 1em;
+
+                &.disabled {
+                    color: #ddd;
+                    pointer-events: none;              
+                }        
+            }
+        }
+
+        &.links {
+            li {
+                margin-left: 1em;
+                a {
+                    color: #aaa;
+                    &:hover {
+                        color: #04a;
+                        text-decoration: none;       
+                    }
+                }    
+            }
+        }
+    }
+}
+
+/* Home */
+
+section.home .content {
+    width: calc((100% / 2) - 100px);
+    min-width: 480px;
+    float: left;
+
+    li {
+        margin: 1em 0;
+    }
+    pre {
+        padding: .2em 0;
+        overflow: auto;
+    }
+}
+
+section.home .shivizexample {
+    float: left;
+    padding-left: 50px;
+    padding-top: 50px;
+    width: calc((100% / 2) - 100px);
+    /* border: 1px solid #aaa; */
+
+    img {
+        padding-top: 75px;
+    }
+}
+
+#versionContainer {
+    position: absolute;
+    top: 24pt;
+    right: 24pt;
+    height: 30px;
+    text-align: right;
+    color: grey;
+    font-size: 8pt;
+    font-family: monospace;
+}
+
+/* Input */
+
+section.input .right textarea #input {
+    resize: none;
+    height: calc(100% - 2em);
+}
+
+section.input {
+    width: 100%;
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+    td {
+        vertical-align: top;
+        padding: 0;
+    }
+    .left {
+        width: 240pt;
+        min-width: 240pt;
+        padding-right: 2em;   
+    }
+}
+
+#input {
+    margin: 0;
+}
+
+#examples {
+    font-size: 10pt;
+    padding-bottom: 1em;
+}
+
+/* File input */
+
+#file_input {
+    position: relative;
+
+    li {
+        list-style-position: inside;
+        text-indent: -1em;
+        padding-left: 1em; 
+    }
+}
+
+#file_icon {
+    font-family: "Icon";
+    font-size: 24pt;
+    position:relative;
+    top: 10px;
+    left: 5px;
+    opacity: 0.35;
+
+    &:hover {
+        opacity: 0.4;
+        cursor: default;  
+    }
+
+    &:hover + #file_desc {
+        display: block;
+        border: 1px solid #aaa;
+        width: 170%;
+        font-size: 11pt;        
+    }
+}
+
+#file_desc {
+    display: none;
+    position: absolute;
+    left: 90%;
+    background-color: #fff;
+    padding: .5em;
+}
+
+/* Visualization */
+
+.visualization header {
+    position: fixed;
+    background: #fff;
+    padding: 24pt;
+    top: 0;
+    left: 0;
+    z-index: 4;
+}
+
+.visualization > .left:not(.dialog) {
+    position: relative;
+    z-index: 4;
+}
+
+.visualization .left {
+
+    .bg {
+        position: fixed;
+        background: #fff;
+        width: 240pt;
+        height: 100%;
+        padding: 24pt;
+        top: 0;
+        left: 0;
+    }
+
+    #tabs {
+        background: #fff;
+        width: 288pt;
+        top: 6em;
+        position: fixed;
+        z-index: 3;
+        left: 0;   
+    }
+
+    .leftTabLinks {
+        list-style-type: none;
+
+        a {
+            display: block;
+            padding: 7px 15px;
+            color: #ffffff;
+
+            &:hover {
+                text-decoration: none;
+            } 
+        }
+
+        li {
+            position: fixed;
+            z-index: 4;
+            background: #bfbfbf;
+            margin-left: 3.5em;
+            opacity: 0.6;
+
+            &:first-child {
+                left: -1.6em;
+            }
+            &.default {
+                opacity: 1;
+            }
+        }
+
+        .tab {
+            display: none;
+        }
+
+        .defaultTab {
+            display: block;
+        }
+    }
+}
+
+%leftTabs {
+    border-collapse: collapse;
+    border-spacing: 0;
+    font-size: 10pt;
+    font-family: monospace;
+    line-height: 1em;
+}
+
+.visualization .log {
+    @extend %leftTabs;
+    position: absolute;
+    top: 1em;
+}
+
+.visualization .clusterResults {
+    @extend %leftTabs;
+    height: calc(100% - 20em);
+    max-width: 250pt;
+    width: 250pt;
+    overflow: auto;
+    display: block;
+    position: fixed;
+    z-index: 4;
+    top: 16.5em;
+
+    p {
+        margin-bottom: .5em;
+    }
+}
+
+.visualization #baseLabel {
+    display: inline-block;
+    margin-top: 0.5em;
+}
+
+.visualization .clusterBase {
+    width: 210pt;
+    max-width: 210pt;
+    padding: .2em;
+    font-size: 10pt;
+    margin-top: .5em;
+    margin-left: 0em;
+}
+
+.visualization #clusterOption {
+    top: 9em;
+    position: fixed;
+    font-family: sans-serif;
+    font-size: 11pt;
+    z-index: 4;
+
+    p {
+        margin-bottom: .5em;
+    }
+}
+
+%logLineRevealAndHover {
+    overflow: visible;
+    font-size: 0;
+    line-height: 1em;
+
+    > .line {
+        z-index: 1;
+        font-size: 10pt;
+        line-height: 1em;
+    }  
+}
+
+%logLineFocus {
+    white-space: normal;
+    z-index: 3;
+    margin-left: 2em;
+    word-break: break-all; 
+}
+
+.visualization .log {
+
+    td.spacer {
+        width: 12pt;
+        min-width: 12pt;
+    }
+
+    .line {
+        position: absolute;
+        width: inherit;
+        white-space: nowrap;
+        overflow: hidden;
+        background: #fff;
+        cursor: pointer;
+        transition: margin;
+        transition-duration: .1s;
+        transition-timing-function: ease-out;
+
+        &.focus {
+            @extend %logLineFocus;           
+        }
+        &.more {
+
+            &.reveal {
+                @extend %logLineRevealAndHover;
+
+                > .line.focus {
+                    @extend %logLineFocus;
+                }
+            }
+            &:hover {
+                @extend %logLineRevealAndHover;
+            }
+        }
+    }
+
+    .logLabelL {
+        width: inherit;
+        position: fixed;
+        margin-top: 2.5em;
+        color: black;
+        margin-bottom: 1em;
+        white-space: pre-wrap;
+        font-family: sans-serif;
+        font-size: 11pt;
+        opacity: 0.8;
+        z-index: 4;  
+    }
+
+    .logLabelR {
+        @extend .logLabelL;
+    }
+}
+
+.visualization .highlight {
+    position: absolute;
+    transition: top, background, height;
+    transition-duration: .1s;
+    transition-timing-function: ease-out;
+    box-shadow: 0 0 0 1px #fff;
+    z-index: 2;
+    padding: 1px;
+    margin: -1px;
+    margin-left: calc(20pt - 2px);
+    cursor: pointer;
+
+    &:before {
+        position: absolute;
+        display: block;
+        content: attr(data-ln);
+        width: 20pt;
+        height: inherit;
+        max-height: 10pt;
+        padding: 1px 0;
+        font: 8pt monospace;
+        left: -20pt;
+        top: 0;
+        text-align: center;
+        background: inherit;
+        color: rgba(255,255,255,.6);
+        box-shadow: 0 -1px #fff, 0 1px #fff; 
+    }
+}
+
+.visualization #graph {
+    margin-left: 264pt;
+}
+
+/* Searchbar */
+
+#searchbar {
+    position: fixed;
+    top: 0;
+    height: 2em;
+    padding: 2em 0;
+    background: #fff;
+    z-index: 4;
+}
+
+#searchbar #bar {
+    height: 24pt;
+    width: 100%;
+    z-index: 1;
+
+    input {
+        height: 24pt;
+        font-size: 12pt;
+        margin: 0;
+        float: left;
+        width: calc(100% - 52pt);
+        padding-right: 24pt;
+        border-right: none;
+
+        &.empty + .clear {
+            display: none;
+        }
+        &:focus ~ #numFound {
+            border-color: #000;
+        }
+        &.focus ~ #numFound {
+            border-color: #000;
+        }
+        &:focus ~button {
+            border: 1px solid #000;
+        }
+        &.focus ~button {
+            border: 1px solid #000;
+        }
+    }
+
+    .clear {
+        height: 22pt;
+        width: 22pt;
+        position: absolute;
+        margin-top: 1px;
+        left: calc(100% - 76pt);
+        background: white;
+        cursor: pointer;
+
+        div {
+            width: 2px;
+            height: 14pt;
+            background: #04a;
+            position: absolute;
+            overflow: hidden; 
+            margin-left: 12pt;
+            margin-top: 4pt;        
+        }
+        .one {
+            transform: rotate(45deg);        
+        }
+        .two {
+            transform: rotate(-45deg);
+        }
+    }
+    .nav {
+        display: none;
+    }
+
+    #numResults {
+        width: 72pt;
+    }
+
+    #searchButton {
+        width: 52pt;
+    }
+
+    #numFound {
+        width: 92pt;
+        float: left;
+        line-height: calc(24pt - 2px);
+        text-align: center;
+        font-size: 10pt;
+        text-transform: uppercase;
+        border-width: 1px 0;
+        border-style: solid;
+        border-color: #aaa;
+    }
+
+    button {
+        float: left;
+        margin: 0;
+        width: 24pt;
+        height: 24pt;
+        padding: 0;   
+    }
+
+}
+
+#searchbar.results {
+    #bar {
+        input {
+            width: calc(100% - 140pt);
+        }
+        .clear {
+            left: calc(100% - 164pt);    
+        }
+        .nav {
+            display: initial;
+        }
+    }
+    #panel {
+        width: calc(100% - 140pt + 1px);
+    }
+
+    #searchButton {
+        display: none;
+    }
+}
+
+/* Searchbar Panel */
+
+%svgCircle {
+    stroke: #fff;
+    stroke-width: 2px;   
+}
+
+%svgLine {
+    stroke: #999;
+    stroke-opacity: 0.6;    
+}
+
+#searchbar #panel {
+
+    display: none;
+    width: calc(100% - 52pt + 1px);
+    border: 1px solid black;
+    border-top: none;
+    box-sizing: border-box;
+    overflow: hidden;
+    padding: .4em;
+    background: #fff;
+
+    table {
+        border-collapse: collapse;
+        border-spacing: 0;    
+    }
+
+    td {
+        vertical-align: top;
+    }
+
+    svg {
+        min-height: 400px;
+        padding: .5em 0 0 .5em;    
+    }
+
+    circle {
+        @extend %svgCircle;
+
+        &.hover {
+            opacity: .6;
+            display: none;
+            cursor: default;
+        }    
+    }
+
+    line {
+        @extend %svgLine;
+    }
+
+    /* Add button for custom structured search */
+    .add {
+        color: #fff;
+        height: 25px;
+        width: 25px;
+        opacity: .6;
+        font: inherit;
+        outline: none;
+        border: none;
+        cursor: pointer;
+        padding: 0;
+        margin: .5em 2em 0 0;
+
+        &:hover {
+            opacity: 0.8;
+        }
+        &:active {
+            opacity: 1;
+        }
+        &:disabled {
+            display: none;
+        }
+    }
+
+    /* Tabs for different searches */
+    .searchTabLinks {
+        margin: 0;
+        display: table;
+        padding: 0 0 .5em 0; 
+        border-collapse: separate;
+        border-spacing: .3em;
+
+        a {
+            display: block;
+            padding: 9px 15px;
+            color: #4a4a4a;
+
+            &:hover {
+                text-decoration: none;
+            }        
+        }
+
+        li {
+            display: table-cell;
+            background: #a3c2d9;
+            text-align: center; 
+
+            &.default {
+                background: #7ca8c9;
+
+                a {
+                    color: #fff;
+                }
+            }       
+        }
+    }
+
+    /* Options for structured search */
+    .structuredSearches {
+        margin: -.5em 0 0 -3.5em;
+        display: table;
+        border-collapse: separate;
+        border-spacing: 1em .5em;
+
+        li {
+            display: table-cell;
+        }       
+    }
+
+    .tab {
+        margin-left: .5em;
+        display: none;
+    }
+
+    .defaultTab {
+        margin-left: .5em;
+        display: block;
+    }
+
+    .predefined {
+        margin: .5em 0 0 0;
+
+        button {
+            width: auto;
+            margin: 0 0 .4em;            
+        }
+    }
+
+    .out {
+        font-size: 10pt;
+        margin-left: .5em;
+
+        dt {
+            margin: 1em 0 .2em;
+        }       
+    }
+}
+
+svg {
+    user-select: none;
+    -ms-user-select: none;
+    -moz-user-select: none;
+    -webkit-user-select: none;
+}
+
+#vizContainer {
+    margin-top: 4em;
+    white-space: nowrap;
+
+    svg {
+        vertical-align: top;
+        margin-top: 45px;
+
+        &:last-child {
+            padding-right: 240px;
+        }
+
+        line {
+            @extend %svgLine;
+        }
+
+        g {
+            circle {
+                @extend %svgCircle;
+            }
+            text {
+                text-anchor: middle;
+                font-size: 8pt;
+                fill: #fff;
+                dominant-baseline: central;
+                pointer-events: none;            
+            }
+            rect {
+                fill: transparent;
+            }
+        }
+
+        rect.box {
+            fill: #ddd;
+        }
+    }
+}
+
+/* hostBar */
+
+#hostBar {
+    position: fixed;
+    background: white;
+    z-index: 2;
+}
+
+#hostBarSeparator {
+    height: 62px;
+    display: inline;
+    border-right: 2px dotted rgba(3, 3, 3, 0.24);
+    position: fixed;
+    margin-top: -2em;
+}
+
+/* View drop-downs and labels */
+
+#viewSelectDiv {
+    margin-bottom: 1em;
+}
+
+#viewLabelDiv {
+    margin-bottom: 1em;
+}
+
+#viewLabelL {
+    position: relative;
+    font-family: sans-serif;
+    opacity: 0.8;
+    margin-right: 0.5em;
+}
+
+#viewLabelR {
+    position: fixed;
+    right: 240px;
+    font-family: sans-serif;
+    opacity: 0.8;
+    margin-top: -2.2em;
+    margin-right: 0.5em;
+}
+
+#viewSelectL {
+    position: relative;
+    padding: 0.15em;
+    font-family: sans-serif;
+    opacity: 0.8;
+    margin-left: 1.5em;
+}
+
+#viewSelectR {
+    position: fixed;
+    padding: 0.15em;
+    right: 260px;
+    font-family: sans-serif;
+    opacity: 0.8;
+    margin-right: 0.8em;
+}
+
+#viewSeparator {
+    display: inline-block;
+    border-right: 2px dotted rgba(3, 3, 3, 0.24);
+    position: relative;
+    z-index: 2; /* make this div sit on top of the hostBar div */
+}
+
+/* Arrow icons for clustering */
+
+#labelIconR {
+    font-family: "Icomoon";
+    margin-left: .5em;
+    margin-right: .5em;   
+}
+
+#labelIconL {
+    @extend #labelIconR;
+    float: left;
+    transform: rotate(180deg);
+}
+
+#selectIconL {
+    font-family: "Icomoon";
+    float: left;
+    margin-right: -1em;
+    margin-left: 0.2em;
+    margin-top: 0.2em;
+    transform: rotate(180deg);
+}
+
+#selectIconR {
+    font-family: "Icomoon";
+    position: fixed;
+    right: 250px;
+    margin-top: 0.2em;
+}
+
+#clusterIconR {
+    font-family: "Icomoon";
+    font-size: 10px;
+    margin-right: -1em;
+    float: left;
+}
+
+#clusterIconL {
+    @extend #clusterIconR;
+    transform: rotate(180deg);
+}
+
+/* Styling for execution labels in clusters */
+
+.execFade {
+    opacity: 0.3;
+    color: #676767;
+}
+
+.indent {
+    margin-left: 1.5em;
+    font-size: 9.5pt;
+}
+
+/* Sidebar */
+
+%eventFields {
+    font-size: 10pt;
+    border-spacing: 0;
+    border-collapse: collapse;
+    display: block;
+    overflow: hidden;    
+}
+
+%fieldsTitle {
+    text-align: left;
+    vertical-align: top;
+    padding-right: 1em;
+    white-space: nowrap;     
+}
+
+%fieldsValue {
+    /*word-break: break-all;*/
+    overflow: hidden;
+    text-overflow: ellipsis;    
+}
+
+#sidebar {
+    width: 240px;
+    height: 100%;
+    padding: 2em;
+    box-sizing: border-box;
+    position: fixed;
+    right: 0;
+    top: 0;
+    background: #fff;
+    z-index: 2;
+
+    .diffButton {
+        height: 24pt;
+        padding: 0;
+        margin-top: 0;
+        margin-bottom: 2em;    
+    }
+
+    .pairwiseButton {
+        height: 24pt;
+        padding: 0;
+        margin-top: 0;
+        margin-bottom: 1em;    
+    }
+
+    .info {
+        height: 12em;
+        overflow: auto;    
+    }
+
+    .event {
+        word-break: break-all;
+        margin-bottom: 1em;    
+    }
+
+    .fields {
+        @extend %eventFields;
+
+        .title {
+            @extend %fieldsTitle;    
+        }
+        .value {
+            @extend %fieldsValue;
+        }  
+    }
+
+    .hidden {
+        margin-top: 2em;
+
+        svg {
+            float:left;
+            margin-top: 1em;
+        }
+    }
+}
+
+svg#defs {
+    height: 0;
+    width: 0;
+    position: absolute;
+}
+
+/* Popup dialog */
+
+.dialog {
+    width: 200px;
+    background: #eee;
+    font-family: sans-serif;
+    position: absolute;
+    z-index: 2;
+    display: none;
+
+    &.host {
+        position: fixed;
+        z-index: 3;
+
+        button:not(.hb) {
+            display:none;
+        }
+    }
+
+    .hidden {
+        z-index: 3;
+    }
+
+    .info {
+        @extend %eventFields;
+        margin: 1em;
+        color: white;
+        word-break: break-all;
+
+        .title {
+            @extend %fieldsTitle;
+        }
+        .value {
+            @extend %fieldsValue;
+        }
+    }
+
+    .triangle {
+        position: absolute;
+        width: 0;
+        height: 0;
+        border-style: solid;
+        border-width: 10px;
+        border-color: inherit;
+        border-bottom-color: transparent;        
+    }
+
+    &.right .triangle {
+        border-right-color: transparent;
+        right: -20px;
+        top: 0;        
+    }
+
+    &.left .triangle {
+        border-left-color: transparent;
+        left: -20px;
+        top: 0;        
+    }
+
+    .name {
+        margin: 1em;
+        color: white;
+        word-break: break-all;
+    }
+
+    button {
+        margin: 0;
+        background: rgba(0,0,0,.1);
+
+        &:hover {
+            margin: 0;
+            background: rgba(0,0,0,.05);     
+        }
+        &:active {
+            margin: 0;
+            background: rgba(0,0,0,.2);  
+        }    
+    }
+
+    &:not(.host) button.hb {
+        display: none;
+    }
+}
+
+/* Error box */
+#errorbox {
+    display: none;
+    width: 50%;
+    box-sizing: border-box;
+    position: fixed;
+    top: 200px;
+    left: 25%;
+    z-index: 99;
+    background: #c44;
+    color: #fff;
+    padding: 1em;
+
+    pre {
+        overflow: auto;
+        padding: .4em;
+        background: #FDD;
+        color: #444;
+
+        &:last-child {
+            margin-bottom: 0;
+        }
+        & + br {
+            display: none;
+        }   
+    }
+}
+
+#errorcover {
+    display: none;
+    width: 100%;
+    height: 100%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 98;
+    background: rgba(255,255,255,.8);
+}
