@@ -467,11 +467,6 @@ Global.prototype.drawHiddenHostAsRhombus = function(container) {
 Global.prototype.drawClusterIcons = function() {
     $("#clusterIconL, #clusterIconR, br.spaceL, br.spaceR, br.left, br.right").remove();
 
-    // Condense any previously expanded results
-    $("table.clusterResults a").filter(function() {
-      return $(this).text() == "Condense";
-    }).click();
-
     var leftLabel = this.viewL.getLabel();
     var rightLabel = this.viewR.getLabel();
     var clusterIconL = $('<label id="clusterIconL"></label>').text("r");
@@ -481,7 +476,7 @@ Global.prototype.drawClusterIcons = function() {
     var rightLink = $("table.clusterResults a").filter(function() { return $(this).attr("href") == rightLabel; });
 
     // Set margin for base dropdown to zero initially
-    $(".clusterBase").css("margin-left", "0em");
+    $(".clusterBase").removeClass("baseIndent");
     
     // If the selected execution is hidden in a condensed list, click the Show all button to make it visible
     if (!leftLink.is(":visible")) {
@@ -497,23 +492,24 @@ Global.prototype.drawClusterIcons = function() {
     }
 
     // If the left graph is the specified base execution, draw the left arrow icon next to the dropdown
-    if (leftLabel == $("select.clusterBase").val()) {
-        $("#baseLabel").after("<br class='spaceL'>");
-        $(".clusterBase").before(clusterIconL.css("margin-top", "1.3em")).css("margin-left", "1.5em");
-        if (this.getPairwiseView()) {
-            $(rightLink.before(clusterIconR).next()).after($("<br class=right>").hide());;
+    if ($("#clusterComparison").is(":checked")) {
+        if (leftLabel == $("select.clusterBase").val()) {
+            $("#baseLabel").after($("<br class='spaceL'>").hide());
+            $(".clusterBase").before(clusterIconL.addClass("baseIcon")).addClass("baseIndent");
+            if (this.getPairwiseView()) {
+                $(rightLink.before(clusterIconR).next()).after($("<br class=right>").hide());;
+            }
+        // If the right graph is the specified base execution, draw the right arrow icon next to the dropdown
+        } else if (this.getPairwiseView() && rightLabel == $("select.clusterBase").val()) {
+            $("#baseLabel").after($("<br class='spaceR'>").hide());
+            $(".clusterBase").before(clusterIconR.addClass("baseIcon")).addClass("baseIndent");
+            $(leftLink.before(clusterIconL).next()).after($("<br class=left>").hide());
         }
-    // If the right graph is the specified base execution, draw the right arrow icon next to the dropdown
-    } else if (this.getPairwiseView() && rightLabel == $("select.clusterBase").val()) {
-        $("#baseLabel").after("<br class='spaceR'>");
-        $(".clusterBase").before(clusterIconR.css("margin-top", "1.3em")).css("margin-left", "1.5em");
-        $(leftLink.before(clusterIconL).next()).after($("<br class=left>").hide());
+    }
     // Otherwise, draw the appropriate arrow beside the correct execution label
-    } else {
-        $(leftLink.before(clusterIconL).next()).after($("<br class=left>").hide());
-        if (this.getPairwiseView()) {
-            $(rightLink.before(clusterIconR).next()).after($("<br class=right>").hide());
-        }
+    $(leftLink.before(clusterIconL).next()).after($("<br class=left>").hide());
+    if (this.getPairwiseView()) {
+        $(rightLink.before(clusterIconR).next()).after($("<br class=right>").hide());
     }
 }
 

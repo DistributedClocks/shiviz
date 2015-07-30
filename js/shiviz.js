@@ -253,17 +253,11 @@ Shiviz.prototype.visualize = function(log, regexpString, delimiterString, sortTy
             $(".leftTabLinks").children().show();
 
             // Clear the Clusters tab
-            $("#clusterOption").remove();
-            $("table.clusterResults").children().remove();
-
-            // Add the clustering options to the Clusters tab
-            var numProcessInput = $("<input></input>").attr("id", "clusterNumProcess").attr("type", "checkbox");
-            var comparisonInput = $("<input></input>").attr("id", "clusterComparison").attr("type", "checkbox");
-            var clusterOption = $("<div id='clusterOption'></div>").append($("<p></p>").text("Cluster executions by:"), 
-                numProcessInput, $("<label></label>").text("number of processes"), "<br>", comparisonInput, 
-                $("<label></label>").text("execution comparison"));
-
-            $("#clusterTab").append(clusterOption);
+            $(".clusterResults td.lines").empty();
+            $(".clusterResults td:empty").remove();
+            $("#baseLabel, .clusterBase").hide();
+            $("#clusterIconL, #clusterIconR").remove();
+            $("#clusterOption input").prop("checked", false);
         }
 
         var global = new Global($("#vizContainer"), $("#sidebar"), $("#hostBar"), $("table.log"), views);

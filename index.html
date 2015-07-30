@@ -328,8 +328,22 @@
                     </table>
                 </div>
                 <div id="clusterTab" class="tab">
+                    <div id="clusterOption">
+                        <p>Cluster executions by:</p>
+                        <input id="clusterNumProcess" type="checkbox">
+                        <label>number of processes</label><br>
+                        <input id="clusterComparison" type="checkbox">
+                        <label>execution comparison</label>
+                    </div>
                     <table class="clusterResults">
-                        <tr></tr>
+                        <tr>
+                            <td><label id="baseLabel">Base execution:</label></td>
+                            <td>
+                                <select class="clusterBase">
+                                    <option id="placeholder" style="display:none" selected>Select a base execution</option>
+                                </select>
+                            </td>
+                        </tr>
                     </table>
                 </div>
             </div>
