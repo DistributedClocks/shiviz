@@ -283,12 +283,12 @@ testQuery("paren query 2", "(b)", "a", {}, false);
 testQuery("paren query 3", "(((((a)))))", "a", {}, true);
 testQuery("regex query 1", "abc=/^([a-z][0-9])+$/", "", {abc:"a8k4h2g5p0"}, true);
 testQuery("regex query 1", "abc=/^([a-z][0-9])+$/", "", {abc:"a8ka4h2g5p0"}, false);
-testQuery("and query 1", "a = 1 & b = 2", "a", {a:1, b:2, c:3}, true);
-testQuery("and query 2", "a = 1 & c = 2", "a", {a:1, b:2, c:3}, false);
-testQuery("or query 1", "a = 1 | b = 9", "a", {a:1, b:2, c:3}, true);
-testQuery("and query 2", "a = 9 | b = 21", "a", {a:1, b:2, c:3}, false);
-testQuery("precedence query test 1", "a | b & c", "asdf", {}, false);
-testQuery("precedence query test 2", "a | (b & c)", "asdf", {}, true);
+testQuery("and query 1", "a = 1 && b = 2", "a", {a:1, b:2, c:3}, true);
+testQuery("and query 2", "a = 1 && c = 2", "a", {a:1, b:2, c:3}, false);
+testQuery("or query 1", "a = 1 || b = 9", "a", {a:1, b:2, c:3}, true);
+testQuery("and query 2", "a = 9 || b = 21", "a", {a:1, b:2, c:3}, false);
+testQuery("precedence query test 1", "a || b && c", "asdf", {}, false);
+testQuery("precedence query test 2", "a || (b && c)", "asdf", {}, true);
 
 function testQuery(description, query, log, fields, expected) {
     assert(description, function() {

@@ -151,33 +151,39 @@ function Controller(global) {
         }
     });
 
+    // Event handler for switching between the Log lines and Clusters tabs
     $(".visualization .leftTabLinks a").unbind().on("click", function(e) {
         $(".visualization #" + $(this).attr("href")).show().siblings().hide();
         $(this).parent("li").addClass("default").siblings("li").removeClass("default");
         if ($(this).attr("href") == "clusterTab") {
-            // Remove any highlighting from Log lines tab
+            // Remove any log line highlighting when on the Clusters tab
             $(".highlight").css("opacity", 0);
             if ($("#clusterNumProcess").is(":checked") || $("#clusterComparison").is(":checked") && $(".clusterBase").val() != null) {
                 $("#labelIconL, #labelIconR, #selectIconL, #selectIconR").show();
             }
+        // Hide the arrow icons when on the Log lines tab
         } else {
             $("#labelIconL, #labelIconR, #selectIconL, #selectIconR").hide();
         }
         e.preventDefault();
     });
 
+    // Event handler for switching between clustering options
     $("#clusterNumProcess, #clusterComparison").unbind().on("change", function() {
         $("#labelIconL, #labelIconR, #selectIconL, #selectIconR").hide();
+        $("#clusterIconL, #clusterIconR").remove();
 
         if ($(this).is(":checked")) {
             $(this).siblings("input").prop("checked", false);
             // Generate clustering results
-            var clusterer = new Clusterer($(this).attr("id"));
-            clusterer.setGlobal(self.global);
+            var clusterMetric = $(this).attr("id");
+            var clusterer = new Clusterer(clusterMetric, self.global);
             clusterer.cluster();
         } else {
             // Clear the results if no option is selected
-            $("table.clusterResults").children().remove();
+            $(".clusterResults td.lines").empty();
+            $(".clusterResults td:empty").remove();
+            $("#baseLabel, .clusterBase").hide();
         }     
     });
 }

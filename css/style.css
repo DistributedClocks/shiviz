@@ -1,1030 +1,1027 @@
 @font-face {
-    font-family: "Icon";
-    src: url("../fonts/icons.woff") format("woff");
+  font-family: "Icon";
+  src: url("../fonts/icons.woff") format("woff");
 }
-
 @font-face {
-    font-family: "Icomoon";
-    src: url("../fonts/icomoon.woff");
+  font-family: "Icomoon";
+  src: url("../fonts/icomoon.woff");
 }
-
 body {
-    font-size: 12pt;
-    font-family: "Helvetica Neue", Helvetica, sans-serif;
-    margin: 0;
-    padding: 2em;
-    box-sizing: border-box;
-    text-rendering: optimizeLegibility;
+  font-size: 12pt;
+  font-family: "Helvetica Neue", Helvetica, sans-serif;
+  margin: 0;
+  padding: 2em;
+  box-sizing: border-box;
+  text-rendering: optimizeLegibility;
 }
 
 h1 {
-    font-size: 48pt;
-    font-weight: 300;
-    letter-spacing: -2px;
-    margin: 24pt 0 24pt -2px;
+  font-size: 48pt;
+  font-weight: 300;
+  letter-spacing: -2px;
+  margin: 24pt 0 24pt -2px;
 }
 
 h2 {
-    font-weight: 300;
-    margin: 24pt 0;
-    -webkit-hyphens: auto;
-    -moz-hyphens: auto;
+  font-weight: 300;
+  margin: 24pt 0;
+  -webkit-hyphens: auto;
+  -moz-hyphens: auto;
 }
 
 h3 {
-    margin: 2em 0 1em;
+  margin: 2em 0 1em;
 }
 
 a {
-    color: #04a;
+  color: #04a;
 }
 a:hover:not(.execFade) {
-    color: #15b;
+  color: #15b;
 }
 a:active:not(.execFade) {
-    color: #048;
+  color: #048;
 }
 a:not(:hover) {
-    text-decoration: none;
+  text-decoration: none;
 }
 
 header > a,
 #examples a:not(:first-child) {
-    margin-left: 1em;
+  margin-left: 1em;
 }
 
 section:not(.home) {
-    display: none;
+  display: none;
 }
 
 input[type="text"], textarea, button {
-    display: block;
-    box-sizing: border-box;
-    width: 100%;
-    margin: 1em 0;
+  display: block;
+  box-sizing: border-box;
+  width: 100%;
+  margin: 1em 0;
 }
 
 .option, button {
-    margin: 1.5em 0;
-}
-
-#file_input {
-    position: relative;
-}
-
-#file_input li {
-    list-style-position: inside;
-    text-indent: -9.5pt;
-    padding-left: 1em;
-}
-
-#file_icon {
-    font-family: "Icon";
-    font-size: 24pt;
-    position:relative;
-    top: 10px;
-    left: 5px;
-    opacity: 0.35;
-}
-
-#file_desc {
-    display: none;
-    position: absolute;
-    left: 90%;
-    background-color: #fff;
-    padding: .5em;
-}
-
-#file_icon:hover + #file_desc {
-    display: block;
-    border: 1px solid #aaa;
-    width: 170%;
-    font-size: 11pt;
-}
-
-#file_icon:hover {
-    opacity: 0.4;
-    cursor: default;
+  margin: 1.5em 0;
 }
 
 .regex {
-    font-family: monospace;
-    font-size: .9em;
+  font-family: monospace;
+  font-size: .9em;
+}
+
+.fade {
+  opacity: 0.5;
 }
 
 input, textarea {
-    outline: none;
-    border: 1px solid #aaa;
-    padding: .4em;
+  outline: none;
+  border: 1px solid #aaa;
+  padding: .4em;
 }
+
 input.mono {
-    font-family: monospace;
+  font-family: monospace;
 }
 
 select {
-    outline: none;
-    font-size: 12pt;
-    margin: 0;
-    padding: 0;
+  outline: none;
+  font-size: 12pt;
+  margin: 0;
+  padding: 0;
 }
 
 input:focus,
 input.focus,
 textarea:focus {
-    border-color: black;
+  border-color: black;
 }
 
 button {
-    background: #04a;
-    border: none;
-    color: rgba(255,255,255,.9);
-    padding: 1em;
-    outline: none;
-    text-transform: uppercase;
-    cursor: pointer;
+  background: #04a;
+  border: none;
+  color: rgba(255, 255, 255, 0.9);
+  padding: 1em;
+  outline: none;
+  text-transform: uppercase;
+  cursor: pointer;
 }
 button:hover {
-    background: #15b;
-    color: #fff;
+  background: #15b;
+  color: #fff;
 }
 button:active {
-    background: #048;
-    color: rgba(255,255,255,.6);
+  background: #048;
+  color: rgba(255, 255, 255, 0.6);
 }
 button:disabled {
-    background: #aaa;
-    pointer-events: none;
+  background: #aaa;
+  pointer-events: none;
 }
 
 .load {
-    visibility: hidden;
-    font-family: "Icon";
-    position: absolute;
+  visibility: hidden;
+  font-family: "Icon";
+  position: absolute;
 }
 
 /* Icon nav */
 header.icon {
-    width: 10.1em;
-    font-family: "Icon";
-    font-size: 24pt;
-    overflow: hidden;
-    margin-left: -.1em;
+  width: 10.1em;
+  font-family: "Icon";
+  font-size: 24pt;
+  overflow: hidden;
+  margin-left: -.1em;
 }
 header.icon ul {
-    list-style: none;
-    padding: 0;
-    margin: 0;
+  list-style: none;
+  padding: 0;
+  margin: 0;
 }
 header.icon ul li {
-    float: left;
-    color: #aaa;
-    cursor: pointer;
+  float: left;
+  color: #aaa;
+  cursor: pointer;
 }
 header.icon ul li:hover {
-    color: #04a;
+  color: #04a;
 }
 header.icon ul li.active {
-    color: #04a;
-    pointer-events: none;
+  color: #04a;
+  pointer-events: none;
 }
 header.icon ul.tabs li {
-    margin-right: 1em;
+  margin-right: 1em;
 }
 header.icon ul.tabs li.disabled {
-    color: #ddd;
-    pointer-events: none;
+  color: #ddd;
+  pointer-events: none;
 }
 header.icon ul.links li {
-    margin-left: 1em;
+  margin-left: 1em;
 }
 header.icon ul.links li a {
-    color: #aaa;
+  color: #aaa;
 }
 header.icon ul.links li a:hover {
-    color: #04a;
-    text-decoration: none;
+  color: #04a;
+  text-decoration: none;
 }
 
 /* Home */
 section.home .content {
-    width: calc((100% / 2) - 100px);
-    min-width: 480px;
-    float: left;
+  width: calc((100% / 2) - 100px);
+  min-width: 480px;
+  float: left;
 }
 section.home .content li {
-    margin: 1em 0;
+  margin: 1em 0;
 }
 section.home .content pre {
-    padding: .2em 0;
-    overflow: auto;
+  padding: .2em 0;
+  overflow: auto;
 }
+
 section.home .shivizexample {
-    float: left;
-    padding-left: 50px;
-    padding-top: 50px;
-    width: calc((100% / 2) - 100px);
-/*    border: 1px solid #aaa; */
+  float: left;
+  padding-left: 50px;
+  padding-top: 50px;
+  width: calc((100% / 2) - 100px);
+  /* border: 1px solid #aaa; */
 }
 section.home .shivizexample img {
-    padding-top: 75px;
+  padding-top: 75px;
 }
 
 #versionContainer {
-    position: absolute;
-    top: 24pt;
-    right: 24pt;
-    height: 30px;
-    text-align: right;
-    color: grey;
-    font-size: 8pt;
-    font-family: monospace;
+  position: absolute;
+  top: 24pt;
+  right: 24pt;
+  height: 30px;
+  text-align: right;
+  color: grey;
+  font-size: 8pt;
+  font-family: monospace;
 }
 
 /* Input */
-section.input .right textarea#input {
-    resize: none;
-    height: calc(100% - 2em);
+section.input .right textarea #input {
+  resize: none;
+  height: calc(100% - 2em);
 }
 
 section.input {
-    width: 100%;
+  width: 100%;
 }
-
 section.input table {
-    width: 100%;
-    border-collapse: collapse;
+  width: 100%;
+  border-collapse: collapse;
 }
-
 section.input td {
-    vertical-align: top;
-    padding: 0;
+  vertical-align: top;
+  padding: 0;
 }
-
 section.input .left {
-    width: 240pt;
-    min-width: 240pt;
-    padding-right: 2em;
+  width: 240pt;
+  min-width: 240pt;
+  padding-right: 2em;
 }
 
 #input {
-    margin: 0;
+  margin: 0;
 }
 
 #examples {
-    font-size: 10pt;
-    padding-bottom: 1em;
+  font-size: 10pt;
+  padding-bottom: 1em;
 }
 
+/* File input */
+#file_input {
+  position: relative;
+}
+#file_input li {
+  list-style-position: inside;
+  text-indent: -1em;
+  padding-left: 1em;
+}
+
+#file_icon {
+  font-family: "Icon";
+  font-size: 24pt;
+  position: relative;
+  top: 10px;
+  left: 5px;
+  opacity: 0.35;
+}
+#file_icon:hover {
+  opacity: 0.4;
+  cursor: default;
+}
+#file_icon:hover + #file_desc {
+  display: block;
+  border: 1px solid #aaa;
+  width: 170%;
+  font-size: 11pt;
+}
+
+#file_desc {
+  display: none;
+  position: absolute;
+  left: 90%;
+  background-color: #fff;
+  padding: .5em;
+}
 
 /* Visualization */
 .visualization header {
-    position: fixed;
-    background: #fff;
-    padding: 24pt;
-    top: 0;
-    left: 0;
-    z-index: 4;
+  position: fixed;
+  background: #fff;
+  padding: 24pt;
+  top: 0;
+  left: 0;
+  z-index: 4;
 }
 
 .visualization > .left:not(.dialog) {
-    position: relative;
-    z-index: 4;
+  position: relative;
+  z-index: 4;
 }
+
 .visualization .left .bg {
-    position: fixed;
-    background: #fff;
-    width: 240pt;
-    height: 100%;
-    padding: 24pt;
-    top: 0;
-    left: 0;
+  position: fixed;
+  background: #fff;
+  width: 240pt;
+  height: 100%;
+  padding: 24pt;
+  top: 0;
+  left: 0;
 }
-
 .visualization .left #tabs {
-    background: #fff;
-    width: 288pt;
-    top: 6em;
-    position: fixed;
-    z-index: 3;
-    left: 0;
+  background: #fff;
+  width: 288pt;
+  top: 6em;
+  position: fixed;
+  z-index: 3;
+  left: 0;
 }
-
 .visualization .left .leftTabLinks {
-    list-style-type: none;
+  list-style-type: none;
 }
-
 .visualization .left .leftTabLinks a {
-    display: block;
-    padding: 7px 15px;
-    color: #ffffff;
+  display: block;
+  padding: 7px 15px;
+  color: #ffffff;
 }
 .visualization .left .leftTabLinks a:hover {
-    text-decoration: none;
+  text-decoration: none;
 }
 .visualization .left .leftTabLinks li {
-    position: fixed;
-    z-index: 4;
-    background: #bfbfbf;
-    margin-left: 3.5em;
-    opacity: 0.6;
+  position: fixed;
+  z-index: 4;
+  background: #bfbfbf;
+  margin-left: 3.5em;
+  opacity: 0.6;
 }
 .visualization .left .leftTabLinks li:first-child {
-    left: -1.6em;
+  left: -1.6em;
 }
 .visualization .left .leftTabLinks li.default {
-    opacity: 1;
+  opacity: 1;
 }
 .visualization .left .leftTabLinks .tab {
-    display: none;
+  display: none;
 }
 .visualization .left .leftTabLinks .defaultTab {
-    display: block;
+  display: block;
 }
 
-.visualization .log,
-.visualization .clusterResults {
-    border-collapse: collapse;
-    border-spacing: 0;
-    font-size: 10pt;
-    font-family: monospace;
-    line-height: 1em;
+.visualization .log, .visualization .clusterResults {
+  border-collapse: collapse;
+  border-spacing: 0;
+  font-size: 10pt;
+  font-family: monospace;
+  line-height: 1em;
 }
 
 .visualization .log {
-    position: absolute;
-    top: 1em;
+  position: absolute;
+  top: 1em;
 }
 
 .visualization .clusterResults {
-    height: calc(100% - 20em);
-    max-width: 250pt;
-    width: 250pt;
-    overflow: auto;
-    display: block;
-    position: fixed;
-    z-index: 4;
-    top: 16.5em;
+  height: calc(100% - 20em);
+  max-width: 250pt;
+  width: 250pt;
+  overflow: auto;
+  display: block;
+  position: fixed;
+  z-index: 4;
+  top: 16.5em;
+}
+.visualization .clusterResults p {
+  margin-bottom: .5em;
+}
+
+.visualization .clusterResults td.lines {
+  position: absolute;
 }
 
 .visualization #baseLabel {
-    display: inline-block;
-    margin-top: 0.5em;
+  position: absolute;
+  margin-top: 0.5em;
 }
 
 .visualization .clusterBase {
-    width: 210pt;
-    max-width: 210pt;
-    padding: .2em;
-    font-size: 10pt;
-    margin-top: .5em;
-    margin-left: 0em;
+  position: absolute;
+  width: 210pt;
+  max-width: 210pt;
+  padding: .2em;
+  font-size: 10pt;
+  margin-top: 2em;
 }
 
 .visualization #clusterOption {
-    top: 9em;
-    position: fixed;
-    font-family: sans-serif;
-    font-size: 11pt;
-    z-index: 4;
+  top: 9em;
+  position: fixed;
+  font-family: sans-serif;
+  font-size: 11pt;
+  z-index: 4;
+}
+.visualization #clusterOption p {
+  margin-bottom: .5em;
 }
 
-.visualization #clusterOption p,
-.visualization .clusterResults p {
-    margin-bottom: 0.5em;
+.visualization .log .line.more.reveal, .visualization .log .line.more:hover {
+  overflow: visible;
+  font-size: 0;
+  line-height: 1em;
+}
+.visualization .log .line.more.reveal > .line, .visualization .log .line.more:hover > .line {
+  z-index: 1;
+  font-size: 10pt;
+  line-height: 1em;
+}
+
+.visualization .log .line.focus, .visualization .log .line.more.reveal > .line.focus {
+  white-space: normal;
+  z-index: 3;
+  margin-left: 2em;
+  word-break: break-all;
 }
 
 .visualization .log td.spacer {
-    width: 12pt;
-    min-width: 12pt;
+  width: 12pt;
+  min-width: 12pt;
 }
-
 .visualization .log .line {
-    position: absolute;
-    width: inherit;
-    white-space: nowrap;
-    overflow: hidden;
-    background: #fff;
-    cursor: pointer;
-    transition: margin;
-    transition-duration: .1s;
-    transition-timing-function: ease-out;
+  position: absolute;
+  width: inherit;
+  white-space: nowrap;
+  overflow: hidden;
+  background: #fff;
+  cursor: pointer;
+  transition: margin;
+  transition-duration: .1s;
+  transition-timing-function: ease-out;
 }
-
-.visualization .log .logLabelL, 
-.visualization .log .logLabelR {
-    width: inherit;
-    position: fixed;
-    margin-top: 2.5em;
-    color: black;
-    margin-bottom: 1em;
-    white-space: pre-wrap;
-    font-family: sans-serif;
-    font-size: 11pt;
-    opacity: 0.8;
-    z-index: 4;
-}
-
-.visualization .log .line.more:hover,
-.visualization .log .line.more.reveal {
-    overflow: visible;
-    font-size: 0;
-    line-height: 1em;
-}
-
-.visualization .log .line.more:hover > .line,
-.visualization .log .line.more.reveal > .line {
-    z-index: 1;
-    font-size: 10pt;
-    line-height: 1em;
-}
-
-.visualization .log .line.more:hover > .line:last-child,
-.visualization .log .line.more.reveal > .line:last-child {
-}
-
-.visualization .log .line.focus,
-.visualization .log .line.more.reveal > .line.focus {
-    white-space: normal;
-    z-index: 3;
-    margin-left: 2em;
-    word-break: break-all;
+.visualization .log .logLabelL, .visualization .log .logLabelR {
+  width: inherit;
+  position: fixed;
+  margin-top: 2.5em;
+  color: black;
+  margin-bottom: 1em;
+  white-space: pre-wrap;
+  font-family: sans-serif;
+  font-size: 11pt;
+  opacity: 0.8;
+  z-index: 4;
 }
 
 .visualization .highlight {
-    position: absolute;
-    transition: top, background, height;
-    transition-duration: .1s;
-    transition-timing-function: ease-out;
-    box-shadow: 0 0 0 1px #fff;
-    z-index: 2;
-    padding: 1px;
-    margin: -1px;
-    margin-left: calc(20pt - 2px);
-    cursor: pointer;
+  position: absolute;
+  transition: top, background, height;
+  transition-duration: .1s;
+  transition-timing-function: ease-out;
+  box-shadow: 0 0 0 1px #fff;
+  z-index: 2;
+  padding: 1px;
+  margin: -1px;
+  margin-left: calc(20pt - 2px);
+  cursor: pointer;
 }
-
 .visualization .highlight:before {
-    position: absolute;
-    display: block;
-    content: attr(data-ln);
-    width: 20pt;
-    height: inherit;
-    max-height: 10pt;
-    padding: 1px 0;
-    font: 8pt monospace;
-    left: -20pt;
-    top: 0;
-    text-align: center;
-    background: inherit;
-    color: rgba(255,255,255,.6);
-    box-shadow: 0 -1px #fff, 0 1px #fff;
+  position: absolute;
+  display: block;
+  content: attr(data-ln);
+  width: 20pt;
+  height: inherit;
+  max-height: 10pt;
+  padding: 1px 0;
+  font: 8pt monospace;
+  left: -20pt;
+  top: 0;
+  text-align: center;
+  background: inherit;
+  color: rgba(255, 255, 255, 0.6);
+  box-shadow: 0 -1px #fff, 0 1px #fff;
 }
 
 .visualization #graph {
-    margin-left: 264pt;
+  margin-left: 264pt;
 }
 
+/* Searchbar */
 #searchbar {
-    position: fixed;
-    top: 0;
-    height: 2em;
-    padding: 2em 0;
-    background: #fff;
-    z-index: 4;
+  position: fixed;
+  top: 0;
+  height: 2em;
+  padding: 2em 0;
+  background: #fff;
+  z-index: 4;
 }
+
 #searchbar #bar {
-    height: 24pt;
-    width: 100%;
-    z-index: 1;
+  height: 24pt;
+  width: 100%;
+  z-index: 1;
 }
 #searchbar #bar input {
-    height: 24pt;
-    font-size: 12pt;
-    margin: 0;
-    float: left;
-    width: calc(100% - 52pt);
-    padding-right: 24pt;
-    border-right: none;
-}
-#searchbar.results #bar input {
-    width: calc(100% - 140pt);
-}
-#searchbar #bar .clear {
-    height: 22pt;
-    width: 22pt;
-    position: absolute;
-    margin-top: 1px;
-    left: calc(100% - 76pt);
-    background: white;
-    cursor: pointer;
-}
-#searchbar.results #bar .clear {
-    left: calc(100% - 164pt);
+  height: 24pt;
+  font-size: 12pt;
+  margin: 0;
+  float: left;
+  width: calc(100% - 52pt);
+  padding-right: 24pt;
+  border-right: none;
 }
 #searchbar #bar input.empty + .clear {
-    display: none;
+  display: none;
+}
+#searchbar #bar input:focus ~ #numFound {
+  border-color: #000;
+}
+#searchbar #bar input.focus ~ #numFound {
+  border-color: #000;
+}
+#searchbar #bar input:focus ~ button {
+  border: 1px solid #000;
+}
+#searchbar #bar input.focus ~ button {
+  border: 1px solid #000;
+}
+#searchbar #bar .clear {
+  height: 22pt;
+  width: 22pt;
+  position: absolute;
+  margin-top: 1px;
+  left: calc(100% - 76pt);
+  background: white;
+  cursor: pointer;
 }
 #searchbar #bar .clear div {
-    width: 2px;
-    height: 14pt;
-    background: #04a;
-    position: absolute;
-    overflow: hidden; 
-    margin-left: 12pt;
-    margin-top: 4pt;
+  width: 2px;
+  height: 14pt;
+  background: #04a;
+  position: absolute;
+  overflow: hidden;
+  margin-left: 12pt;
+  margin-top: 4pt;
 }
 #searchbar #bar .clear .one {
-    transform: rotate(45deg);
+  transform: rotate(45deg);
 }
 #searchbar #bar .clear .two {
-    transform: rotate(-45deg);
+  transform: rotate(-45deg);
+}
+#searchbar #bar .nav {
+  display: none;
+}
+#searchbar #bar #numResults {
+  width: 72pt;
+}
+#searchbar #bar #searchButton {
+  width: 52pt;
+}
+#searchbar #bar #numFound {
+  width: 92pt;
+  float: left;
+  line-height: calc(24pt - 2px);
+  text-align: center;
+  font-size: 10pt;
+  text-transform: uppercase;
+  border-width: 1px 0;
+  border-style: solid;
+  border-color: #aaa;
+}
+#searchbar #bar button {
+  float: left;
+  margin: 0;
+  width: 24pt;
+  height: 24pt;
+  padding: 0;
 }
 
-#searchbar #bar .nav {
-    display: none;
+#searchbar.results #bar input {
+  width: calc(100% - 140pt);
+}
+#searchbar.results #bar .clear {
+  left: calc(100% - 164pt);
 }
 #searchbar.results #bar .nav {
-    display: initial;
-}
-
-#searchbar #bar #numResults {
-    width: 72pt;
-}
-
-#searchbar #bar #searchButton {
-    width: 52pt;
-}
-#searchbar.results #searchButton {
-    display: none;
-}
-
-#searchbar #bar #numFound {
-    width: 92pt;
-    float: left;
-    line-height: calc(24pt - 2px);
-    text-align: center;
-    font-size: 10pt;
-    text-transform: uppercase;
-    border-width: 1px 0;
-    border-style: solid;
-    border-color: #aaa;
-}
-#searchbar #bar input:focus ~ #numFound,
-#searchbar #bar input.focus ~ #numFound {
-    border-color: #000;
-}
-
-#searchbar #bar button {
-    float: left;
-    margin: 0;
-    width: 24pt;
-    height: 24pt;
-    padding: 0;
-}
-
-#searchbar #bar input:focus ~ button,
-#searchbar #bar input.focus ~ button {
-    border: 1px solid #000;
-}
-#searchbar #panel {
-    display: none;
-    width: calc(100% - 52pt + 1px);
-    border: 1px solid black;
-    border-top: none;
-    box-sizing: border-box;
-    overflow: hidden;
-    padding: .4em;
-    background: #fff;
+  display: initial;
 }
 #searchbar.results #panel {
-    width: calc(100% - 140pt + 1px);
+  width: calc(100% - 140pt + 1px);
+}
+#searchbar.results #searchButton {
+  display: none;
+}
+
+/* Searchbar Panel */
+#searchbar #panel circle, #vizContainer svg g circle {
+  stroke: #fff;
+  stroke-width: 2px;
+}
+
+#searchbar #panel line, #vizContainer svg line {
+  stroke: #999;
+  stroke-opacity: 0.6;
+}
+
+#searchbar #panel {
+  display: none;
+  width: calc(100% - 52pt + 1px);
+  border: 1px solid black;
+  border-top: none;
+  box-sizing: border-box;
+  overflow: hidden;
+  padding: .4em;
+  background: #fff;
+  /* Add button for custom structured search */
+  /* Tabs for different searches */
+  /* Options for structured search */
 }
 #searchbar #panel table {
-    border-collapse: collapse;
-    border-spacing: 0;
+  border-collapse: collapse;
+  border-spacing: 0;
 }
 #searchbar #panel td {
-    vertical-align: top;
+  vertical-align: top;
 }
 #searchbar #panel svg {
-    min-height: 400px;
-    padding: .5em 0 0 .5em;
+  min-height: 400px;
+  padding: .5em 0 0 .5em;
 }
 #searchbar #panel circle.hover {
-    opacity: .6;
-    display: none;
-    cursor: default;
+  opacity: .6;
+  display: none;
+  cursor: default;
 }
 #searchbar #panel .add {
-    color: #fff;
-    height: 25px;
-    width: 25px;
-    opacity: .6;
-    font: inherit;
-    outline: none;
-    border: none;
-    cursor: pointer;
-    padding: 0;
-    margin: .5em 2em 0 0;
+  color: #fff;
+  height: 25px;
+  width: 25px;
+  opacity: .6;
+  font: inherit;
+  outline: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  margin: .5em 2em 0 0;
 }
 #searchbar #panel .add:hover {
-    opacity: .8;
+  opacity: 0.8;
 }
 #searchbar #panel .add:active {
-    opacity: 1;
+  opacity: 1;
 }
 #searchbar #panel .add:disabled {
-    display: none;
+  display: none;
 }
 #searchbar #panel .searchTabLinks {
-    margin: 0;
-    display: table;
-    padding: 0 0 .5em 0; 
-    border-collapse: separate;
-    border-spacing: .3em;
+  margin: 0;
+  display: table;
+  padding: 0 0 .5em 0;
+  border-collapse: separate;
+  border-spacing: .3em;
 }
 #searchbar #panel .searchTabLinks a {
-    display: block;
-    padding: 9px 15px;
-    color: #4a4a4a;
+  display: block;
+  padding: 9px 15px;
+  color: #4a4a4a;
 }
 #searchbar #panel .searchTabLinks a:hover {
-    text-decoration: none;
+  text-decoration: none;
 }
 #searchbar #panel .searchTabLinks li {
-    display: table-cell;
-    background: #a3c2d9;
-    text-align: center;
+  display: table-cell;
+  background: #a3c2d9;
+  text-align: center;
 }
 #searchbar #panel .searchTabLinks li.default {
-    background: #7ca8c9;
+  background: #7ca8c9;
 }
-#searchbar #panel .searchTabLinks li.default a{
-    color: #ffffff;
+#searchbar #panel .searchTabLinks li.default a {
+  color: #fff;
 }
 #searchbar #panel .structuredSearches {
-    margin: -.5em 0 0 -3.5em;
-    display: table;
-    border-collapse: separate;
-    border-spacing: 1em .5em;
+  margin: -.5em 0 0 -3.5em;
+  display: table;
+  border-collapse: separate;
+  border-spacing: 1em .5em;
 }
 #searchbar #panel .structuredSearches li {
-    display: table-cell;
+  display: table-cell;
 }
 #searchbar #panel .tab {
-    margin-left: .5em;
-    display: none;
+  margin-left: .5em;
+  display: none;
 }
 #searchbar #panel .defaultTab {
-    margin-left: .5em;
-    display: block;
+  margin-left: .5em;
+  display: block;
 }
 #searchbar #panel .predefined {
-    margin: .5em 0 0 0;
+  margin: .5em 0 0 0;
 }
 #searchbar #panel .predefined button {
-    width: auto;
-    margin: 0 0 .4em;
+  width: auto;
+  margin: 0 0 .4em;
 }
 #searchbar #panel .out {
-    font-size: 10pt;
-    margin-left: .5em;
+  font-size: 10pt;
+  margin-left: .5em;
 }
 #searchbar #panel .out dt {
-    margin: 1em 0 .2em;
+  margin: 1em 0 .2em;
 }
 
 svg {
-    user-select: none;
-    -ms-user-select: none;
-    -moz-user-select: none;
-    -webkit-user-select: none;
+  user-select: none;
+  -ms-user-select: none;
+  -moz-user-select: none;
+  -webkit-user-select: none;
 }
 
 #vizContainer {
-    margin-top: 4em;
-    white-space: nowrap;
+  margin-top: 4em;
+  white-space: nowrap;
 }
-
 #vizContainer svg {
-    vertical-align: top;
-    margin-top: 45px;
+  vertical-align: top;
+  margin-top: 45px;
 }
 #vizContainer svg:last-child {
-    padding-right: 240px;
+  padding-right: 240px;
 }
-
-#vizContainer svg line,
-#panel line {
-    stroke: #999;
-    stroke-opacity: 0.6;
-}
-
-#vizContainer svg g circle,
-#panel circle {
-    stroke: #fff;
-    stroke-width: 2px;
-}
-
 #vizContainer svg g text {
-    text-anchor: middle;
-    font-size: 8pt;
-    fill: #fff;
-    dominant-baseline: central;
-    pointer-events: none;
+  text-anchor: middle;
+  font-size: 8pt;
+  fill: #fff;
+  dominant-baseline: central;
+  pointer-events: none;
 }
-
 #vizContainer svg g rect {
-    fill: transparent;
+  fill: transparent;
 }
-
 #vizContainer svg rect.box {
-    fill: #ddd;
+  fill: #ddd;
 }
 
+/* hostBar */
 #hostBar {
-    position: fixed;
-    background: white;
-    z-index: 2;
-}
-
-#viewSelectDiv {
-    margin-bottom: 1em;
-}
-
-#viewLabelDiv {
-    margin-bottom: 1em;
-}
-
-#viewLabelL {
-    position: relative;
-    font-family: sans-serif;
-    opacity: 0.8;
-    margin-right: 0.5em;
-}
-
-#viewLabelR {
-    position: fixed;
-    right: 240px;
-    font-family: sans-serif;
-    opacity: 0.8;
-    margin-top: -2.2em;
-    margin-right: 0.5em;
-}
-
-#labelIconL {
-    font-family: "Icomoon";
-    margin-left: .5em;
-    margin-right: .5em;
-    float: left;
-    transform: rotate(180deg);
-}
-
-#labelIconR {
-    font-family: "Icomoon";
-    margin-left: .5em;
-    margin-right: .5em;   
-}
-
-#selectIconL {
-    font-family: "Icomoon";
-    float: left;
-    margin-right: -1em;
-    margin-left: 0.2em;
-    margin-top: 0.2em;
-    transform: rotate(180deg);
-}
-
-#selectIconR {
-    font-family: "Icomoon";
-    position: fixed;
-    right: 250px;
-    margin-top: 0.2em;
-}
-
-#clusterIconL, #clusterIconR {
-    font-family: "Icomoon";
-    font-size: 10px;
-    margin-right: -1em;
-    float: left;
-}
-
-#clusterIconL {
-    transform: rotate(180deg);
-}
-
-#viewSelectL {
-    position: relative;
-    padding: 0.15em;
-    font-family: sans-serif;
-    opacity: 0.8;
-    margin-left: 1.5em;
-}
-
-#viewSelectR {
-    position: fixed;
-    padding: 0.15em;
-    right: 260px;
-    font-family: sans-serif;
-    opacity: 0.8;
-    margin-right: 0.8em;
-}
-
-#viewSeparator {
-    display: inline-block;
-    border-right: 2px dotted rgba(3, 3, 3, 0.24);
-    position: relative;
-    z-index: 2; /* make this div sit on top of the hostBar div */
+  position: fixed;
+  background: white;
+  z-index: 2;
 }
 
 #hostBarSeparator {
-    height: 62px;
-    display: inline;
-    border-right: 2px dotted rgba(3, 3, 3, 0.24);
-    position: fixed;
-    margin-top: -2em;
+  height: 62px;
+  display: inline;
+  border-right: 2px dotted rgba(3, 3, 3, 0.24);
+  position: fixed;
+  margin-top: -2em;
 }
 
-#sidebar {
-    width: 240px;
-    height: 100%;
-    padding: 2em;
-    box-sizing: border-box;
-    position: fixed;
-    right: 0;
-    top: 0;
-    background: #fff;
-    z-index: 2;
+/* View drop-downs and labels */
+#viewSelectDiv {
+  margin-bottom: 1em;
 }
 
-#sidebar .diffButton {
-    height: 24pt;
-    padding: 0;
-    margin-top: 0;
-    margin-bottom: 2em;
+#viewLabelDiv {
+  margin-bottom: 1em;
 }
 
-#sidebar .pairwiseButton {
-    height: 24pt;
-    padding: 0;
-    margin-top: 0;
-    margin-bottom: 1em;
+#viewLabelL {
+  position: relative;
+  font-family: sans-serif;
+  opacity: 0.8;
+  margin-right: 0.5em;
 }
 
-.fade {
-    opacity: 0.5;
+#viewLabelR {
+  position: fixed;
+  right: 240px;
+  font-family: sans-serif;
+  opacity: 0.8;
+  margin-top: -2.2em;
+  margin-right: 0.5em;
 }
 
+#viewSelectL {
+  position: relative;
+  padding: 0.15em;
+  font-family: sans-serif;
+  opacity: 0.8;
+  margin-left: 1.5em;
+}
+
+#viewSelectR {
+  position: fixed;
+  padding: 0.15em;
+  right: 260px;
+  font-family: sans-serif;
+  opacity: 0.8;
+  margin-right: 0.8em;
+}
+
+#viewSeparator {
+  display: inline-block;
+  border-right: 2px dotted rgba(3, 3, 3, 0.24);
+  position: relative;
+  z-index: 2;
+  /* make this div sit on top of the hostBar div */
+}
+
+/* Arrow icons for clustering */
+#labelIconR, #labelIconL {
+  font-family: "Icomoon";
+  margin-left: .5em;
+  margin-right: .5em;
+}
+
+#labelIconL {
+  float: left;
+  transform: rotate(180deg);
+}
+
+#selectIconL {
+  font-family: "Icomoon";
+  float: left;
+  margin-right: -1em;
+  margin-left: 0.2em;
+  margin-top: 0.2em;
+  transform: rotate(180deg);
+}
+
+#selectIconR {
+  font-family: "Icomoon";
+  position: fixed;
+  right: 250px;
+  margin-top: 0.2em;
+}
+
+#clusterIconR, #clusterIconL {
+  font-family: "Icomoon";
+  font-size: 10px;
+  margin-right: -1em;
+  float: left;
+}
+
+#clusterIconL {
+  transform: rotate(180deg);
+}
+
+/* Styling for execution labels in clusters */
 .execFade {
-    opacity: 0.3;
-    color: #676767;
+  opacity: 0.3;
+  color: #676767;
 }
 
 .indent {
-    margin-left: 1.5em;
-    font-size: 9.5pt;
+  margin-left: 1.5em;
+  font-size: 9.5pt;
 }
 
+.baseIndent {
+  margin-left: 1.5em;
+}
+
+.baseIcon {
+  margin-top: 3.3em;
+  position: absolute;
+}
+
+.shiftDown {
+  margin-top: 4em;
+}
+
+/* Sidebar */
+#sidebar .fields, .dialog .info {
+  font-size: 10pt;
+  border-spacing: 0;
+  border-collapse: collapse;
+  display: block;
+  overflow: hidden;
+}
+
+#sidebar .fields .title, .dialog .info .title {
+  text-align: left;
+  vertical-align: top;
+  padding-right: 1em;
+  white-space: nowrap;
+}
+
+#sidebar .fields .value, .dialog .info .value {
+  /*word-break: break-all;*/
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+#sidebar {
+  width: 240px;
+  height: 100%;
+  padding: 2em;
+  box-sizing: border-box;
+  position: fixed;
+  right: 0;
+  top: 0;
+  background: #fff;
+  z-index: 2;
+}
+#sidebar .diffButton {
+  height: 24pt;
+  padding: 0;
+  margin-top: 0;
+  margin-bottom: 2em;
+}
+#sidebar .pairwiseButton {
+  height: 24pt;
+  padding: 0;
+  margin-top: 0;
+  margin-bottom: 1em;
+}
 #sidebar .info {
-    height: 12em;
-    overflow: auto;
+  height: 12em;
+  overflow: auto;
 }
-
 #sidebar .event {
-    word-break: break-all;
-    margin-bottom: 1em;
+  word-break: break-all;
+  margin-bottom: 1em;
 }
-
-#sidebar .fields,
-.dialog .info {
-    font-size: 10pt;
-    border-spacing: 0;
-    border-collapse: collapse;
-    display: block;
-    overflow: hidden;
-}
-#sidebar .fields .title,
-.dialog .info .title {
-    text-align: left;
-    vertical-align: top;
-    padding-right: 1em;
-    white-space: nowrap;
-}
-#sidebar .fields .value,
-.dialog .info .value {
-    /*word-break: break-all;*/
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
-
 #sidebar .hidden {
-    margin-top: 2em;
+  margin-top: 2em;
 }
 #sidebar .hidden svg {
-    float: left;
-    margin-top: 1em;
+  float: left;
+  margin-top: 1em;
 }
 
 svg#defs {
-    height: 0;
-    width: 0;
-    position: absolute;
+  height: 0;
+  width: 0;
+  position: absolute;
 }
 
 /* Popup dialog */
 .dialog {
-    width: 200px;
-    background: #eee;
-    font-family: sans-serif;
-    position: absolute;
-    z-index: 2;
-    display: none;
+  width: 200px;
+  background: #eee;
+  font-family: sans-serif;
+  position: absolute;
+  z-index: 2;
+  display: none;
 }
 .dialog.host {
-    position: fixed;
-    z-index: 3;
-}
-.dialog.hidden {
-    z-index: 3;
-}
-
-.dialog .triangle {
-    position: absolute;
-    width: 0;
-    height: 0;
-    border-style: solid;
-    border-width: 10px;
-    border-color: inherit;
-    border-bottom-color: transparent;
-}
-.dialog.right .triangle {
-    border-right-color: transparent;
-    right: -20px;
-    top: 0;
-}
-.dialog.left .triangle {
-    border-left-color: transparent;
-    left: -20px;
-    top: 0;
-}
-.dialog .name,
-.dialog .info {
-    margin: 1em;
-    color: white;
-    word-break: break-all;
-}
-.dialog button {
-    margin: 0;
-    background: rgba(0,0,0,.1);
-}
-.dialog button:hover {
-    margin: 0;
-    background: rgba(0,0,0,.05);
-}
-.dialog button:active {
-    margin: 0;
-    background: rgba(0,0,0,.2);
-}
-.dialog:not(.host) button.hb {
-    display: none;
+  position: fixed;
+  z-index: 3;
 }
 .dialog.host button:not(.hb) {
-    display: none;
+  display: none;
+}
+.dialog .hidden {
+  z-index: 3;
+}
+.dialog .info {
+  margin: 1em;
+  color: white;
+  word-break: break-all;
+}
+.dialog .triangle {
+  position: absolute;
+  width: 0;
+  height: 0;
+  border-style: solid;
+  border-width: 10px;
+  border-color: inherit;
+  border-bottom-color: transparent;
+}
+.dialog.right .triangle {
+  border-right-color: transparent;
+  right: -20px;
+  top: 0;
+}
+.dialog.left .triangle {
+  border-left-color: transparent;
+  left: -20px;
+  top: 0;
+}
+.dialog .name {
+  margin: 1em;
+  color: white;
+  word-break: break-all;
+}
+.dialog button {
+  margin: 0;
+  background: rgba(0, 0, 0, 0.1);
+}
+.dialog button:hover {
+  margin: 0;
+  background: rgba(0, 0, 0, 0.05);
+}
+.dialog button:active {
+  margin: 0;
+  background: rgba(0, 0, 0, 0.2);
+}
+.dialog:not(.host) button.hb {
+  display: none;
 }
 
 /* Error box */
 #errorbox {
-    display: none;
-    width: 50%;
-    box-sizing: border-box;
-    position: fixed;
-    top: 200px;
-    left: 25%;
-    z-index: 99;
-    background: #c44;
-    color: #fff;
-    padding: 1em;
+  display: none;
+  width: 50%;
+  box-sizing: border-box;
+  position: fixed;
+  top: 200px;
+  left: 25%;
+  z-index: 99;
+  background: #c44;
+  color: #fff;
+  padding: 1em;
 }
 #errorbox pre {
-    overflow: auto;
-    padding: .4em;
-    background: #FDD;
-    color: #444;
+  overflow: auto;
+  padding: .4em;
+  background: #FDD;
+  color: #444;
 }
 #errorbox pre:last-child {
-    margin-bottom: 0;
+  margin-bottom: 0;
 }
 #errorbox pre + br {
-    display: none;
+  display: none;
 }
 
 #errorcover {
-    display: none;
-    width: 100%;
-    height: 100%;
-    position: fixed;
-    top: 0;
-    left: 0;
-    z-index: 98;
-    background: rgba(255,255,255,.8);
+  display: none;
+  width: 100%;
+  height: 100%;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 98;
+  background: rgba(255, 255, 255, 0.8);
 }
