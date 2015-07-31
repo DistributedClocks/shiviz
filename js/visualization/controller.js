@@ -158,7 +158,8 @@ function Controller(global) {
         if ($(this).attr("href") == "clusterTab") {
             // Remove any log line highlighting when on the Clusters tab
             $(".highlight").css("opacity", 0);
-            if ($("#clusterNumProcess").is(":checked") || $("#clusterComparison").is(":checked") && $(".clusterBase").val() != null) {
+            if ($("#clusterNumProcess").is(":checked") || ($("#clusterComparison").is(":checked") 
+                && $(".clusterBase").find("option:selected").text() != "Select a base execution")) {
                 $("#labelIconL, #labelIconR, #selectIconL, #selectIconR").show();
             }
         // Hide the arrow icons when on the Log lines tab

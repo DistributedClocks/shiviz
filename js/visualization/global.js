@@ -113,7 +113,8 @@ Global.prototype.drawAll = function() {
 
     // Show arrow icons and highlight cluster results that match a search term when on the Clusters tab
     if ($(".leftTabLinks li").is(":visible") && !$(".leftTabLinks li").first().hasClass("default")) {
-        if ($("#clusterNumProcess").is(":checked") || ($("#clusterComparison").is(":checked") && $(".clusterBase").val() != null)) {
+        if ($("#clusterNumProcess").is(":checked") || ($("#clusterComparison").is(":checked")
+            && $(".clusterBase").find("option:selected").text() != "Select a base execution")) {
             labelIconL.show(); selectIconL.show(); 
 
             if (global.getPairwiseView()) {
