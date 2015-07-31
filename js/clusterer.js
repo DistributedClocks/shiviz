@@ -123,7 +123,7 @@ Clusterer.prototype.clusterByExecComparison = function() {
     $(".clusterBase").show().find("option").not("#placeholder").remove();
 
     // Set margin for base dropdown to zero initially
-    $(".clusterBase").removeClass("baseIndent");
+    $(".clusterBase").removeClass("baseIndent fade");
 
     global.getViews().forEach(function(view) {
         var label = view.getLabel();
