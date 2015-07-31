@@ -120,7 +120,9 @@ Global.prototype.drawAll = function() {
                 labelIconR.show();
                 selectIconR.show();
             }
-            var selected = $("select.clusterBase option:selected");
+
+            var baseDropdown = $(".clusterBase");
+            var selected = $(".clusterBase option:selected");
 
             // If the searchbar is not empty, fade out all executions in Clusters tab
             if (searchbar.getMode() != 0) {
@@ -128,14 +130,16 @@ Global.prototype.drawAll = function() {
                     var text = $(this).text();
                     return text != "Show all" && text != "Condense";
                 }).addClass("execFade");
-                $(".clusterBase").addClass("fade");
+                if (baseDropdown.is(":visible")) {
+                    baseDropdown.addClass("fade");
+                }
 
                 // Remove fading for executions that match the search term
                 this.views.forEach(function(view) {
                   if (view.hasQueryMatch()) {
                       var label = view.getLabel();
-                      if (selected && selected.val() == label) {
-                          $(".clusterBase").removeClass("fade");
+                      if (baseDropdown.is(":visible") && selected.val() == label) {
+                          baseDropdown.removeClass("fade");
                       } else {
                         $("table.clusterResults a").filter(function() {
                             return $(this).attr("href") == label;
