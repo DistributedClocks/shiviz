@@ -327,14 +327,11 @@ section.input .left {
 .visualization .left .leftTabLinks li:first-child {
   left: -1.6em;
 }
+.visualization .left .leftTabLinks li:last-child {
+  left: 10.3em;
+}
 .visualization .left .leftTabLinks li.default {
   opacity: 1;
-}
-.visualization .left .leftTabLinks .tab {
-  display: none;
-}
-.visualization .left .leftTabLinks .defaultTab {
-  display: block;
 }
 
 .visualization .log, .visualization .clusterResults {
@@ -363,7 +360,6 @@ section.input .left {
 .visualization .clusterResults p {
   margin-bottom: .5em;
 }
-
 .visualization .clusterResults td.lines {
   position: absolute;
 }
@@ -677,11 +673,6 @@ section.input .left {
 }
 #searchbar #panel .tab {
   margin-left: .5em;
-  display: none;
-}
-#searchbar #panel .defaultTab {
-  margin-left: .5em;
-  display: block;
 }
 #searchbar #panel .predefined {
   margin: .5em 0 0 0;

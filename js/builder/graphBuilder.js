@@ -24,6 +24,8 @@ function GraphBuilder($svg, $addButton) {
     /** @private */
     this.hosts = [];
 
+    this.cleared = true;
+
     /** @private */
     this.colors = [ "rgb(122,155,204)", "rgb(122,204,155)", "rgb(187,204,122)", "rgb(204,122,122)", "rgb(187,122,204)", "rgb(122,155,204)" ];
 
@@ -279,12 +281,34 @@ GraphBuilder.prototype.getNodeByCoord = function(x, y) {
  * Resets the GraphBuilder to its original state.
  */
 GraphBuilder.prototype.clear = function() {
+    // Set the cleared field to true so that the callback in searchBar.js does not update the searchbar input
+    this.setCleared(true);
     while (this.hosts.length > 0)
+        // removeHost invokes the callback function
         this.removeHost(this.hosts[this.hosts.length - 1]);
 
+    // Set the cleared field to false now that callbacks for resetting the GraphBuilder have completed
+    // This allows the searchbar input to be updated the next time a user draws something
+    this.setCleared(false);
     this.addHost();
     this.addHost();
 };
+
+/**
+ * Retrieves the cleared field for this GraphBuilder
+ * @returns {Boolean} True if this GraphBuilder was reset, false otherwise
+ */
+GraphBuilder.prototype.isCleared = function() {
+    return this.cleared;
+}
+
+/**
+ * Sets the cleared field for this GraphBuilder
+ * @param {Boolean} cleared The boolean value to set
+ */
+GraphBuilder.prototype.setCleared = function(cleared) {
+    this.cleared = cleared;
+}
 
 /**
  * Handles all user interaction with the graph builder, including bindings for:

@@ -357,17 +357,13 @@ section.input {
             &:first-child {
                 left: -1.6em;
             }
+
+            &:last-child {
+                left: 10.3em;
+            }
             &.default {
                 opacity: 1;
             }
-        }
-
-        .tab {
-            display: none;
-        }
-
-        .defaultTab {
-            display: block;
         }
     }
 }
@@ -783,12 +779,6 @@ section.input {
 
     .tab {
         margin-left: .5em;
-        display: none;
-    }
-
-    .defaultTab {
-        margin-left: .5em;
-        display: block;
     }
 
     .predefined {

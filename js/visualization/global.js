@@ -124,9 +124,10 @@ Global.prototype.drawAll = function() {
 
             var baseDropdown = $(".clusterBase");
             var selected = $(".clusterBase option:selected");
+            var mode = searchbar.getMode();
 
-            // If the searchbar is not empty, fade out all executions in Clusters tab
-            if (searchbar.getMode() != 0) {
+            // If the searchbar is not empty or in motif mode, fade out all executions in Clusters tab
+            if (mode != SearchBar.MODE_EMPTY && mode != SearchBar.MODE_MOTIF) {
                 $("table.clusterResults a").filter(function() {
                     var text = $(this).text();
                     return text != "Show all" && text != "Condense";
