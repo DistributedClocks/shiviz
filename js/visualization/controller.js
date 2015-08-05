@@ -151,18 +151,18 @@ function Controller(global) {
         }
     });
 
-    // Event handler for switching between the Log lines and Clusters tabs
+    // Event handler for switching between the left tabs
     $(".visualization .leftTabLinks a").unbind().on("click", function(e) {
         $(".visualization #" + $(this).attr("href")).show().siblings().hide();
         $(this).parent("li").addClass("default").siblings("li").removeClass("default");
-        if ($(this).attr("href") == "clusterTab") {
-            // Remove any log line highlighting when on the Clusters tab
+        if ($(this).attr("href") != "logTab") {
+            // Remove any log line highlighting when not on the Log lines tab
             $(".highlight").css("opacity", 0);
             if ($("#clusterNumProcess").is(":checked") || ($("#clusterComparison").is(":checked") 
                 && $(".clusterBase").find("option:selected").text() != "Select a base execution")) {
                 $("#labelIconL, #labelIconR, #selectIconL, #selectIconR").show();
             }
-        // Hide the arrow icons when on the Log lines tab
+        // Hide the arrow icons when not on the Clusters tab
         } else {
             $("#labelIconL, #labelIconR, #selectIconL, #selectIconR").hide();
         }

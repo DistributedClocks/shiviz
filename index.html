@@ -320,14 +320,15 @@
             <ul class="leftTabLinks">
                <li class="default"><a href="logTab">Log lines</a></li>
                <li><a href="clusterTab">Clusters</a></li>
+               <li><a href="motifsTab">Motifs</a></li>
             </ul>
             <div id="leftTabContent">
-                <div id="logTab" class="defaultTab">
+                <div id="logTab">
                     <table class="log">
                         <tr></tr>
                     </table>
                 </div>
-                <div id="clusterTab" class="tab">
+                <div id="clusterTab">
                     <div id="clusterOption">
                         <p>Cluster executions by:</p>
                         <input id="clusterNumProcess" type="checkbox">
@@ -346,13 +347,15 @@
                         </tr>
                     </table>
                 </div>
+                <div id="motifsTab">
+                </div>
             </div>
             <div class="highlight"></div>
         </div>
         <div id="graph">
             <div id="searchbar">
                 <div id="bar">
-                    <input type="text" class="mono" placeholder="Search the visualization" readonly>
+                    <input type="text" class="mono" placeholder="Search the visualization">
                     <div class="clear">
                         <div class="one"></div>
                         <div class="two"></div>
@@ -366,9 +369,9 @@
                     <ul class="searchTabLinks">
                         <li class="default"><a href="textTab">Text Search</a></li>
                         <li><a href="structuredTab">Structured Search</a> </li>
-                        <!--<li><a href="networkTab">Network Motif Search</a></li>-->
+                        <li><a href="networkTab">Network Motif Search</a></li>
                     </ul>
-                    <div id="textTab" class="defaultTab">
+                    <div id="textTab" class="tab">
                         <b>Text search</b>: search for log lines/events that match a text query.
                         <div class="out">
                             <p>
@@ -418,6 +421,12 @@
                         </ul>
                     </div>
                     <div id="networkTab" class="tab">
+                        <input id="twoEvents" type="checkbox">
+                        <label>2-event subgraphs</label><br>
+                        <input id="threeEvents" type="checkbox">
+                        <label>3-event subgraphs</label><br>
+                        <input id="fourEvents" type="checkbox">
+                        <label>4-event subgraphs</label>
                     </div>
                 </div>
             </div>
