@@ -12,7 +12,7 @@
  * @param {Number} hostNum The host number. The graph builder host with hostNum =
  *            i should be the ith host in the graphBuilder.
  */
-function GraphBuilderHost(graphBuilder, hostNum) {
+function GraphBuilderHost(graphBuilder, hostNum, motifSearch) {
 
     var host = this;
 
@@ -34,10 +34,18 @@ function GraphBuilderHost(graphBuilder, hostNum) {
     /** @private */
     this.nodes = [];
 
+    this.motifSearch = motifSearch;
+
+    this.rectSize = (motifSearch ? 5 : 25);
+
+    this.lineY1 = (motifSearch ? 2 : 30);
+
+    this.lineY2 = (motifSearch ? 100 : 1000);
+
     /** @private */
     this.rect = Util.svgElement("rect").attr({
-        "width": 25,
-        "height": 25,
+        "width": this.rectSize,
+        "height": this.rectSize,
         "fill": this.color,
         "x": this.rx,
         "y": 0
@@ -48,9 +56,9 @@ function GraphBuilderHost(graphBuilder, hostNum) {
     /** @private */
     this.line = Util.svgElement("line").attr({
         "x1": this.x,
-        "y1": 30,
+        "y1": this.lineY1,
         "x2": this.x,
-        "y2": 1000
+        "y2": this.lineY2
     }).prependTo(graphBuilder.getSVG());
 }
 
@@ -94,7 +102,7 @@ GraphBuilderHost.prototype.getNodesSorted = function() {
  */
 GraphBuilderHost.prototype.addNode = function(y, tmp) {
 
-    var node = new GraphBuilderNode(this.graphBuilder, this.x, y, tmp, this.color);
+    var node = new GraphBuilderNode(this.graphBuilder, this.x, y, tmp, this.color, this.motifSearch);
 
     this.nodes.push(node);
     this.graphBuilder.invokeUpdateCallback();

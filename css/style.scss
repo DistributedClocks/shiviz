@@ -39,13 +39,13 @@ a {
     color: #04a;
 
     &:hover:not(.execFade) {
-    	color: #15b;
+        color: #15b;
     }
     &:active:not(.execFade) {
-    	color: #048;
+        color: #048;
     }
     &:not(:hover) {
-    	text-decoration: none;
+        text-decoration: none;
     }
 }
 
@@ -382,7 +382,7 @@ section.input {
     top: 1em;
 }
 
-.visualization .clusterResults {
+.visualization table.clusterResults {
     @extend %leftTabs;
     height: calc(100% - 20em);
     max-width: 250pt;
@@ -400,6 +400,27 @@ section.input {
     td.lines {
         position: absolute;
     }
+}
+
+.visualization table.motifResults {
+    @extend %leftTabs;
+    height: calc(100% - 15em);
+    max-width: 250pt;
+    width: 250pt;
+    overflow: auto;
+    display: block;
+    position: fixed;
+    z-index: 4;
+    top: 10.5em;
+
+    td {
+        position: absolute;
+
+        a, span {
+            font-size: 9pt;
+        }
+    }
+
 }
 
 .visualization #baseLabel {

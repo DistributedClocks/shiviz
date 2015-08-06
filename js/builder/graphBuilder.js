@@ -5,7 +5,7 @@
  * @constructor
  * @param $svg
  */
-function GraphBuilder($svg, $addButton) {
+function GraphBuilder($svg, $addButton, motifSearch) {
 
     /** @private */
     this.updateCallback = null;
@@ -25,6 +25,8 @@ function GraphBuilder($svg, $addButton) {
     this.hosts = [];
 
     this.cleared = true;
+
+    this.motifSearch = motifSearch;
 
     /** @private */
     this.colors = [ "rgb(122,155,204)", "rgb(122,204,155)", "rgb(187,204,122)", "rgb(204,122,122)", "rgb(187,122,204)", "rgb(122,155,204)" ];
@@ -158,16 +160,18 @@ GraphBuilder.prototype.addHost = function() {
         throw new Exception("GraphBuilder.prototype.addHost: no new hosts may be added");
     }
 
-    var host = new GraphBuilderHost(this, this.hosts.length);
+    var host = new GraphBuilderHost(this, this.hosts.length, this.motifSearch);
     this.hosts.push(host);
 
     this.$svg.width(this.hosts.length * 65);
 
-    if (this.hosts.length == GraphBuilder.MAX_HOSTS) {
-        this.$addButton.attr("disabled", true);
-    }
-    else {
-        this.$addButton.css("background", this.colors[this.colors.length - 1]);
+    if (this.$addButton) {
+        if (this.hosts.length == GraphBuilder.MAX_HOSTS) {
+            this.$addButton.attr("disabled", true);
+        }
+        else {
+            this.$addButton.css("background", this.colors[this.colors.length - 1]);
+        }
     }
 
     return host;
@@ -210,9 +214,11 @@ GraphBuilder.prototype.removeHost = function(host) {
     host.line.remove();
 
     this.$svg.width(this.hosts.length * 65);
-    this.$addButton.css("background", this.colors[this.colors.length - 1]);
-    this.$addButton.removeAttr("disabled");
 
+    if (this.$addButton) {
+        this.$addButton.css("background", this.colors[this.colors.length - 1]);
+        this.$addButton.removeAttr("disabled");
+    }
     this.invokeUpdateCallback();
 };
 
@@ -311,6 +317,14 @@ GraphBuilder.prototype.setCleared = function(cleared) {
 }
 
 /**
+ * Sets the motifSearch flag
+ * @param {Boolean} motifSearch The boolean value to set
+ */
+GraphBuilder.prototype.setMotifSearch = function(motifSearch) {
+    this.motifSearch = motifSearch;
+}
+
+/**
  * Handles all user interaction with the graph builder, including bindings for:
  *  
  * <ul>
@@ -328,9 +342,11 @@ GraphBuilder.prototype.bind = function() {
     var $svg = this.$svg;
     var $hover = this.$hover;
 
-    this.$addButton.unbind().click(function() {
-        context.addHost();
-    });
+    if (this.$addButton) {
+        this.$addButton.unbind().click(function() {
+            context.addHost();
+        });
+    }
 
     $svg.unbind().on("mousemove", function(e) {
         var x = e.offsetX || (e.pageX - $svg.offset().left);
@@ -496,13 +512,15 @@ GraphBuilder.prototype.setUpdateCallback = function(fn) {
  * Invokes the update callback function
  */
 GraphBuilder.prototype.invokeUpdateCallback = function() {
-    this.updateCallback();
+    if (this.updateCallback) {
+        this.updateCallback();
+    }
 };
 
 /**
  * Converts the drawn graph in this graph builder to a BuilderGraph
  * 
- * @returns {BuilderGraph} teh resulting BuilderGraph
+ * @returns {BuilderGraph} the resulting BuilderGraph
  */
 GraphBuilder.prototype.convertToBG = function() {
 

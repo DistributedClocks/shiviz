@@ -334,7 +334,7 @@ section.input .left {
   opacity: 1;
 }
 
-.visualization .log, .visualization .clusterResults {
+.visualization .log, .visualization table.clusterResults, .visualization table.motifResults {
   border-collapse: collapse;
   border-spacing: 0;
   font-size: 10pt;
@@ -347,7 +347,7 @@ section.input .left {
   top: 1em;
 }
 
-.visualization .clusterResults {
+.visualization table.clusterResults {
   height: calc(100% - 20em);
   max-width: 250pt;
   width: 250pt;
@@ -357,11 +357,28 @@ section.input .left {
   z-index: 4;
   top: 16.5em;
 }
-.visualization .clusterResults p {
+.visualization table.clusterResults p {
   margin-bottom: .5em;
 }
-.visualization .clusterResults td.lines {
+.visualization table.clusterResults td.lines {
   position: absolute;
+}
+
+.visualization table.motifResults {
+  height: calc(100% - 15em);
+  max-width: 250pt;
+  width: 250pt;
+  overflow: auto;
+  display: block;
+  position: fixed;
+  z-index: 4;
+  top: 10.5em;
+}
+.visualization table.motifResults td {
+  position: absolute;
+}
+.visualization table.motifResults td a, .visualization table.motifResults td span {
+  font-size: 9pt;
 }
 
 .visualization #baseLabel {
