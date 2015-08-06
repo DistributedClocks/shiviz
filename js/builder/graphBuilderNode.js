@@ -13,7 +13,7 @@
  * @param {Boolean} tmp Whether the node is temporary (i.e. result of incomplete action)
  * @param {String} color The color of the node
  */
-function GraphBuilderNode(graphBuilder, x, y, tmp, color) {
+function GraphBuilderNode(graphBuilder, x, y, tmp, color, motifSearch) {
     
     /** @private */
     this.id = GraphBuilderNode.id++;
@@ -42,11 +42,13 @@ function GraphBuilderNode(graphBuilder, x, y, tmp, color) {
     /** @private */
     this.color = color;
 
+    this.radius = (motifSearch ? 2 : 5);
+
     var context = this;
     
     /** @private */
     this.circle = $(Util.svgElement("circle")).attr({
-        "r": 5,
+        "r": this.radius,
         "cx": x,
         "cy": y,
         "fill": context.color

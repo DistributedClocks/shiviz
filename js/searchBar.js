@@ -39,7 +39,7 @@ function SearchBar() {
     this.motifNavigator = null;
 
     /** @private */
-    this.graphBuilder = new GraphBuilder($("#panel svg"), $("#addButton"));
+    this.graphBuilder = new GraphBuilder($("#panel svg"), $("#addButton"), false);
 
     /** @private */
     this.mode = SearchBar.MODE_EMPTY;
@@ -51,7 +51,6 @@ function SearchBar() {
 
     // Called whenever a change is made to the GraphBuilder -- either through drawing a custom structure or through clearStructure()
     this.graphBuilder.setUpdateCallback(function() {
-
         if (context.updateLocked) {
             return;
         }
@@ -486,6 +485,7 @@ SearchBar.prototype.query = function() {
             var prefix = (dev ? "https://api.github.com/repos/pattyw/motifs/contents/" : "/shiviz/log/");
             var url = prefix + "motifs.json";
             var viewToCount = {};
+            var builderGraphs = [];
 
             $.get(url, function(response) {
                 if (dev)
@@ -495,6 +495,8 @@ SearchBar.prototype.query = function() {
                 lines.forEach(function(line) {
                     if (isNaN(line.charAt(0))) {
                         var builderGraph = searchbar.getBuilderGraphFromJSON(line);
+                        builderGraphs.push(builderGraph);
+
                         var finder = new CustomMotifFinder(builderGraph);
                         var hmt = new HighlightMotifTransformation(finder, false);
 
@@ -502,11 +504,13 @@ SearchBar.prototype.query = function() {
                             var label = view.getLabel();
                             searchbar.motifNavigator = new MotifNavigator(true);
 
+                            // Use a motifNavigator to get the number of instances that the current motif shows up in the current view
                             hmt.findMotifs(view.getModel());
                             var motifGroup = hmt.getHighlighted();
                             searchbar.motifNavigator.addMotif(view.getVisualModel(), motifGroup);
                             var numMotifs = searchbar.motifNavigator.getNumMotifs();
 
+                            // Save the number of instances of this motif under the current view's label
                             if (viewToCount[label]) {
                                 viewToCount[label].push(numMotifs);
                             } else {
@@ -516,16 +520,15 @@ SearchBar.prototype.query = function() {
                     }
                 });
                 
-                var motifs = searchbar.calculateMotifs(viewToCount);
-                var motifDrawer = new MotifDrawer(motifs, viewToCount);
+                var motifDrawer = new MotifDrawer(searchbar.global, viewToCount, builderGraphs);
                 motifDrawer.drawResults();
+
+                // Switch to the Motifs tab
+                $(".leftTabLinks li").last().show().find("a").click();
 
             }).fail(function() {
                 shiviz.getinstance().handleexception(new exception("unable to retrieve motifs from: " + url, true));
             });
-
-            // Switch to the Motifs tab
-            $(".leftTabLinks li").last().show().find("a").click();
             break;
 
         default:
@@ -541,30 +544,6 @@ SearchBar.prototype.query = function() {
     }
     this.countMotifs();
 };
-
-SearchBar.prototype.calculateMotifs = function(viewToCount) {
-    var views = this.global.getViews();
-    var numMotifs = viewToCount[views[0].getLabel()].length;
-    var motifToViews = {};
-
-    views.forEach(function(view) {
-        var label = view.getLabel();
-        var motifsCount = viewToCount[label];
-
-        // Iterate through the count for each motif for this view
-        for (var index=0; index < numMotifs; index++) {
-            // If this view has this motif, add its label to the array
-            if (motifsCount[index] > 0) {
-                if (motifToViews[index]) {
-                    motifToViews[index].push(label);
-                } else {
-                    motifToViews[index] = [label];
-                }
-            }
-        }
-    });
-    return motifToViews;
-}
 
 /**
   * Creates a BuilderGraph from a json object containing hosts and vector timestamps
