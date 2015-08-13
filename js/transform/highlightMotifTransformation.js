@@ -35,7 +35,7 @@ HighlightMotifTransformation.prototype.setIgnoreEdges = function(val) {
 /**
  * Returns the motif group that represents the highlighted elements from the
  * last invocation of {@link HighlightMotifTransformation#transform}. If
- * transform has yet to be called, this method returns null
+ * transform or findMotifs have yet to be called, this method returns null
  * 
  * @returns {MotifGroup}
  */
@@ -74,7 +74,7 @@ HighlightMotifTransformation.prototype.transform = function(model) {
     for (var i = 0; i < nodes.length; i++) {
         var node = nodes[i];
         var visualNode = model.getVisualNodeByNode(node);
-        visualNode.setRadius(visualNode.getRadius() * 1.2);
+        visualNode.setRadius(5 * 1.2);
         visualNode.setOpacity(1);
     }
 

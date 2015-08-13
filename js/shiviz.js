@@ -252,9 +252,8 @@ Shiviz.prototype.visualize = function(log, regexpString, delimiterString, sortTy
             // Show the Log lines and Clusters tab for logs with multiple executions
             $(".leftTabLinks li").not(":last").show();
 
-            // Show the network motifs search option for logs with multiple executions and uncheck the input boxes
+            // Show the network motifs search option for logs with multiple executions
             $(".searchTabLinks li").last().show();
-            $("#networkTab input").prop("checked", false);
 
             // Clear the Clusters tab
             $(".clusterResults td.lines").empty();

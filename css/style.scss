@@ -419,6 +419,10 @@ section.input {
         a, span {
             font-size: 9pt;
         }
+
+        line {
+            @extend %svgLine
+        }
     }
 
 }

@@ -23,42 +23,41 @@ function GraphBuilderHost(graphBuilder, hostNum, motifSearch) {
     this.graphBuilder = graphBuilder;
 
     /** @private */
-    this.rx = hostNum * 65;
+    this.rx = (motifSearch ? hostNum * 40 : hostNum * 65);
 
     /** @private */
-    this.x = this.rx + 12.5;
+    this.x = (motifSearch ? this.rx + 10 : this.rx + 12.5);
 
     /** @private */
     this.color = graphBuilder.colors.pop();
 
     /** @private */
-    this.nodes = [];
-
     this.motifSearch = motifSearch;
 
-    this.rectSize = (motifSearch ? 5 : 25);
-
-    this.lineY1 = (motifSearch ? 2 : 30);
-
-    this.lineY2 = (motifSearch ? 100 : 1000);
+    /** @private */
+    this.nodes = [];
 
     /** @private */
     this.rect = Util.svgElement("rect").attr({
-        "width": this.rectSize,
-        "height": this.rectSize,
+        "width": 25,
+        "height": 25,
         "fill": this.color,
         "x": this.rx,
         "y": 0
     }).on("dblclick", function() {
         graphBuilder.removeHost(host);
-    }).prependTo(graphBuilder.getSVG());
+    })
+
+    if (!motifSearch) {
+        this.rect.prependTo(graphBuilder.getSVG());
+    }
 
     /** @private */
     this.line = Util.svgElement("line").attr({
         "x1": this.x,
-        "y1": this.lineY1,
+        "y1": 30,
         "x2": this.x,
-        "y2": this.lineY2
+        "y2": 1000
     }).prependTo(graphBuilder.getSVG());
 }
 
@@ -102,7 +101,10 @@ GraphBuilderHost.prototype.getNodesSorted = function() {
  */
 GraphBuilderHost.prototype.addNode = function(y, tmp) {
 
-    var node = new GraphBuilderNode(this.graphBuilder, this.x, y, tmp, this.color, this.motifSearch);
+    var node = new GraphBuilderNode(this.graphBuilder, this.x, y, tmp, this.color);
+    if (this.motifSearch) {
+        node.setCircleRadius(3);
+    }
 
     this.nodes.push(node);
     this.graphBuilder.invokeUpdateCallback();
@@ -142,3 +144,14 @@ GraphBuilderHost.prototype.removeAllNodes = function() {
 GraphBuilderHost.prototype.getColor = function() {
     return this.color;
 };
+
+/**
+ * Sets the y coordinates for the line segment of this host
+ *
+ * @param {Number} y1 The top coordinate for the line
+ * @param {Number} y2 The bottom coordinate for the line
+ */
+GraphBuilderHost.prototype.setLineYCoordinates = function(y1, y2) {
+    this.line.attr("y1", y1);
+    this.line.attr("y2", y2);
+}
