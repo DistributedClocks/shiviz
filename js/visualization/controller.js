@@ -153,18 +153,36 @@ function Controller(global) {
 
     // Event handler for switching between the left tabs
     $(".visualization .leftTabLinks a").unbind().on("click", function(e) {
-        $(".visualization #" + $(this).attr("href")).show().siblings().hide();
+
+        var anchorHref = $(this).attr("href");
+        $(".visualization #" + anchorHref).show().siblings().hide();
         $(this).parent("li").addClass("default").siblings("li").removeClass("default");
-        if ($(this).attr("href") != "logTab") {
+
+        $("#labelIconL, #labelIconR, #selectIconL, #selectIconR").hide();
+
+        if (anchorHref != "logTab") {
             // Remove any log line highlighting when not on the Log lines tab
             $(".highlight").css("opacity", 0);
-            if ($("#clusterNumProcess").is(":checked") || ($("#clusterComparison").is(":checked") 
-                && $(".clusterBase").find("option:selected").text() != "Select a base execution")) {
-                $("#labelIconL, #labelIconR, #selectIconL, #selectIconR").show();
+        }
+        if (anchorHref == "clusterTab") {
+            if (searchbar.getMode() == SearchBar.MODE_MOTIF) {
+                searchbar.clear();
             }
-        // Hide the arrow icons when not on the Clusters tab
-        } else {
-            $("#labelIconL, #labelIconR, #selectIconL, #selectIconR").hide();
+            if ($("#clusterNumProcess").is(":checked") || ($("#clusterComparison").is(":checked") && $(".clusterBase").find("option:selected").text() != "Select a base execution")) {
+                $("#labelIconL, #selectIconL").show();
+                if (global.getPairwiseView()) {
+                    $("#labelIconR, #selectIconR").show();
+                }
+            }
+        }
+        if (global.getViews().length > 1 && searchbar.getMode() != SearchBar.MODE_MOTIF) {
+            $(".pairwiseButton").show();
+        }
+        if (anchorHref == "motifsTab") {
+            if (global.getPairwiseView()) {
+                $(".pairwiseButton").click();
+            }
+            $(".pairwiseButton").hide();
         }
         e.preventDefault();
     });
@@ -178,14 +196,14 @@ function Controller(global) {
             $(this).siblings("input").prop("checked", false);
             // Generate clustering results
             var clusterMetric = $(this).attr("id");
-            var clusterer = new Clusterer(clusterMetric, self.global);
+            var clusterer = new Clusterer(clusterMetric, global);
             clusterer.cluster();
         } else {
             // Clear the results if no option is selected
             $(".clusterResults td.lines").empty();
             $(".clusterResults td:empty").remove();
             $("#baseLabel, .clusterBase").hide();
-        }     
+        }
     });
 }
 

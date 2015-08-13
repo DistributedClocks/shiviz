@@ -13,7 +13,7 @@
  * @param {Boolean} tmp Whether the node is temporary (i.e. result of incomplete action)
  * @param {String} color The color of the node
  */
-function GraphBuilderNode(graphBuilder, x, y, tmp, color, motifSearch) {
+function GraphBuilderNode(graphBuilder, x, y, tmp, color) {
     
     /** @private */
     this.id = GraphBuilderNode.id++;
@@ -42,13 +42,11 @@ function GraphBuilderNode(graphBuilder, x, y, tmp, color, motifSearch) {
     /** @private */
     this.color = color;
 
-    this.radius = (motifSearch ? 2 : 5);
-
     var context = this;
     
     /** @private */
     this.circle = $(Util.svgElement("circle")).attr({
-        "r": this.radius,
+        "r": 5,
         "cx": x,
         "cy": y,
         "fill": context.color
@@ -91,6 +89,15 @@ GraphBuilderNode.prototype.getLines = function() {
 GraphBuilderNode.prototype.getCircle = function() {
     return this.circle;
 };
+
+/**
+ * Sets the radius of the circle SVG element associated with this node
+ *
+ * @param {Number} radius The new radius for the circle
+ */
+GraphBuilderNode.prototype.setCircleRadius = function(radius) {
+    this.circle.attr("r", radius);
+}
 
 /**
  * Returns the coordinates as a two element array

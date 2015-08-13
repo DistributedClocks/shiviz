@@ -92,7 +92,7 @@ GraphBuilder.prototype.convertFromBG = function(bg) {
     nodes.forEach(function(n) {
         var head = n.getPrev().isHead() ? 0 : 1;
         nodeToParents[n.getId()] = n.getParents().length + head;
-        nodeToY[n.getId()] = GraphBuilder.START_OFFSET + GraphBuilder.Y_SPACING * 2;
+        nodeToY[n.getId()] = (context.motifSearch ? 5 : GraphBuilder.START_OFFSET + GraphBuilder.Y_SPACING * 2);
     });
 
     var next = nodes.filter(function(n) {
@@ -112,7 +112,7 @@ GraphBuilder.prototype.convertFromBG = function(bg) {
             var id = n.getId();
 
             var numParents = --nodeToParents[id];
-            nodeToY[id] = Math.max(nodeToY[id], nodeToY[curr.getId()] + GraphBuilder.Y_SPACING);
+            nodeToY[id] = (context.motifSearch ? Math.max(nodeToY[id], nodeToY[curr.getId()] + 20) : Math.max(nodeToY[id], nodeToY[curr.getId()] + GraphBuilder.Y_SPACING));
 
             if (numParents == 0)
                 next.push(n);
@@ -137,6 +137,15 @@ GraphBuilder.prototype.convertFromBG = function(bg) {
             gbn.addChild(gbc, $line);
         });
     });
+
+    if (this.motifSearch) {
+        this.hosts.forEach(function(host) {
+            var sortedNodes = host.getNodesSorted();
+            var y1 = sortedNodes[0].getCoords()[1];
+            var y2 = sortedNodes[sortedNodes.length - 1].getCoords()[1];
+            host.setLineYCoordinates(y1, y2);
+        });
+    }
 };
 
 /**
@@ -322,6 +331,40 @@ GraphBuilder.prototype.setCleared = function(cleared) {
  */
 GraphBuilder.prototype.setMotifSearch = function(motifSearch) {
     this.motifSearch = motifSearch;
+}
+
+/**
+ * Gets the maximum x-coordinate among the nodes in this graphBuilder
+ */
+GraphBuilder.prototype.getMaxNodeWidth = function() {
+    var nodes = this.getNodes();
+    var maxWidth = 0;
+
+    nodes.forEach(function(node) {
+        var currWidth = node.getCoords()[0];
+        if (currWidth > maxWidth) {
+            maxWidth = currWidth;
+        }
+    });
+
+    return maxWidth;
+}
+
+/**
+ * Gets the maximum y-coordinate among the nodes in this graphBuilder
+ */
+GraphBuilder.prototype.getMaxNodeHeight = function() {
+    var nodes = this.getNodes();
+    var maxHeight = 0;
+
+    nodes.forEach(function(node) {
+        var currHeight = node.getCoords()[1];
+        if (currHeight > maxHeight) {
+            maxHeight = currHeight;
+        }
+    });
+
+    return maxHeight;
 }
 
 /**

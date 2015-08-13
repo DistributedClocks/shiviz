@@ -11,7 +11,7 @@
  * 
  * @constructor
  */
-function MotifNavigator(motifSearch) {
+function MotifNavigator() {
 
     /** @private */
     this.motifDatas = [];
@@ -24,9 +24,6 @@ function MotifNavigator(motifSearch) {
 
     /** @private */
     this.hasStarted = false;
-
-    /** @private */
-    this.motifSearch = motifSearch;
 
 };
 
@@ -54,13 +51,11 @@ MotifNavigator.prototype.addMotif = function(visualGraph, motifGroup) {
         var motif = motifs[m];
         var top = Number.POSITIVE_INFINITY;
 
-        if (!this.motifSearch) {
-            var nodes = motif.getNodes();
-            for (var i = 0; i < nodes.length; i++) {
-                var node = nodes[i];
-                var visualNode = visualGraph.getVisualNodeByNode(node);
-                top = Math.min(top, visualNode.getY());
-            }
+        var nodes = motif.getNodes();
+        for (var i = 0; i < nodes.length; i++) {
+            var node = nodes[i];
+            var visualNode = visualGraph.getVisualNodeByNode(node);
+            top = Math.min(top, visualNode.getY());
         }
 
         var data = new MotifNavigatorData(top, motif, visualGraph);

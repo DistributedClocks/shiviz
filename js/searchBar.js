@@ -137,6 +137,13 @@ function SearchBar() {
         var currentTab = $(this).attr("href");
         $("#searchbar #" + currentTab).show().siblings("div").hide();
         $(this).parent("li").addClass("default").siblings("li").removeClass("default");
+
+        // Check all the inputs initially when on the motifs tab
+        if (currentTab == "networkTab") {
+            $("#searchbar").removeClass("results");
+            $("#networkTab input:checkbox").prop("checked", true);
+            context.setValue("#motif");
+        }
         // prevent id of div from being added to URL
         e.preventDefault();
     });
@@ -207,6 +214,15 @@ SearchBar.getInstance = function() {
  */
 SearchBar.prototype.setGlobal = function(global) {
     this.global = global;
+};
+
+/**
+ * Returns the global associated with this search bar.
+ *
+ * @returns {Global} global the global associated with this search bar
+ */
+SearchBar.prototype.getGlobal = function(global) {
+    return this.global;
 };
 
 /**
@@ -388,7 +404,10 @@ SearchBar.prototype.clearResults = function() {
     this.motifNavigator = null;
     if (this.global != null && this.global.getController().hasHighlight()) {
         this.global.getController().clearHighlight();
-        this.global.drawAll();
+    } else {
+        if (this.global.getViews().length > 1 && !$(".leftTabLinks li").last().hasClass("default") && !$(".pairwiseButton").is(":visible")) {
+            $(".pairwiseButton").show();
+        }
     }
     $("select.clusterBase").removeClass("fade");
     $("table.clusterResults a").removeClass("execFade");
@@ -484,14 +503,34 @@ SearchBar.prototype.query = function() {
         case SearchBar.MODE_MOTIF:
             var prefix = (dev ? "https://api.github.com/repos/pattyw/motifs/contents/" : "/shiviz/log/");
             var url = prefix + "motifs.json";
-            var viewToCount = {};
-            var builderGraphs = [];
 
             $.get(url, function(response) {
                 if (dev)
                     response = atob(response.content)
-                var lines = response.split("\n");
 
+                var lines = response.split("\n");
+                var viewToCount = {};
+                var builderGraphs = [];
+
+                // Get the relevant subgraphs from motifs.json based on ticked checkboxes
+                var twoEventCutoff = lines.indexOf("2-event subgraphs");
+                var threeEventCutoff = lines.indexOf("3-event subgraphs");
+                var fourEventCutoff = lines.indexOf("4-event subgraphs");                
+
+                if (!$("#networkTab #fourEvents").is(":checked")) {
+                    lines.splice(fourEventCutoff, lines.length - fourEventCutoff);
+                }
+
+                if (!$("#networkTab #threeEvents").is(":checked")) {
+                    lines.splice(threeEventCutoff, fourEventCutoff - threeEventCutoff);     
+                }
+
+                if (!$("#networkTab #twoEvents").is(":checked")) {
+                    var twoEventCutoff = lines.indexOf("2-event subgraphs");
+                    lines.splice(twoEventCutoff, threeEventCutoff - twoEventCutoff);
+                }
+
+                // Find the number of instances of a subgraph in each view
                 lines.forEach(function(line) {
                     if (isNaN(line.charAt(0))) {
                         var builderGraph = searchbar.getBuilderGraphFromJSON(line);
@@ -502,13 +541,10 @@ SearchBar.prototype.query = function() {
 
                         searchbar.global.getViews().forEach(function(view) {
                             var label = view.getLabel();
-                            searchbar.motifNavigator = new MotifNavigator(true);
 
-                            // Use a motifNavigator to get the number of instances that the current motif shows up in the current view
                             hmt.findMotifs(view.getModel());
                             var motifGroup = hmt.getHighlighted();
-                            searchbar.motifNavigator.addMotif(view.getVisualModel(), motifGroup);
-                            var numMotifs = searchbar.motifNavigator.getNumMotifs();
+                            var numMotifs = motifGroup.getMotifs().length;
 
                             // Save the number of instances of this motif under the current view's label
                             if (viewToCount[label]) {
@@ -520,11 +556,13 @@ SearchBar.prototype.query = function() {
                     }
                 });
                 
-                var motifDrawer = new MotifDrawer(searchbar.global, viewToCount, builderGraphs);
+                // Calculate motifs and draw the results in the motifs tab
+                var motifDrawer = new MotifDrawer(viewToCount, builderGraphs);
                 motifDrawer.drawResults();
 
-                // Switch to the Motifs tab
+                // Switch to the Motifs tab and clear any previously highlighted results
                 $(".leftTabLinks li").last().show().find("a").click();
+                searchbar.clearResults();
 
             }).fail(function() {
                 shiviz.getinstance().handleexception(new exception("unable to retrieve motifs from: " + url, true));
@@ -539,10 +577,12 @@ SearchBar.prototype.query = function() {
     catch (e) {
         Shiviz.getInstance().handleException(e);
     }
+    // For the network motifs search, motifs are only highlighted when a user clicks on an execution in the motifs tab
+    // so countMotifs() should not be called during the initial search but during the on-click event in MotifDrawer.js
     if (this.mode != SearchBar.MODE_MOTIF) {
         $("#searchbar").addClass("results");
+        this.countMotifs();
     }
-    this.countMotifs();
 };
 
 /**
@@ -569,11 +609,10 @@ SearchBar.prototype.countMotifs = function() {
     // Only compute and display the motif count if a search is being performed
     if ($("#searchbar").hasClass("results")) {
         var views = this.global.getActiveViews();
-        this.motifNavigator = new MotifNavigator(false);
+        this.motifNavigator = new MotifNavigator();
         this.motifNavigator.addMotif(views[0].getVisualModel(), views[0].getTransformer().getHighlightedMotif());
-        // getHighlightedMotif is null until a view is drawn (transform is called in view.draw) and viewR or views[1] is only drawn when a user selects pairwise view
         if (this.global.getPairwiseView()) {
-            this.motifNavigator.addMotif(views[1].getVisualModel(), views[1].getTransformer().getHighlightedMotif());    
+            this.motifNavigator.addMotif(views[1].getVisualModel(), views[1].getTransformer().getHighlightedMotif());
         }
         this.motifNavigator.start();
     

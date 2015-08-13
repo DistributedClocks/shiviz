@@ -40,6 +40,9 @@ function Global($vizContainer, $sidebar, $hostBar, $logTable, views) {
     
     /** @private */
     this.$hostBar = $hostBar;
+
+    /** @private */
+    this.searchbar = SearchBar.getInstance();
     
     /** @private */
     this.$logTable = $logTable;
@@ -90,7 +93,7 @@ Global.MIN_HOST_WIDTH = 40;
 Global.prototype.drawAll = function() {
     var global = this;
     var numViews = this.views.length;
-    var searchbar = SearchBar.getInstance();
+    var searchbar = this.searchbar;
     this.resize();
 
     this.$logTable.empty(); //TODO: check
@@ -112,10 +115,10 @@ Global.prototype.drawAll = function() {
     var viewSelectL = $('<select id="viewSelectL"></select>');
 
     // Show arrow icons and highlight cluster results that match a search term when on the Clusters tab
-    if ($(".leftTabLinks li").is(":visible") && !$(".leftTabLinks li").first().hasClass("default")) {
+    if ($(".leftTabLinks li").is(":visible") && $(".leftTabLinks li").first().next().hasClass("default")) {
         if ($("#clusterNumProcess").is(":checked") || ($("#clusterComparison").is(":checked")
             && $(".clusterBase").find("option:selected").text() != "Select a base execution")) {
-            labelIconL.show(); selectIconL.show(); 
+            labelIconL.show(); selectIconL.show();
 
             if (global.getPairwiseView()) {
                 labelIconR.show();
@@ -155,7 +158,10 @@ Global.prototype.drawAll = function() {
 
     if (this.viewR != null) {
         // the "Pairwise" button is only visible when there are > 1 executions
-        $(".pairwiseButton").show();
+        if (!$(".leftTabLinks li").last().hasClass("default") && searchbar.getMode() != SearchBar.MODE_MOTIF) {
+            $(".pairwiseButton").show();
+        }
+        $(".searchTabLinks li").last().show();
         $(".visualization .left #tabs").css("height", "4.5em");
 
         var rightLabel = this.viewR.getLabel();
@@ -197,6 +203,12 @@ Global.prototype.drawAll = function() {
                 var valR = $("#viewSelectR option:selected").val();
                 var valL = $("#viewSelectL option:selected").val();
                 global.controller.hideDiff();
+                if (searchbar.getMode() == SearchBar.MODE_MOTIF && global.controller.hasHighlight()) {
+                    searchbar.clear();
+                    if ($(".leftTabLinks li").last().hasClass("default")) {
+                        searchbar.setValue("#motif");
+                    }
+                }
 
                 global.viewR = global.getViewByLabel(valR);
                 if (global.getShowDiff()) {
@@ -223,6 +235,12 @@ Global.prototype.drawAll = function() {
         var valR = $("#viewSelectR option:selected").val();
         var valL = $("#viewSelectL option:selected").val();
         global.controller.hideDiff();
+        if (searchbar.getMode() == SearchBar.MODE_MOTIF) {
+            searchbar.clear();
+            if ($(".leftTabLinks li").last().hasClass("default")) {
+                searchbar.setValue("#motif");
+            }
+        }
         // If the selected view for viewL is the same as the current (hidden) viewR, change viewR to viewL so that
         // when a user changes to pairwise view, viewL and viewR are not the same (this leads to only one view being drawn)
         if (valL == global.viewR.getLabel()) {
@@ -369,6 +387,35 @@ Global.prototype.swapViews = function() {
         if ($("#clusterNumProcess").is(":checked") || $("#clusterComparison").is(":checked")) {
             this.drawClusterIcons();
         }
+        if (this.searchbar.getMode() == SearchBar.MODE_MOTIF && this.controller.hasHighlight()) {
+            this.searchbar.clear();
+        }
+    }
+}
+
+/**
+  * Sets the view in the given position to the execution with the label specified by anchorHref
+  *
+  * @param {String} position Either "L" or "R" to indicate the left or right view
+  * @param {String} anchorHref The label of the execution to be set
+  */
+Global.prototype.setView = function(position, anchorHref) {
+    var leftView = this.getActiveViews()[0].getLabel();
+    var rightView = this.getActiveViews()[1].getLabel();
+
+    if ((position == "L" && anchorHref == rightView) || (position == "R" && this.getPairwiseView() && anchorHref == leftView)) {
+        this.swapViews();
+    } else {
+        // For logs with exactly two executions, there are no execution drop-downs so have to call drawClusterIcons directly
+        if (this.getPairwiseView() && this.getViews().length == 2) {
+            this.drawClusterIcons();
+        } else {
+            if (position == "L") {
+                $("#viewSelectL").children("option[value='" + anchorHref + "']").prop("selected", true).change();
+            } else {
+                $("#viewSelectR").children("option[value='" + anchorHref + "']").prop("selected", true).change();                 
+            }                
+        }
     }
 }
 
@@ -491,7 +538,7 @@ Global.prototype.drawClusterIcons = function() {
         })[0]).click();
     }
 
-    if (!rightLink.is(":visible")) {
+    if (!rightLink.is(":visible") && this.getPairwiseView()) {
         $(rightLink.nextAll("a").filter(function() {
             return $(this).text() == "Show all";
         })[0]).click();

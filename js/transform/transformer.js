@@ -285,6 +285,10 @@ Transformer.prototype.getHighlightMotifTransformation = function() {
     return this.highlightMotifTransformation;
 }
 
+Transformer.prototype.setHighlightMotifTransformation = function(hmt) {
+    this.highlightMotifTransformation = hmt;
+}
+
 /**
  * Sets this transformer to highlight different hosts in the View
  * this transformer belongs to and the given View passed to the function
