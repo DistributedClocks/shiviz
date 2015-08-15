@@ -59,27 +59,47 @@ MotifDrawer.prototype.drawResults = function() {
 
         viewLabels.forEach(function(viewLabel) {
             var count = parseInt(context.viewToCount[viewLabel][motifIndex]);
-            var numInstances = $("<span></span>");
-            numInstances.text(": " + count + " instance");
+            var numInstances = ": " + count + " instance";
             if (count > 1) {
-                numInstances.text(numInstances.text().concat("s"));
+                numInstances = numInstances.concat("s");
             }
-            context.table.append($("<a></a>").text(viewLabel).attr("href", motifIndex), numInstances, "<br>");
+            if (viewLabel == "") {
+                // For a single execution where the label is "", just list the number of instances
+                context.table.append($("<a></a>").text(numInstances.substring(2)).attr("href", motifIndex));
+            } else {
+                // For multiple executions, list the execution label along with the number of instances
+                context.table.append($("<a></a>").text(viewLabel).attr("href", motifIndex), 
+                    $("<span></span>").text(numInstances), "<br>");
+            }
         });
+        context.table.append("<br>");
+    }
+    if (context.table.find("a").length == 0) {
+        context.table.append($("<p></p>").text("No motifs found"));
     }
     $(".motifResults").append(this.table);
 
-    // Event handler when execution labels are clicked
+    // Event handler when links in the motifs tab are clicked
     $(".motifResults a").on("click", function(e) {
-        var viewLabel = $(this).text();
         var motifIndex = $(this).attr("href");
+        $("#motifIcon").remove();
+        $(".motifResults a").removeClass("indent");
 
-        // Clear current searches and re-set to motif search
-        context.searchbar.clearResults();
-        context.searchbar.setValue("#motif");
+        var motifIcon = $('<label id="motifIcon"></label>').text("r");
 
+        if (context.global.getViews().length > 1) {
+            var viewLabel = $(this).text();
+            context.global.setView("L", viewLabel);
+        }
+        $(".motifResults a").addClass("indent");
+        $(this).before(motifIcon);
+
+        // Clear any current searches and re-set to motif search
+        if (context.searchbar.getMode() != SearchBar.MODE_MOTIF) {
+            context.searchbar.clear();
+            context.searchbar.setValue("#motif");
+        }
         // Highlight the given motif in the clicked on execution
-        context.global.setView("L", viewLabel);
         context.highlightMotif(motifIndex);
 
         // Show the number of instances of the highlighted motif
@@ -183,7 +203,6 @@ MotifDrawer.prototype.highlightMotif = function(motifIndex) {
     var viewL = views[0];
     var viewR = views[1];
 
-    controller.clearHighlight();
     var finder = new CustomMotifFinder(this.builderGraphs[motifIndex]);
     viewL.getTransformer().highlightMotif(finder, false);
     // Redraw the view to apply the transformation to the graph and to the log lines

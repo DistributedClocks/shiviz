@@ -108,6 +108,7 @@ function SearchBar() {
         context.hidePanel();
         context.update();
         context.updateLocked = false;
+        context.resetMotifsTab();
     });
 
     $("#searchbar .predefined button").on("click", function() {
@@ -137,26 +138,20 @@ function SearchBar() {
         var currentTab = $(this).attr("href");
         $("#searchbar #" + currentTab).show().siblings("div").hide();
         $(this).parent("li").addClass("default").siblings("li").removeClass("default");
-
-        // Check all the inputs initially when on the motifs tab
-        if (currentTab == "networkTab") {
-            $("#searchbar").removeClass("results");
-            $("#networkTab input:checkbox").prop("checked", true);
-            context.setValue("#motif");
-        }
         // prevent id of div from being added to URL
         e.preventDefault();
     });
 
     // Event handler for motif selection in network motifs tab
-    $("#networkTab input").on("change", function() {
+    $("#motifOption input").on("change", function() {
         if ($(this).is(":checked") || $(this).siblings("input:checkbox:checked").length > 0) {
             context.setValue("#motif");
+            $("#searchButton").click();
         } else {
             context.clearText();
+            $(".motifResults td").empty();
         }
         context.clearStructure();
-        context.clearResults();
     });
 }
 
@@ -343,10 +338,6 @@ SearchBar.prototype.getValue = function() {
 SearchBar.prototype.setValue = function(val) {
     $("#searchbar #bar input").val(val);
     this.updateMode();
-
-    if (this.mode != SearchBar.MODE_MOTIF) {
-        this.clearMotifSelection();
-    }
 };
 
 /**
@@ -405,20 +396,14 @@ SearchBar.prototype.clearResults = function() {
     if (this.global != null && this.global.getController().hasHighlight()) {
         this.global.getController().clearHighlight();
     } else {
-        if (this.global.getViews().length > 1 && !$(".leftTabLinks li").last().hasClass("default") && !$(".pairwiseButton").is(":visible")) {
+        // Show the pairwise button on the log lines tab when clearing a motif search
+        if (this.global.getViews().length > 1 && !$(".leftTabLinks li").first().next().hasClass("default") && !$(".pairwiseButton").is(":visible")) {
             $(".pairwiseButton").show();
         }
     }
-    $("select.clusterBase").removeClass("fade");
-    $("table.clusterResults a").removeClass("execFade");
+    $(".clusterBase").removeClass("fade");
+    $(".clusterResults a").removeClass("execFade");
 };
-
-/**
- * Clears the checkboxes on the network motifs tab
- */
-SearchBar.prototype.clearMotifSelection = function() {
-    $("#networkTab input").prop("checked", false);
-}
 
 /**
  * Clears the drawn motif, the text input, and the search results
@@ -517,15 +502,15 @@ SearchBar.prototype.query = function() {
                 var threeEventCutoff = lines.indexOf("3-event subgraphs");
                 var fourEventCutoff = lines.indexOf("4-event subgraphs");                
 
-                if (!$("#networkTab #fourEvents").is(":checked")) {
+                if (!$("#motifOption #fourEvents").is(":checked")) {
                     lines.splice(fourEventCutoff, lines.length - fourEventCutoff);
                 }
 
-                if (!$("#networkTab #threeEvents").is(":checked")) {
+                if (!$("#motifOption #threeEvents").is(":checked")) {
                     lines.splice(threeEventCutoff, fourEventCutoff - threeEventCutoff);     
                 }
 
-                if (!$("#networkTab #twoEvents").is(":checked")) {
+                if (!$("#motifOption #twoEvents").is(":checked")) {
                     var twoEventCutoff = lines.indexOf("2-event subgraphs");
                     lines.splice(twoEventCutoff, threeEventCutoff - twoEventCutoff);
                 }
@@ -561,7 +546,7 @@ SearchBar.prototype.query = function() {
                 motifDrawer.drawResults();
 
                 // Switch to the Motifs tab and clear any previously highlighted results
-                $(".leftTabLinks li").last().show().find("a").click();
+                $(".leftTabLinks li").first().next().show().find("a").click();
                 searchbar.clearResults();
 
             }).fail(function() {
@@ -577,9 +562,12 @@ SearchBar.prototype.query = function() {
     catch (e) {
         Shiviz.getInstance().handleException(e);
     }
-    // For the network motifs search, motifs are only highlighted when a user clicks on an execution in the motifs tab
-    // so countMotifs() should not be called during the initial search but during the on-click event in MotifDrawer.js
     if (this.mode != SearchBar.MODE_MOTIF) {
+        // reset the motifs tab when performing other searches
+        this.resetMotifsTab();
+
+        // For the network motifs search, motifs are only highlighted when a user clicks on an execution in the motifs tab
+        // so countMotifs() should not be called during the initial search but during the on-click event in MotifDrawer.js
         $("#searchbar").addClass("results");
         this.countMotifs();
     }
@@ -617,6 +605,19 @@ SearchBar.prototype.countMotifs = function() {
         this.motifNavigator.start();
     
         var numMotifs = this.motifNavigator.getNumMotifs();
-        $("#numFound").text(numMotifs + " instances");
+        var numInstances = numMotifs + " instance";
+        if (numMotifs == 0 || numMotifs > 1) {
+            numInstances = numInstances.concat("s");
+        }
+        $("#numFound").text(numInstances + " in view");
     }
 };
+
+/**
+ * Clear the results in the motifs tab and uncheck all the checkboxes
+ */
+SearchBar.prototype.resetMotifsTab = function() {
+    $("#motifOption input").prop("checked", false);
+    $(".motifResults td").empty();
+    $(".motifResults td:empty").remove();
+}

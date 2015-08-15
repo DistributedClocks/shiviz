@@ -165,8 +165,11 @@ function Controller(global) {
             $(".highlight").css("opacity", 0);
         }
         if (anchorHref == "clusterTab") {
+            // Clear all motif results when on the clusters tab
             if (searchbar.getMode() == SearchBar.MODE_MOTIF) {
                 searchbar.clear();
+                $("#motifIcon").hide();
+                $(".motifResults a").removeClass("indent");
             }
             if ($("#clusterNumProcess").is(":checked") || ($("#clusterComparison").is(":checked") && $(".clusterBase").find("option:selected").text() != "Select a base execution")) {
                 $("#labelIconL, #selectIconL").show();
@@ -175,6 +178,7 @@ function Controller(global) {
                 }
             }
         }
+        // Show the pairwise button for log lines and clusters when not doing a motif search
         if (global.getViews().length > 1 && searchbar.getMode() != SearchBar.MODE_MOTIF) {
             $(".pairwiseButton").show();
         }
@@ -183,6 +187,9 @@ function Controller(global) {
                 $(".pairwiseButton").click();
             }
             $(".pairwiseButton").hide();
+            if ($(".motifResults a").length > 0) {
+                searchbar.setValue("#motif");
+            }
         }
         e.preventDefault();
     });
@@ -250,6 +257,20 @@ Controller.prototype.hasHighlight = function() {
     }
     return false;
 };
+
+/**
+ * Determines if a motif is being highlighted in the given View
+ *
+ * @param {View} view
+ * @returns {Boolean} True if a motif is being highlighted in the view
+ */
+Controller.prototype.hasHighlightInView = function(view) {
+    if (view.getTransformer().hasHighlightedMotif()) {
+        return true;
+    } else {
+        return false;
+    }
+}
 
 /**
  * Hides the specified host across all {@link View}s. The visualization is then

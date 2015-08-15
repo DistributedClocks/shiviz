@@ -240,22 +240,22 @@ Shiviz.prototype.visualize = function(log, regexpString, delimiterString, sortTy
 
         // reset search tabs
         $("#textTab").show().siblings("div").hide();
-        $(".searchTabLinks li:first").addClass("default").siblings("li").removeClass("default");
-        $(".searchTabLinks li").last().hide();
+        $(".searchTabLinks li").first().addClass("default").siblings("li").removeClass("default");
 
         // reset left sidebar tabs
-        $(".leftTabLinks li:first").addClass("default").siblings().removeClass("default");
         $(".leftTabLinks").children().hide();
+        $(".leftTabLinks li").not(":last").show();
+        $(".leftTabLinks li").first().addClass("default").siblings().removeClass("default");
         $("#logTab").show().siblings().hide();
 
+        // Reset the motifs tab
+        $(".motifResults td").empty();
+        $(".motifResults td:empty").remove();
+        $("#motifOption input").prop("checked", false);
+
         if (views.length > 1) {
-            // Show the Log lines and Clusters tab for logs with multiple executions
-            $(".leftTabLinks li").not(":last").show();
-
-            // Show the network motifs search option for logs with multiple executions
-            $(".searchTabLinks li").last().show();
-
-            // Clear the Clusters tab
+            // Show and clear the Clusters tab
+            $(".leftTabLinks li").last().show();
             $(".clusterResults td.lines").empty();
             $(".clusterResults td:empty").remove();
             $("#baseLabel, .clusterBase").hide();

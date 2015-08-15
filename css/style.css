@@ -328,7 +328,7 @@ section.input .left {
   left: -1.6em;
 }
 .visualization .left .leftTabLinks li:last-child {
-  left: 10.3em;
+  left: 9.3em;
 }
 .visualization .left .leftTabLinks li.default {
   opacity: 1;
@@ -365,14 +365,14 @@ section.input .left {
 }
 
 .visualization table.motifResults {
-  height: calc(100% - 15em);
+  height: calc(100% - 21em);
   max-width: 250pt;
   width: 250pt;
   overflow: auto;
   display: block;
   position: fixed;
   z-index: 4;
-  top: 10.5em;
+  top: 18.5em;
 }
 .visualization table.motifResults td {
   position: absolute;
@@ -395,14 +395,14 @@ section.input .left {
   margin-top: 2em;
 }
 
-.visualization #clusterOption {
+.visualization #clusterOption, .visualization #motifOption {
   top: 9em;
   position: fixed;
   font-family: sans-serif;
   font-size: 11pt;
   z-index: 4;
 }
-.visualization #clusterOption p {
+.visualization #clusterOption p, .visualization #motifOption p {
   margin-bottom: .5em;
 }
 
@@ -558,11 +558,11 @@ section.input .left {
   width: 52pt;
 }
 #searchbar #bar #numFound {
-  width: 92pt;
+  width: 100pt;
   float: left;
   line-height: calc(24pt - 2px);
   text-align: center;
-  font-size: 10pt;
+  font-size: 8pt;
   text-transform: uppercase;
   border-width: 1px 0;
   border-style: solid;
@@ -575,12 +575,15 @@ section.input .left {
   height: 24pt;
   padding: 0;
 }
+#searchbar #bar #prevButton {
+  margin-left: -1.5em;
+}
 
 #searchbar.results #bar input {
   width: calc(100% - 140pt);
 }
 #searchbar.results #bar .clear {
-  left: calc(100% - 164pt);
+  left: calc(100% - 180pt);
 }
 #searchbar.results #bar .nav {
   display: initial;
@@ -831,7 +834,7 @@ svg {
   margin-top: 0.2em;
 }
 
-#clusterIconR, #clusterIconL {
+#clusterIconR, #clusterIconL, #motifIcon {
   font-family: "Icomoon";
   font-size: 10px;
   margin-right: -1em;
@@ -842,6 +845,7 @@ svg {
   transform: rotate(180deg);
 }
 
+/* Motif icon */
 /* Styling for execution labels in clusters */
 .execFade {
   opacity: 0.3;
