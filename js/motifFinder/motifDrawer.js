@@ -91,7 +91,8 @@ MotifDrawer.prototype.drawResults = function() {
             var viewLabel = $(this).text();
             context.global.setView("L", viewLabel);
         }
-        $(".motifResults a").addClass("indent");
+        // Indent the clicked on execution and any other executions under the same motif
+        $(this).nextUntil("p").addBack().addClass("indent");
         $(this).before(motifIcon);
 
         // Clear any current searches and re-set to motif search
