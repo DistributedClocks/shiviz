@@ -115,7 +115,7 @@ Global.prototype.drawAll = function() {
     var viewSelectL = $('<select id="viewSelectL"></select>');
 
     // Show arrow icons and highlight cluster results that match a search term when on the Clusters tab
-    if ($(".leftTabLinks li").is(":visible") && $(".leftTabLinks li").first().next().hasClass("default")) {
+    if ($(".leftTabLinks li").is(":visible") && $(".leftTabLinks li").last().hasClass("default")) {
         if ($("#clusterNumProcess").is(":checked") || ($("#clusterComparison").is(":checked")
             && $(".clusterBase").find("option:selected").text() != "Select a base execution")) {
             labelIconL.show(); selectIconL.show();
@@ -130,7 +130,7 @@ Global.prototype.drawAll = function() {
             var mode = searchbar.getMode();
 
             // If the searchbar is not empty or in motif mode, fade out all executions in Clusters tab
-            if (mode != SearchBar.MODE_EMPTY && mode != SearchBar.MODE_MOTIF) {
+            if (mode != SearchBar.MODE_EMPTY) {
                 $("table.clusterResults a").filter(function() {
                     var text = $(this).text();
                     return text != "Show all" && text != "Condense";
@@ -157,8 +157,8 @@ Global.prototype.drawAll = function() {
     }
 
     if (this.viewR != null) {
-        // the "Pairwise" button is only visible when there are > 1 executions
-        if (!$(".leftTabLinks li").last().hasClass("default") && searchbar.getMode() != SearchBar.MODE_MOTIF) {
+        // the "Pairwise" button is only visible when there are > 1 executions and when not doing a motif search
+        if (!$(".leftTabLinks li").first().next().hasClass("default") && searchbar.getMode() != SearchBar.MODE_MOTIF) {
             $(".pairwiseButton").show();
         }
         $(".searchTabLinks li").last().show();
@@ -204,8 +204,9 @@ Global.prototype.drawAll = function() {
                 var valL = $("#viewSelectL option:selected").val();
                 global.controller.hideDiff();
                 if (searchbar.getMode() == SearchBar.MODE_MOTIF && global.controller.hasHighlight()) {
+                    $("#motifIcon").remove();
                     searchbar.clear();
-                    if ($(".leftTabLinks li").last().hasClass("default")) {
+                    if ($(".leftTabLinks li").first().next().hasClass("default")) {
                         searchbar.setValue("#motif");
                     }
                 }
@@ -236,8 +237,9 @@ Global.prototype.drawAll = function() {
         var valL = $("#viewSelectL option:selected").val();
         global.controller.hideDiff();
         if (searchbar.getMode() == SearchBar.MODE_MOTIF) {
+            $("#motifIcon").remove();
             searchbar.clear();
-            if ($(".leftTabLinks li").last().hasClass("default")) {
+            if ($(".leftTabLinks li").first().next().hasClass("default")) {
                 searchbar.setValue("#motif");
             }
         }
@@ -287,7 +289,11 @@ Global.prototype.drawAll = function() {
     $(".dialog").hide();
     this.drawSideBar();
 
-    searchbar.countMotifs();
+    // only call countMotifs if there are actually highlighted motifs to count, 
+    // otherwise the motifGroup parameter to addMotif() in motifNavigator is null
+    if (this.getController().hasHighlightInView(this.viewL)) {
+        searchbar.countMotifs();
+    }
 };
 
 /**
@@ -386,9 +392,6 @@ Global.prototype.swapViews = function() {
         // When clustering, draw cluster icons next to the execution dropdown or label
         if ($("#clusterNumProcess").is(":checked") || $("#clusterComparison").is(":checked")) {
             this.drawClusterIcons();
-        }
-        if (this.searchbar.getMode() == SearchBar.MODE_MOTIF && this.controller.hasHighlight()) {
-            this.searchbar.clear();
         }
     }
 }
