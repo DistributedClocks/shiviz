@@ -85,7 +85,6 @@ function SearchBar() {
 
     $("#searchbar #bar input").on("input", function() {
         context.clearResults();
-        context.clearMotifSelection();
         context.update();
     }).on("focus", function() {
         context.showPanel();
