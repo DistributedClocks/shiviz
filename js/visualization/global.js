@@ -203,14 +203,12 @@ Global.prototype.drawAll = function() {
                 var valR = $("#viewSelectR option:selected").val();
                 var valL = $("#viewSelectL option:selected").val();
                 global.controller.hideDiff();
-                if (searchbar.getMode() == SearchBar.MODE_MOTIF && global.controller.hasHighlight()) {
-                    $("#motifIcon").remove();
-                    searchbar.clear();
-                    if ($(".leftTabLinks li").first().next().hasClass("default")) {
-                        searchbar.setValue("#motif");
+                if (searchbar.getMode() == SearchBar.MODE_MOTIF) {
+                    if (global.getController().hasHighlight()) {
+                        searchbar.clearResults();
                     }
+                    searchbar.resetMotifResults();
                 }
-
                 global.viewR = global.getViewByLabel(valR);
                 if (global.getShowDiff()) {
                     global.controller.showDiff();
@@ -237,11 +235,10 @@ Global.prototype.drawAll = function() {
         var valL = $("#viewSelectL option:selected").val();
         global.controller.hideDiff();
         if (searchbar.getMode() == SearchBar.MODE_MOTIF) {
-            $("#motifIcon").remove();
-            searchbar.clear();
-            if ($(".leftTabLinks li").first().next().hasClass("default")) {
-                searchbar.setValue("#motif");
+            if (global.getController().hasHighlight()) {
+                searchbar.clearResults();
             }
+            searchbar.resetMotifResults();
         }
         // If the selected view for viewL is the same as the current (hidden) viewR, change viewR to viewL so that
         // when a user changes to pairwise view, viewL and viewR are not the same (this leads to only one view being drawn)
