@@ -92,7 +92,8 @@ MotifDrawer.prototype.drawResults = function() {
             context.global.setView("L", viewLabel);
         }
         // Indent the clicked on execution and any other executions under the same motif
-        $(this).nextUntil("p").addBack().addClass("indent");
+        $(this).nextUntil("p", ":not(span)").addBack().addClass("indent");
+        $(this).prevUntil("svg", ":not(span)").addClass("indent");
         $(this).before(motifIcon);
 
         // Clear any current searches and re-set to motif search
