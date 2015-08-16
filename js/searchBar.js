@@ -85,7 +85,6 @@ function SearchBar() {
 
     $("#searchbar #bar input").on("input", function() {
         context.clearResults();
-        context.clearMotifSelection();
         context.update();
     }).on("focus", function() {
         context.showPanel();
@@ -108,7 +107,7 @@ function SearchBar() {
         context.hidePanel();
         context.update();
         context.updateLocked = false;
-        context.resetMotifsTab();
+        context.clearMotifsTab();
     });
 
     $("#searchbar .predefined button").on("click", function() {
@@ -564,7 +563,7 @@ SearchBar.prototype.query = function() {
     }
     if (this.mode != SearchBar.MODE_MOTIF) {
         // reset the motifs tab when performing other searches
-        this.resetMotifsTab();
+        this.clearMotifsTab();
 
         // For the network motifs search, motifs are only highlighted when a user clicks on an execution in the motifs tab
         // so countMotifs() should not be called during the initial search but during the on-click event in MotifDrawer.js
@@ -614,10 +613,22 @@ SearchBar.prototype.countMotifs = function() {
 };
 
 /**
- * Clear the results in the motifs tab and uncheck all the checkboxes
+ * Clears the results in the motifs tab and uncheck all the checkboxes
  */
-SearchBar.prototype.resetMotifsTab = function() {
+SearchBar.prototype.clearMotifsTab = function() {
     $("#motifOption input").prop("checked", false);
     $(".motifResults td").empty();
     $(".motifResults td:empty").remove();
+}
+
+/**
+ * Resets the motif results so that no execution is selected
+ */
+SearchBar.prototype.resetMotifResults = function() {
+    // Clear the #motif value in the searchbar if not on the motifs tab
+    if (!$(".leftTabLinks li").first().next().hasClass("default")) {
+        this.clearText();
+    }
+    $("#motifIcon").remove();
+    $(".motifResults a").removeClass("indent");
 }

@@ -157,7 +157,6 @@ function Controller(global) {
         var anchorHref = $(this).attr("href");
         $(".visualization #" + anchorHref).show().siblings().hide();
         $(this).parent("li").addClass("default").siblings("li").removeClass("default");
-
         $("#labelIconL, #labelIconR, #selectIconL, #selectIconR").hide();
 
         if (anchorHref != "logTab") {
@@ -167,9 +166,10 @@ function Controller(global) {
         if (anchorHref == "clusterTab") {
             // Clear all motif results when on the clusters tab
             if (searchbar.getMode() == SearchBar.MODE_MOTIF) {
-                searchbar.clear();
-                $("#motifIcon").hide();
-                $(".motifResults a").removeClass("indent");
+                if (global.getController().hasHighlight()) {
+                    searchbar.clearResults();
+                }
+                searchbar.resetMotifResults();
             }
             if ($("#clusterNumProcess").is(":checked") || ($("#clusterComparison").is(":checked") && $(".clusterBase").find("option:selected").text() != "Select a base execution")) {
                 $("#labelIconL, #selectIconL").show();
