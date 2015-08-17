@@ -31,9 +31,11 @@ function GraphBuilder($svg, $addButton, motifSearch) {
     /** @private */
     this.colors = [ "rgb(122,155,204)", "rgb(122,204,155)", "rgb(187,204,122)", "rgb(204,122,122)", "rgb(187,122,204)", "rgb(122,155,204)" ];
 
-    this.bind();
-    this.addHost();
-    this.addHost();
+    if (!motifSearch) {
+        this.bindNodes();
+        this.addHost();
+        this.addHost();
+    }
 }
 
 /**
@@ -194,6 +196,7 @@ GraphBuilder.prototype.addHost = function() {
 GraphBuilder.prototype.removeHost = function(host) {
 
     Util.removeFromArray(this.hosts, host);
+    var hostNum = host.getHostNum();
 
     this.hosts.forEach(function(h, i) {
         h.rx = i * 65;
@@ -214,6 +217,12 @@ GraphBuilder.prototype.removeHost = function(host) {
             n.x = h.x;
             n.circle.attr("cx", h.x);
         });
+
+        // update the hostNum
+        var currHostNum = h.getHostNum();
+        if (currHostNum > hostNum) {
+            h.setHostNum(currHostNum - 1);
+        }
     });
 
     this.colors.push(host.color);
@@ -326,14 +335,6 @@ GraphBuilder.prototype.setCleared = function(cleared) {
 }
 
 /**
- * Sets the motifSearch flag
- * @param {Boolean} motifSearch The boolean value to set
- */
-GraphBuilder.prototype.setMotifSearch = function(motifSearch) {
-    this.motifSearch = motifSearch;
-}
-
-/**
  * Gets the maximum x-coordinate among the nodes in this graphBuilder
  */
 GraphBuilder.prototype.getMaxNodeWidth = function() {
@@ -368,7 +369,7 @@ GraphBuilder.prototype.getMaxNodeHeight = function() {
 }
 
 /**
- * Handles all user interaction with the graph builder, including bindings for:
+ * Handles all user interaction with nodes in the graph builder, including:
  *  
  * <ul>
  * <li>Add node on click</li>
@@ -379,7 +380,7 @@ GraphBuilder.prototype.getMaxNodeHeight = function() {
  * <li>Double click existing node to remove</li>
  * </ul>
  */
-GraphBuilder.prototype.bind = function() {
+GraphBuilder.prototype.bindNodes = function() {
 
     var context = this;
     var $svg = this.$svg;
@@ -501,7 +502,7 @@ GraphBuilder.prototype.bind = function() {
             }
 
             parent.state = false;
-            context.bind();
+            context.bindNodes();
         }).on("mouseout", function(e) {
             var $t = $(e.relatedTarget);
             if ($t[0] == $svg[0] || $t.parents("svg").length)
@@ -509,7 +510,7 @@ GraphBuilder.prototype.bind = function() {
             $line.remove();
             context.getHostByNode(parent).removeNode(parent);
             context.invokeUpdateCallback();
-            context.bind();
+            context.bindNodes();
         });
     }).on("dblclick", function() {
         context.getHostByNode(this.node).removeNode(this.node);
@@ -540,6 +541,48 @@ GraphBuilder.prototype.bind = function() {
         return r;
     }
 };
+
+/**
+ * Handles user interaction with host squares in the graph builder
+ *
+ * @param {GraphBuilderHost} host The host to bind events to 
+ */
+GraphBuilder.prototype.bindHost = function(host) {
+    var graphBuilder = this;
+    var square = host.getHostSquare();
+
+    square.on("dblclick", function() {
+        graphBuilder.removeHost(host);
+        $(".hostConstraintDialog").hide();
+    }).on("click", function() {
+
+        $(".hostConstraintDialog").css({
+            "left": graphBuilder.getSVG().offset().left + host.getX() + 35,
+        }).removeClass("right").addClass("left").show();
+
+        var hostNum = host.getHostNum();
+        if (hostNum > 4) {
+            $(".hostConstraintDialog").css({
+                "left": graphBuilder.getSVG().offset().left + host.getX() - 120
+            }).removeClass("left").addClass("right");
+        }
+        $("#constraint").val(host.getConstraint()).attr("name", host.getX()).focus();
+    });
+
+    $("#constraint").unbind("keydown").on("keydown", function(e) {
+        switch (e.which) {
+        // Return
+        case 13:
+            var currHost = graphBuilder.getHostByX($(this).attr("name"));
+            currHost.setConstraint($(this).val());
+            $(".hostConstraintDialog").hide();
+
+            // Update the searchbar with the new constraint
+            graphBuilder.invokeUpdateCallback();
+            break;
+        }
+    });
+}
 
 /**
  * Sets the update callback function. The update callback function will be

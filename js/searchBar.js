@@ -122,6 +122,7 @@ function SearchBar() {
             return;
         }
         context.motifNavigator.next();
+        context.hidePanel();
     });
 
     $("#prevButton").on("click", function() {
@@ -129,6 +130,7 @@ function SearchBar() {
             return;
         }
         context.motifNavigator.prev();
+        context.hidePanel();
     });
 
     // Event handler for switching between search options
@@ -368,6 +370,7 @@ SearchBar.prototype.showPanel = function() {
  */
 SearchBar.prototype.hidePanel = function() {
     $("#bar input").blur().removeClass("focus");
+    $(".hostConstraintDialog").hide();
     $("#searchbar #panel").hide();
     $(window).unbind("mousedown");
 };
