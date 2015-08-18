@@ -51,7 +51,7 @@ function Shiviz() {
                 pointerevents: "none"
             });
         }).fail(function() {
-            shiviz.getinstance().handleexception(new exception("unable to retrieve example log from: " + url, true));
+            Shiviz.getInstance().handleException(new Exception("unable to retrieve example log from: " + url, true));
         });
     });
 
