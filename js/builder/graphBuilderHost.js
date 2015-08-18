@@ -12,7 +12,7 @@
  * @param {Number} hostNum The host number. The graph builder host with hostNum =
  *            i should be the ith host in the graphBuilder.
  */
-function GraphBuilderHost(graphBuilder, hostNum) {
+function GraphBuilderHost(graphBuilder, hostNum, motifSearch) {
 
     var host = this;
 
@@ -23,13 +23,16 @@ function GraphBuilderHost(graphBuilder, hostNum) {
     this.graphBuilder = graphBuilder;
 
     /** @private */
-    this.rx = hostNum * 65;
+    this.rx = (motifSearch ? hostNum * 40 : hostNum * 65);
 
     /** @private */
-    this.x = this.rx + 12.5;
+    this.x = (motifSearch ? this.rx + 10 : this.rx + 12.5);
 
     /** @private */
     this.color = graphBuilder.colors.pop();
+
+    /** @private */
+    this.motifSearch = motifSearch;
 
     /** @private */
     this.nodes = [];
@@ -43,7 +46,11 @@ function GraphBuilderHost(graphBuilder, hostNum) {
         "y": 0
     }).on("dblclick", function() {
         graphBuilder.removeHost(host);
-    }).prependTo(graphBuilder.getSVG());
+    })
+
+    if (!motifSearch) {
+        this.rect.prependTo(graphBuilder.getSVG());
+    }
 
     /** @private */
     this.line = Util.svgElement("line").attr({
@@ -95,6 +102,9 @@ GraphBuilderHost.prototype.getNodesSorted = function() {
 GraphBuilderHost.prototype.addNode = function(y, tmp) {
 
     var node = new GraphBuilderNode(this.graphBuilder, this.x, y, tmp, this.color);
+    if (this.motifSearch) {
+        node.setCircleRadius(3);
+    }
 
     this.nodes.push(node);
     this.graphBuilder.invokeUpdateCallback();
@@ -134,3 +144,14 @@ GraphBuilderHost.prototype.removeAllNodes = function() {
 GraphBuilderHost.prototype.getColor = function() {
     return this.color;
 };
+
+/**
+ * Sets the y coordinates for the line segment of this host
+ *
+ * @param {Number} y1 The top coordinate for the line
+ * @param {Number} y2 The bottom coordinate for the line
+ */
+GraphBuilderHost.prototype.setLineYCoordinates = function(y1, y2) {
+    this.line.attr("y1", y1);
+    this.line.attr("y2", y2);
+}

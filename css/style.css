@@ -327,17 +327,14 @@ section.input .left {
 .visualization .left .leftTabLinks li:first-child {
   left: -1.6em;
 }
+.visualization .left .leftTabLinks li:last-child {
+  left: 9.3em;
+}
 .visualization .left .leftTabLinks li.default {
   opacity: 1;
 }
-.visualization .left .leftTabLinks .tab {
-  display: none;
-}
-.visualization .left .leftTabLinks .defaultTab {
-  display: block;
-}
 
-.visualization .log, .visualization .clusterResults {
+.visualization .log, .visualization table.clusterResults, .visualization table.motifResults {
   border-collapse: collapse;
   border-spacing: 0;
   font-size: 10pt;
@@ -350,7 +347,7 @@ section.input .left {
   top: 1em;
 }
 
-.visualization .clusterResults {
+.visualization table.clusterResults {
   height: calc(100% - 20em);
   max-width: 250pt;
   width: 250pt;
@@ -360,12 +357,28 @@ section.input .left {
   z-index: 4;
   top: 16.5em;
 }
-.visualization .clusterResults p {
+.visualization table.clusterResults p {
   margin-bottom: .5em;
 }
-
-.visualization .clusterResults td.lines {
+.visualization table.clusterResults td.lines {
   position: absolute;
+}
+
+.visualization table.motifResults {
+  height: calc(100% - 21em);
+  max-width: 250pt;
+  width: 250pt;
+  overflow: auto;
+  display: block;
+  position: fixed;
+  z-index: 4;
+  top: 18.5em;
+}
+.visualization table.motifResults td {
+  position: absolute;
+}
+.visualization table.motifResults td a, .visualization table.motifResults td span {
+  font-size: 9pt;
 }
 
 .visualization #baseLabel {
@@ -382,14 +395,14 @@ section.input .left {
   margin-top: 2em;
 }
 
-.visualization #clusterOption {
+.visualization #clusterOption, .visualization #motifOption {
   top: 9em;
   position: fixed;
   font-family: sans-serif;
   font-size: 11pt;
   z-index: 4;
 }
-.visualization #clusterOption p {
+.visualization #clusterOption p, .visualization #motifOption p {
   margin-bottom: .5em;
 }
 
@@ -545,11 +558,11 @@ section.input .left {
   width: 52pt;
 }
 #searchbar #bar #numFound {
-  width: 92pt;
+  width: 100pt;
   float: left;
   line-height: calc(24pt - 2px);
   text-align: center;
-  font-size: 10pt;
+  font-size: 8pt;
   text-transform: uppercase;
   border-width: 1px 0;
   border-style: solid;
@@ -562,12 +575,15 @@ section.input .left {
   height: 24pt;
   padding: 0;
 }
+#searchbar #bar #prevButton {
+  margin-left: -1.5em;
+}
 
 #searchbar.results #bar input {
   width: calc(100% - 140pt);
 }
 #searchbar.results #bar .clear {
-  left: calc(100% - 164pt);
+  left: calc(100% - 180pt);
 }
 #searchbar.results #bar .nav {
   display: initial;
@@ -585,7 +601,7 @@ section.input .left {
   stroke-width: 2px;
 }
 
-#searchbar #panel line, #vizContainer svg line {
+.visualization table.motifResults td line, #searchbar #panel line, #vizContainer svg line {
   stroke: #999;
   stroke-opacity: 0.6;
 }
@@ -677,11 +693,6 @@ section.input .left {
 }
 #searchbar #panel .tab {
   margin-left: .5em;
-  display: none;
-}
-#searchbar #panel .defaultTab {
-  margin-left: .5em;
-  display: block;
 }
 #searchbar #panel .predefined {
   margin: .5em 0 0 0;
@@ -823,7 +834,7 @@ svg {
   margin-top: 0.2em;
 }
 
-#clusterIconR, #clusterIconL {
+#clusterIconR, #clusterIconL, #motifIcon {
   font-family: "Icomoon";
   font-size: 10px;
   margin-right: -1em;
@@ -834,6 +845,13 @@ svg {
   transform: rotate(180deg);
 }
 
+#clusterImg {
+  position: relative;
+  top: -7.1em;
+  padding-right: 1.75em;
+}
+
+/* Motif icon */
 /* Styling for execution labels in clusters */
 .execFade {
   opacity: 0.3;
