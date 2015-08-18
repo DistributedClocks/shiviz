@@ -1,3 +1,4 @@
+
 /**
  * Constructs a {@link GraphBuilder} host with the provided number associated
  * with the provided graph builder.
@@ -38,17 +39,19 @@ function GraphBuilderHost(graphBuilder, hostNum, motifSearch) {
     this.nodes = [];
 
     /** @private */
+    this.constraint = "";
+
+    /** @private */
     this.rect = Util.svgElement("rect").attr({
         "width": 25,
         "height": 25,
         "fill": this.color,
         "x": this.rx,
         "y": 0
-    }).on("dblclick", function() {
-        graphBuilder.removeHost(host);
     })
 
     if (!motifSearch) {
+        graphBuilder.bindHost(this);
         this.rect.prependTo(graphBuilder.getSVG());
     }
 
@@ -67,7 +70,13 @@ function GraphBuilderHost(graphBuilder, hostNum, motifSearch) {
  * @returns {String} the name of this host
  */
 GraphBuilderHost.prototype.getName = function() {
-    return String.fromCharCode(97 + this.hostNum);
+    var constraint = this.getConstraint();
+
+    if (constraint) {
+        return constraint;
+    } else {
+        return String.fromCharCode(97 + this.hostNum);
+    }
 };
 
 /**
@@ -108,7 +117,10 @@ GraphBuilderHost.prototype.addNode = function(y, tmp) {
 
     this.nodes.push(node);
     this.graphBuilder.invokeUpdateCallback();
-    this.graphBuilder.bind();
+    // Don't bind any mouse events to motif drawings in the sidebar
+    if (!this.motifSearch) {
+        this.graphBuilder.bindNodes();
+    }
 
     return node;
 };
@@ -144,6 +156,35 @@ GraphBuilderHost.prototype.removeAllNodes = function() {
 GraphBuilderHost.prototype.getColor = function() {
     return this.color;
 };
+
+/**
+ * Gets the rectangle SVG associated with this graphBuilderHost
+ *
+ * @returns {svg.Element} The rectangle svg
+ */
+GraphBuilderHost.prototype.getHostSquare = function() {
+    return this.rect;
+}
+
+GraphBuilderHost.prototype.getX = function() {
+    return this.x;
+}
+
+GraphBuilderHost.prototype.setHostNum = function(hostNum) {
+    this.hostNum = hostNum;
+}
+
+GraphBuilderHost.prototype.getHostNum = function() {
+    return this.hostNum;
+}
+
+GraphBuilderHost.prototype.setConstraint = function(constraint) {
+    this.constraint = constraint;
+}
+
+GraphBuilderHost.prototype.getConstraint = function() {
+    return this.constraint;
+}
 
 /**
  * Sets the y coordinates for the line segment of this host

@@ -370,6 +370,7 @@ SearchBar.prototype.showPanel = function() {
  */
 SearchBar.prototype.hidePanel = function() {
     $("#bar input").blur().removeClass("focus");
+    $(".hostConstraintDialog").hide();
     $("#searchbar #panel").hide();
     $(window).unbind("mousedown");
 };

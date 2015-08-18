@@ -49,6 +49,7 @@ CustomMotifFinder.prototype.find = function(graph) {
         var cnode = nodes[n];
 
         if (!setNodeMatch(startBuilderNode, cnode)) {
+            // jump over one iteration in the loop
             continue;
         }
         if (searchNode(startBuilderNode)) {
@@ -292,6 +293,7 @@ CustomMotifFinder.prototype.find = function(graph) {
             throw new Exception("bNode or node already has a match");
         }
 
+        // TODO:
         var fail = inOtherMotif[node.getId()] //
                 || (hostMatch[node.getHost()] && hostMatch[node.getHost()] != bNode.getHost()); //
 
