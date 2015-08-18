@@ -1007,6 +1007,37 @@ svg#defs {
   display: none;
 }
 
+.hostConstraintDialog {
+  width: 100px;
+  /* Make the surrounding div have a height of 0px so that it won't block other boxes from being clicked */
+  height: 0px;
+  font-family: sans-serif;
+  position: fixed;
+  z-index: 4;
+}
+.hostConstraintDialog .triangle {
+  position: absolute;
+  border-style: solid;
+  border-width: 5px;
+  border-color: #737373;
+  border-bottom-color: transparent;
+}
+.hostConstraintDialog.left .triangle {
+  border-left-color: transparent;
+  left: -10px;
+  top: 1.25em;
+}
+.hostConstraintDialog.right .triangle {
+  border-right-color: transparent;
+  right: -10px;
+  top: 1.25em;
+}
+.hostConstraintDialog #constraint {
+  margin-top: 1.5em;
+  border-color: #737373;
+  color: #737373;
+}
+
 /* Error box */
 #errorbox {
   display: none;
@@ -1043,3 +1074,5 @@ svg#defs {
   z-index: 98;
   background: rgba(255, 255, 255, 0.8);
 }
+
+/*# sourceMappingURL=style.css.map */
