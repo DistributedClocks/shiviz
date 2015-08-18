@@ -551,7 +551,7 @@ SearchBar.prototype.query = function() {
                 searchbar.clearResults();
 
             }).fail(function() {
-                shiviz.getinstance().handleexception(new exception("unable to retrieve motifs from: " + url, true));
+                Shiviz.getInstance().handleException(new Exception("unable to retrieve motifs from: " + url, true));
             });
             break;
 
