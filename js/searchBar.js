@@ -39,7 +39,7 @@ function SearchBar() {
     this.motifNavigator = null;
 
     /** @private */
-    this.graphBuilder = new GraphBuilder($("#panel svg"), $("#addButton"));
+    this.graphBuilder = new GraphBuilder($("#panel svg"), $("#addButton"), false);
 
     /** @private */
     this.mode = SearchBar.MODE_EMPTY;
@@ -49,17 +49,17 @@ function SearchBar() {
 
     var context = this;
 
+    // Called whenever a change is made to the GraphBuilder -- either through drawing a custom structure or through clearStructure()
     this.graphBuilder.setUpdateCallback(function() {
-
         if (context.updateLocked) {
             return;
         }
 
-        var vts = new VectorTimestampSerializer("{\"host\":\"`HOST`\",\"clock\":`CLOCK`}", ",", "#motif=[", "]");
+        var vts = new VectorTimestampSerializer("{\"host\":\"`HOST`\",\"clock\":`CLOCK`}", ",", "#structure=[", "]");
         var builderGraph = this.convertToBG();
-        context.setValue(vts.serialize(builderGraph.toVectorTimestamps()));
-
-        context.updateMode();
+        if (!this.isCleared()) {
+            context.setValue(vts.serialize(builderGraph.toVectorTimestamps()));
+        }
     });
 
     $("#searchbar #bar input").unbind("keydown.search").on("keydown.search", function(e) {
@@ -70,7 +70,7 @@ function SearchBar() {
         switch (e.which) {
         // Return
         case 13:
-            if (context.getValue().trim().length != 0) {
+            if (context.getValue().trim().length > 0) {
                 context.query();
                 context.hidePanel();
             }
@@ -107,10 +107,11 @@ function SearchBar() {
         context.hidePanel();
         context.update();
         context.updateLocked = false;
+        context.clearMotifsTab();
     });
 
     $("#searchbar .predefined button").on("click", function() {
-        context.clearMotif();
+        context.clearStructure();
         context.setValue("#" + this.name);
         context.hidePanel();
         context.query();
@@ -127,10 +128,10 @@ function SearchBar() {
         if (context.motifNavigator == null) {
             return;
         }
-
         context.motifNavigator.prev();
     });
 
+    // Event handler for switching between search options
     $("#searchbar .searchTabLinks a").on("click", function(e) {
         // Show the clicked on tab and hide the others
         var currentTab = $(this).attr("href");
@@ -138,6 +139,18 @@ function SearchBar() {
         $(this).parent("li").addClass("default").siblings("li").removeClass("default");
         // prevent id of div from being added to URL
         e.preventDefault();
+    });
+
+    // Event handler for motif selection in network motifs tab
+    $("#motifOption input").on("change", function() {
+        if ($(this).is(":checked") || $(this).siblings("input:checkbox:checked").length > 0) {
+            context.setValue("#motif");
+            $("#searchButton").click();
+        } else {
+            context.clearText();
+            $(".motifResults td").empty();
+        }
+        context.clearStructure();
     });
 }
 
@@ -157,13 +170,19 @@ SearchBar.MODE_TEXT = 1;
  * @static
  * @const
  */
-SearchBar.MODE_STRUCTURAL = 2;
+SearchBar.MODE_CUSTOM = 2;
 
 /**
  * @static
  * @const
  */
 SearchBar.MODE_PREDEFINED = 3;
+
+/**
+ * @static
+ * @const
+ */
+SearchBar.MODE_MOTIF = 4;
 
 /**
  * @private
@@ -192,6 +211,15 @@ SearchBar.prototype.setGlobal = function(global) {
 };
 
 /**
+ * Returns the global associated with this search bar.
+ *
+ * @returns {Global} global the global associated with this search bar
+ */
+SearchBar.prototype.getGlobal = function(global) {
+    return this.global;
+};
+
+/**
  * Updates the mode of this search bar. The mode indicates what type of query is
  * currently being performed and is one of the mode static constants defined in
  * this class (e.g. {@link SearchBar.MODE_TEXT}). This method automatically
@@ -217,11 +245,14 @@ SearchBar.prototype.updateMode = function() {
     if (value.charAt(0) != "#") {
         this.mode = SearchBar.MODE_TEXT;
     }
-    else if (value.slice(0, 7) != "#motif=" && /[a-zA-Z0-9]/.test(value.charAt(1))) {
-        this.mode = SearchBar.MODE_PREDEFINED;
+    else if (value.slice(0, 11) == "#structure=") {
+        this.mode = SearchBar.MODE_CUSTOM;
+    }
+    else if (value.slice(0, 7) == "#motif") {
+        this.mode = SearchBar.MODE_MOTIF;
     }
     else {
-        this.mode = SearchBar.MODE_STRUCTURAL;
+        this.mode = SearchBar.MODE_PREDEFINED;
     }
 
 };
@@ -242,7 +273,6 @@ SearchBar.prototype.getMode = function() {
  * drawn graph.
  */
 SearchBar.prototype.update = function() {
-    var value = this.getValue();
 
     this.updateLocked = true;
     this.updateMode();
@@ -251,38 +281,35 @@ SearchBar.prototype.update = function() {
 
     // Empty
     case SearchBar.MODE_EMPTY:
-        this.clearMotif();
+        this.clearStructure();
 
         break;
 
     // Text
     case SearchBar.MODE_TEXT:
-        this.clearMotif();
+        this.clearStructure();
         break;
 
-    // Motif (custom)
-    case SearchBar.MODE_STRUCTURAL:
+    // Custom structure
+    case SearchBar.MODE_CUSTOM:
         try {
-            var json = value.trim().match(/^#(?:motif=)?(\[.*\])/i)[1];
-            var rawRegExp = '(?<event>){"host":"(?<host>[^}]+)","clock":(?<clock>{[^}]*})}';
-            var parsingRegex = new NamedRegExp(rawRegExp, "i");
-            var parser = new LogParser(json, null, parsingRegex);
-            var logEvents = parser.getLogEvents(parser.getLabels()[0]);
-            var vectorTimestamps = logEvents.map(function(logEvent) {
-                return logEvent.getVectorTimestamp();
-            });
-            var builderGraph = BuilderGraph.fromVectorTimestamps(vectorTimestamps);
+            var json = this.getValue().trim().match(/^#(?:structure=)?(\[.*\])/i)[1];
+            var builderGraph = this.getBuilderGraphFromJSON(json);
             this.graphBuilder.convertFromBG(builderGraph);
         }
         catch (exception) {
-            this.clearMotif();
+            this.clearStructure();
             $("#searchbar #bar input").css("color", "red");
         }
         break;
 
-    // Predefined Motif
+    // Predefined Structure
     case SearchBar.MODE_PREDEFINED:
-        this.clearMotif();
+        this.clearStructure();
+        break;
+
+    // Network motifs
+    case SearchBar.MODE_MOTIF:
         break;
 
     default:
@@ -346,9 +373,9 @@ SearchBar.prototype.hidePanel = function() {
 };
 
 /**
- * Clears the drawn motif.
+ * Clears the drawn structure
  */
-SearchBar.prototype.clearMotif = function() {
+SearchBar.prototype.clearStructure = function() {
     this.graphBuilder.clear();
 };
 
@@ -367,21 +394,25 @@ SearchBar.prototype.clearResults = function() {
     this.motifNavigator = null;
     if (this.global != null && this.global.getController().hasHighlight()) {
         this.global.getController().clearHighlight();
-        this.global.drawAll();
+    } else {
+        // Show the pairwise button on the log lines tab when clearing a motif search
+        if (this.global.getViews().length > 1 && !$(".leftTabLinks li").first().next().hasClass("default") && !$(".pairwiseButton").is(":visible")) {
+            $(".pairwiseButton").show();
+        }
     }
-    $("select.clusterBase").removeClass("fade");
-    $("table.clusterResults a").removeClass("execFade");
+    $(".clusterBase").removeClass("fade");
+    $(".clusterResults a").removeClass("execFade");
 };
 
 /**
  * Clears the drawn motif, the text input, and the search results
  * 
- * @see {@link SearchBar#clearMotif}
+ * @see {@link SearchBar#clearStructure}
  * @see {@link SearchBar#clearText}
  * @see {@link SearchBar#clearResults}
  */
 SearchBar.prototype.clear = function() {
-    this.clearMotif();
+    this.clearStructure();
     this.clearText();
     this.clearResults();
 };
@@ -391,6 +422,7 @@ SearchBar.prototype.clear = function() {
  */
 SearchBar.prototype.query = function() {
     this.updateMode();
+    var searchbar = this;
 
     try {
         switch (this.mode) {
@@ -403,17 +435,10 @@ SearchBar.prototype.query = function() {
             this.global.getController().highlightMotif(finder);
             break;
 
-        case SearchBar.MODE_STRUCTURAL:
+        case SearchBar.MODE_CUSTOM:
             try {
-                var json = this.getValue().trim().match(/^#(?:motif=)?(\[.*\])/i)[1];
-                var rawRegExp = '(?<event>){"host":"(?<host>[^}]+)","clock":(?<clock>{[^}]*})}';
-                var parsingRegex = new NamedRegExp(rawRegExp, "i");
-                var parser = new LogParser(json, null, parsingRegex);
-                var logEvents = parser.getLogEvents(parser.getLabels()[0]);
-                var vectorTimestamps = logEvents.map(function(logEvent) {
-                    return logEvent.getVectorTimestamp();
-                });
-                var builderGraph = BuilderGraph.fromVectorTimestamps(vectorTimestamps);
+                var json = this.getValue().trim().match(/^#(?:structure=)?(\[.*\])/i)[1];
+                var builderGraph = this.getBuilderGraphFromJSON(json);
                 var finder = new CustomMotifFinder(builderGraph);
                 this.global.getController().highlightMotif(finder);
             }
@@ -459,6 +484,75 @@ SearchBar.prototype.query = function() {
 
             break;
 
+        case SearchBar.MODE_MOTIF:
+            var prefix = (dev ? "https://api.github.com/repos/pattyw/motifs/contents/" : "/shiviz/log/");
+            var url = prefix + "motifs.json";
+
+            $.get(url, function(response) {
+                if (dev)
+                    response = atob(response.content)
+
+                var lines = response.split("\n");
+                var viewToCount = {};
+                var builderGraphs = [];
+
+                // Get the relevant subgraphs from motifs.json based on ticked checkboxes
+                var twoEventCutoff = lines.indexOf("2-event subgraphs");
+                var threeEventCutoff = lines.indexOf("3-event subgraphs");
+                var fourEventCutoff = lines.indexOf("4-event subgraphs");                
+
+                if (!$("#motifOption #fourEvents").is(":checked")) {
+                    lines.splice(fourEventCutoff, lines.length - fourEventCutoff);
+                }
+
+                if (!$("#motifOption #threeEvents").is(":checked")) {
+                    lines.splice(threeEventCutoff, fourEventCutoff - threeEventCutoff);     
+                }
+
+                if (!$("#motifOption #twoEvents").is(":checked")) {
+                    var twoEventCutoff = lines.indexOf("2-event subgraphs");
+                    lines.splice(twoEventCutoff, threeEventCutoff - twoEventCutoff);
+                }
+
+                // Find the number of instances of a subgraph in each view
+                lines.forEach(function(line) {
+                    if (isNaN(line.charAt(0))) {
+                        var builderGraph = searchbar.getBuilderGraphFromJSON(line);
+                        builderGraphs.push(builderGraph);
+
+                        var finder = new CustomMotifFinder(builderGraph);
+                        var hmt = new HighlightMotifTransformation(finder, false);
+
+                        searchbar.global.getViews().forEach(function(view) {
+                            var label = view.getLabel();
+
+                            hmt.findMotifs(view.getModel());
+                            var motifGroup = hmt.getHighlighted();
+                            var numMotifs = motifGroup.getMotifs().length;
+
+                            // Save the number of instances of this motif under the current view's label
+                            if (viewToCount[label]) {
+                                viewToCount[label].push(numMotifs);
+                            } else {
+                                viewToCount[label] = [numMotifs];
+                            }
+                        });
+                    }
+                });
+                
+                // Calculate motifs and draw the results in the motifs tab
+                var motifDrawer = new MotifDrawer(viewToCount, builderGraphs);
+                motifDrawer.drawResults();
+
+                // Switch to the Motifs tab and clear any previously highlighted results
+                $(".leftTabLinks li").first().next().show().find("a").click();
+                searchbar.clearResults();
+
+            }).fail(function() {
+                shiviz.getinstance().handleexception(new exception("unable to retrieve motifs from: " + url, true));
+            });
+            break;
+
         default:
             throw new Exception("SearchBar.prototype.query: invalid mode");
             break;
@@ -467,9 +561,33 @@ SearchBar.prototype.query = function() {
     catch (e) {
         Shiviz.getInstance().handleException(e);
     }
-    $("#searchbar").addClass("results");
-    this.countMotifs();
+    if (this.mode != SearchBar.MODE_MOTIF) {
+        // reset the motifs tab when performing other searches
+        this.clearMotifsTab();
+
+        // For the network motifs search, motifs are only highlighted when a user clicks on an execution in the motifs tab
+        // so countMotifs() should not be called during the initial search but during the on-click event in MotifDrawer.js
+        $("#searchbar").addClass("results");
+        this.countMotifs();
+    }
 };
+
+/**
+  * Creates a BuilderGraph from a json object containing hosts and vector timestamps
+  *
+  * @param {String} json The json object specifying hosts and vector timestamps
+  * @returns {BuilderGraph} the builderGraph created from the given json object
+  */
+SearchBar.prototype.getBuilderGraphFromJSON = function(json) {
+    var rawRegExp = '(?<event>){"host":"(?<host>[^}]+)","clock":(?<clock>{[^}]*})}';
+    var parsingRegex = new NamedRegExp(rawRegExp, "i");
+    var parser = new LogParser(json, null, parsingRegex);
+    var logEvents = parser.getLogEvents(parser.getLabels()[0]);
+    var vectorTimestamps = logEvents.map(function(logEvent) {
+        return logEvent.getVectorTimestamp();
+    });
+    return BuilderGraph.fromVectorTimestamps(vectorTimestamps);
+}
 
 /**
   * This function creates a new MotifNavigator to count the number of times a highlighted motif occurs in the active views
@@ -480,13 +598,37 @@ SearchBar.prototype.countMotifs = function() {
         var views = this.global.getActiveViews();
         this.motifNavigator = new MotifNavigator();
         this.motifNavigator.addMotif(views[0].getVisualModel(), views[0].getTransformer().getHighlightedMotif());
-        // getHighlightedMotif is null until a view is drawn and viewR or views[1] is only drawn when a user selects pairwise view
         if (this.global.getPairwiseView()) {
-            this.motifNavigator.addMotif(views[1].getVisualModel(), views[1].getTransformer().getHighlightedMotif());    
+            this.motifNavigator.addMotif(views[1].getVisualModel(), views[1].getTransformer().getHighlightedMotif());
         }
         this.motifNavigator.start();
     
         var numMotifs = this.motifNavigator.getNumMotifs();
-        $("#numFound").text(numMotifs + " instances");
+        var numInstances = numMotifs + " instance";
+        if (numMotifs == 0 || numMotifs > 1) {
+            numInstances = numInstances.concat("s");
+        }
+        $("#numFound").text(numInstances + " in view");
     }
 };
+
+/**
+ * Clears the results in the motifs tab and uncheck all the checkboxes
+ */
+SearchBar.prototype.clearMotifsTab = function() {
+    $("#motifOption input").prop("checked", false);
+    $(".motifResults td").empty();
+    $(".motifResults td:empty").remove();
+}
+
+/**
+ * Resets the motif results so that no execution is selected
+ */
+SearchBar.prototype.resetMotifResults = function() {
+    // Clear the #motif value in the searchbar if not on the motifs tab
+    if (!$(".leftTabLinks li").first().next().hasClass("default")) {
+        this.clearText();
+    }
+    $("#motifIcon").remove();
+    $(".motifResults a").removeClass("indent");
+}

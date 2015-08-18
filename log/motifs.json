@@ -1,0 +1,24 @@
+2-event subgraphs
+{"host":"a","clock":{"a":1}},{"host":"b","clock":{"b":1,"a":1}}
+3-event subgraphs
+{"host":"a","clock":{"a":1}},{"host":"a","clock":{"a":2}},{"host":"b","clock":{"b":1,"a":2}}
+{"host":"a","clock":{"a":1}},{"host":"a","clock":{"a":2}},{"host":"b","clock":{"b":1,"a":1}}
+{"host":"a","clock":{"a":1}},{"host":"b","clock":{"b":1}},{"host":"b","clock":{"b":2,"a":1}}
+{"host":"a","clock":{"a":1}},{"host":"b","clock":{"b":1,"a":1}},{"host":"b","clock":{"b":2,"a":1}}
+{"host":"a","clock":{"a":1}},{"host":"a","clock":{"a":2,"b":1}},{"host":"b","clock":{"b":1,"a":1}}
+{"host":"a","clock":{"a":1}},{"host":"b","clock":{"b":1,"a":1}},{"host":"c","clock":{"c":1,"a":1}}
+{"host":"a","clock":{"a":1}},{"host":"b","clock":{"b":1,"c":1,"a":1}},{"host":"c","clock":{"c":1}}
+{"host":"a","clock":{"a":1}},{"host":"b","clock":{"b":1,"a":1}},{"host":"c","clock":{"c":1,"b":1,"a":1}}
+4-event subgraphs
+{"host":"a","clock":{"a":1}},{"host":"a","clock":{"a":2}},{"host":"a","clock":{"a":3}},{"host":"b","clock":{"b":1,"a":3}}
+{"host":"a","clock":{"a":1}},{"host":"a","clock":{"a":2}},{"host":"b","clock":{"b":1,"a":2}},{"host":"b","clock":{"b":2,"a":2}}
+{"host":"a","clock":{"a":1}},{"host":"b","clock":{"b":1,"a":1}},{"host":"b","clock":{"b":2,"a":1}},{"host":"b","clock":{"b":3,"a":1}}
+{"host":"a","clock":{"a":1}},{"host":"a","clock":{"a":2,"b":2}},{"host":"b","clock":{"b":1,"a":1}},{"host":"b","clock":{"b":2,"a":1}}
+{"host":"a","clock":{"a":1}},{"host":"a","clock":{"a":2,"b":1}},{"host":"a","clock":{"a":3,"b":1}},{"host":"b","clock":{"b":1,"a":1}}
+{"host":"a","clock":{"a":1}},{"host":"a","clock":{"a":2}},{"host":"a","clock":{"a":3,"b":1}},{"host":"b","clock":{"b":1,"a":2}}
+{"host":"a","clock":{"a":1}},{"host":"b","clock":{"b":1}},{"host":"b","clock":{"b":2,"a":1}},{"host":"c","clock":{"c":1,"b":1}}
+{"host":"a","clock":{"a":1,"b":1}},{"host":"b","clock":{"b":1}},{"host":"b","clock":{"b":2,"a":1}},{"host":"c","clock":{"c":1,"b":2,"a":1}}
+{"host":"a","clock":{"a":1}},{"host":"b","clock":{"b":1,"a":1}},{"host":"b","clock":{"b":2,"a":1,"c":1}},{"host":"c","clock":{"c":1,"b":1,"a":1}}
+{"host":"a","clock":{"a":1}},{"host":"b","clock":{"b":1,"a":1}},{"host":"c","clock":{"c":1,"b":1,"a":1}},{"host":"c","clock":{"c":2,"b":1,"a":1}}
+{"host":"a","clock":{"a":1}},{"host":"b","clock":{"b":1,"a":1}},{"host":"c","clock":{"c":1,"a":1}},{"host":"d","clock":{"d":1,"a":1}}
+{"host":"a","clock":{"a":1}},{"host":"b","clock":{"b":1,"a":1}},{"host":"c","clock":{"c":1,"b":1,"a":1}},{"host":"d","clock":{"d":1,"c":1,"b":1,"a":1}}

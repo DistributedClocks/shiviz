@@ -91,6 +91,15 @@ GraphBuilderNode.prototype.getCircle = function() {
 };
 
 /**
+ * Sets the radius of the circle SVG element associated with this node
+ *
+ * @param {Number} radius The new radius for the circle
+ */
+GraphBuilderNode.prototype.setCircleRadius = function(radius) {
+    this.circle.attr("r", radius);
+}
+
+/**
  * Returns the coordinates as a two element array
  * 
  * @returns {Array<Number>} Array containing coordinates

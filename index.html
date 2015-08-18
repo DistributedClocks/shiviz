@@ -108,16 +108,16 @@
                         and select "expand" to undo this collapsing.
                     </li>
                   <li>
-                    <strong>Search for keywords or motifs</strong>
+                    <strong>Search for keywords or subgraphs</strong>
                         <br>
                         ShiViz supports keyword search across the
                         parsed fields. Search supports logical
                         connectives and regular expressions. You can
-                        also search for <emph>motifs</emph>, or
-                        communication topologies of interest. You can
-                        search for a pre-defined motif like broadcast
+                        also search for subgraphs or communication 
+                        topologies of interest. You can search for a 
+                        pre-defined structure like broadcast
                         or request-response, or you can define and
-                        search for a custom motif.
+                        search for a custom structure.
                     </li>
                  <li>
                     <strong>Show and hide differences between executions</strong>
@@ -145,6 +145,17 @@
 
                         Cluster by execution comparison to see an overview
                         of how executions differ from a selected base.
+                    </li>
+
+                    <li>
+                    <strong>Search for network motifs</strong>
+                        <br>
+                        Click on the "motifs" tab to find frequently
+                        occurring communication patterns within and
+                        across executions. Search for 2, 3 or 4-event
+                        motifs that occur in at least 50% of the
+                        executions or that appear at least 5 times 
+                        within a single execution.
                     </li>
                 </ul>
             </p>
@@ -202,13 +213,13 @@
                 We might have a parser RegExp like:
                 <pre>(?&lt;date&gt;\d\d/\d\d/\d\d \d\d:\d\d (AM|PM)) (?&lt;event&gt;.*)\n(?&lt;host&gt;\w+) (?&lt;clock&gt;\{.*\})</pre>
             </p>
-	    <p>
-	      The capture groups in ShiViz is not standard regexp
-	      syntax. We recommend using a plain
-	      <a href="https://www.debuggex.com/">JS regexp tester</a>
-	      with regular capture groups to develop expressions, and
-	      name the capture groups afterwards.
-	    </p>
+            <p>
+              The capture groups in ShiViz is not standard regexp
+              syntax. We recommend using a plain
+              <a href="https://www.debuggex.com/">JS regexp tester</a>
+              with regular capture groups to develop expressions, and
+              name the capture groups afterwards.
+            </p>
 
             <h3>How can I generate logs to use in ShiViz?</h3>
             <p>
@@ -228,13 +239,15 @@
             </p>
         </div>
         <div class="shivizexample">
-	  <img src="images/shiviz-example.png" style="padding-top: 0px;"/><br/>
-          <img src="images/event-selection.png"/><br/>
-          <img src="images/process-selection.png"/><br/>
-          <img src="images/event-expand-menu.png"/><br/>
-          <img src="images/search.png"/><br/>
-          <img src="images/diff.png"/></br>
-          <img src="images/cluster.png">
+            <img src="images/shiviz-example.png" style="padding-top: 0px;"/><br/>
+            <img src="images/event-selection.png"/><br/>
+            <img src="images/process-selection.png"/><br/>
+            <img src="images/event-expand-menu.png"/><br/>
+            <img src="images/search.png"/><br/>
+            <img src="images/diff.png"/><br/>
+            <img id="clusterImg" src="images/cluster.png"/>
+            <img src="images/motifs.png">
+            </div>
         </div>
     </section>
 
@@ -258,16 +271,16 @@
                         </ul>
                     </header>
                     <h3>Options</h3>
-		      <div id="file_input">
-			      <label>Select a file: <input type="file" id="file"></label>
-			      <span id="file_icon">d</span>
-			      <div id="file_desc">Upload a log by selecting a file with the following format: <br><br>
-			      <li> The first line of the file is the log parsing regular expression. If left empty, the default regular expression 
-			      <span class="regex">"(?&ltevent&gt.*)\n(?&lthost&gt\S*) (?&ltclock&gt{.*})"</span> will be used.<br>
-			      <li> The second line of the file is the multiple executions regular expression delimiter. This can be left empty if the log does not contain multiple executions. <br>
-			      <li> The rest of the file is the log.
-			      </div>
-		      </div>					
+                    <div id="file_input">
+                        <label>Select a file: <input type="file" id="file"></label>
+                        <span id="file_icon">d</span>
+                        <div id="file_desc">Upload a log by selecting a file with the following format: <br><br>
+                        <li> The first line of the file is the log parsing regular expression. If left empty, the default regular expression 
+                        <span class="regex">"(?&ltevent&gt.*)\n(?&lthost&gt\S*) (?&ltclock&gt{.*})"</span> will be used.<br>
+                        <li> The second line of the file is the multiple executions regular expression delimiter. This can be left empty if the log does not contain multiple executions. <br>
+                        <li> The rest of the file is the log.
+                        </div>
+                    </div>                    
                     <div class="option">
                         <label>Log parsing regular expression: <input class="mono" type="text" id="parser"></label>
                     </div>
@@ -319,15 +332,16 @@
             <div id="tabs"></div>
             <ul class="leftTabLinks">
                <li class="default"><a href="logTab">Log lines</a></li>
+               <li><a href="motifsTab">Motifs</a></li>
                <li><a href="clusterTab">Clusters</a></li>
             </ul>
             <div id="leftTabContent">
-                <div id="logTab" class="defaultTab">
+                <div id="logTab">
                     <table class="log">
                         <tr></tr>
                     </table>
                 </div>
-                <div id="clusterTab" class="tab">
+                <div id="clusterTab">
                     <div id="clusterOption">
                         <p>Cluster executions by:</p>
                         <input id="clusterNumProcess" type="checkbox">
@@ -346,13 +360,27 @@
                         </tr>
                     </table>
                 </div>
+                <div id="motifsTab">
+                    <div id="motifOption">
+                        <p>Find network motifs:</p>
+                        <input id="twoEvents" type="checkbox">
+                        <label>2-event motifs</label><br>
+                        <input id="threeEvents" type="checkbox">
+                        <label>3-event motifs</label><br>
+                        <input id="fourEvents" type="checkbox">
+                        <label>4-event motifs</label>
+                    </div>
+                    <table class="motifResults">
+                        <tr></tr>
+                    </table>
+                </div>
             </div>
             <div class="highlight"></div>
         </div>
         <div id="graph">
             <div id="searchbar">
                 <div id="bar">
-                    <input type="text" class="mono" placeholder="Search the visualization" readonly>
+                    <input type="text" class="mono" placeholder="Search the visualization">
                     <div class="clear">
                         <div class="one"></div>
                         <div class="two"></div>
@@ -366,9 +394,8 @@
                     <ul class="searchTabLinks">
                         <li class="default"><a href="textTab">Text Search</a></li>
                         <li><a href="structuredTab">Structured Search</a> </li>
-                        <!--<li><a href="networkTab">Network Motif Search</a></li>-->
                     </ul>
-                    <div id="textTab" class="defaultTab">
+                    <div id="textTab" class="tab">
                         <b>Text search</b>: search for log lines/events that match a text query.
                         <div class="out">
                             <p>
@@ -393,7 +420,7 @@
                                 processes, events, click and drag to
                                 add inter-event edges).<br>
                                 <table>
-                                        <tr>
+                                    <tr>
                                         <td>
                                             <svg>
                                                 <circle r="5" class="hover"></circle>
@@ -416,8 +443,6 @@
                                 </div>
                             </li>
                         </ul>
-                    </div>
-                    <div id="networkTab" class="tab">
                     </div>
                 </div>
             </div>
@@ -491,6 +516,7 @@
 
     <script type="text/javascript" src="js/motifFinder/motif.js"></script>
     <script type="text/javascript" src="js/motifFinder/motifFinder.js"></script>
+    <script type="text/javascript" src="js/motifFinder/motifDrawer.js"></script>
     <script type="text/javascript" src="js/motifFinder/broadcastGatherFinder.js"></script>
     <script type="text/javascript" src="js/motifFinder/customMotifFinder.js"></script>
     <script type="text/javascript" src="js/motifFinder/motifGroup.js"></script>
