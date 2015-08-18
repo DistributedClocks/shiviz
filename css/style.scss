@@ -681,7 +681,7 @@ section.input {
         }
     }
     #panel {
-        width: calc(100% - 140pt + 1px);
+        width: calc(100% - 155pt + 1px);
     }
 
     #searchButton {
@@ -708,7 +708,7 @@ section.input {
     border: 1px solid black;
     border-top: none;
     box-sizing: border-box;
-    overflow: hidden;
+    overflow: auto;
     padding: .4em;
     background: #fff;
 

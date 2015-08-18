@@ -589,7 +589,7 @@ section.input .left {
   display: initial;
 }
 #searchbar.results #panel {
-  width: calc(100% - 140pt + 1px);
+  width: calc(100% - 155pt + 1px);
 }
 #searchbar.results #searchButton {
   display: none;
@@ -612,7 +612,7 @@ section.input .left {
   border: 1px solid black;
   border-top: none;
   box-sizing: border-box;
-  overflow: hidden;
+  overflow: auto;
   padding: .4em;
   background: #fff;
   /* Add button for custom structured search */

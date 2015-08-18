@@ -122,6 +122,7 @@ function SearchBar() {
             return;
         }
         context.motifNavigator.next();
+        context.hidePanel();
     });
 
     $("#prevButton").on("click", function() {
@@ -129,6 +130,7 @@ function SearchBar() {
             return;
         }
         context.motifNavigator.prev();
+        context.hidePanel();
     });
 
     // Event handler for switching between search options
@@ -485,7 +487,7 @@ SearchBar.prototype.query = function() {
             break;
 
         case SearchBar.MODE_MOTIF:
-            var prefix = (dev ? "https://api.github.com/repos/pattyw/motifs/contents/" : "/shiviz/log/");
+            var prefix = (dev ? "https://api.github.com/repos/bestchai/shiviz-logs/contents/" : "/shiviz/log/");
             var url = prefix + "motifs.json";
 
             $.get(url, function(response) {
