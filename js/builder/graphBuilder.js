@@ -31,9 +31,11 @@ function GraphBuilder($svg, $addButton, motifSearch) {
     /** @private */
     this.colors = [ "rgb(122,155,204)", "rgb(122,204,155)", "rgb(187,204,122)", "rgb(204,122,122)", "rgb(187,122,204)", "rgb(122,155,204)" ];
 
-    this.bind();
-    this.addHost();
-    this.addHost();
+    if (!motifSearch) {
+        this.bind();
+        this.addHost();
+        this.addHost();
+    }
 }
 
 /**
