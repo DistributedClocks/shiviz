@@ -31,25 +31,22 @@ function Shiviz() {
 
         // logUrlPrefix is defined in dev.js & deployed.js
         var prefix = "/shiviz/log/";
-        var url = prefix + $(this).data("log");
+        var logName = $(this).data("log");
+        var url = prefix + logName;
 
-        try {
-            $.get(url, function(response) {
-                handleResponse(response, e);
-            }).fail(function() {
-                throw new Error("unable to retrieve example log from: " + url);
-            });
-        } catch (err) {
+        $.get(url, function(response) {
+            handleResponse(response, e);
+        }).fail(function() {
             prefix = "https://api.github.com/repos/bestchai/shiviz-logs/contents/";
-            url = prefix + $(this).data("log");
+            url = prefix + logName;
 
             $.get(url, function(response) {
                 response = atob(response.content);
                 handleResponse(response, e);
             }).fail(function() {
                 Shiviz.getInstance().handleException(new Exception("unable to retrieve example log from: " + url, true));
-            });    
-        }
+            });  
+        });
     });
 
     function handleResponse(response, e) {
