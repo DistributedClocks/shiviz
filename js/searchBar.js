@@ -501,6 +501,7 @@ SearchBar.prototype.query = function() {
                 url = prefix + "motifs.json";
 
                 $.get(url, function(response) {
+                    response = atob(response.content);
                     handleMotifResponse(response);
                 }).fail(function() {
                     Shiviz.getInstance().handleException(new Exception("unable to retrieve example log from: " + url, true));
@@ -528,9 +529,6 @@ SearchBar.prototype.query = function() {
     }
 
     function handleMotifResponse(response) {
-        if (dev)
-            response = atob(response.content)
-
         var lines = response.split("\n");
         var viewToCount = {};
         var builderGraphs = [];

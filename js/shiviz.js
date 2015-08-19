@@ -44,6 +44,7 @@ function Shiviz() {
             url = prefix + $(this).data("log");
 
             $.get(url, function(response) {
+                response = atob(response.content);
                 handleResponse(response, e);
             }).fail(function() {
                 Shiviz.getInstance().handleException(new Exception("unable to retrieve example log from: " + url, true));
@@ -52,10 +53,6 @@ function Shiviz() {
     });
 
     function handleResponse(response, e) {
-        if (dev) {
-            response = atob(response.content);
-        }
-
         $("#input").val(response);
         context.resetView();
         $("#delimiter").val($(e.target).data("delimiter"));
