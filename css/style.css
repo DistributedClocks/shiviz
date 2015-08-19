@@ -2,10 +2,12 @@
   font-family: "Icon";
   src: url("../fonts/icons.woff") format("woff");
 }
+
 @font-face {
   font-family: "Icomoon";
   src: url("../fonts/icomoon.woff");
 }
+
 body {
   font-size: 12pt;
   font-family: "Helvetica Neue", Helvetica, sans-serif;
@@ -589,7 +591,7 @@ section.input .left {
   display: initial;
 }
 #searchbar.results #panel {
-  width: calc(100% - 155pt + 1px);
+  width: calc(100% - 140pt + 1px);
 }
 #searchbar.results #searchButton {
   display: none;
@@ -612,7 +614,7 @@ section.input .left {
   border: 1px solid black;
   border-top: none;
   box-sizing: border-box;
-  overflow: auto;
+  overflow: hidden;
   padding: .4em;
   background: #fff;
   /* Add button for custom structured search */
@@ -845,12 +847,6 @@ svg {
   transform: rotate(180deg);
 }
 
-#clusterImg {
-  position: relative;
-  top: -7.1em;
-  padding-right: 1.75em;
-}
-
 /* Motif icon */
 /* Styling for execution labels in clusters */
 .execFade {
@@ -1008,34 +1004,20 @@ svg#defs {
 }
 
 .hostConstraintDialog {
-  width: 100px;
-  /* Make the surrounding div have a height of 0px so that it won't block other boxes from being clicked */
+  width: 150px;
+  /* Make the surrounding div have a height of 0px so that it won't block other boxes from being clicked on */
   height: 0px;
   font-family: sans-serif;
   position: fixed;
   z-index: 4;
 }
-.hostConstraintDialog .triangle {
-  position: absolute;
-  border-style: solid;
-  border-width: 5px;
-  border-color: #737373;
-  border-bottom-color: transparent;
-}
-.hostConstraintDialog.left .triangle {
-  border-left-color: transparent;
-  left: -10px;
-  top: 1.25em;
-}
-.hostConstraintDialog.right .triangle {
-  border-right-color: transparent;
-  right: -10px;
-  top: 1.25em;
-}
-.hostConstraintDialog #constraint {
-  margin-top: 1.5em;
-  border-color: #737373;
+
+.hostConstraintDialog #hostConstraint {
   color: #737373;
+}
+
+.hostConstraintDialog #hostConstraint {
+  margin-top: 1.5em;
 }
 
 /* Error box */
@@ -1074,5 +1056,3 @@ svg#defs {
   z-index: 98;
   background: rgba(255, 255, 255, 0.8);
 }
-
-/*# sourceMappingURL=style.css.map */

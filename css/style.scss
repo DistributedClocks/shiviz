@@ -681,7 +681,7 @@ section.input {
         }
     }
     #panel {
-        width: calc(100% - 155pt + 1px);
+        width: calc(100% - 140pt + 1px);
     }
 
     #searchButton {
@@ -708,7 +708,7 @@ section.input {
     border: 1px solid black;
     border-top: none;
     box-sizing: border-box;
-    overflow: auto;
+    overflow: hidden;
     padding: .4em;
     background: #fff;
 
@@ -985,12 +985,6 @@ svg {
     transform: rotate(180deg);
 }
 
-#clusterImg {
-    position: relative;
-    top: -7.1em;
-    padding-right: 1.75em;
-}
-
 /* Motif icon */
 
 #motifIcon {
@@ -1191,38 +1185,25 @@ svg#defs {
     }
 }
 
-.hostConstraintDialog {
-    width: 100px;
-    /* Make the surrounding div have a height of 0px so that it won't block other boxes from being clicked */
+%constraintDialog {
+    width: 150px;
+    /* Make the surrounding div have a height of 0px so that it won't block other boxes from being clicked on */
     height: 0px;
     font-family: sans-serif;
     position: fixed;
-    z-index: 4;
+    z-index: 4;    
+}
 
-    .triangle {
-        position: absolute;
-        border-style: solid;
-        border-width: 5px;
-        border-color: #737373;
-        border-bottom-color: transparent;        
-    }
+%constraintInput {
+    color: #737373;   
+}
 
-    &.left .triangle {
-        border-left-color: transparent;
-        left: -10px;
-        top: 1.25em;        
-    }
+.hostConstraintDialog {
+    @extend %constraintDialog;
 
-    &.right .triangle {
-        border-right-color: transparent;
-        right: -10px;
-        top: 1.25em;        
-    }
-
-    #constraint {
+    #hostConstraint {
+        @extend %constraintInput;
         margin-top: 1.5em;
-        border-color: #737373;
-        color: #737373;
     }
 }
 

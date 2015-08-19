@@ -13,14 +13,14 @@
  * @extends AbstractGraph
  * @param {Array<String>} hosts The initial set of hosts
  */
-function BuilderGraph(hosts) {
+function BuilderGraph(hosts, hostConstraints) {
     AbstractGraph.call(this);
 
     /** @private */
     this.hostSet = {};
 
     for (var i = 0; i < hosts.length; i++) {
-        this.addHost(hosts[i]);
+        this.addHost(hosts[i], hostConstraints[i]);
     }
 }
 
@@ -35,7 +35,7 @@ BuilderGraph.prototype.constructor = BuilderGraph;
  * 
  * @param {String} host The name of the new host.
  */
-BuilderGraph.prototype.addHost = function(host) {
+BuilderGraph.prototype.addHost = function(host, hostConstraint) {
     if (!!this.hostSet[host]) {
         return;
     }
@@ -47,11 +47,13 @@ BuilderGraph.prototype.addHost = function(host) {
     head.isHeadInner = true;
     head.host = host;
     head.graph = this;
+    head.hasHostConstraint = hostConstraint;
 
     var tail = new BuilderNode();
     tail.isTailInner = true;
     tail.host = host;
     tail.graph = this;
+    tail.hasHostConstraint = hostConstraint;
 
     head.prev = null;
     head.next = tail;
@@ -97,7 +99,7 @@ BuilderGraph.prototype.toVectorTimestamps = function() {
     });
 };
 
-BuilderGraph.fromVectorTimestamps = function(vectorTimestamps) {
+BuilderGraph.fromVectorTimestamps = function(vectorTimestamps, hostConstraints) {
     
     var logEvents = vectorTimestamps.map(function(vt) {
         return new LogEvent("", vt, 0, {});
@@ -116,7 +118,7 @@ BuilderGraph.fromVectorTimestamps = function(vectorTimestamps) {
     }
 
     var hosts = modelGraph.getHosts();
-    var newGraph = new BuilderGraph(hosts);
+    var newGraph = new BuilderGraph(hosts, hostConstraints);
 
     var oldToNewNode = {};
 
@@ -132,6 +134,9 @@ BuilderGraph.fromVectorTimestamps = function(vectorTimestamps) {
         node.getParents().forEach(function(parent) {
             newNode.addParent(oldToNewNode[parent.getId()]);
         });
+
+        var index = hosts.indexOf(newNode.getHost());
+        newNode.setHasHostConstraint(hostConstraints[index]);
     });
 
     return newGraph;

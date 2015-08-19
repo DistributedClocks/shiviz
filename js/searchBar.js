@@ -488,71 +488,21 @@ SearchBar.prototype.query = function() {
             break;
 
         case SearchBar.MODE_MOTIF:
-            var prefix = (dev ? "https://api.github.com/repos/bestchai/shiviz-logs/contents/" : "/shiviz/log/");
+            var prefix = "/shiviz/log/";
             var url = prefix + "motifs.json";
 
             $.get(url, function(response) {
-                if (dev)
-                    response = atob(response.content)
-
-                var lines = response.split("\n");
-                var viewToCount = {};
-                var builderGraphs = [];
-
-                // Get the relevant subgraphs from motifs.json based on ticked checkboxes
-                var twoEventCutoff = lines.indexOf("2-event subgraphs");
-                var threeEventCutoff = lines.indexOf("3-event subgraphs");
-                var fourEventCutoff = lines.indexOf("4-event subgraphs");                
-
-                if (!$("#motifOption #fourEvents").is(":checked")) {
-                    lines.splice(fourEventCutoff, lines.length - fourEventCutoff);
-                }
-
-                if (!$("#motifOption #threeEvents").is(":checked")) {
-                    lines.splice(threeEventCutoff, fourEventCutoff - threeEventCutoff);     
-                }
-
-                if (!$("#motifOption #twoEvents").is(":checked")) {
-                    var twoEventCutoff = lines.indexOf("2-event subgraphs");
-                    lines.splice(twoEventCutoff, threeEventCutoff - twoEventCutoff);
-                }
-
-                // Find the number of instances of a subgraph in each view
-                lines.forEach(function(line) {
-                    if (isNaN(line.charAt(0))) {
-                        var builderGraph = searchbar.getBuilderGraphFromJSON(line);
-                        builderGraphs.push(builderGraph);
-
-                        var finder = new CustomMotifFinder(builderGraph);
-                        var hmt = new HighlightMotifTransformation(finder, false);
-
-                        searchbar.global.getViews().forEach(function(view) {
-                            var label = view.getLabel();
-
-                            hmt.findMotifs(view.getModel());
-                            var motifGroup = hmt.getHighlighted();
-                            var numMotifs = motifGroup.getMotifs().length;
-
-                            // Save the number of instances of this motif under the current view's label
-                            if (viewToCount[label]) {
-                                viewToCount[label].push(numMotifs);
-                            } else {
-                                viewToCount[label] = [numMotifs];
-                            }
-                        });
-                    }
-                });
-                
-                // Calculate motifs and draw the results in the motifs tab
-                var motifDrawer = new MotifDrawer(viewToCount, builderGraphs);
-                motifDrawer.drawResults();
-
-                // Switch to the Motifs tab and clear any previously highlighted results
-                $(".leftTabLinks li").first().next().show().find("a").click();
-                searchbar.clearResults();
-
+                handleMotifResponse(response);
             }).fail(function() {
-                shiviz.getinstance().handleexception(new exception("unable to retrieve motifs from: " + url, true));
+                prefix = "https://api.github.com/repos/bestchai/shiviz-logs/contents/";
+                url = prefix + "motifs.json";
+
+                $.get(url, function(response) {
+                    response = atob(response.content);
+                    handleMotifResponse(response);
+                }).fail(function() {
+                    Shiviz.getInstance().handleException(new Exception("unable to retrieve motifs from: " + url, true));
+                });
             });
             break;
 
@@ -573,6 +523,64 @@ SearchBar.prototype.query = function() {
         $("#searchbar").addClass("results");
         this.countMotifs();
     }
+
+    function handleMotifResponse(response) {
+        var lines = response.split("\n");
+        var viewToCount = {};
+        var builderGraphs = [];
+
+        // Get the relevant subgraphs from motifs.json based on ticked checkboxes
+        var twoEventCutoff = lines.indexOf("2-event subgraphs");
+        var threeEventCutoff = lines.indexOf("3-event subgraphs");
+        var fourEventCutoff = lines.indexOf("4-event subgraphs");                
+
+        if (!$("#motifOption #fourEvents").is(":checked")) {
+            lines.splice(fourEventCutoff, lines.length - fourEventCutoff);
+        }
+
+        if (!$("#motifOption #threeEvents").is(":checked")) {
+            lines.splice(threeEventCutoff, fourEventCutoff - threeEventCutoff);     
+        }
+
+        if (!$("#motifOption #twoEvents").is(":checked")) {
+            var twoEventCutoff = lines.indexOf("2-event subgraphs");
+            lines.splice(twoEventCutoff, threeEventCutoff - twoEventCutoff);
+        }
+
+        // Find the number of instances of a subgraph in each view
+        lines.forEach(function(line) {
+            if (isNaN(line.charAt(0))) {
+                var builderGraph = searchbar.getBuilderGraphFromJSON(line);
+                builderGraphs.push(builderGraph);
+
+                var finder = new CustomMotifFinder(builderGraph);
+                var hmt = new HighlightMotifTransformation(finder, false);
+
+                searchbar.global.getViews().forEach(function(view) {
+                    var label = view.getLabel();
+
+                    hmt.findMotifs(view.getModel());
+                    var motifGroup = hmt.getHighlighted();
+                    var numMotifs = motifGroup.getMotifs().length;
+
+                    // Save the number of instances of this motif under the current view's label
+                    if (viewToCount[label]) {
+                        viewToCount[label].push(numMotifs);
+                    } else {
+                        viewToCount[label] = [numMotifs];
+                    }
+                });
+            }
+        });
+        
+        // Calculate motifs and draw the results in the motifs tab
+        var motifDrawer = new MotifDrawer(viewToCount, builderGraphs);
+        motifDrawer.drawResults();
+
+        // Switch to the Motifs tab and clear any previously highlighted results
+        $(".leftTabLinks li").first().next().show().find("a").click();
+        searchbar.clearResults();
+    }
 };
 
 /**
@@ -589,7 +597,11 @@ SearchBar.prototype.getBuilderGraphFromJSON = function(json) {
     var vectorTimestamps = logEvents.map(function(logEvent) {
         return logEvent.getVectorTimestamp();
     });
-    return BuilderGraph.fromVectorTimestamps(vectorTimestamps);
+    var gbHosts = this.graphBuilder.getHosts();
+    var hostConstraints = gbHosts.map(function(gbHost) {
+        return gbHost.getConstraint() != "";
+    });
+    return BuilderGraph.fromVectorTimestamps(vectorTimestamps, hostConstraints);
 }
 
 /**
