@@ -490,13 +490,9 @@ SearchBar.prototype.query = function() {
             var prefix = "/shiviz/log/";
             var url = prefix + "motifs.json";
 
-            try {
-                $.get(url, function(response) {
-                    handleMotifResponse(response);
-                }).fail(function() {
-                    throw new Error("unable to retrieve motifs from: " + url);
-                });
-            } catch (err) {
+            $.get(url, function(response) {
+                handleMotifResponse(response);
+            }).fail(function() {
                 prefix = "https://api.github.com/repos/bestchai/shiviz-logs/contents/";
                 url = prefix + "motifs.json";
 
@@ -506,7 +502,7 @@ SearchBar.prototype.query = function() {
                 }).fail(function() {
                     Shiviz.getInstance().handleException(new Exception("unable to retrieve motifs from: " + url, true));
                 });
-            }
+            });
             break;
 
         default:
