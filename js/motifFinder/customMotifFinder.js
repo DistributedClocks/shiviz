@@ -293,24 +293,42 @@ CustomMotifFinder.prototype.find = function(graph) {
             throw new Exception("bNode or node already has a match");
         }
 
-        // TODO:
+        var bNodeHost = bNode.getHost();
+        var nodeHost = node.getHost();
+
         var fail = inOtherMotif[node.getId()] //
-                || (hostMatch[node.getHost()] && hostMatch[node.getHost()] != bNode.getHost()); //
+                || (hostMatch[nodeHost] && hostMatch[nodeHost] != bNodeHost) //
+                || (!matchHostConstraint());
 
         if (fail) {
             return false;
         }
-
-        if (!hostNumBound[node.getHost()]) {
-            hostNumBound[node.getHost()] = 0;
+        else {
         }
-        hostNumBound[node.getHost()]++;
 
-        hostMatch[node.getHost()] = bNode.getHost();
+        // If no nodes are bound to this host, set the count to 0
+        if (!hostNumBound[nodeHost]) {
+            hostNumBound[nodeHost] = 0;
+        }
+        // Then, increment the count
+        hostNumBound[nodeHost]++;
+
+        // Save the matches
+        hostMatch[nodeHost] = bNodeHost;
         nodeMatch[node.getId()] = bNode;
         bNodeMatch[bNode.getId()] = node;
 
         return true;
+
+        // Check to see if the graph node's host matches the host constraint from the builder node
+        function matchHostConstraint() {
+            if (bNode.hasHostConstraint) {
+                var regexp = new RegExp(bNodeHost);
+                return regexp.test(nodeHost);
+            } else {
+                return true;
+            }
+        }
     }
 
     function removeNodeMatch(node) {

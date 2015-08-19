@@ -241,6 +241,14 @@ GraphBuilder.prototype.removeHost = function(host) {
 };
 
 /**
+ * Retrieves all graph builder hosts associated with this graph builder
+ * @returns {Array<GraphBuilderHost>} All hosts
+ */
+GraphBuilder.prototype.getHosts = function() {
+    return this.hosts;
+}
+
+/**
  * Retrieves the host whose x coordinate is the one provided
  * 
  * @param {Number} x the x-coord
@@ -446,6 +454,7 @@ GraphBuilder.prototype.bindNodes = function() {
 
     $svg.find("circle:not(.hover)").unbind().on("mousedown", function() {
         var parent = this.node;
+
         var $line = Util.svgElement("line").attr({
             "x1": $(this).attr("cx"),
             "y1": $(this).attr("cy"),
@@ -477,6 +486,7 @@ GraphBuilder.prototype.bindNodes = function() {
                 "x2": c.x,
                 "y2": c.y
             });
+
         }).on("mouseup", function() {
             var hx = $hover.attr("cx"), hy = $hover.attr("cy");
             var existing = context.getNodeByCoord(hx, hy);
@@ -503,6 +513,7 @@ GraphBuilder.prototype.bindNodes = function() {
 
             parent.state = false;
             context.bindNodes();
+
         }).on("mouseout", function(e) {
             var $t = $(e.relatedTarget);
             if ($t[0] == $svg[0] || $t.parents("svg").length)
@@ -512,8 +523,33 @@ GraphBuilder.prototype.bindNodes = function() {
             context.invokeUpdateCallback();
             context.bindNodes();
         });
+
     }).on("dblclick", function() {
         context.getHostByNode(this.node).removeNode(this.node);
+
+    }).on("click", function() {
+        var $circle = $(this);
+
+        $(".eventConstraintDialog").css({
+            "left": $circle.attr("cx") + 200,
+        }).show();
+
+        $("#eventConstraint").css({
+            "border-color": $circle.attr("fill"),
+            "margin-top": $circle.attr("cy") + 100
+        }).focus();
+    });
+
+    $("#eventConstraint").unbind("keydown").on("keydown", function(e) {
+        switch (e.which) {
+        // Return
+        case 13:
+            $(".eventConstraintDialog").hide();
+
+            // Update the searchbar with the new constraint
+            context.invokeUpdateCallback();
+            break;
+        }
     });
 
     function isValid(c) {
@@ -557,19 +593,15 @@ GraphBuilder.prototype.bindHost = function(host) {
     }).on("click", function() {
 
         $(".hostConstraintDialog").css({
-            "left": graphBuilder.getSVG().offset().left + host.getX() + 35,
-        }).removeClass("right").addClass("left").show();
+            "left": graphBuilder.getSVG().offset().left + host.getX() + 15,
+        }).show();
 
-        var hostNum = host.getHostNum();
-        if (hostNum > 4) {
-            $(".hostConstraintDialog").css({
-                "left": graphBuilder.getSVG().offset().left + host.getX() - 120
-            }).removeClass("left").addClass("right");
-        }
-        $("#constraint").val(host.getConstraint()).attr("name", host.getX()).focus();
+        $("#hostConstraint").css({
+            "border-color": host.getColor()
+        }).val(host.getConstraint()).attr("name", host.getX()).focus();
     });
 
-    $("#constraint").unbind("keydown").on("keydown", function(e) {
+    $("#hostConstraint").unbind("keydown").on("keydown", function(e) {
         switch (e.which) {
         // Return
         case 13:
@@ -614,7 +646,11 @@ GraphBuilder.prototype.convertToBG = function() {
         return gbHost.getName();
     });
 
-    var builderGraph = new BuilderGraph(hosts);
+    var hostConstraints = this.hosts.map(function(gbHost) {
+        return gbHost.getConstraint() != "";
+    });
+
+    var builderGraph = new BuilderGraph(hosts, hostConstraints);
     var gbNodeToBuilderNode = {};
 
     this.hosts.forEach(function(gbHost) {
@@ -624,6 +660,9 @@ GraphBuilder.prototype.convertToBG = function() {
             var builderNode = new BuilderNode();
             gbNodeToBuilderNode[gbNode.getId()] = builderNode;
             tail.insertPrev(builderNode);
+
+            var index = hosts.indexOf(builderNode.getHost());
+            builderNode.setHasHostConstraint(hostConstraints[index]);
         });
     });
 

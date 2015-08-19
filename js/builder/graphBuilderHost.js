@@ -166,22 +166,47 @@ GraphBuilderHost.prototype.getHostSquare = function() {
     return this.rect;
 }
 
+/**
+ * Gets the rectangle SVG associated with this graphBuilderHost
+ *
+ * @returns {svg.Element} The rectangle svg
+ */
 GraphBuilderHost.prototype.getX = function() {
     return this.x;
 }
 
+/**
+ * Updates the host number associated with this graphBuilderHost
+ *
+ * @param {Number} hostNum
+ */
 GraphBuilderHost.prototype.setHostNum = function(hostNum) {
     this.hostNum = hostNum;
 }
 
+/**
+ * Gets the host number associated with this graphBuilderHost
+ *
+ * @returns {Number}
+ */
 GraphBuilderHost.prototype.getHostNum = function() {
     return this.hostNum;
 }
 
+/**
+ * Sets the constraint associated with this graphBuilderHost
+ *
+ * @param {} constraint
+ */
 GraphBuilderHost.prototype.setConstraint = function(constraint) {
     this.constraint = constraint;
 }
 
+/**
+ * Gets the constraint associated with this graphBuilderHost
+ *
+ * @returns {}
+ */
 GraphBuilderHost.prototype.getConstraint = function() {
     return this.constraint;
 }

@@ -19,6 +19,8 @@ function Shiviz() {
 
     var context = this;
     var defaultParser = "(?<event>.*)\\n(?<host>\\S*) (?<clock>{.*})";
+    var defaultOrdering = "descending";
+    var defaultHostSort = "#hostsortLength";
 
     $(".input input, .input textarea").on('input propertychange', function(e) {
         context.resetView();
@@ -28,32 +30,40 @@ function Shiviz() {
         e.preventDefault();
 
         // logUrlPrefix is defined in dev.js & deployed.js
-        var prefix = (dev ? "https://api.github.com/repos/bestchai/shiviz-logs/contents/" : "/shiviz/log/");
-        var url = prefix + $(this).data("log");
-        var defaultOrdering = "descending";
-        var defaultHostSort = "#hostsortLength";
+        var prefix = "/shiviz/log/";
+        var logName = $(this).data("log");
+        var url = prefix + logName;
 
         $.get(url, function(response) {
-            if (dev)
-                response = atob(response.content)
-
-            $("#input").val(response);
-            context.resetView();
-            $("#delimiter").val($(e.target).data("delimiter"));
-            $("#parser").val($(e.target).data("parser") || defaultParser);
-            $("#ordering").val($(e.target).data("ordering") || defaultOrdering);
-            $($(e.target).data("hostsort") || defaultHostSort).prop("checked", true);
-            // Clears the file input value by replacing the file input component with a clone
-            $("#file").replaceWith($("#file").clone(true));
-
-            $(e.target).css({
-                color: "gray",
-                pointerevents: "none"
-            });
+            handleResponse(response, e);
         }).fail(function() {
-            shiviz.getinstance().handleexception(new exception("unable to retrieve example log from: " + url, true));
+            prefix = "https://api.github.com/repos/bestchai/shiviz-logs/contents/";
+            url = prefix + logName;
+
+            $.get(url, function(response) {
+                response = atob(response.content);
+                handleResponse(response, e);
+            }).fail(function() {
+                Shiviz.getInstance().handleException(new Exception("unable to retrieve example log from: " + url, true));
+            });  
         });
     });
+
+    function handleResponse(response, e) {
+        $("#input").val(response);
+        context.resetView();
+        $("#delimiter").val($(e.target).data("delimiter"));
+        $("#parser").val($(e.target).data("parser") || defaultParser);
+        $("#ordering").val($(e.target).data("ordering") || defaultOrdering);
+        $($(e.target).data("hostsort") || defaultHostSort).prop("checked", true);
+        // Clears the file input value by replacing the file input component with a clone
+        $("#file").replaceWith($("#file").clone(true));
+
+        $(e.target).css({
+            color: "gray",
+            pointerevents: "none"
+        });
+    }
 
     $(".tabs li").on("click", function() {
         context.go($(this).index(), true);
