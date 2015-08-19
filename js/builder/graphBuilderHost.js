@@ -108,7 +108,10 @@ GraphBuilderHost.prototype.addNode = function(y, tmp) {
 
     this.nodes.push(node);
     this.graphBuilder.invokeUpdateCallback();
-    this.graphBuilder.bind();
+    // Don't bind any mouse events to motif drawings in the sidebar
+    if (!this.motifSearch) {
+        this.graphBuilder.bind();
+    }
 
     return node;
 };
