@@ -37,7 +37,7 @@ function Shiviz() {
             $.get(url, function(response) {
                 handleResponse(response, e);
             }).fail(function() {
-                throw new Exception("unable to retrieve example log from: " + url, true);
+                throw new Error("unable to retrieve example log from: " + url);
             });
         } catch (err) {
             prefix = "https://api.github.com/repos/bestchai/shiviz-logs/contents/";

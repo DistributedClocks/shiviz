@@ -494,7 +494,7 @@ SearchBar.prototype.query = function() {
                 $.get(url, function(response) {
                     handleMotifResponse(response);
                 }).fail(function() {
-                    throw new Exception("unable to retrieve motifs from: " + url, true);
+                    throw new Error("unable to retrieve motifs from: " + url);
                 });
             } catch (err) {
                 prefix = "https://api.github.com/repos/bestchai/shiviz-logs/contents/";
@@ -504,9 +504,8 @@ SearchBar.prototype.query = function() {
                     response = atob(response.content);
                     handleMotifResponse(response);
                 }).fail(function() {
-                    Shiviz.getInstance().handleException(new Exception("unable to retrieve example log from: " + url, true));
-                });       
-
+                    Shiviz.getInstance().handleException(new Exception("unable to retrieve motifs from: " + url, true));
+                });
             }
             break;
 
