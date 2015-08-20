@@ -214,11 +214,14 @@ GraphBuilderHost.prototype.setConstraint = function(constraint) {
             "id": gbh.getHostNum() + "constraintText"
         }).text("C").css("cursor", "default");
 
-        this.graphBuilder.getSVG().append($constraintText);
+        gbh.graphBuilder.getSVG().append($constraintText);
 
         // Clicking on the constraint indicator triggers a click on the host box
         $constraintText.on("click", function() {
-            $(".hostConstraintDialog").show();
+            // Need to pass in gbh here or the value of "this" in handleHostClick will be for $constraintText
+            gbh.graphBuilder.handleHostClick(gbh);
+        }).on("dblclick", function() {
+            gbh.graphBuilder.handleHostDblClick(gbh);
         });
         
         // For an empty constraint, remove the indicator

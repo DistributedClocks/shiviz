@@ -592,17 +592,11 @@ GraphBuilder.prototype.bindHost = function(host) {
     var square = host.getHostSquare();
 
     square.on("dblclick", function() {
-        graphBuilder.removeHost(host);
-        $(".hostConstraintDialog").hide();
+        // Have to pass in host here or the value of "this" in handleHostClick will be for square
+        // and we won't be able to access graphBuilder
+        graphBuilder.handleHostDblClick(host);
     }).on("click", function() {
-
-        $(".hostConstraintDialog").css({
-            "left": graphBuilder.getSVG().offset().left + host.getX() + 15,
-        }).show();
-
-        $("#hostConstraint").css({
-            "border-color": host.getColor()
-        }).val(host.getConstraint()).attr("name", host.getX()).focus();
+        graphBuilder.handleHostClick(host);
     });
 
     $("#hostConstraint").unbind("keydown").on("keydown", function(e) {
@@ -618,6 +612,29 @@ GraphBuilder.prototype.bindHost = function(host) {
             break;
         }
     });
+}
+
+/**
+ * Handles the click event on a host box in a custom structured search by showing the constraint dialog box
+ * @param {GraphBuilderHost} host The host whose host box was clicked on
+ */
+GraphBuilder.prototype.handleHostClick = function(host) {
+    $(".hostConstraintDialog").css({
+        "left": host.graphBuilder.getSVG().offset().left + host.getX() + 15
+    }).show();
+
+    $("#hostConstraint").css({
+        "border-color": host.getColor()
+    }).val(host.getConstraint()).attr("name", host.getX()).focus();
+}
+
+/**
+ * Handles the double click event on a host box in a custom structured search by removing the host
+ * @param {GraphBuilderHost} host The host whose host box was double clicked on
+ */
+GraphBuilder.prototype.handleHostDblClick = function(host) {
+    host.graphBuilder.removeHost(host);
+    $(".hostConstraintDialog").hide();
 }
 
 /**
