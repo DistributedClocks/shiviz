@@ -145,14 +145,15 @@ header.icon {
 
         li {
             float: left;
-            color: #aaa;
+            color: #04a;
+            opacity: 0.5;
             cursor: pointer;
 
             &:hover {
-                color: #04a;
+                opacity: 1;
             }
             &.active {
-                color: #04a;
+                opacity: 1;
                 pointer-events: none;    
             }
         }
@@ -172,9 +173,10 @@ header.icon {
             li {
                 margin-left: 1em;
                 a {
-                    color: #aaa;
+                    color: #04a;
+                    opacity: 0.7;
                     &:hover {
-                        color: #04a;
+                        opacity: 1;
                         text-decoration: none;       
                     }
                 }    
@@ -350,9 +352,9 @@ section.input {
         li {
             position: fixed;
             z-index: 4;
-            background: #bfbfbf;
+            background: #04A;
             margin-left: 3.5em;
-            opacity: 0.6;
+            opacity: 0.5;
 
             &:first-child {
                 left: -1.6em;
@@ -775,7 +777,7 @@ section.input {
         a {
             display: block;
             padding: 9px 15px;
-            color: #4a4a4a;
+            color: #fff;
 
             &:hover {
                 text-decoration: none;
@@ -784,11 +786,12 @@ section.input {
 
         li {
             display: table-cell;
-            background: #a3c2d9;
+            background: #04A;
+            opacity: 0.5;
             text-align: center; 
 
             &.default {
-                background: #7ca8c9;
+                opacity: 1;
 
                 a {
                     color: #fff;
