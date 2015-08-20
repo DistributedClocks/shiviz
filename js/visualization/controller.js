@@ -80,6 +80,8 @@ function Controller(global) {
         // Test for click inside a host square or a constraint dialog
         if ($target.is("rect") || $target.parents(".hostConstraintDialog").length)
             return;
+        if ($target.is("text"))
+            return;
         $(".hostConstraintDialog").hide();
     });
 

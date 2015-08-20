@@ -200,6 +200,32 @@ GraphBuilderHost.prototype.getHostNum = function() {
  */
 GraphBuilderHost.prototype.setConstraint = function(constraint) {
     this.constraint = constraint;
+    var gbh = this;
+
+    if (constraint) {
+        // If the constraint is not empty, add an indicator to the host box
+        var $constraintText = Util.svgElement("text");
+
+        $constraintText.attr({
+            "font-family": "arial",
+            "font-size": "15px",
+            "x": parseFloat(gbh.getHostSquare().attr("x")) + 8,
+            "y": parseFloat(gbh.getHostSquare().attr("y")) + 18,
+            "id": gbh.getHostNum() + "constraintText"
+        }).text("C").css("cursor", "default");
+
+        this.graphBuilder.getSVG().append($constraintText);
+
+        // Clicking on the constraint indicator triggers a click on the host box
+        $constraintText.on("click", function() {
+            $(".hostConstraintDialog").show();
+        });
+        
+        // For an empty constraint, remove the indicator
+    } else {
+        var textId = "#" + this.getHostNum() + "constraintText";
+        $(textId).remove();
+    }
 }
 
 /**
