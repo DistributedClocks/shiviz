@@ -198,6 +198,10 @@ GraphBuilder.prototype.removeHost = function(host) {
     Util.removeFromArray(this.hosts, host);
     var hostNum = host.getHostNum();
 
+    // Remove the constraint indicator when removing a host
+    var textId = "#" + hostNum + "constraintText";
+    $(textId).remove();
+
     this.hosts.forEach(function(h, i) {
         h.rx = i * 65;
         h.x = h.rx + 12.5;
@@ -606,7 +610,7 @@ GraphBuilder.prototype.bindHost = function(host) {
         // Return
         case 13:
             var currHost = graphBuilder.getHostByX($(this).attr("name"));
-            currHost.setConstraint($(this).val());
+            currHost.setConstraint($(this).val().trim());
             $(".hostConstraintDialog").hide();
 
             // Update the searchbar with the new constraint
