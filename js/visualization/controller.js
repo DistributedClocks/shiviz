@@ -75,6 +75,16 @@ function Controller(global) {
         });
     });
 
+    $("#searchbar #panel").unbind("click").on("click", function(e) {
+        var $target = $(e.target);
+        // Test for click inside a host square or a constraint dialog
+        if ($target.is("rect") || $target.parents(".hostConstraintDialog").length)
+            return;
+        if ($target.is("text"))
+            return;
+        $(".hostConstraintDialog").hide();
+    });
+
     $(".dialog button").unbind().click(function() {
         var type = this.name;
         var e = $(".dialog").data("element");

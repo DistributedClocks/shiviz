@@ -133,6 +133,9 @@ function AbstractNode() {
     this.isTailInner = false;
 
     /** @private */
+    this.hasHostConstraint = false;
+
+    /** @private */
     this.graph = null;
 
 }

@@ -2,10 +2,12 @@
   font-family: "Icon";
   src: url("../fonts/icons.woff") format("woff");
 }
+
 @font-face {
   font-family: "Icomoon";
   src: url("../fonts/icomoon.woff");
 }
+
 body {
   font-size: 12pt;
   font-family: "Helvetica Neue", Helvetica, sans-serif;
@@ -141,14 +143,15 @@ header.icon ul {
 }
 header.icon ul li {
   float: left;
-  color: #aaa;
+  color: #04a;
+  opacity: 0.5;
   cursor: pointer;
 }
 header.icon ul li:hover {
-  color: #04a;
+  opacity: 1;
 }
 header.icon ul li.active {
-  color: #04a;
+  opacity: 1;
   pointer-events: none;
 }
 header.icon ul.tabs li {
@@ -162,10 +165,11 @@ header.icon ul.links li {
   margin-left: 1em;
 }
 header.icon ul.links li a {
-  color: #aaa;
+  color: #04a;
+  opacity: 0.7;
 }
 header.icon ul.links li a:hover {
-  color: #04a;
+  opacity: 1;
   text-decoration: none;
 }
 
@@ -320,9 +324,9 @@ section.input .left {
 .visualization .left .leftTabLinks li {
   position: fixed;
   z-index: 4;
-  background: #bfbfbf;
+  background: #04A;
   margin-left: 3.5em;
-  opacity: 0.6;
+  opacity: 0.5;
 }
 .visualization .left .leftTabLinks li:first-child {
   left: -1.6em;
@@ -589,7 +593,7 @@ section.input .left {
   display: initial;
 }
 #searchbar.results #panel {
-  width: calc(100% - 155pt + 1px);
+  width: calc(100% - 140pt + 1px);
 }
 #searchbar.results #searchButton {
   display: none;
@@ -612,7 +616,7 @@ section.input .left {
   border: 1px solid black;
   border-top: none;
   box-sizing: border-box;
-  overflow: auto;
+  overflow: hidden;
   padding: .4em;
   background: #fff;
   /* Add button for custom structured search */
@@ -666,18 +670,19 @@ section.input .left {
 #searchbar #panel .searchTabLinks a {
   display: block;
   padding: 9px 15px;
-  color: #4a4a4a;
+  color: #fff;
 }
 #searchbar #panel .searchTabLinks a:hover {
   text-decoration: none;
 }
 #searchbar #panel .searchTabLinks li {
   display: table-cell;
-  background: #a3c2d9;
+  background: #04A;
+  opacity: 0.5;
   text-align: center;
 }
 #searchbar #panel .searchTabLinks li.default {
-  background: #7ca8c9;
+  opacity: 1;
 }
 #searchbar #panel .searchTabLinks li.default a {
   color: #fff;
@@ -845,12 +850,6 @@ svg {
   transform: rotate(180deg);
 }
 
-#clusterImg {
-  position: relative;
-  top: -7.1em;
-  padding-right: 1.75em;
-}
-
 /* Motif icon */
 /* Styling for execution labels in clusters */
 .execFade {
@@ -1005,6 +1004,23 @@ svg#defs {
 }
 .dialog:not(.host) button.hb {
   display: none;
+}
+
+.hostConstraintDialog {
+  width: 150px;
+  /* Make the surrounding div have a height of 0px so that it won't block other boxes from being clicked on */
+  height: 0px;
+  font-family: sans-serif;
+  position: fixed;
+  z-index: 4;
+}
+
+.hostConstraintDialog #hostConstraint {
+  color: #737373;
+}
+
+.hostConstraintDialog #hostConstraint {
+  margin-top: 1.5em;
 }
 
 /* Error box */
