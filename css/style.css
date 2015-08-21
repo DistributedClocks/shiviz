@@ -132,7 +132,7 @@ button:disabled {
 header.icon {
   width: 10.1em;
   font-family: "Icon";
-  font-size: 24pt;
+  font-size: 26pt;
   overflow: hidden;
   margin-left: -.1em;
 }
@@ -160,17 +160,6 @@ header.icon ul.tabs li {
 header.icon ul.tabs li.disabled {
   color: #ddd;
   pointer-events: none;
-}
-header.icon ul.links li {
-  margin-left: 1em;
-}
-header.icon ul.links li a {
-  color: #04a;
-  opacity: 0.7;
-}
-header.icon ul.links li a:hover {
-  opacity: 1;
-  text-decoration: none;
 }
 
 /* Home */
