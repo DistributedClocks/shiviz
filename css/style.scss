@@ -134,7 +134,7 @@ button {
 header.icon {
     width: 10.1em;
     font-family: "Icon";
-    font-size: 24pt;
+    font-size: 26pt;
     overflow: hidden;
     margin-left: -.1em;
 
@@ -166,20 +166,6 @@ header.icon {
                     color: #ddd;
                     pointer-events: none;              
                 }        
-            }
-        }
-
-        &.links {
-            li {
-                margin-left: 1em;
-                a {
-                    color: #04a;
-                    opacity: 0.7;
-                    &:hover {
-                        opacity: 1;
-                        text-decoration: none;       
-                    }
-                }    
             }
         }
     }
