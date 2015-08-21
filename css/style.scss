@@ -145,14 +145,15 @@ header.icon {
 
         li {
             float: left;
-            color: #aaa;
+            color: #04a;
+            opacity: 0.5;
             cursor: pointer;
 
             &:hover {
-                color: #04a;
+                opacity: 1;
             }
             &.active {
-                color: #04a;
+                opacity: 1;
                 pointer-events: none;    
             }
         }
@@ -172,9 +173,10 @@ header.icon {
             li {
                 margin-left: 1em;
                 a {
-                    color: #aaa;
+                    color: #04a;
+                    opacity: 0.7;
                     &:hover {
-                        color: #04a;
+                        opacity: 1;
                         text-decoration: none;       
                     }
                 }    
@@ -350,9 +352,9 @@ section.input {
         li {
             position: fixed;
             z-index: 4;
-            background: #bfbfbf;
+            background: #04A;
             margin-left: 3.5em;
-            opacity: 0.6;
+            opacity: 0.5;
 
             &:first-child {
                 left: -1.6em;
@@ -681,7 +683,7 @@ section.input {
         }
     }
     #panel {
-        width: calc(100% - 155pt + 1px);
+        width: calc(100% - 140pt + 1px);
     }
 
     #searchButton {
@@ -708,7 +710,7 @@ section.input {
     border: 1px solid black;
     border-top: none;
     box-sizing: border-box;
-    overflow: auto;
+    overflow: hidden;
     padding: .4em;
     background: #fff;
 
@@ -775,7 +777,7 @@ section.input {
         a {
             display: block;
             padding: 9px 15px;
-            color: #4a4a4a;
+            color: #fff;
 
             &:hover {
                 text-decoration: none;
@@ -784,11 +786,12 @@ section.input {
 
         li {
             display: table-cell;
-            background: #a3c2d9;
+            background: #04A;
+            opacity: 0.5;
             text-align: center; 
 
             &.default {
-                background: #7ca8c9;
+                opacity: 1;
 
                 a {
                     color: #fff;
@@ -983,12 +986,6 @@ svg {
 #clusterIconL {
     @extend #clusterIconR;
     transform: rotate(180deg);
-}
-
-#clusterImg {
-    position: relative;
-    top: -7.1em;
-    padding-right: 1.75em;
 }
 
 /* Motif icon */
@@ -1188,6 +1185,28 @@ svg#defs {
 
     &:not(.host) button.hb {
         display: none;
+    }
+}
+
+%constraintDialog {
+    width: 150px;
+    /* Make the surrounding div have a height of 0px so that it won't block other boxes from being clicked on */
+    height: 0px;
+    font-family: sans-serif;
+    position: fixed;
+    z-index: 4;    
+}
+
+%constraintInput {
+    color: #737373;   
+}
+
+.hostConstraintDialog {
+    @extend %constraintDialog;
+
+    #hostConstraint {
+        @extend %constraintInput;
+        margin-top: 1.5em;
     }
 }
 

@@ -19,3 +19,19 @@ function BuilderNode() {
 // BuilderNode extends Node
 BuilderNode.prototype = Object.create(AbstractNode.prototype);
 BuilderNode.prototype.constructor = BuilderNode;
+
+/**
+ * Checks to see if this builder node belongs to a host with a constraint
+ * @returns {Boolean} True if this node's host has a constraint and false otherwise
+ */
+BuilderNode.prototype.hasHostConstraint = function() {
+	return this.hasHostConstraint;
+}
+
+/**
+ * Sets the hasHostConstraint boolean to the given parameter
+ * @param {Boolean} hasHostConstraint
+ */
+BuilderNode.prototype.setHasHostConstraint = function(hasHostConstraint) {
+	this.hasHostConstraint = hasHostConstraint;
+}
