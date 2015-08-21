@@ -42,6 +42,9 @@ function GraphBuilderHost(graphBuilder, hostNum, motifSearch) {
     this.constraint = "";
 
     /** @private */
+    this.constraintSVG = $(Util.svgElement("text"));
+
+    /** @private */
     this.rect = Util.svgElement("rect").attr({
         "width": 25,
         "height": 25,
@@ -204,20 +207,17 @@ GraphBuilderHost.prototype.setConstraint = function(constraint) {
 
     if (constraint) {
         // If the constraint is not empty, add an indicator to the host box
-        var $constraintText = Util.svgElement("text");
-
-        $constraintText.attr({
+        this.constraintSVG.attr({
             "font-family": "arial",
             "font-size": "15px",
             "x": parseFloat(gbh.getHostSquare().attr("x")) + 8,
-            "y": parseFloat(gbh.getHostSquare().attr("y")) + 18,
-            "id": gbh.getHostNum() + "constraintText"
+            "y": parseFloat(gbh.getHostSquare().attr("y")) + 18
         }).text("C").css("cursor", "default");
 
-        gbh.graphBuilder.getSVG().append($constraintText);
+        gbh.graphBuilder.getSVG().append(this.constraintSVG);
 
         // Clicking on the constraint indicator triggers a click on the host box
-        $constraintText.on("click", function() {
+        this.constraintSVG.on("click", function() {
             // Need to pass in gbh here or the value of "this" in handleHostClick will be for $constraintText
             gbh.graphBuilder.handleHostClick(gbh);
         }).on("dblclick", function() {
@@ -226,18 +226,26 @@ GraphBuilderHost.prototype.setConstraint = function(constraint) {
         
         // For an empty constraint, remove the indicator
     } else {
-        var textId = "#" + this.getHostNum() + "constraintText";
-        $(textId).remove();
+        this.constraintSVG.remove();
     }
 }
 
 /**
  * Gets the constraint associated with this graphBuilderHost
  *
- * @returns {}
+ * @returns {String}
  */
 GraphBuilderHost.prototype.getConstraint = function() {
     return this.constraint;
+}
+
+/**
+ * Gets the svg text element for showing a graph builder host has a constraint
+ *
+ * @returns {svg.Element} The constraint text svg element
+ */
+GraphBuilderHost.prototype.getConstraintSVG = function() {
+    return this.constraintSVG;
 }
 
 /**

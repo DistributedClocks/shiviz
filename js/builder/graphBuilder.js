@@ -199,8 +199,7 @@ GraphBuilder.prototype.removeHost = function(host) {
     var hostNum = host.getHostNum();
 
     // Remove the constraint indicator when removing a host
-    var textId = "#" + hostNum + "constraintText";
-    $(textId).remove();
+    host.getConstraintSVG().remove();
 
     this.hosts.forEach(function(h, i) {
         h.rx = i * 65;
@@ -226,6 +225,9 @@ GraphBuilder.prototype.removeHost = function(host) {
         var currHostNum = h.getHostNum();
         if (currHostNum > hostNum) {
             h.setHostNum(currHostNum - 1);
+            h.getConstraintSVG().attr({
+                "x": parseFloat(h.getHostSquare().attr("x")) + 8
+            });
         }
     });
 
