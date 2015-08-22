@@ -284,6 +284,7 @@ Global.prototype.drawAll = function() {
 
     this.$vizContainer.height("auto");
     $(".dialog").hide();
+    $(".hostConstraintDialog").hide();
     this.drawSideBar();
 
     // only call countMotifs if there are actually highlighted motifs to count, 
