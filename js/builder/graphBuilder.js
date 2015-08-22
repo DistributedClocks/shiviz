@@ -537,7 +537,7 @@ GraphBuilder.prototype.bindNodes = function() {
         var $circle = $(this);
 
         $(".eventConstraintDialog").css({
-            "left": $circle.attr("cx") + 200,
+            "left": $circle.attr("cx") + 200
         }).show();
 
         $("#eventConstraint").css({
