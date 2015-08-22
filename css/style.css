@@ -2,12 +2,10 @@
   font-family: "Icon";
   src: url("../fonts/icons.woff") format("woff");
 }
-
 @font-face {
   font-family: "Icomoon";
   src: url("../fonts/icomoon.woff");
 }
-
 body {
   font-size: 12pt;
   font-family: "Helvetica Neue", Helvetica, sans-serif;
@@ -130,7 +128,7 @@ button:disabled {
 
 /* Icon nav */
 header.icon {
-  width: 10.1em;
+  width: 9em;
   font-family: "Icon";
   font-size: 26pt;
   overflow: hidden;
