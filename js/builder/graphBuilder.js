@@ -32,7 +32,7 @@ function GraphBuilder($svg, $addButton, motifSearch) {
     this.colors = [ "rgb(122,155,204)", "rgb(122,204,155)", "rgb(187,204,122)", "rgb(204,122,122)", "rgb(187,122,204)", "rgb(122,155,204)" ];
 
     if (!motifSearch) {
-        this.bind();
+        this.bindNodes();
         this.addHost();
         this.addHost();
     }
@@ -196,6 +196,10 @@ GraphBuilder.prototype.addHost = function() {
 GraphBuilder.prototype.removeHost = function(host) {
 
     Util.removeFromArray(this.hosts, host);
+    var hostNum = host.getHostNum();
+
+    // Remove the constraint indicator when removing a host
+    host.getConstraintSVG().remove();
 
     this.hosts.forEach(function(h, i) {
         h.rx = i * 65;
@@ -216,6 +220,15 @@ GraphBuilder.prototype.removeHost = function(host) {
             n.x = h.x;
             n.circle.attr("cx", h.x);
         });
+
+        // update the hostNum
+        var currHostNum = h.getHostNum();
+        if (currHostNum > hostNum) {
+            h.setHostNum(currHostNum - 1);
+            h.getConstraintSVG().attr({
+                "x": parseFloat(h.getHostSquare().attr("x")) + 8
+            });
+        }
     });
 
     this.colors.push(host.color);
@@ -232,6 +245,14 @@ GraphBuilder.prototype.removeHost = function(host) {
     }
     this.invokeUpdateCallback();
 };
+
+/**
+ * Retrieves all graph builder hosts associated with this graph builder
+ * @returns {Array<GraphBuilderHost>} All hosts
+ */
+GraphBuilder.prototype.getHosts = function() {
+    return this.hosts;
+}
 
 /**
  * Retrieves the host whose x coordinate is the one provided
@@ -328,14 +349,6 @@ GraphBuilder.prototype.setCleared = function(cleared) {
 }
 
 /**
- * Sets the motifSearch flag
- * @param {Boolean} motifSearch The boolean value to set
- */
-GraphBuilder.prototype.setMotifSearch = function(motifSearch) {
-    this.motifSearch = motifSearch;
-}
-
-/**
  * Gets the maximum x-coordinate among the nodes in this graphBuilder
  */
 GraphBuilder.prototype.getMaxNodeWidth = function() {
@@ -370,7 +383,7 @@ GraphBuilder.prototype.getMaxNodeHeight = function() {
 }
 
 /**
- * Handles all user interaction with the graph builder, including bindings for:
+ * Handles all user interaction with nodes in the graph builder, including:
  *  
  * <ul>
  * <li>Add node on click</li>
@@ -381,7 +394,7 @@ GraphBuilder.prototype.getMaxNodeHeight = function() {
  * <li>Double click existing node to remove</li>
  * </ul>
  */
-GraphBuilder.prototype.bind = function() {
+GraphBuilder.prototype.bindNodes = function() {
 
     var context = this;
     var $svg = this.$svg;
@@ -447,6 +460,7 @@ GraphBuilder.prototype.bind = function() {
 
     $svg.find("circle:not(.hover)").unbind().on("mousedown", function() {
         var parent = this.node;
+
         var $line = Util.svgElement("line").attr({
             "x1": $(this).attr("cx"),
             "y1": $(this).attr("cy"),
@@ -478,6 +492,7 @@ GraphBuilder.prototype.bind = function() {
                 "x2": c.x,
                 "y2": c.y
             });
+
         }).on("mouseup", function() {
             var hx = $hover.attr("cx"), hy = $hover.attr("cy");
             var existing = context.getNodeByCoord(hx, hy);
@@ -503,7 +518,8 @@ GraphBuilder.prototype.bind = function() {
             }
 
             parent.state = false;
-            context.bind();
+            context.bindNodes();
+
         }).on("mouseout", function(e) {
             var $t = $(e.relatedTarget);
             if ($t[0] == $svg[0] || $t.parents("svg").length)
@@ -511,10 +527,35 @@ GraphBuilder.prototype.bind = function() {
             $line.remove();
             context.getHostByNode(parent).removeNode(parent);
             context.invokeUpdateCallback();
-            context.bind();
+            context.bindNodes();
         });
+
     }).on("dblclick", function() {
         context.getHostByNode(this.node).removeNode(this.node);
+
+    }).on("click", function() {
+        var $circle = $(this);
+
+        $(".eventConstraintDialog").css({
+            "left": $circle.attr("cx") + 200,
+        }).show();
+
+        $("#eventConstraint").css({
+            "border-color": $circle.attr("fill"),
+            "margin-top": $circle.attr("cy") + 100
+        }).focus();
+    });
+
+    $("#eventConstraint").unbind("keydown").on("keydown", function(e) {
+        switch (e.which) {
+        // Return
+        case 13:
+            $(".eventConstraintDialog").hide();
+
+            // Update the searchbar with the new constraint
+            context.invokeUpdateCallback();
+            break;
+        }
     });
 
     function isValid(c) {
@@ -542,6 +583,61 @@ GraphBuilder.prototype.bind = function() {
         return r;
     }
 };
+
+/**
+ * Handles user interaction with host squares in the graph builder
+ *
+ * @param {GraphBuilderHost} host The host to bind events to 
+ */
+GraphBuilder.prototype.bindHost = function(host) {
+    var graphBuilder = this;
+    var square = host.getHostSquare();
+
+    square.on("dblclick", function() {
+        // Have to pass in host here or the value of "this" in handleHostClick will be for square
+        // and we won't be able to access graphBuilder
+        graphBuilder.handleHostDblClick(host);
+    }).on("click", function() {
+        graphBuilder.handleHostClick(host);
+    });
+
+    $("#hostConstraint").unbind("keydown").on("keydown", function(e) {
+        switch (e.which) {
+        // Return
+        case 13:
+            var currHost = graphBuilder.getHostByX($(this).attr("name"));
+            currHost.setConstraint($(this).val().trim());
+            $(".hostConstraintDialog").hide();
+
+            // Update the searchbar with the new constraint
+            graphBuilder.invokeUpdateCallback();
+            break;
+        }
+    });
+}
+
+/**
+ * Handles the click event on a host box in a custom structured search by showing the constraint dialog box
+ * @param {GraphBuilderHost} host The host whose host box was clicked on
+ */
+GraphBuilder.prototype.handleHostClick = function(host) {
+    $(".hostConstraintDialog").css({
+        "left": host.graphBuilder.getSVG().offset().left + host.getX() + 15
+    }).show();
+
+    $("#hostConstraint").css({
+        "border-color": host.getColor()
+    }).val(host.getConstraint()).attr("name", host.getX()).focus();
+}
+
+/**
+ * Handles the double click event on a host box in a custom structured search by removing the host
+ * @param {GraphBuilderHost} host The host whose host box was double clicked on
+ */
+GraphBuilder.prototype.handleHostDblClick = function(host) {
+    host.graphBuilder.removeHost(host);
+    $(".hostConstraintDialog").hide();
+}
 
 /**
  * Sets the update callback function. The update callback function will be
@@ -573,7 +669,11 @@ GraphBuilder.prototype.convertToBG = function() {
         return gbHost.getName();
     });
 
-    var builderGraph = new BuilderGraph(hosts);
+    var hostConstraints = this.hosts.map(function(gbHost) {
+        return gbHost.getConstraint() != "";
+    });
+
+    var builderGraph = new BuilderGraph(hosts, hostConstraints);
     var gbNodeToBuilderNode = {};
 
     this.hosts.forEach(function(gbHost) {
@@ -583,6 +683,9 @@ GraphBuilder.prototype.convertToBG = function() {
             var builderNode = new BuilderNode();
             gbNodeToBuilderNode[gbNode.getId()] = builderNode;
             tail.insertPrev(builderNode);
+
+            var index = hosts.indexOf(builderNode.getHost());
+            builderNode.setHasHostConstraint(hostConstraints[index]);
         });
     });
 

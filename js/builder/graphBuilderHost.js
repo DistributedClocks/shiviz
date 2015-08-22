@@ -1,3 +1,4 @@
+
 /**
  * Constructs a {@link GraphBuilder} host with the provided number associated
  * with the provided graph builder.
@@ -38,17 +39,22 @@ function GraphBuilderHost(graphBuilder, hostNum, motifSearch) {
     this.nodes = [];
 
     /** @private */
+    this.constraint = "";
+
+    /** @private */
+    this.constraintSVG = $(Util.svgElement("text"));
+
+    /** @private */
     this.rect = Util.svgElement("rect").attr({
         "width": 25,
         "height": 25,
         "fill": this.color,
         "x": this.rx,
         "y": 0
-    }).on("dblclick", function() {
-        graphBuilder.removeHost(host);
     })
 
     if (!motifSearch) {
+        graphBuilder.bindHost(this);
         this.rect.prependTo(graphBuilder.getSVG());
     }
 
@@ -67,7 +73,13 @@ function GraphBuilderHost(graphBuilder, hostNum, motifSearch) {
  * @returns {String} the name of this host
  */
 GraphBuilderHost.prototype.getName = function() {
-    return String.fromCharCode(97 + this.hostNum);
+    var constraint = this.getConstraint();
+
+    if (constraint) {
+        return constraint;
+    } else {
+        return String.fromCharCode(97 + this.hostNum);
+    }
 };
 
 /**
@@ -110,7 +122,7 @@ GraphBuilderHost.prototype.addNode = function(y, tmp) {
     this.graphBuilder.invokeUpdateCallback();
     // Don't bind any mouse events to motif drawings in the sidebar
     if (!this.motifSearch) {
-        this.graphBuilder.bind();
+        this.graphBuilder.bindNodes();
     }
 
     return node;
@@ -147,6 +159,94 @@ GraphBuilderHost.prototype.removeAllNodes = function() {
 GraphBuilderHost.prototype.getColor = function() {
     return this.color;
 };
+
+/**
+ * Gets the rectangle SVG associated with this graphBuilderHost
+ *
+ * @returns {svg.Element} The rectangle svg
+ */
+GraphBuilderHost.prototype.getHostSquare = function() {
+    return this.rect;
+}
+
+/**
+ * Gets the rectangle SVG associated with this graphBuilderHost
+ *
+ * @returns {svg.Element} The rectangle svg
+ */
+GraphBuilderHost.prototype.getX = function() {
+    return this.x;
+}
+
+/**
+ * Updates the host number associated with this graphBuilderHost
+ *
+ * @param {Number} hostNum
+ */
+GraphBuilderHost.prototype.setHostNum = function(hostNum) {
+    this.hostNum = hostNum;
+}
+
+/**
+ * Gets the host number associated with this graphBuilderHost
+ *
+ * @returns {Number}
+ */
+GraphBuilderHost.prototype.getHostNum = function() {
+    return this.hostNum;
+}
+
+/**
+ * Sets the constraint associated with this graphBuilderHost
+ *
+ * @param {} constraint
+ */
+GraphBuilderHost.prototype.setConstraint = function(constraint) {
+    this.constraint = constraint;
+    var gbh = this;
+
+    if (constraint) {
+        // If the constraint is not empty, add an indicator to the host box
+        this.constraintSVG.attr({
+            "font-family": "arial",
+            "font-size": "15px",
+            "x": parseFloat(gbh.getHostSquare().attr("x")) + 8,
+            "y": parseFloat(gbh.getHostSquare().attr("y")) + 18
+        }).text("C").css("cursor", "default");
+
+        gbh.graphBuilder.getSVG().append(this.constraintSVG);
+
+        // Clicking on the constraint indicator triggers a click on the host box
+        this.constraintSVG.on("click", function() {
+            // Need to pass in gbh here or the value of "this" in handleHostClick will be for $constraintText
+            gbh.graphBuilder.handleHostClick(gbh);
+        }).on("dblclick", function() {
+            gbh.graphBuilder.handleHostDblClick(gbh);
+        });
+        
+        // For an empty constraint, remove the indicator
+    } else {
+        this.constraintSVG.remove();
+    }
+}
+
+/**
+ * Gets the constraint associated with this graphBuilderHost
+ *
+ * @returns {String}
+ */
+GraphBuilderHost.prototype.getConstraint = function() {
+    return this.constraint;
+}
+
+/**
+ * Gets the svg text element for showing a graph builder host has a constraint
+ *
+ * @returns {svg.Element} The constraint text svg element
+ */
+GraphBuilderHost.prototype.getConstraintSVG = function() {
+    return this.constraintSVG;
+}
 
 /**
  * Sets the y coordinates for the line segment of this host

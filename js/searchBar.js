@@ -370,6 +370,7 @@ SearchBar.prototype.showPanel = function() {
  */
 SearchBar.prototype.hidePanel = function() {
     $("#bar input").blur().removeClass("focus");
+    $(".hostConstraintDialog").hide();
     $("#searchbar #panel").hide();
     $(window).unbind("mousedown");
 };
@@ -596,7 +597,11 @@ SearchBar.prototype.getBuilderGraphFromJSON = function(json) {
     var vectorTimestamps = logEvents.map(function(logEvent) {
         return logEvent.getVectorTimestamp();
     });
-    return BuilderGraph.fromVectorTimestamps(vectorTimestamps);
+    var gbHosts = this.graphBuilder.getHosts();
+    var hostConstraints = gbHosts.map(function(gbHost) {
+        return gbHost.getConstraint() != "";
+    });
+    return BuilderGraph.fromVectorTimestamps(vectorTimestamps, hostConstraints);
 }
 
 /**
