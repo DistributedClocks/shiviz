@@ -145,8 +145,8 @@ function Shiviz() {
     });
 
     if (window.location.hash) {
-        $("#input").on("change", function () {
-            console.log("input change");
+        $("#input").bind("change.hash", function () {
+            $("#input").unbind("change.hash");
             $("#visualize").click();
         });
         var log = window.location.hash.substr(1) + ".log";
