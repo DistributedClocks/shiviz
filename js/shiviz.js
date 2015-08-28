@@ -63,6 +63,9 @@ function Shiviz() {
             color: "gray",
             pointerevents: "none"
         });
+
+        // Triggers change event for example-hash listener
+        $("#input").change();
     }
 
     $(".tabs li").on("click", function() {
@@ -140,6 +143,15 @@ function Shiviz() {
        
        reader.readAsText(file);
     });
+
+    if (window.location.hash) {
+        $("#input").on("change", function () {
+            console.log("input change");
+            $("#visualize").click();
+        });
+        var log = window.location.hash.substr(1) + ".log";
+        $("#examples a[data-log=\"" + log + "\"]").click();
+    }
 }
 
 /**
