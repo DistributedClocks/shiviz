@@ -390,14 +390,15 @@
                         <div class="out">
                             <p>
                                 <dl>
+                                    <dt><b>Examples:</b></dt>
                                     <dt><code>sync</code></dt>
-                                    <dd>find events containing the text "sync"</dd>
+                                    <dd>Find events containing the text "sync" in any field.</dd>
                                     <dt><code>priority=CRITICAL &amp;&amp; text=/fail.*/</code></dt>
-                                    <dd>find events with "priority" field set to "CRITICAL" and with "text" field matching the specified regex. Supported logical operators are: <code>&amp;&amp;</code>, <code>||</code>, <code>^</code></dd>
+                                    <dd>Find events with "priority" field set to "CRITICAL" and with "text" field matching the specified regex. Supported logical operators are: <code>&amp;&amp;</code>, <code>||</code>, <code>^</code></dd>
                                     <dt><code>ip="216.58.216.174"</code></dt>
-                                    <dd>String literals containing non-alphanumeric symbols must be surrounded by quotes</dd>
+                                    <dd>String literals containing non-alphanumeric symbols must be surrounded by quotes.</dd>
                                     <dt><code>location="EC2" || (isMobile &amp;&amp; useragent=/.*Webkit.*/)</code></dt>
-                                    <dd>Use parenthesis to specify order of operations</dd>
+                                    <dd>Use parenthesis to specify order of operations.</dd>
                                 </dl>
                             </p>
                         </div>
