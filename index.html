@@ -295,13 +295,15 @@
                 </td>
                 <td class="right">
                     <div id="examples">
-                        Examples:
-                        <a class="log-link" href="" data-log="simple-reliable-broadcast.log" data-ordering="ascending" data-hostsort="#hostsortOrder" data-parser="\[\w+\] \[(?<date>([^ ]+ [^ ]+))\] [^ ]+ \[akka://Broadcast/user/(?<host>\w+)\] (?<clock>.*\}) (?<event>.*)">Reliable broadcast log</a>
-                        <a class="log-link" href="" data-log="facebook-study.log" data-parser="(?<ip>(\d{1,3}\.){3}\d{1,3}) (?<date>(\d{1,2}/){2}\d{4} (\d{2}:){2}\d{2} (AM|PM)) (?<action>(INFO|GET|POST)) (?<event>.*)\n(?<host>\w*) (?<clock>.*)">Facebook data-center log</a>
-                        <a class="log-link" href="" data-log="voldemort-simple-threadnames.log" data-parser="\[(?<date>\d{4}-\d{2}-\d{2} (\d{2}:){2}\d{2},\d{3}) (?<path>\S*)\] (?<priority>(INFO|WARN)) (?<event>.*)\n(?<host>\S*) (?<clock>{.*})">Voldemort log</a>
-                        <a class="log-link" href="" data-log="simpledb.log">SimpleDB log</a>
-                        <a class="log-link" href="" data-log="facebook-multiple-study.log" data-delimiter="^=== (?<trace>.*) ===$" data-parser="(?<ip>(\d{1,3}\.){3}\d{1,3}) (?<date>(\d{1,2}/){2}\d{4} (\d{2}:){2}\d{2} (AM|PM)) (?<action>(INFO|GET|POST)) (?<event>.*)\n(?<host>\w*) (?<clock>.*)">Facebook log with multiple executions</a>
-                        <a class="log-link" href="" data-log="multiple-comparison.log" data-delimiter="^=== (?<trace>.*) ===$" data-parser="(?<ip>(\d{1,3}\.){3}\d{1,3}) (?<date>(\d{1,2}/){2}\d{4} (\d{2}:){2}\d{2} (AM|PM)) (?<action>(INFO|GET|POST)) (?<event>.*)\n(?<host>\w*) (?<clock>.*)">Comparison log</a>
+                      <b>Example logs:</b>
+                      <a class="log-link" href="" data-log="simple-reliable-broadcast.log" data-ordering="ascending" data-hostsort="#hostsortOrder" data-parser="\[\w+\] \[(?<date>([^ ]+ [^ ]+))\] [^ ]+ \[akka://Broadcast/user/(?<host>\w+)\] (?<clock>.*\}) (?<event>.*)">Reliable broadcast</a>
+                      <a class="log-link" href="" data-log="chord.log" data-ordering="descending" data-hostsort="#hostsortLength" data-parser="(?<host>\S*) (?<clock>{.*})\n(?<event>.*)">Chord DHT</a>
+                      <!-- <a class="log-link" href="" data-log="fslock_24t_4sp.log" data-ordering="ascending" data-hostsort="#hostsortOrder" data-parser="(?<timestamp>(\d*)) (?<event>.*)\n(?<host>\w*) (?<clock>.*)">Multi-threaded lock contention (2MB)</a> -->
+                      <a class="log-link" href="" data-log="voldemort-simple-threadnames.log" data-parser="\[(?<date>\d{4}-\d{2}-\d{2} (\d{2}:){2}\d{2},\d{3}) (?<path>\S*)\] (?<priority>(INFO|WARN)) (?<event>.*)\n(?<host>\S*) (?<clock>{.*})">Voldemort</a>
+                      <a class="log-link" href="" data-log="simpledb.log">SimpleDB</a>
+<a class="log-link" href="" data-log="facebook.log" data-parser="(?<ip>(\d{1,3}\.){3}\d{1,3}) (?<date>(\d{1,2}/){2}\d{4} (\d{2}:){2}\d{2} (AM|PM)) (?<action>(INFO|GET|POST)) (?<event>.*)\n(?<host>\w*) (?<clock>.*)">Data-center lad balancer (synth)</a>
+                      <a class="log-link" href="" data-log="facebook-multiple.log" data-delimiter="^=== (?<trace>.*) ===$" data-parser="(?<ip>(\d{1,3}\.){3}\d{1,3}) (?<date>(\d{1,2}/){2}\d{4} (\d{2}:){2}\d{2} (AM|PM)) (?<action>(INFO|GET|POST)) (?<event>.*)\n(?<host>\w*) (?<clock>.*)">Multi-execution (synth)</a>
+                      <a class="log-link" href="" data-log="multiple-comparison.log" data-delimiter="^=== (?<trace>.*) ===$" data-parser="(?<ip>(\d{1,3}\.){3}\d{1,3}) (?<date>(\d{1,2}/){2}\d{4} (\d{2}:){2}\d{2} (AM|PM)) (?<action>(INFO|GET|POST)) (?<event>.*)\n(?<host>\w*) (?<clock>.*)">Comparison log (synth)</a>
                     </div>
                     <textarea id="input" spellcheck="false"></textarea>
                 </td>
