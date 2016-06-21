@@ -300,7 +300,7 @@
                       <b>Example logs:</b>
                       <a class="log-link" href="" data-log="simple-reliable-broadcast.log" data-ordering="ascending" data-hostsort="#hostsortOrder" data-parser="\[\w+\] \[(?<date>([^ ]+ [^ ]+))\] [^ ]+ \[akka://Broadcast/user/(?<host>\w+)\] (?<clock>.*\}) (?<event>.*)">Reliable broadcast</a>
                       <a class="log-link" href="" data-log="chord.log" data-ordering="descending" data-hostsort="#hostsortLength" data-parser="(?<host>\S*) (?<clock>{.*})\n(?<event>.*)">Chord DHT</a>
-                      <a class="log-link" href="" data-log="fslock_24t_4sp.log" data-ordering="descending" data-hostsort="#hostsortLength" data-parser="(?<timestamp>(\d*)) (?<event>.*)\n(?<host>\w*) (?<clock>.*)">FS lock contention</a>
+                      <a class="log-link" href="" data-log="fslock_24t_4sp.log" data-ordering="descending" data-hostsort="#hostsortLength" data-parser="(?<timestamp>(\d*)) (?<event>.*)\n(?<host>\w*) (?<clock>.*)">Key-value store lock contention</a>
                       <!-- <a class="log-link" href="" data-log="fslock_24t_4sp.log" data-ordering="ascending" data-hostsort="#hostsortOrder" data-parser="(?<timestamp>(\d*)) (?<event>.*)\n(?<host>\w*) (?<clock>.*)">Multi-threaded lock contention (2MB)</a> -->
                       <a class="log-link" href="" data-log="voldemort-simple-threadnames.log" data-parser="\[(?<date>\d{4}-\d{2}-\d{2} (\d{2}:){2}\d{2},\d{3}) (?<path>\S*)\] (?<priority>(INFO|WARN)) (?<event>.*)\n(?<host>\S*) (?<clock>{.*})">Voldemort</a>
                       <a class="log-link" href="" data-log="simpledb.log">SimpleDB</a>
