@@ -16,9 +16,10 @@ function Controller(global) {
     var self = this;
     var searchbar = SearchBar.getInstance();
 
-    $(window).unbind("scroll");
-    $(window).bind("scroll", self.onScroll);
-    $(window).scroll();
+    self.bindScroll();
+    // $(window).unbind("scroll");
+    // $(window).bind("scroll", self.onScroll);
+    // $(window).scroll();
 
     $(window).unbind("resize");
     $(window).on("resize", function() {
@@ -38,6 +39,7 @@ function Controller(global) {
                 d.setSelected(false);
             });
         }
+        self.bindScroll();
     });
 
     $(window).unbind("click.dialog").on("click.dialog", function(e) {
@@ -73,6 +75,7 @@ function Controller(global) {
             $(this).remove();
             d.setSelected(false);
         });
+        self.bindScroll();
     });
 
     $("#searchbar #panel").unbind("click").on("click", function(e) {
@@ -83,6 +86,7 @@ function Controller(global) {
         if ($target.is("text"))
             return;
         $(".hostConstraintDialog").hide();
+        self.bindScroll();
     });
 
     $(".dialog button").unbind().click(function() {
@@ -111,7 +115,7 @@ function Controller(global) {
                 self.toggleCollapseNode(e);
                 break;
         }
-
+        self.bindScroll();
     });
     
     $(".diffButton").unbind().click(function() {    
@@ -129,6 +133,7 @@ function Controller(global) {
             global.setShowDiff(false);
             self.hideDiff();
         }
+        self.bindScroll();
     });
 
     $(".pairwiseButton").unbind().click(function() {    
@@ -159,6 +164,7 @@ function Controller(global) {
                 global.drawClusterIcons();
             }
         }
+        self.bindScroll();
     });
 
     // Event handler for switching between the left tabs
@@ -202,6 +208,7 @@ function Controller(global) {
             }
         }
         e.preventDefault();
+        self.bindScroll();
     });
 
     // Event handler for switching between clustering options
@@ -221,6 +228,7 @@ function Controller(global) {
             $(".clusterResults td:empty").remove();
             $("#baseLabel, .clusterBase").hide();
         }
+        self.bindScroll();
     });
 }
 
@@ -237,6 +245,7 @@ Controller.prototype.highlightMotif = function(motifFinder) {
     });
 
     this.global.drawAll();
+    this.bindScroll();
 };
 
 /**
@@ -251,6 +260,7 @@ Controller.prototype.clearHighlight = function() {
     });
 
     this.global.drawAll();
+    this.bindScroll();
 };
 
 /**
@@ -295,6 +305,7 @@ Controller.prototype.hideHost = function(host) {
     });
 
     this.global.drawAll();
+    this.bindScroll();
 };
 
 /**
@@ -310,6 +321,7 @@ Controller.prototype.unhideHost = function(host) {
     });
 
     this.global.drawAll();
+    this.bindScroll();
 };
 
 /**
@@ -324,6 +336,7 @@ Controller.prototype.toggleHostHighlight = function(host) {
     });
 
     this.global.drawAll();
+    this.bindScroll();
 };
 
 /**
@@ -338,6 +351,7 @@ Controller.prototype.toggleCollapseNode = function(node) {
     });
 
     this.global.drawAll();
+    this.bindScroll();
 };
 
 /**
@@ -354,6 +368,7 @@ Controller.prototype.showDiff = function() {
     viewL.getTransformer().showDiff(viewR);
     viewR.getTransformer().showDiff(viewL);
     this.global.drawAll();
+    this.bindScroll();
 };
 
 /**
@@ -370,6 +385,7 @@ Controller.prototype.hideDiff = function() {
     viewL.getTransformer().hideDiff(viewR);
     viewR.getTransformer().hideDiff(viewL);
     this.global.drawAll();
+    this.bindScroll();
 };
 
 /**
@@ -789,4 +805,12 @@ Controller.prototype.showDialog = function(e, type, elem) {
             $dialog.show();
         }
     });
+    self.bindScroll();
+}
+
+Controller.prototype.bindScroll = function(){
+    var self = this;
+    $(window).unbind("scroll");
+    $(window).bind("scroll", self.onScroll);
+    $(window).scroll();
 }

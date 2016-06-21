@@ -81,6 +81,7 @@ function SearchBar() {
             context.hidePanel();
             break;
         }
+        context.global.getController.bindScroll();
     });
 
     $("#searchbar #bar input").on("input", function() {
@@ -108,6 +109,7 @@ function SearchBar() {
         context.update();
         context.updateLocked = false;
         context.clearMotifsTab();
+        context.global.getController.bindScroll();
     });
 
     $("#searchbar .predefined button").on("click", function() {
