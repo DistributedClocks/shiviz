@@ -174,7 +174,7 @@ def main():
     
     # Push the deployed dir.
     runcmd("cd " + dist_dir + " && hg push")
-
+    
     print
     print "Done."
     return
