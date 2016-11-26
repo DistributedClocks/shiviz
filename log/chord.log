@@ -1,0 +1,2470 @@
+client-testGetEveryNSeconds {"client-testGetEveryNSeconds":1}
+Initialization Complete
+client-testGetEveryNSeconds {"client-testGetEveryNSeconds":2}
+Sending Put request for '90'
+client-testGetEveryNSeconds {"client-testGetEveryNSeconds":3, "front-end":23, "kv-node-10":249, "kv-node-30":203, "kv-node-40":195, "kv-node-60":146, "kv-node-70":43}
+Received Put reply
+client-testGetEveryNSeconds {"client-testGetEveryNSeconds":4, "front-end":23, "kv-node-10":249, "kv-node-30":203, "kv-node-40":195, "kv-node-60":146, "kv-node-70":43}
+Sending Get request for '90'
+client-testGetEveryNSeconds {"client-testGetEveryNSeconds":5, "front-end":27, "kv-node-10":249, "kv-node-30":208, "kv-node-40":200, "kv-node-60":154, "kv-node-70":43}
+Received Get reply
+0001 {"0001":1}
+Initilization Complete
+0001 {"0001":2}
+Sending Message
+0001 {"0001":3}
+receivingmsg
+0001 {"0001":4}
+Sending Message Again
+front-end {"front-end":1}
+Initialization Complete
+front-end {"front-end":2}
+Initializing node 10
+front-end {"front-end":3, "kv-node-10":4}
+Received reply from InitializeChordVars
+front-end {"front-end":4, "kv-node-10":4}
+Initializing node 30
+front-end {"front-end":5, "kv-node-10":4, "kv-node-30":4}
+Received reply from InitializeChordVars
+front-end {"front-end":6, "kv-node-10":4, "kv-node-30":4}
+Joining new node 30
+front-end {"front-end":7, "kv-node-10":10, "kv-node-30":8}
+Received reply from join
+front-end {"front-end":8, "kv-node-10":10, "kv-node-30":8}
+Initializing node 40
+front-end {"front-end":9, "kv-node-10":10, "kv-node-30":8, "kv-node-40":4}
+Received reply from InitializeChordVars
+front-end {"front-end":10, "kv-node-10":10, "kv-node-30":8, "kv-node-40":4}
+Joining new node 40
+front-end {"front-end":11, "kv-node-10":35, "kv-node-30":25, "kv-node-40":11}
+Received reply from join
+front-end {"front-end":12, "kv-node-10":35, "kv-node-30":25, "kv-node-40":11}
+Initializing node 60
+front-end {"front-end":13, "kv-node-10":35, "kv-node-30":25, "kv-node-40":11, "kv-node-60":4}
+Received reply from InitializeChordVars
+front-end {"front-end":14, "kv-node-10":35, "kv-node-30":25, "kv-node-40":11, "kv-node-60":4}
+Joining new node 60
+front-end {"front-end":15, "kv-node-10":90, "kv-node-30":57, "kv-node-40":49, "kv-node-60":10}
+Received reply from join
+front-end {"front-end":16, "kv-node-10":90, "kv-node-30":57, "kv-node-40":49, "kv-node-60":10}
+Initializing node 70
+front-end {"front-end":17, "kv-node-10":90, "kv-node-30":57, "kv-node-40":49, "kv-node-60":10, "kv-node-70":4}
+Received reply from InitializeChordVars
+front-end {"front-end":18, "kv-node-10":90, "kv-node-30":57, "kv-node-40":49, "kv-node-60":10, "kv-node-70":4}
+Joining new node 70
+front-end {"front-end":19, "kv-node-10":209, "kv-node-30":158, "kv-node-40":153, "kv-node-60":112, "kv-node-70":10}
+Received reply from join
+front-end {"front-end":20, "kv-node-10":209, "kv-node-30":158, "kv-node-40":153, "kv-node-60":112, "kv-node-70":10, "client-testGetEveryNSeconds":2}
+Received Put request: 90
+front-end {"front-end":21, "kv-node-10":209, "kv-node-30":158, "kv-node-40":153, "kv-node-60":112, "kv-node-70":10, "client-testGetEveryNSeconds":2}
+Sending put request to kv-nodes
+front-end {"front-end":22, "kv-node-10":249, "kv-node-30":203, "kv-node-40":195, "kv-node-60":146, "kv-node-70":43, "client-testGetEveryNSeconds":2}
+Received reply from kvNode Put
+front-end {"front-end":23, "kv-node-10":249, "kv-node-30":203, "kv-node-40":195, "kv-node-60":146, "kv-node-70":43, "client-testGetEveryNSeconds":2}
+Replied to Put
+front-end {"front-end":24, "kv-node-10":249, "kv-node-30":203, "kv-node-40":195, "kv-node-60":146, "kv-node-70":43, "client-testGetEveryNSeconds":4}
+Received Get request: 90
+front-end {"front-end":25, "kv-node-10":249, "kv-node-30":203, "kv-node-40":195, "kv-node-60":146, "kv-node-70":43, "client-testGetEveryNSeconds":4}
+Sending get request to kv-nodes
+front-end {"front-end":26, "kv-node-10":249, "kv-node-30":208, "kv-node-40":200, "kv-node-60":154, "kv-node-70":43, "client-testGetEveryNSeconds":4}
+Received reply from kvNode Get
+front-end {"front-end":27, "kv-node-10":249, "kv-node-30":208, "kv-node-40":200, "kv-node-60":154, "kv-node-70":43, "client-testGetEveryNSeconds":4}
+Replied to Get
+kv-node-10 {"kv-node-10":1}
+Initialization Complete
+kv-node-10 {"kv-node-10":2}
+Registering with front end
+kv-node-10 {"kv-node-10":3, "front-end":2}
+Received initialize request
+kv-node-10 {"kv-node-10":4, "front-end":2}
+Respond to initialize request
+kv-node-10 {"kv-node-10":5, "front-end":6, "kv-node-30":4}
+Adding node 30 as first neighbour
+kv-node-10 {"kv-node-10":6, "front-end":6, "kv-node-30":4}
+Sending request to update pred to 10 and succ to 10
+kv-node-10 {"kv-node-10":7, "front-end":6, "kv-node-30":4}
+Sending backups to predecessor 30
+kv-node-10 {"kv-node-10":8, "front-end":6, "kv-node-30":7}
+Received reply to UpdateNode
+kv-node-10 {"kv-node-10":9, "front-end":6, "kv-node-30":8}
+Received keys from successor
+kv-node-10 {"kv-node-10":10, "front-end":6, "kv-node-30":8}
+Responding to Join request
+kv-node-10 {"kv-node-10":11, "front-end":6, "kv-node-30":8}
+Registering with front end
+kv-node-10 {"kv-node-10":12, "front-end":6, "kv-node-30":8}
+10 getting node info from : 127.0.0.1:13861
+kv-node-10 {"kv-node-10":13, "front-end":6, "kv-node-30":8}
+10 getting node info from : 127.0.0.1:13861
+kv-node-10 {"kv-node-10":14, "front-end":6, "kv-node-30":10}
+Received reply with node 30
+kv-node-10 {"kv-node-10":15, "front-end":6, "kv-node-30":12}
+Received reply with node 30
+kv-node-10 {"kv-node-10":16, "front-end":6, "kv-node-30":12}
+10 getting node info from : 127.0.0.1:13861
+kv-node-10 {"kv-node-10":17, "front-end":6, "kv-node-30":14}
+Received reply with node 30
+kv-node-10 {"kv-node-10":18, "front-end":6, "kv-node-30":14}
+Received reply with node 30
+kv-node-10 {"kv-node-10":19, "front-end":6, "kv-node-30":17}
+Received GetNode request
+kv-node-10 {"kv-node-10":20, "front-end":6, "kv-node-30":17}
+10 reply to GetNode
+kv-node-10 {"kv-node-10":21, "front-end":6, "kv-node-30":17}
+Received GetNode request
+kv-node-10 {"kv-node-10":22, "front-end":6, "kv-node-30":17}
+10 reply to GetNode
+kv-node-10 {"kv-node-10":23, "front-end":6, "kv-node-30":20}
+Received GetNode request
+kv-node-10 {"kv-node-10":24, "front-end":6, "kv-node-30":20}
+10 reply to GetNode
+kv-node-10 {"kv-node-10":25, "front-end":10, "kv-node-30":20, "kv-node-40":4}
+Adding node 40 as second neighbour
+kv-node-10 {"kv-node-10":26, "front-end":10, "kv-node-30":20, "kv-node-40":4}
+Sending request to update pred to 30 and succ to 10
+kv-node-10 {"kv-node-10":27, "front-end":10, "kv-node-30":20, "kv-node-40":4}
+Sending backups to predecessor 40
+kv-node-10 {"kv-node-10":28, "front-end":10, "kv-node-30":20, "kv-node-40":7}
+Received reply to UpdateNode
+kv-node-10 {"kv-node-10":29, "front-end":10, "kv-node-30":20, "kv-node-40":7}
+10 getting node info from : 127.0.0.1:13867
+kv-node-10 {"kv-node-10":30, "front-end":10, "kv-node-30":20, "kv-node-40":9}
+Received reply with node 40
+kv-node-10 {"kv-node-10":31, "front-end":10, "kv-node-30":20, "kv-node-40":9}
+Received reply with node 40
+kv-node-10 {"kv-node-10":32, "front-end":10, "kv-node-30":20, "kv-node-40":9}
+Sending request to update succ to 40
+kv-node-10 {"kv-node-10":33, "front-end":10, "kv-node-30":25, "kv-node-40":10}
+Received reply to UpdateNode
+kv-node-10 {"kv-node-10":34, "front-end":10, "kv-node-30":25, "kv-node-40":11}
+Received keys from successor
+kv-node-10 {"kv-node-10":35, "front-end":10, "kv-node-30":25, "kv-node-40":11}
+Responding to Join request
+kv-node-10 {"kv-node-10":36, "front-end":10, "kv-node-30":25, "kv-node-40":11}
+Registering with front end
+kv-node-10 {"kv-node-10":37, "front-end":10, "kv-node-30":25, "kv-node-40":11}
+10 getting node info from : 127.0.0.1:13861
+kv-node-10 {"kv-node-10":38, "front-end":10, "kv-node-30":27, "kv-node-40":11}
+Received reply with node 30
+kv-node-10 {"kv-node-10":39, "front-end":10, "kv-node-30":27, "kv-node-40":11}
+10 getting node info from : 127.0.0.1:13867
+kv-node-10 {"kv-node-10":40, "front-end":10, "kv-node-30":27, "kv-node-40":11}
+10 getting node info from : 127.0.0.1:13867
+kv-node-10 {"kv-node-10":41, "front-end":10, "kv-node-30":27, "kv-node-40":13}
+Received reply with node 40
+kv-node-10 {"kv-node-10":42, "front-end":10, "kv-node-30":27, "kv-node-40":15}
+Received reply with node 40
+kv-node-10 {"kv-node-10":43, "front-end":10, "kv-node-30":27, "kv-node-40":15}
+10 getting node info from : 127.0.0.1:13867
+kv-node-10 {"kv-node-10":44, "front-end":10, "kv-node-30":27, "kv-node-40":17}
+Received reply with node 40
+kv-node-10 {"kv-node-10":45, "front-end":10, "kv-node-30":27, "kv-node-40":17}
+Received reply with node 40
+kv-node-10 {"kv-node-10":46, "front-end":10, "kv-node-30":28, "kv-node-40":17}
+Received keys from successor
+kv-node-10 {"kv-node-10":47, "front-end":10, "kv-node-30":28, "kv-node-40":17}
+Sending request to update Pred to 10
+kv-node-10 {"kv-node-10":48, "front-end":10, "kv-node-30":31, "kv-node-40":17}
+Received reply to UpdateNode
+kv-node-10 {"kv-node-10":49, "front-end":10, "kv-node-30":31, "kv-node-40":17}
+10 getting node info from : localhost:13867
+kv-node-10 {"kv-node-10":50, "front-end":10, "kv-node-30":31, "kv-node-40":19}
+Received reply with node 40
+kv-node-10 {"kv-node-10":51, "front-end":10, "kv-node-30":31, "kv-node-40":19}
+Received reply with node 40
+kv-node-10 {"kv-node-10":52, "front-end":10, "kv-node-30":33, "kv-node-40":19}
+Received GetNode request
+kv-node-10 {"kv-node-10":53, "front-end":10, "kv-node-30":33, "kv-node-40":19}
+10 reply to GetNode
+kv-node-10 {"kv-node-10":54, "front-end":10, "kv-node-30":35, "kv-node-40":19}
+Received GetNode request
+kv-node-10 {"kv-node-10":55, "front-end":10, "kv-node-30":35, "kv-node-40":19}
+10 reply to GetNode
+kv-node-10 {"kv-node-10":56, "front-end":10, "kv-node-30":42, "kv-node-40":23}
+Received GetNode request
+kv-node-10 {"kv-node-10":57, "front-end":10, "kv-node-30":42, "kv-node-40":23}
+10 reply to GetNode
+kv-node-10 {"kv-node-10":58, "front-end":10, "kv-node-30":42, "kv-node-40":26}
+Received GetNode request
+kv-node-10 {"kv-node-10":59, "front-end":10, "kv-node-30":42, "kv-node-40":26}
+10 reply to GetNode
+kv-node-10 {"kv-node-10":60, "front-end":10, "kv-node-30":46, "kv-node-40":30}
+Received GetNode request
+kv-node-10 {"kv-node-10":61, "front-end":10, "kv-node-30":46, "kv-node-40":30}
+10 reply to GetNode
+kv-node-10 {"kv-node-10":62, "front-end":10, "kv-node-30":46, "kv-node-40":30}
+Registering with front end
+kv-node-10 {"kv-node-10":63, "front-end":10, "kv-node-30":46, "kv-node-40":30}
+10 getting node info from : 127.0.0.1:13861
+kv-node-10 {"kv-node-10":64, "front-end":10, "kv-node-30":52, "kv-node-40":34}
+Received reply with node 30
+kv-node-10 {"kv-node-10":65, "front-end":10, "kv-node-30":52, "kv-node-40":34}
+10 getting node info from : 127.0.0.1:13867
+kv-node-10 {"kv-node-10":66, "front-end":10, "kv-node-30":52, "kv-node-40":38}
+Received reply with node 40
+kv-node-10 {"kv-node-10":67, "front-end":10, "kv-node-30":52, "kv-node-40":38}
+10 getting node info from : 127.0.0.1:13867
+kv-node-10 {"kv-node-10":68, "front-end":10, "kv-node-30":52, "kv-node-40":40}
+Received reply with node 40
+kv-node-10 {"kv-node-10":69, "front-end":10, "kv-node-30":52, "kv-node-40":40}
+10 getting node info from : 127.0.0.1:13861
+kv-node-10 {"kv-node-10":70, "front-end":10, "kv-node-30":54, "kv-node-40":40}
+Received reply with node 30
+kv-node-10 {"kv-node-10":71, "front-end":10, "kv-node-30":54, "kv-node-40":40}
+Received reply with node 30
+kv-node-10 {"kv-node-10":72, "front-end":10, "kv-node-30":54, "kv-node-40":40}
+10 getting node info from : localhost:13867
+kv-node-10 {"kv-node-10":73, "front-end":10, "kv-node-30":54, "kv-node-40":42}
+Received reply with node 40
+kv-node-10 {"kv-node-10":74, "front-end":10, "kv-node-30":54, "kv-node-40":42}
+Received reply with node 40
+kv-node-10 {"kv-node-10":75, "front-end":14, "kv-node-30":54, "kv-node-40":42, "kv-node-60":4}
+Adding node 60 to complete ring
+kv-node-10 {"kv-node-10":76, "front-end":14, "kv-node-30":54, "kv-node-40":42, "kv-node-60":4}
+Sending request to update pred to 40 and succ to 10
+kv-node-10 {"kv-node-10":77, "front-end":14, "kv-node-30":54, "kv-node-40":42, "kv-node-60":4}
+Sending backups to predecessor 60
+kv-node-10 {"kv-node-10":78, "front-end":14, "kv-node-30":54, "kv-node-40":42, "kv-node-60":7}
+Received reply to UpdateNode
+kv-node-10 {"kv-node-10":79, "front-end":14, "kv-node-30":54, "kv-node-40":42, "kv-node-60":7}
+10 getting node info from : 127.0.0.1:13879
+kv-node-10 {"kv-node-10":80, "front-end":14, "kv-node-30":54, "kv-node-40":42, "kv-node-60":9}
+Received reply with node 60
+kv-node-10 {"kv-node-10":81, "front-end":14, "kv-node-30":54, "kv-node-40":42, "kv-node-60":9}
+Received reply with node 60
+kv-node-10 {"kv-node-10":82, "front-end":14, "kv-node-30":54, "kv-node-40":42, "kv-node-60":9}
+Sending request to update succ to 60
+kv-node-10 {"kv-node-10":83, "front-end":14, "kv-node-30":54, "kv-node-40":45, "kv-node-60":10}
+Received reply to UpdateNode
+kv-node-10 {"kv-node-10":84, "front-end":14, "kv-node-30":54, "kv-node-40":45, "kv-node-60":10}
+10 getting node info from : 127.0.0.1:13867
+kv-node-10 {"kv-node-10":85, "front-end":14, "kv-node-30":54, "kv-node-40":47, "kv-node-60":10}
+Received reply with node 40
+kv-node-10 {"kv-node-10":86, "front-end":14, "kv-node-30":54, "kv-node-40":47, "kv-node-60":10}
+Received reply with node 40
+kv-node-10 {"kv-node-10":87, "front-end":14, "kv-node-30":54, "kv-node-40":47, "kv-node-60":10}
+Sending request to update succ to 40
+kv-node-10 {"kv-node-10":88, "front-end":14, "kv-node-30":57, "kv-node-40":48, "kv-node-60":10}
+Received reply to UpdateNode
+kv-node-10 {"kv-node-10":89, "front-end":14, "kv-node-30":57, "kv-node-40":49, "kv-node-60":10}
+Received keys from successor
+kv-node-10 {"kv-node-10":90, "front-end":14, "kv-node-30":57, "kv-node-40":49, "kv-node-60":10}
+Responding to Join request
+kv-node-10 {"kv-node-10":91, "front-end":14, "kv-node-30":59, "kv-node-40":49, "kv-node-60":10}
+Received GetNode request
+kv-node-10 {"kv-node-10":92, "front-end":14, "kv-node-30":59, "kv-node-40":49, "kv-node-60":10}
+10 reply to GetNode
+kv-node-10 {"kv-node-10":93, "front-end":14, "kv-node-30":62, "kv-node-40":49, "kv-node-60":10}
+Received GetNode request
+kv-node-10 {"kv-node-10":94, "front-end":14, "kv-node-30":62, "kv-node-40":49, "kv-node-60":10}
+10 reply to GetNode
+kv-node-10 {"kv-node-10":95, "front-end":14, "kv-node-30":73, "kv-node-40":53, "kv-node-60":14}
+Received GetNode request
+kv-node-10 {"kv-node-10":96, "front-end":14, "kv-node-30":73, "kv-node-40":53, "kv-node-60":14}
+10 reply to GetNode
+kv-node-10 {"kv-node-10":97, "front-end":14, "kv-node-30":73, "kv-node-40":56, "kv-node-60":14}
+Received GetNode request
+kv-node-10 {"kv-node-10":98, "front-end":14, "kv-node-30":73, "kv-node-40":56, "kv-node-60":14}
+10 reply to GetNode
+kv-node-10 {"kv-node-10":99, "front-end":14, "kv-node-30":79, "kv-node-40":66, "kv-node-60":18}
+Received GetNode request
+kv-node-10 {"kv-node-10":100, "front-end":14, "kv-node-30":79, "kv-node-40":66, "kv-node-60":18}
+10 reply to GetNode
+kv-node-10 {"kv-node-10":101, "front-end":14, "kv-node-30":79, "kv-node-40":66, "kv-node-60":18}
+Registering with front end
+kv-node-10 {"kv-node-10":102, "front-end":14, "kv-node-30":79, "kv-node-40":66, "kv-node-60":18}
+10 getting node info from : 127.0.0.1:13861
+kv-node-10 {"kv-node-10":103, "front-end":14, "kv-node-30":83, "kv-node-40":69, "kv-node-60":18}
+Received reply with node 30
+kv-node-10 {"kv-node-10":104, "front-end":14, "kv-node-30":83, "kv-node-40":69, "kv-node-60":18}
+10 getting node info from : 127.0.0.1:13867
+kv-node-10 {"kv-node-10":105, "front-end":14, "kv-node-30":83, "kv-node-40":73, "kv-node-60":18}
+Received reply with node 40
+kv-node-10 {"kv-node-10":106, "front-end":14, "kv-node-30":83, "kv-node-40":73, "kv-node-60":18}
+10 getting node info from : 127.0.0.1:13879
+kv-node-10 {"kv-node-10":107, "front-end":14, "kv-node-30":83, "kv-node-40":73, "kv-node-60":20}
+Received reply with node 60
+kv-node-10 {"kv-node-10":108, "front-end":14, "kv-node-30":83, "kv-node-40":73, "kv-node-60":20}
+10 getting node info from : 127.0.0.1:13879
+kv-node-10 {"kv-node-10":109, "front-end":14, "kv-node-30":83, "kv-node-40":73, "kv-node-60":22}
+Received reply with node 60
+kv-node-10 {"kv-node-10":110, "front-end":14, "kv-node-30":83, "kv-node-40":73, "kv-node-60":22}
+10 getting node info from : localhost:13867
+kv-node-10 {"kv-node-10":111, "front-end":14, "kv-node-30":83, "kv-node-40":75, "kv-node-60":22}
+Received reply with node 40
+kv-node-10 {"kv-node-10":112, "front-end":14, "kv-node-30":83, "kv-node-40":75, "kv-node-60":22}
+Received reply with node 40
+kv-node-10 {"kv-node-10":113, "front-end":14, "kv-node-30":84, "kv-node-40":75, "kv-node-60":22}
+Received keys from successor
+kv-node-10 {"kv-node-10":114, "front-end":14, "kv-node-30":84, "kv-node-40":75, "kv-node-60":22}
+Sending request to update Pred to 10
+kv-node-10 {"kv-node-10":115, "front-end":14, "kv-node-30":87, "kv-node-40":75, "kv-node-60":22}
+Received reply to UpdateNode
+kv-node-10 {"kv-node-10":116, "front-end":14, "kv-node-30":87, "kv-node-40":75, "kv-node-60":22}
+10 getting node info from : localhost:13867
+kv-node-10 {"kv-node-10":117, "front-end":14, "kv-node-30":87, "kv-node-40":77, "kv-node-60":22}
+Received reply with node 40
+kv-node-10 {"kv-node-10":118, "front-end":14, "kv-node-30":87, "kv-node-40":77, "kv-node-60":22}
+Received reply with node 40
+kv-node-10 {"kv-node-10":119, "front-end":14, "kv-node-30":87, "kv-node-40":77, "kv-node-60":22}
+10 getting node info from : localhost:13879
+kv-node-10 {"kv-node-10":120, "front-end":14, "kv-node-30":87, "kv-node-40":77, "kv-node-60":24}
+Received reply with node 60
+kv-node-10 {"kv-node-10":121, "front-end":14, "kv-node-30":87, "kv-node-40":77, "kv-node-60":24}
+Received reply with node 60
+kv-node-10 {"kv-node-10":122, "front-end":14, "kv-node-30":87, "kv-node-40":77, "kv-node-60":27}
+Received GetNode request
+kv-node-10 {"kv-node-10":123, "front-end":14, "kv-node-30":87, "kv-node-40":77, "kv-node-60":27}
+10 reply to GetNode
+kv-node-10 {"kv-node-10":124, "front-end":14, "kv-node-30":87, "kv-node-40":79, "kv-node-60":31}
+Received GetNode request
+kv-node-10 {"kv-node-10":125, "front-end":14, "kv-node-30":87, "kv-node-40":79, "kv-node-60":31}
+10 reply to GetNode
+kv-node-10 {"kv-node-10":126, "front-end":14, "kv-node-30":93, "kv-node-40":79, "kv-node-60":35}
+Received GetNode request
+kv-node-10 {"kv-node-10":127, "front-end":14, "kv-node-30":93, "kv-node-40":79, "kv-node-60":35}
+10 reply to GetNode
+kv-node-10 {"kv-node-10":128, "front-end":14, "kv-node-30":98, "kv-node-40":85, "kv-node-60":40}
+Received GetNode request
+kv-node-10 {"kv-node-10":129, "front-end":14, "kv-node-30":98, "kv-node-40":85, "kv-node-60":40}
+10 reply to GetNode
+kv-node-10 {"kv-node-10":130, "front-end":14, "kv-node-30":107, "kv-node-40":87, "kv-node-60":46}
+Received GetNode request
+kv-node-10 {"kv-node-10":131, "front-end":14, "kv-node-30":107, "kv-node-40":87, "kv-node-60":46}
+10 reply to GetNode
+kv-node-10 {"kv-node-10":132, "front-end":14, "kv-node-30":107, "kv-node-40":89, "kv-node-60":46}
+Received GetNode request
+kv-node-10 {"kv-node-10":133, "front-end":14, "kv-node-30":107, "kv-node-40":89, "kv-node-60":46}
+10 reply to GetNode
+kv-node-10 {"kv-node-10":134, "front-end":14, "kv-node-30":113, "kv-node-40":100, "kv-node-60":50}
+Received GetNode request
+kv-node-10 {"kv-node-10":135, "front-end":14, "kv-node-30":113, "kv-node-40":100, "kv-node-60":50}
+10 reply to GetNode
+kv-node-10 {"kv-node-10":136, "front-end":14, "kv-node-30":113, "kv-node-40":100, "kv-node-60":50}
+Registering with front end
+kv-node-10 {"kv-node-10":137, "front-end":14, "kv-node-30":113, "kv-node-40":100, "kv-node-60":50}
+10 getting node info from : 127.0.0.1:13861
+kv-node-10 {"kv-node-10":138, "front-end":14, "kv-node-30":117, "kv-node-40":103, "kv-node-60":50}
+Received reply with node 30
+kv-node-10 {"kv-node-10":139, "front-end":14, "kv-node-30":117, "kv-node-40":103, "kv-node-60":50}
+10 getting node info from : 127.0.0.1:13867
+kv-node-10 {"kv-node-10":140, "front-end":14, "kv-node-30":117, "kv-node-40":107, "kv-node-60":50}
+Received reply with node 40
+kv-node-10 {"kv-node-10":141, "front-end":14, "kv-node-30":117, "kv-node-40":107, "kv-node-60":50}
+10 getting node info from : 127.0.0.1:13879
+kv-node-10 {"kv-node-10":142, "front-end":14, "kv-node-30":117, "kv-node-40":107, "kv-node-60":52}
+Received reply with node 60
+kv-node-10 {"kv-node-10":143, "front-end":14, "kv-node-30":117, "kv-node-40":107, "kv-node-60":52}
+10 getting node info from : 127.0.0.1:13879
+kv-node-10 {"kv-node-10":144, "front-end":14, "kv-node-30":117, "kv-node-40":107, "kv-node-60":54}
+Received reply with node 60
+kv-node-10 {"kv-node-10":145, "front-end":14, "kv-node-30":117, "kv-node-40":107, "kv-node-60":54}
+10 getting node info from : 127.0.0.1:13861
+kv-node-10 {"kv-node-10":146, "front-end":14, "kv-node-30":119, "kv-node-40":107, "kv-node-60":54}
+Received reply with node 30
+kv-node-10 {"kv-node-10":147, "front-end":14, "kv-node-30":119, "kv-node-40":107, "kv-node-60":54}
+Received reply with node 30
+kv-node-10 {"kv-node-10":148, "front-end":14, "kv-node-30":119, "kv-node-40":107, "kv-node-60":54}
+10 getting node info from : localhost:13867
+kv-node-10 {"kv-node-10":149, "front-end":14, "kv-node-30":119, "kv-node-40":109, "kv-node-60":54}
+Received reply with node 40
+kv-node-10 {"kv-node-10":150, "front-end":14, "kv-node-30":119, "kv-node-40":109, "kv-node-60":54}
+Received reply with node 40
+kv-node-10 {"kv-node-10":151, "front-end":14, "kv-node-30":119, "kv-node-40":109, "kv-node-60":54}
+10 getting node info from : localhost:13879
+kv-node-10 {"kv-node-10":152, "front-end":14, "kv-node-30":119, "kv-node-40":109, "kv-node-60":56}
+Received reply with node 60
+kv-node-10 {"kv-node-10":153, "front-end":14, "kv-node-30":119, "kv-node-40":109, "kv-node-60":56}
+Received reply with node 60
+kv-node-10 {"kv-node-10":154, "front-end":14, "kv-node-30":119, "kv-node-40":109, "kv-node-60":58}
+Received GetNode request
+kv-node-10 {"kv-node-10":155, "front-end":14, "kv-node-30":119, "kv-node-40":109, "kv-node-60":58}
+10 reply to GetNode
+kv-node-10 {"kv-node-10":156, "front-end":14, "kv-node-30":119, "kv-node-40":111, "kv-node-60":63}
+Received GetNode request
+kv-node-10 {"kv-node-10":157, "front-end":14, "kv-node-30":119, "kv-node-40":111, "kv-node-60":63}
+10 reply to GetNode
+kv-node-10 {"kv-node-10":158, "front-end":14, "kv-node-30":125, "kv-node-40":111, "kv-node-60":68}
+Received GetNode request
+kv-node-10 {"kv-node-10":159, "front-end":14, "kv-node-30":125, "kv-node-40":111, "kv-node-60":68}
+10 reply to GetNode
+kv-node-10 {"kv-node-10":160, "front-end":14, "kv-node-30":130, "kv-node-40":117, "kv-node-60":72}
+Received GetNode request
+kv-node-10 {"kv-node-10":161, "front-end":14, "kv-node-30":130, "kv-node-40":117, "kv-node-60":72}
+10 reply to GetNode
+kv-node-10 {"kv-node-10":162, "front-end":14, "kv-node-30":139, "kv-node-40":119, "kv-node-60":78}
+Received GetNode request
+kv-node-10 {"kv-node-10":163, "front-end":14, "kv-node-30":139, "kv-node-40":119, "kv-node-60":78}
+10 reply to GetNode
+kv-node-10 {"kv-node-10":164, "front-end":14, "kv-node-30":139, "kv-node-40":121, "kv-node-60":78}
+Received GetNode request
+kv-node-10 {"kv-node-10":165, "front-end":14, "kv-node-30":139, "kv-node-40":121, "kv-node-60":78}
+10 reply to GetNode
+kv-node-10 {"kv-node-10":166, "front-end":14, "kv-node-30":145, "kv-node-40":132, "kv-node-60":82}
+Received GetNode request
+kv-node-10 {"kv-node-10":167, "front-end":14, "kv-node-30":145, "kv-node-40":132, "kv-node-60":82}
+10 reply to GetNode
+kv-node-10 {"kv-node-10":168, "front-end":14, "kv-node-30":145, "kv-node-40":132, "kv-node-60":82}
+Registering with front end
+kv-node-10 {"kv-node-10":169, "front-end":14, "kv-node-30":145, "kv-node-40":132, "kv-node-60":82}
+10 getting node info from : 127.0.0.1:13861
+kv-node-10 {"kv-node-10":170, "front-end":14, "kv-node-30":149, "kv-node-40":135, "kv-node-60":82}
+Received reply with node 30
+kv-node-10 {"kv-node-10":171, "front-end":14, "kv-node-30":149, "kv-node-40":135, "kv-node-60":82}
+10 getting node info from : 127.0.0.1:13867
+kv-node-10 {"kv-node-10":172, "front-end":14, "kv-node-30":149, "kv-node-40":139, "kv-node-60":82}
+Received reply with node 40
+kv-node-10 {"kv-node-10":173, "front-end":14, "kv-node-30":149, "kv-node-40":139, "kv-node-60":82}
+10 getting node info from : 127.0.0.1:13879
+kv-node-10 {"kv-node-10":174, "front-end":14, "kv-node-30":149, "kv-node-40":139, "kv-node-60":84}
+Received reply with node 60
+kv-node-10 {"kv-node-10":175, "front-end":14, "kv-node-30":149, "kv-node-40":139, "kv-node-60":84}
+10 getting node info from : 127.0.0.1:13879
+kv-node-10 {"kv-node-10":176, "front-end":14, "kv-node-30":149, "kv-node-40":139, "kv-node-60":86}
+Received reply with node 60
+kv-node-10 {"kv-node-10":177, "front-end":14, "kv-node-30":149, "kv-node-40":139, "kv-node-60":86}
+10 getting node info from : 127.0.0.1:13861
+kv-node-10 {"kv-node-10":178, "front-end":14, "kv-node-30":151, "kv-node-40":139, "kv-node-60":86}
+Received reply with node 30
+kv-node-10 {"kv-node-10":179, "front-end":14, "kv-node-30":151, "kv-node-40":139, "kv-node-60":86}
+Received reply with node 30
+kv-node-10 {"kv-node-10":180, "front-end":14, "kv-node-30":151, "kv-node-40":139, "kv-node-60":86}
+10 getting node info from : localhost:13867
+kv-node-10 {"kv-node-10":181, "front-end":14, "kv-node-30":151, "kv-node-40":141, "kv-node-60":86}
+Received reply with node 40
+kv-node-10 {"kv-node-10":182, "front-end":14, "kv-node-30":151, "kv-node-40":141, "kv-node-60":86}
+Received reply with node 40
+kv-node-10 {"kv-node-10":183, "front-end":14, "kv-node-30":151, "kv-node-40":141, "kv-node-60":86}
+10 getting node info from : localhost:13879
+kv-node-10 {"kv-node-10":184, "front-end":14, "kv-node-30":151, "kv-node-40":141, "kv-node-60":88}
+Received reply with node 60
+kv-node-10 {"kv-node-10":185, "front-end":14, "kv-node-30":151, "kv-node-40":141, "kv-node-60":88}
+Received reply with node 60
+kv-node-10 {"kv-node-10":186, "front-end":14, "kv-node-30":151, "kv-node-40":141, "kv-node-60":90}
+Received GetNode request
+kv-node-10 {"kv-node-10":187, "front-end":14, "kv-node-30":151, "kv-node-40":141, "kv-node-60":90}
+10 reply to GetNode
+kv-node-10 {"kv-node-10":188, "front-end":14, "kv-node-30":151, "kv-node-40":143, "kv-node-60":95}
+Received GetNode request
+kv-node-10 {"kv-node-10":189, "front-end":14, "kv-node-30":151, "kv-node-40":143, "kv-node-60":95}
+10 reply to GetNode
+kv-node-10 {"kv-node-10":190, "front-end":18, "kv-node-30":151, "kv-node-40":143, "kv-node-60":95, "kv-node-70":4}
+Adding node 70 to complete ring
+kv-node-10 {"kv-node-10":191, "front-end":18, "kv-node-30":151, "kv-node-40":143, "kv-node-60":95, "kv-node-70":4}
+Sending request to update pred to 60 and succ to 10
+kv-node-10 {"kv-node-10":192, "front-end":18, "kv-node-30":151, "kv-node-40":143, "kv-node-60":95, "kv-node-70":4}
+Sending backups to predecessor 70
+kv-node-10 {"kv-node-10":193, "front-end":18, "kv-node-30":151, "kv-node-40":143, "kv-node-60":95, "kv-node-70":7}
+Received reply to UpdateNode
+kv-node-10 {"kv-node-10":194, "front-end":18, "kv-node-30":151, "kv-node-40":143, "kv-node-60":95, "kv-node-70":7}
+10 getting node info from : 127.0.0.1:13897
+kv-node-10 {"kv-node-10":195, "front-end":18, "kv-node-30":151, "kv-node-40":143, "kv-node-60":95, "kv-node-70":9}
+Received reply with node 70
+kv-node-10 {"kv-node-10":196, "front-end":18, "kv-node-30":151, "kv-node-40":143, "kv-node-60":95, "kv-node-70":9}
+Received reply with node 70
+kv-node-10 {"kv-node-10":197, "front-end":18, "kv-node-30":151, "kv-node-40":143, "kv-node-60":95, "kv-node-70":9}
+Sending request to update succ to 70
+kv-node-10 {"kv-node-10":198, "front-end":18, "kv-node-30":155, "kv-node-40":147, "kv-node-60":109, "kv-node-70":10}
+Received reply to UpdateNode
+kv-node-10 {"kv-node-10":199, "front-end":18, "kv-node-30":155, "kv-node-40":147, "kv-node-60":109, "kv-node-70":10}
+10 getting node info from : localhost:13879
+kv-node-10 {"kv-node-10":200, "front-end":18, "kv-node-30":155, "kv-node-40":147, "kv-node-60":111, "kv-node-70":10}
+Received reply with node 60
+kv-node-10 {"kv-node-10":201, "front-end":18, "kv-node-30":155, "kv-node-40":147, "kv-node-60":111, "kv-node-70":10}
+Received reply with node 60
+kv-node-10 {"kv-node-10":202, "front-end":18, "kv-node-30":155, "kv-node-40":147, "kv-node-60":111, "kv-node-70":10}
+Sending request to update succ to 60
+kv-node-10 {"kv-node-10":203, "front-end":18, "kv-node-30":155, "kv-node-40":150, "kv-node-60":112, "kv-node-70":10}
+Received reply to UpdateNode
+kv-node-10 {"kv-node-10":204, "front-end":18, "kv-node-30":155, "kv-node-40":150, "kv-node-60":112, "kv-node-70":10}
+10 getting node info from : localhost:13867
+kv-node-10 {"kv-node-10":205, "front-end":18, "kv-node-30":155, "kv-node-40":152, "kv-node-60":112, "kv-node-70":10}
+Received reply with node 40
+kv-node-10 {"kv-node-10":206, "front-end":18, "kv-node-30":155, "kv-node-40":152, "kv-node-60":112, "kv-node-70":10}
+Received reply with node 40
+kv-node-10 {"kv-node-10":207, "front-end":18, "kv-node-30":155, "kv-node-40":152, "kv-node-60":112, "kv-node-70":10}
+Sending request to update succ to 40
+kv-node-10 {"kv-node-10":208, "front-end":18, "kv-node-30":158, "kv-node-40":153, "kv-node-60":112, "kv-node-70":10}
+Received reply to UpdateNode
+kv-node-10 {"kv-node-10":209, "front-end":18, "kv-node-30":158, "kv-node-40":153, "kv-node-60":112, "kv-node-70":10}
+Responding to Join request
+kv-node-10 {"kv-node-10":210, "front-end":18, "kv-node-30":160, "kv-node-40":153, "kv-node-60":112, "kv-node-70":10}
+Received GetNode request
+kv-node-10 {"kv-node-10":211, "front-end":18, "kv-node-30":160, "kv-node-40":153, "kv-node-60":112, "kv-node-70":10}
+10 reply to GetNode
+kv-node-10 {"kv-node-10":212, "front-end":18, "kv-node-30":167, "kv-node-40":155, "kv-node-60":114, "kv-node-70":10}
+Received GetNode request
+kv-node-10 {"kv-node-10":213, "front-end":18, "kv-node-30":167, "kv-node-40":155, "kv-node-60":114, "kv-node-70":10}
+10 reply to GetNode
+kv-node-10 {"kv-node-10":214, "front-end":18, "kv-node-30":170, "kv-node-40":159, "kv-node-60":114, "kv-node-70":12}
+Received GetNode request
+kv-node-10 {"kv-node-10":215, "front-end":18, "kv-node-30":170, "kv-node-40":159, "kv-node-60":114, "kv-node-70":12}
+10 reply to GetNode
+kv-node-10 {"kv-node-10":216, "front-end":18, "kv-node-30":182, "kv-node-40":175, "kv-node-60":120, "kv-node-70":18}
+Received GetNode request
+kv-node-10 {"kv-node-10":217, "front-end":18, "kv-node-30":182, "kv-node-40":175, "kv-node-60":120, "kv-node-70":18}
+10 reply to GetNode
+kv-node-10 {"kv-node-10":218, "front-end":18, "kv-node-30":182, "kv-node-40":175, "kv-node-60":120, "kv-node-70":18}
+Registering with front end
+kv-node-10 {"kv-node-10":219, "front-end":18, "kv-node-30":182, "kv-node-40":175, "kv-node-60":120, "kv-node-70":18}
+10 getting node info from : 127.0.0.1:13861
+kv-node-10 {"kv-node-10":220, "front-end":18, "kv-node-30":184, "kv-node-40":175, "kv-node-60":120, "kv-node-70":18}
+Received reply with node 30
+kv-node-10 {"kv-node-10":221, "front-end":18, "kv-node-30":184, "kv-node-40":175, "kv-node-60":120, "kv-node-70":18}
+10 getting node info from : 127.0.0.1:13867
+kv-node-10 {"kv-node-10":222, "front-end":18, "kv-node-30":184, "kv-node-40":179, "kv-node-60":120, "kv-node-70":18}
+Received reply with node 40
+kv-node-10 {"kv-node-10":223, "front-end":18, "kv-node-30":184, "kv-node-40":179, "kv-node-60":120, "kv-node-70":18}
+10 getting node info from : 127.0.0.1:13879
+kv-node-10 {"kv-node-10":224, "front-end":18, "kv-node-30":184, "kv-node-40":179, "kv-node-60":122, "kv-node-70":18}
+Received reply with node 60
+kv-node-10 {"kv-node-10":225, "front-end":18, "kv-node-30":184, "kv-node-40":179, "kv-node-60":122, "kv-node-70":18}
+10 getting node info from : 127.0.0.1:13897
+kv-node-10 {"kv-node-10":226, "front-end":18, "kv-node-30":184, "kv-node-40":179, "kv-node-60":122, "kv-node-70":20}
+Received reply with node 70
+kv-node-10 {"kv-node-10":227, "front-end":18, "kv-node-30":184, "kv-node-40":179, "kv-node-60":122, "kv-node-70":20}
+10 getting node info from : 127.0.0.1:13897
+kv-node-10 {"kv-node-10":228, "front-end":18, "kv-node-30":184, "kv-node-40":179, "kv-node-60":122, "kv-node-70":22}
+Received reply with node 70
+kv-node-10 {"kv-node-10":229, "front-end":18, "kv-node-30":184, "kv-node-40":179, "kv-node-60":122, "kv-node-70":22}
+10 getting node info from : 127.0.0.1:13861
+kv-node-10 {"kv-node-10":230, "front-end":18, "kv-node-30":186, "kv-node-40":179, "kv-node-60":122, "kv-node-70":22}
+Received reply with node 30
+kv-node-10 {"kv-node-10":231, "front-end":18, "kv-node-30":186, "kv-node-40":179, "kv-node-60":122, "kv-node-70":22}
+Received reply with node 30
+kv-node-10 {"kv-node-10":232, "front-end":18, "kv-node-30":186, "kv-node-40":179, "kv-node-60":122, "kv-node-70":22}
+10 getting node info from : localhost:13867
+kv-node-10 {"kv-node-10":233, "front-end":18, "kv-node-30":186, "kv-node-40":181, "kv-node-60":122, "kv-node-70":22}
+Received reply with node 40
+kv-node-10 {"kv-node-10":234, "front-end":18, "kv-node-30":186, "kv-node-40":181, "kv-node-60":122, "kv-node-70":22}
+Received reply with node 40
+kv-node-10 {"kv-node-10":235, "front-end":18, "kv-node-30":186, "kv-node-40":181, "kv-node-60":122, "kv-node-70":22}
+10 getting node info from : localhost:13879
+kv-node-10 {"kv-node-10":236, "front-end":18, "kv-node-30":186, "kv-node-40":181, "kv-node-60":124, "kv-node-70":22}
+Received reply with node 60
+kv-node-10 {"kv-node-10":237, "front-end":18, "kv-node-30":186, "kv-node-40":181, "kv-node-60":124, "kv-node-70":22}
+Received reply with node 60
+kv-node-10 {"kv-node-10":238, "front-end":18, "kv-node-30":186, "kv-node-40":181, "kv-node-60":127, "kv-node-70":22}
+Received GetNode request
+kv-node-10 {"kv-node-10":239, "front-end":18, "kv-node-30":186, "kv-node-40":181, "kv-node-60":127, "kv-node-70":22}
+10 reply to GetNode
+kv-node-10 {"kv-node-10":240, "front-end":18, "kv-node-30":186, "kv-node-40":183, "kv-node-60":134, "kv-node-70":24}
+Received GetNode request
+kv-node-10 {"kv-node-10":241, "front-end":18, "kv-node-30":186, "kv-node-40":183, "kv-node-60":134, "kv-node-70":24}
+10 reply to GetNode
+kv-node-10 {"kv-node-10":242, "front-end":18, "kv-node-30":190, "kv-node-40":185, "kv-node-60":143, "kv-node-70":29}
+Received GetNode request
+kv-node-10 {"kv-node-10":243, "front-end":18, "kv-node-30":190, "kv-node-40":185, "kv-node-60":143, "kv-node-70":29}
+10 reply to GetNode
+kv-node-10 {"kv-node-10":244, "front-end":18, "kv-node-30":190, "kv-node-40":185, "kv-node-60":146, "kv-node-70":32}
+Received GetNode request
+kv-node-10 {"kv-node-10":245, "front-end":18, "kv-node-30":190, "kv-node-40":185, "kv-node-60":146, "kv-node-70":32}
+10 reply to GetNode
+kv-node-10 {"kv-node-10":246, "front-end":18, "kv-node-30":196, "kv-node-40":185, "kv-node-60":146, "kv-node-70":37}
+Received GetNode request
+kv-node-10 {"kv-node-10":247, "front-end":18, "kv-node-30":196, "kv-node-40":185, "kv-node-60":146, "kv-node-70":37}
+10 reply to GetNode
+kv-node-10 {"kv-node-10":248, "front-end":18, "kv-node-30":198, "kv-node-40":185, "kv-node-60":146, "kv-node-70":37}
+Received GetNode request
+kv-node-10 {"kv-node-10":249, "front-end":18, "kv-node-30":198, "kv-node-40":185, "kv-node-60":146, "kv-node-70":37}
+10 reply to GetNode
+kv-node-10 {"kv-node-10":250, "front-end":21, "kv-node-30":212, "kv-node-40":197, "kv-node-60":155, "kv-node-70":53, "client-testGetEveryNSeconds":2}
+Received replicate request for 36
+kv-node-10 {"kv-node-10":251, "front-end":21, "kv-node-30":212, "kv-node-40":197, "kv-node-60":155, "kv-node-70":53, "client-testGetEveryNSeconds":2}
+Responding to replication request
+kv-node-10 {"kv-node-10":252, "front-end":25, "kv-node-30":212, "kv-node-40":202, "kv-node-60":155, "kv-node-70":53, "client-testGetEveryNSeconds":4}
+Received GetNode request
+kv-node-10 {"kv-node-10":253, "front-end":25, "kv-node-30":212, "kv-node-40":202, "kv-node-60":155, "kv-node-70":53, "client-testGetEveryNSeconds":4}
+10 reply to GetNode
+kv-node-10 {"kv-node-10":254, "front-end":25, "kv-node-30":218, "kv-node-40":218, "kv-node-60":160, "kv-node-70":58, "client-testGetEveryNSeconds":4}
+Received GetNode request
+kv-node-10 {"kv-node-10":255, "front-end":25, "kv-node-30":218, "kv-node-40":218, "kv-node-60":160, "kv-node-70":58, "client-testGetEveryNSeconds":4}
+10 reply to GetNode
+kv-node-10 {"kv-node-10":256, "front-end":25, "kv-node-30":218, "kv-node-40":218, "kv-node-60":160, "kv-node-70":58, "client-testGetEveryNSeconds":4}
+Registering with front end
+kv-node-10 {"kv-node-10":257, "front-end":25, "kv-node-30":218, "kv-node-40":218, "kv-node-60":160, "kv-node-70":58, "client-testGetEveryNSeconds":4}
+10 getting node info from : 127.0.0.1:13861
+kv-node-10 {"kv-node-10":258, "front-end":25, "kv-node-30":220, "kv-node-40":218, "kv-node-60":160, "kv-node-70":58, "client-testGetEveryNSeconds":4}
+Received reply with node 30
+kv-node-10 {"kv-node-10":259, "front-end":25, "kv-node-30":220, "kv-node-40":218, "kv-node-60":160, "kv-node-70":58, "client-testGetEveryNSeconds":4}
+10 getting node info from : 127.0.0.1:13867
+kv-node-10 {"kv-node-10":260, "front-end":25, "kv-node-30":220, "kv-node-40":222, "kv-node-60":160, "kv-node-70":58, "client-testGetEveryNSeconds":4}
+Received reply with node 40
+kv-node-10 {"kv-node-10":261, "front-end":25, "kv-node-30":220, "kv-node-40":222, "kv-node-60":160, "kv-node-70":58, "client-testGetEveryNSeconds":4}
+10 getting node info from : 127.0.0.1:13879
+kv-node-10 {"kv-node-10":262, "front-end":25, "kv-node-30":220, "kv-node-40":222, "kv-node-60":162, "kv-node-70":58, "client-testGetEveryNSeconds":4}
+Received reply with node 60
+kv-node-10 {"kv-node-10":263, "front-end":25, "kv-node-30":220, "kv-node-40":222, "kv-node-60":162, "kv-node-70":58, "client-testGetEveryNSeconds":4}
+10 getting node info from : 127.0.0.1:13897
+kv-node-10 {"kv-node-10":264, "front-end":25, "kv-node-30":220, "kv-node-40":222, "kv-node-60":162, "kv-node-70":60, "client-testGetEveryNSeconds":4}
+Received reply with node 70
+kv-node-10 {"kv-node-10":265, "front-end":25, "kv-node-30":220, "kv-node-40":222, "kv-node-60":162, "kv-node-70":60, "client-testGetEveryNSeconds":4}
+10 getting node info from : 127.0.0.1:13897
+kv-node-10 {"kv-node-10":266, "front-end":25, "kv-node-30":220, "kv-node-40":222, "kv-node-60":162, "kv-node-70":62, "client-testGetEveryNSeconds":4}
+Received reply with node 70
+kv-node-10 {"kv-node-10":267, "front-end":25, "kv-node-30":220, "kv-node-40":222, "kv-node-60":162, "kv-node-70":62, "client-testGetEveryNSeconds":4}
+10 getting node info from : 127.0.0.1:13861
+kv-node-10 {"kv-node-10":268, "front-end":25, "kv-node-30":222, "kv-node-40":222, "kv-node-60":162, "kv-node-70":62, "client-testGetEveryNSeconds":4}
+Received reply with node 30
+kv-node-10 {"kv-node-10":269, "front-end":25, "kv-node-30":222, "kv-node-40":222, "kv-node-60":162, "kv-node-70":62, "client-testGetEveryNSeconds":4}
+Received reply with node 30
+kv-node-10 {"kv-node-10":270, "front-end":25, "kv-node-30":222, "kv-node-40":222, "kv-node-60":162, "kv-node-70":62, "client-testGetEveryNSeconds":4}
+10 getting node info from : localhost:13867
+kv-node-10 {"kv-node-10":271, "front-end":25, "kv-node-30":222, "kv-node-40":224, "kv-node-60":162, "kv-node-70":62, "client-testGetEveryNSeconds":4}
+Received reply with node 40
+kv-node-10 {"kv-node-10":272, "front-end":25, "kv-node-30":222, "kv-node-40":224, "kv-node-60":162, "kv-node-70":62, "client-testGetEveryNSeconds":4}
+Received reply with node 40
+kv-node-10 {"kv-node-10":273, "front-end":25, "kv-node-30":222, "kv-node-40":224, "kv-node-60":162, "kv-node-70":62, "client-testGetEveryNSeconds":4}
+10 getting node info from : localhost:13879
+kv-node-10 {"kv-node-10":274, "front-end":25, "kv-node-30":222, "kv-node-40":224, "kv-node-60":164, "kv-node-70":62, "client-testGetEveryNSeconds":4}
+Received reply with node 60
+kv-node-10 {"kv-node-10":275, "front-end":25, "kv-node-30":222, "kv-node-40":224, "kv-node-60":164, "kv-node-70":62, "client-testGetEveryNSeconds":4}
+Received reply with node 60
+kv-node-10 {"kv-node-10":276, "front-end":25, "kv-node-30":222, "kv-node-40":226, "kv-node-60":168, "kv-node-70":62, "client-testGetEveryNSeconds":4}
+Received GetNode request
+kv-node-10 {"kv-node-10":277, "front-end":25, "kv-node-30":222, "kv-node-40":226, "kv-node-60":168, "kv-node-70":62, "client-testGetEveryNSeconds":4}
+10 reply to GetNode
+kv-node-10 {"kv-node-10":278, "front-end":25, "kv-node-30":222, "kv-node-40":226, "kv-node-60":173, "kv-node-70":64, "client-testGetEveryNSeconds":4}
+Received GetNode request
+kv-node-10 {"kv-node-10":279, "front-end":25, "kv-node-30":222, "kv-node-40":226, "kv-node-60":173, "kv-node-70":64, "client-testGetEveryNSeconds":4}
+10 reply to GetNode
+kv-node-10 {"kv-node-10":280, "front-end":25, "kv-node-30":226, "kv-node-40":228, "kv-node-60":183, "kv-node-70":69, "client-testGetEveryNSeconds":4}
+Received GetNode request
+kv-node-10 {"kv-node-10":281, "front-end":25, "kv-node-30":226, "kv-node-40":228, "kv-node-60":183, "kv-node-70":69, "client-testGetEveryNSeconds":4}
+10 reply to GetNode
+kv-node-10 {"kv-node-10":282, "front-end":25, "kv-node-30":226, "kv-node-40":228, "kv-node-60":186, "kv-node-70":73, "client-testGetEveryNSeconds":4}
+Received GetNode request
+kv-node-10 {"kv-node-10":283, "front-end":25, "kv-node-30":226, "kv-node-40":228, "kv-node-60":186, "kv-node-70":73, "client-testGetEveryNSeconds":4}
+10 reply to GetNode
+kv-node-10 {"kv-node-10":284, "front-end":25, "kv-node-30":232, "kv-node-40":228, "kv-node-60":186, "kv-node-70":77, "client-testGetEveryNSeconds":4}
+Received GetNode request
+kv-node-10 {"kv-node-10":285, "front-end":25, "kv-node-30":232, "kv-node-40":228, "kv-node-60":186, "kv-node-70":77, "client-testGetEveryNSeconds":4}
+10 reply to GetNode
+kv-node-10 {"kv-node-10":286, "front-end":25, "kv-node-30":233, "kv-node-40":228, "kv-node-60":186, "kv-node-70":77, "client-testGetEveryNSeconds":4}
+Received GetNode request
+kv-node-10 {"kv-node-10":287, "front-end":25, "kv-node-30":233, "kv-node-40":228, "kv-node-60":186, "kv-node-70":77, "client-testGetEveryNSeconds":4}
+10 reply to GetNode
+kv-node-10 {"kv-node-10":288, "front-end":25, "kv-node-30":237, "kv-node-40":238, "kv-node-60":186, "kv-node-70":82, "client-testGetEveryNSeconds":4}
+Received GetNode request
+kv-node-10 {"kv-node-10":289, "front-end":25, "kv-node-30":237, "kv-node-40":238, "kv-node-60":186, "kv-node-70":82, "client-testGetEveryNSeconds":4}
+10 reply to GetNode
+kv-node-10 {"kv-node-10":290, "front-end":25, "kv-node-30":254, "kv-node-40":254, "kv-node-60":196, "kv-node-70":94, "client-testGetEveryNSeconds":4}
+Received GetNode request
+kv-node-10 {"kv-node-10":291, "front-end":25, "kv-node-30":254, "kv-node-40":254, "kv-node-60":196, "kv-node-70":94, "client-testGetEveryNSeconds":4}
+10 reply to GetNode
+kv-node-10 {"kv-node-10":292, "front-end":25, "kv-node-30":254, "kv-node-40":254, "kv-node-60":196, "kv-node-70":94, "client-testGetEveryNSeconds":4}
+Registering with front end
+kv-node-10 {"kv-node-10":293, "front-end":25, "kv-node-30":254, "kv-node-40":254, "kv-node-60":196, "kv-node-70":94, "client-testGetEveryNSeconds":4}
+10 getting node info from : 127.0.0.1:13861
+kv-node-10 {"kv-node-10":294, "front-end":25, "kv-node-30":256, "kv-node-40":254, "kv-node-60":196, "kv-node-70":94, "client-testGetEveryNSeconds":4}
+Received reply with node 30
+kv-node-10 {"kv-node-10":295, "front-end":25, "kv-node-30":256, "kv-node-40":254, "kv-node-60":196, "kv-node-70":94, "client-testGetEveryNSeconds":4}
+10 getting node info from : 127.0.0.1:13867
+kv-node-10 {"kv-node-10":296, "front-end":25, "kv-node-30":256, "kv-node-40":258, "kv-node-60":196, "kv-node-70":94, "client-testGetEveryNSeconds":4}
+Received reply with node 40
+kv-node-10 {"kv-node-10":297, "front-end":25, "kv-node-30":256, "kv-node-40":258, "kv-node-60":196, "kv-node-70":94, "client-testGetEveryNSeconds":4}
+10 getting node info from : 127.0.0.1:13879
+kv-node-10 {"kv-node-10":298, "front-end":25, "kv-node-30":256, "kv-node-40":258, "kv-node-60":198, "kv-node-70":94, "client-testGetEveryNSeconds":4}
+Received reply with node 60
+kv-node-10 {"kv-node-10":299, "front-end":25, "kv-node-30":256, "kv-node-40":258, "kv-node-60":198, "kv-node-70":94, "client-testGetEveryNSeconds":4}
+10 getting node info from : 127.0.0.1:13897
+kv-node-10 {"kv-node-10":300, "front-end":25, "kv-node-30":256, "kv-node-40":258, "kv-node-60":198, "kv-node-70":96, "client-testGetEveryNSeconds":4}
+Received reply with node 70
+kv-node-10 {"kv-node-10":301, "front-end":25, "kv-node-30":256, "kv-node-40":258, "kv-node-60":198, "kv-node-70":96, "client-testGetEveryNSeconds":4}
+10 getting node info from : 127.0.0.1:13897
+kv-node-10 {"kv-node-10":302, "front-end":25, "kv-node-30":256, "kv-node-40":258, "kv-node-60":198, "kv-node-70":98, "client-testGetEveryNSeconds":4}
+Received reply with node 70
+kv-node-10 {"kv-node-10":303, "front-end":25, "kv-node-30":256, "kv-node-40":258, "kv-node-60":198, "kv-node-70":98, "client-testGetEveryNSeconds":4}
+10 getting node info from : 127.0.0.1:13861
+kv-node-10 {"kv-node-10":304, "front-end":25, "kv-node-30":258, "kv-node-40":258, "kv-node-60":198, "kv-node-70":98, "client-testGetEveryNSeconds":4}
+Received reply with node 30
+kv-node-10 {"kv-node-10":305, "front-end":25, "kv-node-30":258, "kv-node-40":258, "kv-node-60":198, "kv-node-70":98, "client-testGetEveryNSeconds":4}
+Received reply with node 30
+kv-node-10 {"kv-node-10":306, "front-end":25, "kv-node-30":258, "kv-node-40":258, "kv-node-60":198, "kv-node-70":98, "client-testGetEveryNSeconds":4}
+10 getting node info from : localhost:13867
+kv-node-10 {"kv-node-10":307, "front-end":25, "kv-node-30":258, "kv-node-40":260, "kv-node-60":198, "kv-node-70":98, "client-testGetEveryNSeconds":4}
+Received reply with node 40
+kv-node-10 {"kv-node-10":308, "front-end":25, "kv-node-30":258, "kv-node-40":260, "kv-node-60":198, "kv-node-70":98, "client-testGetEveryNSeconds":4}
+Received reply with node 40
+kv-node-10 {"kv-node-10":309, "front-end":25, "kv-node-30":258, "kv-node-40":260, "kv-node-60":198, "kv-node-70":98, "client-testGetEveryNSeconds":4}
+10 getting node info from : localhost:13879
+kv-node-10 {"kv-node-10":310, "front-end":25, "kv-node-30":258, "kv-node-40":260, "kv-node-60":200, "kv-node-70":98, "client-testGetEveryNSeconds":4}
+Received reply with node 60
+kv-node-10 {"kv-node-10":311, "front-end":25, "kv-node-30":258, "kv-node-40":260, "kv-node-60":200, "kv-node-70":98, "client-testGetEveryNSeconds":4}
+Received reply with node 60
+kv-node-10 {"kv-node-10":312, "front-end":25, "kv-node-30":258, "kv-node-40":260, "kv-node-60":203, "kv-node-70":98, "client-testGetEveryNSeconds":4}
+Received GetNode request
+kv-node-10 {"kv-node-10":313, "front-end":25, "kv-node-30":258, "kv-node-40":260, "kv-node-60":203, "kv-node-70":98, "client-testGetEveryNSeconds":4}
+10 reply to GetNode
+kv-node-10 {"kv-node-10":314, "front-end":25, "kv-node-30":260, "kv-node-40":262, "kv-node-60":211, "kv-node-70":100, "client-testGetEveryNSeconds":4}
+Received GetNode request
+kv-node-10 {"kv-node-10":315, "front-end":25, "kv-node-30":260, "kv-node-40":262, "kv-node-60":211, "kv-node-70":100, "client-testGetEveryNSeconds":4}
+10 reply to GetNode
+kv-node-10 {"kv-node-10":316, "front-end":25, "kv-node-30":260, "kv-node-40":264, "kv-node-60":217, "kv-node-70":105, "client-testGetEveryNSeconds":4}
+Received GetNode request
+kv-node-10 {"kv-node-10":317, "front-end":25, "kv-node-30":260, "kv-node-40":264, "kv-node-60":217, "kv-node-70":105, "client-testGetEveryNSeconds":4}
+10 reply to GetNode
+kv-node-10 {"kv-node-10":318, "front-end":25, "kv-node-30":262, "kv-node-40":264, "kv-node-60":222, "kv-node-70":109, "client-testGetEveryNSeconds":4}
+Received GetNode request
+kv-node-10 {"kv-node-10":319, "front-end":25, "kv-node-30":262, "kv-node-40":264, "kv-node-60":222, "kv-node-70":109, "client-testGetEveryNSeconds":4}
+10 reply to GetNode
+kv-node-30 {"kv-node-30":1}
+Initialization Complete
+kv-node-30 {"kv-node-30":2}
+Registering with front end
+kv-node-30 {"kv-node-30":3, "front-end":4, "kv-node-10":4}
+Received initialize request
+kv-node-30 {"kv-node-30":4, "front-end":4, "kv-node-10":4}
+Respond to initialize request
+kv-node-30 {"kv-node-30":5, "front-end":6, "kv-node-10":6}
+Received comp update node request
+kv-node-30 {"kv-node-30":6, "front-end":6, "kv-node-10":7}
+Received keys from successor
+kv-node-30 {"kv-node-30":7, "front-end":6, "kv-node-10":7}
+Responding to UpdateNode
+kv-node-30 {"kv-node-30":8, "front-end":6, "kv-node-10":7}
+Sending backups to predecessor 10
+kv-node-30 {"kv-node-30":9, "front-end":6, "kv-node-10":13}
+Received GetNode request
+kv-node-30 {"kv-node-30":10, "front-end":6, "kv-node-10":13}
+30 reply to GetNode
+kv-node-30 {"kv-node-30":11, "front-end":6, "kv-node-10":13}
+Received GetNode request
+kv-node-30 {"kv-node-30":12, "front-end":6, "kv-node-10":13}
+30 reply to GetNode
+kv-node-30 {"kv-node-30":13, "front-end":6, "kv-node-10":16}
+Received GetNode request
+kv-node-30 {"kv-node-30":14, "front-end":6, "kv-node-10":16}
+30 reply to GetNode
+kv-node-30 {"kv-node-30":15, "front-end":6, "kv-node-10":16}
+Registering with front end
+kv-node-30 {"kv-node-30":16, "front-end":6, "kv-node-10":16}
+30 getting node info from : localhost:13877
+kv-node-30 {"kv-node-30":17, "front-end":6, "kv-node-10":16}
+30 getting node info from : localhost:13877
+kv-node-30 {"kv-node-30":18, "front-end":6, "kv-node-10":20}
+Received reply with node 10
+kv-node-30 {"kv-node-30":19, "front-end":6, "kv-node-10":22}
+Received reply with node 10
+kv-node-30 {"kv-node-30":20, "front-end":6, "kv-node-10":22}
+30 getting node info from : localhost:13877
+kv-node-30 {"kv-node-30":21, "front-end":6, "kv-node-10":24}
+Received reply with node 10
+kv-node-30 {"kv-node-30":22, "front-end":6, "kv-node-10":24}
+Received reply with node 10
+kv-node-30 {"kv-node-30":23, "front-end":10, "kv-node-10":32, "kv-node-40":9}
+Received comp update node request
+kv-node-30 {"kv-node-30":24, "front-end":10, "kv-node-10":32, "kv-node-40":10}
+Received keys from successor
+kv-node-30 {"kv-node-30":25, "front-end":10, "kv-node-10":32, "kv-node-40":10}
+Responding to UpdateNode
+kv-node-30 {"kv-node-30":26, "front-end":10, "kv-node-10":37, "kv-node-40":11}
+Received GetNode request
+kv-node-30 {"kv-node-30":27, "front-end":10, "kv-node-10":37, "kv-node-40":11}
+30 reply to GetNode
+kv-node-30 {"kv-node-30":28, "front-end":10, "kv-node-10":37, "kv-node-40":11}
+Sending backups to predecessor 10
+kv-node-30 {"kv-node-30":29, "front-end":10, "kv-node-10":47, "kv-node-40":17}
+Received UpdateLink request
+kv-node-30 {"kv-node-30":30, "front-end":10, "kv-node-10":47, "kv-node-40":17}
+Responding to UpdateNode
+kv-node-30 {"kv-node-30":31, "front-end":10, "kv-node-10":47, "kv-node-40":17}
+Respond to UpdateLink request
+kv-node-30 {"kv-node-30":32, "front-end":10, "kv-node-10":47, "kv-node-40":17}
+Registering with front end
+kv-node-30 {"kv-node-30":33, "front-end":10, "kv-node-10":47, "kv-node-40":17}
+30 getting node info from : localhost:13877
+kv-node-30 {"kv-node-30":34, "front-end":10, "kv-node-10":53, "kv-node-40":19}
+Received reply with node 10
+kv-node-30 {"kv-node-30":35, "front-end":10, "kv-node-10":53, "kv-node-40":19}
+30 getting node info from : localhost:13877
+kv-node-30 {"kv-node-30":36, "front-end":10, "kv-node-10":53, "kv-node-40":19}
+30 getting node info from : localhost:13867
+kv-node-30 {"kv-node-30":37, "front-end":10, "kv-node-10":55, "kv-node-40":19}
+Received reply with node 10
+kv-node-30 {"kv-node-30":38, "front-end":10, "kv-node-10":55, "kv-node-40":21}
+Received reply with node 40
+kv-node-30 {"kv-node-30":39, "front-end":10, "kv-node-10":55, "kv-node-40":21}
+30 getting node info from : localhost:13867
+kv-node-30 {"kv-node-30":40, "front-end":10, "kv-node-10":55, "kv-node-40":23}
+Received reply with node 40
+kv-node-30 {"kv-node-30":41, "front-end":10, "kv-node-10":55, "kv-node-40":23}
+Received reply with node 40
+kv-node-30 {"kv-node-30":42, "front-end":10, "kv-node-10":55, "kv-node-40":23}
+30 getting node info from : localhost:13877
+kv-node-30 {"kv-node-30":43, "front-end":10, "kv-node-10":57, "kv-node-40":23}
+Received reply with node 10
+kv-node-30 {"kv-node-30":44, "front-end":10, "kv-node-10":57, "kv-node-40":23}
+Received reply with node 10
+kv-node-30 {"kv-node-30":45, "front-end":10, "kv-node-10":57, "kv-node-40":25}
+Received GetNode request
+kv-node-30 {"kv-node-30":46, "front-end":10, "kv-node-10":57, "kv-node-40":25}
+30 reply to GetNode
+kv-node-30 {"kv-node-30":47, "front-end":10, "kv-node-10":59, "kv-node-40":29}
+Received GetNode request
+kv-node-30 {"kv-node-30":48, "front-end":10, "kv-node-10":59, "kv-node-40":29}
+30 reply to GetNode
+kv-node-30 {"kv-node-30":49, "front-end":10, "kv-node-10":61, "kv-node-40":34}
+Received GetNode request
+kv-node-30 {"kv-node-30":50, "front-end":10, "kv-node-10":61, "kv-node-40":34}
+30 reply to GetNode
+kv-node-30 {"kv-node-30":51, "front-end":10, "kv-node-10":63, "kv-node-40":34}
+Received GetNode request
+kv-node-30 {"kv-node-30":52, "front-end":10, "kv-node-10":63, "kv-node-40":34}
+30 reply to GetNode
+kv-node-30 {"kv-node-30":53, "front-end":10, "kv-node-10":69, "kv-node-40":40}
+Received GetNode request
+kv-node-30 {"kv-node-30":54, "front-end":10, "kv-node-10":69, "kv-node-40":40}
+30 reply to GetNode
+kv-node-30 {"kv-node-30":55, "front-end":14, "kv-node-10":87, "kv-node-40":47, "kv-node-60":10}
+Received comp update node request
+kv-node-30 {"kv-node-30":56, "front-end":14, "kv-node-10":87, "kv-node-40":48, "kv-node-60":10}
+Received keys from successor
+kv-node-30 {"kv-node-30":57, "front-end":14, "kv-node-10":87, "kv-node-40":48, "kv-node-60":10}
+Responding to UpdateNode
+kv-node-30 {"kv-node-30":58, "front-end":14, "kv-node-10":87, "kv-node-40":48, "kv-node-60":10}
+Registering with front end
+kv-node-30 {"kv-node-30":59, "front-end":14, "kv-node-10":87, "kv-node-40":48, "kv-node-60":10}
+30 getting node info from : localhost:13877
+kv-node-30 {"kv-node-30":60, "front-end":14, "kv-node-10":92, "kv-node-40":49, "kv-node-60":10}
+Received reply with node 10
+kv-node-30 {"kv-node-30":61, "front-end":14, "kv-node-10":92, "kv-node-40":49, "kv-node-60":10}
+30 getting node info from : localhost:13867
+kv-node-30 {"kv-node-30":62, "front-end":14, "kv-node-10":92, "kv-node-40":49, "kv-node-60":10}
+30 getting node info from : localhost:13877
+kv-node-30 {"kv-node-30":63, "front-end":14, "kv-node-10":92, "kv-node-40":51, "kv-node-60":10}
+Received reply with node 40
+kv-node-30 {"kv-node-30":64, "front-end":14, "kv-node-10":94, "kv-node-40":51, "kv-node-60":10}
+Received reply with node 10
+kv-node-30 {"kv-node-30":65, "front-end":14, "kv-node-10":94, "kv-node-40":51, "kv-node-60":10}
+30 getting node info from : localhost:13867
+kv-node-30 {"kv-node-30":66, "front-end":14, "kv-node-10":94, "kv-node-40":51, "kv-node-60":10}
+30 getting node info from : localhost:13879
+kv-node-30 {"kv-node-30":67, "front-end":14, "kv-node-10":94, "kv-node-40":51, "kv-node-60":12}
+Received reply with node 60
+kv-node-30 {"kv-node-30":68, "front-end":14, "kv-node-10":94, "kv-node-40":53, "kv-node-60":12}
+Received reply with node 40
+kv-node-30 {"kv-node-30":69, "front-end":14, "kv-node-10":94, "kv-node-40":53, "kv-node-60":12}
+Received reply with node 40
+kv-node-30 {"kv-node-30":70, "front-end":14, "kv-node-10":94, "kv-node-40":53, "kv-node-60":12}
+30 getting node info from : localhost:13879
+kv-node-30 {"kv-node-30":71, "front-end":14, "kv-node-10":94, "kv-node-40":53, "kv-node-60":14}
+Received reply with node 60
+kv-node-30 {"kv-node-30":72, "front-end":14, "kv-node-10":94, "kv-node-40":53, "kv-node-60":14}
+Received reply with node 60
+kv-node-30 {"kv-node-30":73, "front-end":14, "kv-node-10":94, "kv-node-40":53, "kv-node-60":14}
+30 getting node info from : localhost:13877
+kv-node-30 {"kv-node-30":74, "front-end":14, "kv-node-10":96, "kv-node-40":53, "kv-node-60":14}
+Received reply with node 10
+kv-node-30 {"kv-node-30":75, "front-end":14, "kv-node-10":96, "kv-node-40":53, "kv-node-60":14}
+Received reply with node 10
+kv-node-30 {"kv-node-30":76, "front-end":14, "kv-node-10":96, "kv-node-40":56, "kv-node-60":14}
+Received GetNode request
+kv-node-30 {"kv-node-30":77, "front-end":14, "kv-node-10":96, "kv-node-40":56, "kv-node-60":14}
+30 reply to GetNode
+kv-node-30 {"kv-node-30":78, "front-end":14, "kv-node-10":98, "kv-node-40":59, "kv-node-60":14}
+Received GetNode request
+kv-node-30 {"kv-node-30":79, "front-end":14, "kv-node-10":98, "kv-node-40":59, "kv-node-60":14}
+30 reply to GetNode
+kv-node-30 {"kv-node-30":80, "front-end":14, "kv-node-10":100, "kv-node-40":69, "kv-node-60":18}
+Received GetNode request
+kv-node-30 {"kv-node-30":81, "front-end":14, "kv-node-10":100, "kv-node-40":69, "kv-node-60":18}
+30 reply to GetNode
+kv-node-30 {"kv-node-30":82, "front-end":14, "kv-node-10":102, "kv-node-40":69, "kv-node-60":18}
+Received GetNode request
+kv-node-30 {"kv-node-30":83, "front-end":14, "kv-node-10":102, "kv-node-40":69, "kv-node-60":18}
+30 reply to GetNode
+kv-node-30 {"kv-node-30":84, "front-end":14, "kv-node-10":102, "kv-node-40":69, "kv-node-60":18}
+Sending backups to predecessor 10
+kv-node-30 {"kv-node-30":85, "front-end":14, "kv-node-10":114, "kv-node-40":75, "kv-node-60":22}
+Received UpdateLink request
+kv-node-30 {"kv-node-30":86, "front-end":14, "kv-node-10":114, "kv-node-40":75, "kv-node-60":22}
+Responding to UpdateNode
+kv-node-30 {"kv-node-30":87, "front-end":14, "kv-node-10":114, "kv-node-40":75, "kv-node-60":22}
+Respond to UpdateLink request
+kv-node-30 {"kv-node-30":88, "front-end":14, "kv-node-10":123, "kv-node-40":79, "kv-node-60":30}
+Received GetNode request
+kv-node-30 {"kv-node-30":89, "front-end":14, "kv-node-10":123, "kv-node-40":79, "kv-node-60":30}
+30 reply to GetNode
+kv-node-30 {"kv-node-30":90, "front-end":14, "kv-node-10":125, "kv-node-40":79, "kv-node-60":35}
+Received GetNode request
+kv-node-30 {"kv-node-30":91, "front-end":14, "kv-node-10":125, "kv-node-40":79, "kv-node-60":35}
+30 reply to GetNode
+kv-node-30 {"kv-node-30":92, "front-end":14, "kv-node-10":125, "kv-node-40":79, "kv-node-60":35}
+Registering with front end
+kv-node-30 {"kv-node-30":93, "front-end":14, "kv-node-10":125, "kv-node-40":79, "kv-node-60":35}
+30 getting node info from : localhost:13877
+kv-node-30 {"kv-node-30":94, "front-end":14, "kv-node-10":127, "kv-node-40":79, "kv-node-60":35}
+Received reply with node 10
+kv-node-30 {"kv-node-30":95, "front-end":14, "kv-node-10":127, "kv-node-40":79, "kv-node-60":35}
+30 getting node info from : localhost:13867
+kv-node-30 {"kv-node-30":96, "front-end":14, "kv-node-10":127, "kv-node-40":85, "kv-node-60":40}
+Received reply with node 40
+kv-node-30 {"kv-node-30":97, "front-end":14, "kv-node-10":127, "kv-node-40":85, "kv-node-60":40}
+30 getting node info from : localhost:13877
+kv-node-30 {"kv-node-30":98, "front-end":14, "kv-node-10":127, "kv-node-40":85, "kv-node-60":40}
+30 getting node info from : localhost:13879
+kv-node-30 {"kv-node-30":99, "front-end":14, "kv-node-10":127, "kv-node-40":85, "kv-node-60":44}
+Received reply with node 60
+kv-node-30 {"kv-node-30":100, "front-end":14, "kv-node-10":129, "kv-node-40":85, "kv-node-60":44}
+Received reply with node 10
+kv-node-30 {"kv-node-30":101, "front-end":14, "kv-node-10":129, "kv-node-40":85, "kv-node-60":44}
+30 getting node info from : localhost:13867
+kv-node-30 {"kv-node-30":102, "front-end":14, "kv-node-10":129, "kv-node-40":87, "kv-node-60":44}
+Received reply with node 40
+kv-node-30 {"kv-node-30":103, "front-end":14, "kv-node-10":129, "kv-node-40":87, "kv-node-60":44}
+Received reply with node 40
+kv-node-30 {"kv-node-30":104, "front-end":14, "kv-node-10":129, "kv-node-40":87, "kv-node-60":44}
+30 getting node info from : localhost:13879
+kv-node-30 {"kv-node-30":105, "front-end":14, "kv-node-10":129, "kv-node-40":87, "kv-node-60":46}
+Received reply with node 60
+kv-node-30 {"kv-node-30":106, "front-end":14, "kv-node-10":129, "kv-node-40":87, "kv-node-60":46}
+Received reply with node 60
+kv-node-30 {"kv-node-30":107, "front-end":14, "kv-node-10":129, "kv-node-40":87, "kv-node-60":46}
+30 getting node info from : localhost:13877
+kv-node-30 {"kv-node-30":108, "front-end":14, "kv-node-10":131, "kv-node-40":87, "kv-node-60":46}
+Received reply with node 10
+kv-node-30 {"kv-node-30":109, "front-end":14, "kv-node-10":131, "kv-node-40":87, "kv-node-60":46}
+Received reply with node 10
+kv-node-30 {"kv-node-30":110, "front-end":14, "kv-node-10":133, "kv-node-40":91, "kv-node-60":46}
+Received GetNode request
+kv-node-30 {"kv-node-30":111, "front-end":14, "kv-node-10":133, "kv-node-40":91, "kv-node-60":46}
+30 reply to GetNode
+kv-node-30 {"kv-node-30":112, "front-end":14, "kv-node-10":133, "kv-node-40":93, "kv-node-60":46}
+Received GetNode request
+kv-node-30 {"kv-node-30":113, "front-end":14, "kv-node-10":133, "kv-node-40":93, "kv-node-60":46}
+30 reply to GetNode
+kv-node-30 {"kv-node-30":114, "front-end":14, "kv-node-10":135, "kv-node-40":103, "kv-node-60":50}
+Received GetNode request
+kv-node-30 {"kv-node-30":115, "front-end":14, "kv-node-10":135, "kv-node-40":103, "kv-node-60":50}
+30 reply to GetNode
+kv-node-30 {"kv-node-30":116, "front-end":14, "kv-node-10":137, "kv-node-40":103, "kv-node-60":50}
+Received GetNode request
+kv-node-30 {"kv-node-30":117, "front-end":14, "kv-node-10":137, "kv-node-40":103, "kv-node-60":50}
+30 reply to GetNode
+kv-node-30 {"kv-node-30":118, "front-end":14, "kv-node-10":145, "kv-node-40":107, "kv-node-60":54}
+Received GetNode request
+kv-node-30 {"kv-node-30":119, "front-end":14, "kv-node-10":145, "kv-node-40":107, "kv-node-60":54}
+30 reply to GetNode
+kv-node-30 {"kv-node-30":120, "front-end":14, "kv-node-10":155, "kv-node-40":111, "kv-node-60":62}
+Received GetNode request
+kv-node-30 {"kv-node-30":121, "front-end":14, "kv-node-10":155, "kv-node-40":111, "kv-node-60":62}
+30 reply to GetNode
+kv-node-30 {"kv-node-30":122, "front-end":14, "kv-node-10":157, "kv-node-40":111, "kv-node-60":68}
+Received GetNode request
+kv-node-30 {"kv-node-30":123, "front-end":14, "kv-node-10":157, "kv-node-40":111, "kv-node-60":68}
+30 reply to GetNode
+kv-node-30 {"kv-node-30":124, "front-end":14, "kv-node-10":157, "kv-node-40":111, "kv-node-60":68}
+Registering with front end
+kv-node-30 {"kv-node-30":125, "front-end":14, "kv-node-10":157, "kv-node-40":111, "kv-node-60":68}
+30 getting node info from : localhost:13877
+kv-node-30 {"kv-node-30":126, "front-end":14, "kv-node-10":159, "kv-node-40":111, "kv-node-60":68}
+Received reply with node 10
+kv-node-30 {"kv-node-30":127, "front-end":14, "kv-node-10":159, "kv-node-40":111, "kv-node-60":68}
+30 getting node info from : localhost:13867
+kv-node-30 {"kv-node-30":128, "front-end":14, "kv-node-10":159, "kv-node-40":117, "kv-node-60":72}
+Received reply with node 40
+kv-node-30 {"kv-node-30":129, "front-end":14, "kv-node-10":159, "kv-node-40":117, "kv-node-60":72}
+30 getting node info from : localhost:13879
+kv-node-30 {"kv-node-30":130, "front-end":14, "kv-node-10":159, "kv-node-40":117, "kv-node-60":72}
+30 getting node info from : localhost:13877
+kv-node-30 {"kv-node-30":131, "front-end":14, "kv-node-10":159, "kv-node-40":117, "kv-node-60":76}
+Received reply with node 60
+kv-node-30 {"kv-node-30":132, "front-end":14, "kv-node-10":161, "kv-node-40":117, "kv-node-60":76}
+Received reply with node 10
+kv-node-30 {"kv-node-30":133, "front-end":14, "kv-node-10":161, "kv-node-40":117, "kv-node-60":76}
+30 getting node info from : localhost:13867
+kv-node-30 {"kv-node-30":134, "front-end":14, "kv-node-10":161, "kv-node-40":119, "kv-node-60":76}
+Received reply with node 40
+kv-node-30 {"kv-node-30":135, "front-end":14, "kv-node-10":161, "kv-node-40":119, "kv-node-60":76}
+Received reply with node 40
+kv-node-30 {"kv-node-30":136, "front-end":14, "kv-node-10":161, "kv-node-40":119, "kv-node-60":76}
+30 getting node info from : localhost:13879
+kv-node-30 {"kv-node-30":137, "front-end":14, "kv-node-10":161, "kv-node-40":119, "kv-node-60":78}
+Received reply with node 60
+kv-node-30 {"kv-node-30":138, "front-end":14, "kv-node-10":161, "kv-node-40":119, "kv-node-60":78}
+Received reply with node 60
+kv-node-30 {"kv-node-30":139, "front-end":14, "kv-node-10":161, "kv-node-40":119, "kv-node-60":78}
+30 getting node info from : localhost:13877
+kv-node-30 {"kv-node-30":140, "front-end":14, "kv-node-10":163, "kv-node-40":119, "kv-node-60":78}
+Received reply with node 10
+kv-node-30 {"kv-node-30":141, "front-end":14, "kv-node-10":163, "kv-node-40":119, "kv-node-60":78}
+Received reply with node 10
+kv-node-30 {"kv-node-30":142, "front-end":14, "kv-node-10":165, "kv-node-40":123, "kv-node-60":78}
+Received GetNode request
+kv-node-30 {"kv-node-30":143, "front-end":14, "kv-node-10":165, "kv-node-40":123, "kv-node-60":78}
+30 reply to GetNode
+kv-node-30 {"kv-node-30":144, "front-end":14, "kv-node-10":165, "kv-node-40":127, "kv-node-60":80}
+Received GetNode request
+kv-node-30 {"kv-node-30":145, "front-end":14, "kv-node-10":165, "kv-node-40":127, "kv-node-60":80}
+30 reply to GetNode
+kv-node-30 {"kv-node-30":146, "front-end":14, "kv-node-10":167, "kv-node-40":135, "kv-node-60":82}
+Received GetNode request
+kv-node-30 {"kv-node-30":147, "front-end":14, "kv-node-10":167, "kv-node-40":135, "kv-node-60":82}
+30 reply to GetNode
+kv-node-30 {"kv-node-30":148, "front-end":14, "kv-node-10":169, "kv-node-40":135, "kv-node-60":82}
+Received GetNode request
+kv-node-30 {"kv-node-30":149, "front-end":14, "kv-node-10":169, "kv-node-40":135, "kv-node-60":82}
+30 reply to GetNode
+kv-node-30 {"kv-node-30":150, "front-end":14, "kv-node-10":177, "kv-node-40":139, "kv-node-60":86}
+Received GetNode request
+kv-node-30 {"kv-node-30":151, "front-end":14, "kv-node-10":177, "kv-node-40":139, "kv-node-60":86}
+30 reply to GetNode
+kv-node-30 {"kv-node-30":152, "front-end":14, "kv-node-10":187, "kv-node-40":143, "kv-node-60":94}
+Received GetNode request
+kv-node-30 {"kv-node-30":153, "front-end":14, "kv-node-10":187, "kv-node-40":143, "kv-node-60":94}
+30 reply to GetNode
+kv-node-30 {"kv-node-30":154, "front-end":14, "kv-node-10":189, "kv-node-40":145, "kv-node-60":101}
+Received GetNode request
+kv-node-30 {"kv-node-30":155, "front-end":14, "kv-node-10":189, "kv-node-40":145, "kv-node-60":101}
+30 reply to GetNode
+kv-node-30 {"kv-node-30":156, "front-end":18, "kv-node-10":207, "kv-node-40":152, "kv-node-60":112, "kv-node-70":10}
+Received comp update node request
+kv-node-30 {"kv-node-30":157, "front-end":18, "kv-node-10":207, "kv-node-40":153, "kv-node-60":112, "kv-node-70":10}
+Received keys from successor
+kv-node-30 {"kv-node-30":158, "front-end":18, "kv-node-10":207, "kv-node-40":153, "kv-node-60":112, "kv-node-70":10}
+Responding to UpdateNode
+kv-node-30 {"kv-node-30":159, "front-end":18, "kv-node-10":207, "kv-node-40":153, "kv-node-60":112, "kv-node-70":10}
+Registering with front end
+kv-node-30 {"kv-node-30":160, "front-end":18, "kv-node-10":207, "kv-node-40":153, "kv-node-60":112, "kv-node-70":10}
+30 getting node info from : localhost:13877
+kv-node-30 {"kv-node-30":161, "front-end":18, "kv-node-10":211, "kv-node-40":153, "kv-node-60":112, "kv-node-70":10}
+Received reply with node 10
+kv-node-30 {"kv-node-30":162, "front-end":18, "kv-node-10":211, "kv-node-40":153, "kv-node-60":112, "kv-node-70":10}
+30 getting node info from : localhost:13867
+kv-node-30 {"kv-node-30":163, "front-end":18, "kv-node-10":211, "kv-node-40":155, "kv-node-60":112, "kv-node-70":10}
+Received reply with node 40
+kv-node-30 {"kv-node-30":164, "front-end":18, "kv-node-10":211, "kv-node-40":155, "kv-node-60":112, "kv-node-70":10}
+30 getting node info from : localhost:13879
+kv-node-30 {"kv-node-30":165, "front-end":18, "kv-node-10":211, "kv-node-40":155, "kv-node-60":114, "kv-node-70":10}
+Received reply with node 60
+kv-node-30 {"kv-node-30":166, "front-end":18, "kv-node-10":211, "kv-node-40":155, "kv-node-60":114, "kv-node-70":10}
+30 getting node info from : localhost:13897
+kv-node-30 {"kv-node-30":167, "front-end":18, "kv-node-10":211, "kv-node-40":155, "kv-node-60":114, "kv-node-70":10}
+30 getting node info from : localhost:13877
+kv-node-30 {"kv-node-30":168, "front-end":18, "kv-node-10":211, "kv-node-40":155, "kv-node-60":114, "kv-node-70":12}
+Received reply with node 70
+kv-node-30 {"kv-node-30":169, "front-end":18, "kv-node-10":213, "kv-node-40":155, "kv-node-60":114, "kv-node-70":12}
+Received reply with node 10
+kv-node-30 {"kv-node-30":170, "front-end":18, "kv-node-10":213, "kv-node-40":155, "kv-node-60":114, "kv-node-70":12}
+30 getting node info from : localhost:13867
+kv-node-30 {"kv-node-30":171, "front-end":18, "kv-node-10":213, "kv-node-40":157, "kv-node-60":114, "kv-node-70":12}
+Received reply with node 40
+kv-node-30 {"kv-node-30":172, "front-end":18, "kv-node-10":213, "kv-node-40":157, "kv-node-60":114, "kv-node-70":12}
+Received reply with node 40
+kv-node-30 {"kv-node-30":173, "front-end":18, "kv-node-10":213, "kv-node-40":157, "kv-node-60":114, "kv-node-70":12}
+30 getting node info from : localhost:13879
+kv-node-30 {"kv-node-30":174, "front-end":18, "kv-node-10":213, "kv-node-40":157, "kv-node-60":116, "kv-node-70":12}
+Received reply with node 60
+kv-node-30 {"kv-node-30":175, "front-end":18, "kv-node-10":213, "kv-node-40":157, "kv-node-60":116, "kv-node-70":12}
+Received reply with node 60
+kv-node-30 {"kv-node-30":176, "front-end":18, "kv-node-10":213, "kv-node-40":157, "kv-node-60":116, "kv-node-70":12}
+30 getting node info from : localhost:13897
+kv-node-30 {"kv-node-30":177, "front-end":18, "kv-node-10":213, "kv-node-40":157, "kv-node-60":116, "kv-node-70":14}
+Received reply with node 70
+kv-node-30 {"kv-node-30":178, "front-end":18, "kv-node-10":213, "kv-node-40":157, "kv-node-60":116, "kv-node-70":14}
+Received reply with node 70
+kv-node-30 {"kv-node-30":179, "front-end":18, "kv-node-10":215, "kv-node-40":161, "kv-node-60":116, "kv-node-70":14}
+Received GetNode request
+kv-node-30 {"kv-node-30":180, "front-end":18, "kv-node-10":215, "kv-node-40":161, "kv-node-60":116, "kv-node-70":14}
+30 reply to GetNode
+kv-node-30 {"kv-node-30":181, "front-end":18, "kv-node-10":215, "kv-node-40":164, "kv-node-60":116, "kv-node-70":14}
+Received GetNode request
+kv-node-30 {"kv-node-30":182, "front-end":18, "kv-node-10":215, "kv-node-40":164, "kv-node-60":116, "kv-node-70":14}
+30 reply to GetNode
+kv-node-30 {"kv-node-30":183, "front-end":18, "kv-node-10":219, "kv-node-40":175, "kv-node-60":120, "kv-node-70":18}
+Received GetNode request
+kv-node-30 {"kv-node-30":184, "front-end":18, "kv-node-10":219, "kv-node-40":175, "kv-node-60":120, "kv-node-70":18}
+30 reply to GetNode
+kv-node-30 {"kv-node-30":185, "front-end":18, "kv-node-10":229, "kv-node-40":179, "kv-node-60":122, "kv-node-70":22}
+Received GetNode request
+kv-node-30 {"kv-node-30":186, "front-end":18, "kv-node-10":229, "kv-node-40":179, "kv-node-60":122, "kv-node-70":22}
+30 reply to GetNode
+kv-node-30 {"kv-node-30":187, "front-end":18, "kv-node-10":239, "kv-node-40":183, "kv-node-60":133, "kv-node-70":24}
+Received GetNode request
+kv-node-30 {"kv-node-30":188, "front-end":18, "kv-node-10":239, "kv-node-40":183, "kv-node-60":133, "kv-node-70":24}
+30 reply to GetNode
+kv-node-30 {"kv-node-30":189, "front-end":18, "kv-node-10":241, "kv-node-40":183, "kv-node-60":139, "kv-node-70":24}
+Received GetNode request
+kv-node-30 {"kv-node-30":190, "front-end":18, "kv-node-10":241, "kv-node-40":183, "kv-node-60":139, "kv-node-70":24}
+30 reply to GetNode
+kv-node-30 {"kv-node-30":191, "front-end":18, "kv-node-10":243, "kv-node-40":185, "kv-node-60":146, "kv-node-70":33}
+Received GetNode request
+kv-node-30 {"kv-node-30":192, "front-end":18, "kv-node-10":243, "kv-node-40":185, "kv-node-60":146, "kv-node-70":33}
+30 reply to GetNode
+kv-node-30 {"kv-node-30":193, "front-end":18, "kv-node-10":245, "kv-node-40":185, "kv-node-60":146, "kv-node-70":37}
+Received GetNode request
+kv-node-30 {"kv-node-30":194, "front-end":18, "kv-node-10":245, "kv-node-40":185, "kv-node-60":146, "kv-node-70":37}
+30 reply to GetNode
+kv-node-30 {"kv-node-30":195, "front-end":18, "kv-node-10":245, "kv-node-40":185, "kv-node-60":146, "kv-node-70":37}
+Registering with front end
+kv-node-30 {"kv-node-30":196, "front-end":18, "kv-node-10":245, "kv-node-40":185, "kv-node-60":146, "kv-node-70":37}
+30 getting node info from : localhost:13877
+kv-node-30 {"kv-node-30":197, "front-end":18, "kv-node-10":247, "kv-node-40":185, "kv-node-60":146, "kv-node-70":37}
+Received reply with node 10
+kv-node-30 {"kv-node-30":198, "front-end":18, "kv-node-10":247, "kv-node-40":185, "kv-node-60":146, "kv-node-70":37}
+30 getting node info from : localhost:13877
+kv-node-30 {"kv-node-30":199, "front-end":18, "kv-node-10":247, "kv-node-40":185, "kv-node-60":146, "kv-node-70":37}
+30 getting node info from : localhost:13867
+kv-node-30 {"kv-node-30":200, "front-end":18, "kv-node-10":247, "kv-node-40":191, "kv-node-60":146, "kv-node-70":43}
+Received reply with node 40
+kv-node-30 {"kv-node-30":201, "front-end":18, "kv-node-10":249, "kv-node-40":191, "kv-node-60":146, "kv-node-70":43}
+Received reply with node 10
+kv-node-30 {"kv-node-30":202, "front-end":18, "kv-node-10":249, "kv-node-40":191, "kv-node-60":146, "kv-node-70":43}
+30 getting node info from : localhost:13879
+kv-node-30 {"kv-node-30":203, "front-end":18, "kv-node-10":249, "kv-node-40":191, "kv-node-60":146, "kv-node-70":43}
+30 getting node info from : localhost:13867
+kv-node-30 {"kv-node-30":204, "front-end":18, "kv-node-10":249, "kv-node-40":193, "kv-node-60":146, "kv-node-70":43}
+Received reply with node 40
+kv-node-30 {"kv-node-30":205, "front-end":18, "kv-node-10":249, "kv-node-40":193, "kv-node-60":146, "kv-node-70":43}
+Received reply with node 40
+kv-node-30 {"kv-node-30":206, "front-end":18, "kv-node-10":249, "kv-node-40":193, "kv-node-60":150, "kv-node-70":43}
+Received reply with node 60
+kv-node-30 {"kv-node-30":207, "front-end":18, "kv-node-10":249, "kv-node-40":193, "kv-node-60":150, "kv-node-70":43}
+30 getting node info from : localhost:13897
+kv-node-30 {"kv-node-30":208, "front-end":18, "kv-node-10":249, "kv-node-40":193, "kv-node-60":150, "kv-node-70":43}
+30 getting node info from : localhost:13879
+kv-node-30 {"kv-node-30":209, "front-end":18, "kv-node-10":249, "kv-node-40":193, "kv-node-60":152, "kv-node-70":43}
+Received reply with node 60
+kv-node-30 {"kv-node-30":210, "front-end":18, "kv-node-10":249, "kv-node-40":193, "kv-node-60":152, "kv-node-70":43}
+Received reply with node 60
+kv-node-30 {"kv-node-30":211, "front-end":18, "kv-node-10":249, "kv-node-40":193, "kv-node-60":152, "kv-node-70":48}
+Received reply with node 70
+kv-node-30 {"kv-node-30":212, "front-end":18, "kv-node-10":249, "kv-node-40":193, "kv-node-60":152, "kv-node-70":48}
+30 getting node info from : localhost:13897
+kv-node-30 {"kv-node-30":213, "front-end":18, "kv-node-10":249, "kv-node-40":193, "kv-node-60":152, "kv-node-70":50}
+Received reply with node 70
+kv-node-30 {"kv-node-30":214, "front-end":18, "kv-node-10":249, "kv-node-40":193, "kv-node-60":152, "kv-node-70":50}
+Received reply with node 70
+kv-node-30 {"kv-node-30":215, "front-end":25, "kv-node-10":249, "kv-node-40":203, "kv-node-60":154, "kv-node-70":50, "client-testGetEveryNSeconds":4}
+Received GetNode request
+kv-node-30 {"kv-node-30":216, "front-end":25, "kv-node-10":249, "kv-node-40":203, "kv-node-60":154, "kv-node-70":50, "client-testGetEveryNSeconds":4}
+30 reply to GetNode
+kv-node-30 {"kv-node-30":217, "front-end":25, "kv-node-10":253, "kv-node-40":205, "kv-node-60":155, "kv-node-70":53, "client-testGetEveryNSeconds":4}
+Received GetNode request
+kv-node-30 {"kv-node-30":218, "front-end":25, "kv-node-10":253, "kv-node-40":205, "kv-node-60":155, "kv-node-70":53, "client-testGetEveryNSeconds":4}
+30 reply to GetNode
+kv-node-30 {"kv-node-30":219, "front-end":25, "kv-node-10":257, "kv-node-40":218, "kv-node-60":160, "kv-node-70":58, "client-testGetEveryNSeconds":4}
+Received GetNode request
+kv-node-30 {"kv-node-30":220, "front-end":25, "kv-node-10":257, "kv-node-40":218, "kv-node-60":160, "kv-node-70":58, "client-testGetEveryNSeconds":4}
+30 reply to GetNode
+kv-node-30 {"kv-node-30":221, "front-end":25, "kv-node-10":267, "kv-node-40":222, "kv-node-60":162, "kv-node-70":62, "client-testGetEveryNSeconds":4}
+Received GetNode request
+kv-node-30 {"kv-node-30":222, "front-end":25, "kv-node-10":267, "kv-node-40":222, "kv-node-60":162, "kv-node-70":62, "client-testGetEveryNSeconds":4}
+30 reply to GetNode
+kv-node-30 {"kv-node-30":223, "front-end":25, "kv-node-10":277, "kv-node-40":226, "kv-node-60":174, "kv-node-70":64, "client-testGetEveryNSeconds":4}
+Received GetNode request
+kv-node-30 {"kv-node-30":224, "front-end":25, "kv-node-10":277, "kv-node-40":226, "kv-node-60":174, "kv-node-70":64, "client-testGetEveryNSeconds":4}
+30 reply to GetNode
+kv-node-30 {"kv-node-30":225, "front-end":25, "kv-node-10":279, "kv-node-40":226, "kv-node-60":177, "kv-node-70":64, "client-testGetEveryNSeconds":4}
+Received GetNode request
+kv-node-30 {"kv-node-30":226, "front-end":25, "kv-node-10":279, "kv-node-40":226, "kv-node-60":177, "kv-node-70":64, "client-testGetEveryNSeconds":4}
+30 reply to GetNode
+kv-node-30 {"kv-node-30":227, "front-end":25, "kv-node-10":281, "kv-node-40":228, "kv-node-60":186, "kv-node-70":72, "client-testGetEveryNSeconds":4}
+Received GetNode request
+kv-node-30 {"kv-node-30":228, "front-end":25, "kv-node-10":281, "kv-node-40":228, "kv-node-60":186, "kv-node-70":72, "client-testGetEveryNSeconds":4}
+30 reply to GetNode
+kv-node-30 {"kv-node-30":229, "front-end":25, "kv-node-10":283, "kv-node-40":228, "kv-node-60":186, "kv-node-70":77, "client-testGetEveryNSeconds":4}
+Received GetNode request
+kv-node-30 {"kv-node-30":230, "front-end":25, "kv-node-10":283, "kv-node-40":228, "kv-node-60":186, "kv-node-70":77, "client-testGetEveryNSeconds":4}
+30 reply to GetNode
+kv-node-30 {"kv-node-30":231, "front-end":25, "kv-node-10":283, "kv-node-40":228, "kv-node-60":186, "kv-node-70":77, "client-testGetEveryNSeconds":4}
+Registering with front end
+kv-node-30 {"kv-node-30":232, "front-end":25, "kv-node-10":283, "kv-node-40":228, "kv-node-60":186, "kv-node-70":77, "client-testGetEveryNSeconds":4}
+30 getting node info from : localhost:13877
+kv-node-30 {"kv-node-30":233, "front-end":25, "kv-node-10":283, "kv-node-40":228, "kv-node-60":186, "kv-node-70":77, "client-testGetEveryNSeconds":4}
+30 getting node info from : localhost:13877
+kv-node-30 {"kv-node-30":234, "front-end":25, "kv-node-10":285, "kv-node-40":228, "kv-node-60":186, "kv-node-70":77, "client-testGetEveryNSeconds":4}
+Received reply with node 10
+kv-node-30 {"kv-node-30":235, "front-end":25, "kv-node-10":287, "kv-node-40":228, "kv-node-60":186, "kv-node-70":77, "client-testGetEveryNSeconds":4}
+Received reply with node 10
+kv-node-30 {"kv-node-30":236, "front-end":25, "kv-node-10":287, "kv-node-40":228, "kv-node-60":186, "kv-node-70":77, "client-testGetEveryNSeconds":4}
+30 getting node info from : localhost:13867
+kv-node-30 {"kv-node-30":237, "front-end":25, "kv-node-10":287, "kv-node-40":228, "kv-node-60":186, "kv-node-70":77, "client-testGetEveryNSeconds":4}
+30 getting node info from : localhost:13867
+kv-node-30 {"kv-node-30":238, "front-end":25, "kv-node-10":287, "kv-node-40":234, "kv-node-60":186, "kv-node-70":82, "client-testGetEveryNSeconds":4}
+Received reply with node 40
+kv-node-30 {"kv-node-30":239, "front-end":25, "kv-node-10":287, "kv-node-40":234, "kv-node-60":186, "kv-node-70":82, "client-testGetEveryNSeconds":4}
+Received reply with node 40
+kv-node-30 {"kv-node-30":240, "front-end":25, "kv-node-10":287, "kv-node-40":236, "kv-node-60":186, "kv-node-70":82, "client-testGetEveryNSeconds":4}
+Received reply with node 40
+kv-node-30 {"kv-node-30":241, "front-end":25, "kv-node-10":287, "kv-node-40":236, "kv-node-60":186, "kv-node-70":82, "client-testGetEveryNSeconds":4}
+30 getting node info from : localhost:13879
+kv-node-30 {"kv-node-30":242, "front-end":25, "kv-node-10":287, "kv-node-40":236, "kv-node-60":186, "kv-node-70":82, "client-testGetEveryNSeconds":4}
+30 getting node info from : localhost:13879
+kv-node-30 {"kv-node-30":243, "front-end":25, "kv-node-10":287, "kv-node-40":236, "kv-node-60":190, "kv-node-70":83, "client-testGetEveryNSeconds":4}
+Received reply with node 60
+kv-node-30 {"kv-node-30":244, "front-end":25, "kv-node-10":287, "kv-node-40":236, "kv-node-60":190, "kv-node-70":83, "client-testGetEveryNSeconds":4}
+Received reply with node 60
+kv-node-30 {"kv-node-30":245, "front-end":25, "kv-node-10":287, "kv-node-40":236, "kv-node-60":192, "kv-node-70":83, "client-testGetEveryNSeconds":4}
+Received reply with node 60
+kv-node-30 {"kv-node-30":246, "front-end":25, "kv-node-10":287, "kv-node-40":236, "kv-node-60":192, "kv-node-70":83, "client-testGetEveryNSeconds":4}
+30 getting node info from : localhost:13897
+kv-node-30 {"kv-node-30":247, "front-end":25, "kv-node-10":287, "kv-node-40":236, "kv-node-60":192, "kv-node-70":83, "client-testGetEveryNSeconds":4}
+30 getting node info from : localhost:13897
+kv-node-30 {"kv-node-30":248, "front-end":25, "kv-node-10":287, "kv-node-40":236, "kv-node-60":192, "kv-node-70":88, "client-testGetEveryNSeconds":4}
+Received reply with node 70
+kv-node-30 {"kv-node-30":249, "front-end":25, "kv-node-10":287, "kv-node-40":236, "kv-node-60":192, "kv-node-70":88, "client-testGetEveryNSeconds":4}
+Received reply with node 70
+kv-node-30 {"kv-node-30":250, "front-end":25, "kv-node-10":287, "kv-node-40":236, "kv-node-60":192, "kv-node-70":90, "client-testGetEveryNSeconds":4}
+Received reply with node 70
+kv-node-30 {"kv-node-30":251, "front-end":25, "kv-node-10":287, "kv-node-40":239, "kv-node-60":192, "kv-node-70":90, "client-testGetEveryNSeconds":4}
+Received GetNode request
+kv-node-30 {"kv-node-30":252, "front-end":25, "kv-node-10":287, "kv-node-40":239, "kv-node-60":192, "kv-node-70":90, "client-testGetEveryNSeconds":4}
+30 reply to GetNode
+kv-node-30 {"kv-node-30":253, "front-end":25, "kv-node-10":289, "kv-node-40":241, "kv-node-60":192, "kv-node-70":90, "client-testGetEveryNSeconds":4}
+Received GetNode request
+kv-node-30 {"kv-node-30":254, "front-end":25, "kv-node-10":289, "kv-node-40":241, "kv-node-60":192, "kv-node-70":90, "client-testGetEveryNSeconds":4}
+30 reply to GetNode
+kv-node-30 {"kv-node-30":255, "front-end":25, "kv-node-10":293, "kv-node-40":254, "kv-node-60":196, "kv-node-70":94, "client-testGetEveryNSeconds":4}
+Received GetNode request
+kv-node-30 {"kv-node-30":256, "front-end":25, "kv-node-10":293, "kv-node-40":254, "kv-node-60":196, "kv-node-70":94, "client-testGetEveryNSeconds":4}
+30 reply to GetNode
+kv-node-30 {"kv-node-30":257, "front-end":25, "kv-node-10":303, "kv-node-40":258, "kv-node-60":198, "kv-node-70":98, "client-testGetEveryNSeconds":4}
+Received GetNode request
+kv-node-30 {"kv-node-30":258, "front-end":25, "kv-node-10":303, "kv-node-40":258, "kv-node-60":198, "kv-node-70":98, "client-testGetEveryNSeconds":4}
+30 reply to GetNode
+kv-node-30 {"kv-node-30":259, "front-end":25, "kv-node-10":313, "kv-node-40":262, "kv-node-60":206, "kv-node-70":98, "client-testGetEveryNSeconds":4}
+Received GetNode request
+kv-node-30 {"kv-node-30":260, "front-end":25, "kv-node-10":313, "kv-node-40":262, "kv-node-60":206, "kv-node-70":98, "client-testGetEveryNSeconds":4}
+30 reply to GetNode
+kv-node-30 {"kv-node-30":261, "front-end":25, "kv-node-10":315, "kv-node-40":264, "kv-node-60":216, "kv-node-70":100, "client-testGetEveryNSeconds":4}
+Received GetNode request
+kv-node-30 {"kv-node-30":262, "front-end":25, "kv-node-10":315, "kv-node-40":264, "kv-node-60":216, "kv-node-70":100, "client-testGetEveryNSeconds":4}
+30 reply to GetNode
+kv-node-30 {"kv-node-30":263, "front-end":25, "kv-node-10":317, "kv-node-40":264, "kv-node-60":222, "kv-node-70":108, "client-testGetEveryNSeconds":4}
+Received GetNode request
+kv-node-30 {"kv-node-30":264, "front-end":25, "kv-node-10":317, "kv-node-40":264, "kv-node-60":222, "kv-node-70":108, "client-testGetEveryNSeconds":4}
+30 reply to GetNode
+kv-node-30 {"kv-node-30":265, "front-end":25, "kv-node-10":319, "kv-node-40":264, "kv-node-60":222, "kv-node-70":113, "client-testGetEveryNSeconds":4}
+Received GetNode request
+kv-node-30 {"kv-node-30":266, "front-end":25, "kv-node-10":319, "kv-node-40":264, "kv-node-60":222, "kv-node-70":113, "client-testGetEveryNSeconds":4}
+30 reply to GetNode
+kv-node-40 {"kv-node-40":1}
+Initialization Complete
+kv-node-40 {"kv-node-40":2}
+Registering with front end
+kv-node-40 {"kv-node-40":3, "front-end":8, "kv-node-10":10, "kv-node-30":8}
+Received initialize request
+kv-node-40 {"kv-node-40":4, "front-end":8, "kv-node-10":10, "kv-node-30":8}
+Respond to initialize request
+kv-node-40 {"kv-node-40":5, "front-end":10, "kv-node-10":26, "kv-node-30":20}
+Received comp update node request
+kv-node-40 {"kv-node-40":6, "front-end":10, "kv-node-10":27, "kv-node-30":20}
+Received keys from successor
+kv-node-40 {"kv-node-40":7, "front-end":10, "kv-node-10":27, "kv-node-30":20}
+Responding to UpdateNode
+kv-node-40 {"kv-node-40":8, "front-end":10, "kv-node-10":29, "kv-node-30":20}
+Received GetNode request
+kv-node-40 {"kv-node-40":9, "front-end":10, "kv-node-10":29, "kv-node-30":20}
+40 reply to GetNode
+kv-node-40 {"kv-node-40":10, "front-end":10, "kv-node-10":29, "kv-node-30":20}
+Sending backups to predecessor 30
+kv-node-40 {"kv-node-40":11, "front-end":10, "kv-node-10":29, "kv-node-30":20}
+Sending backups to predecessor 10
+kv-node-40 {"kv-node-40":12, "front-end":10, "kv-node-10":39, "kv-node-30":27}
+Received GetNode request
+kv-node-40 {"kv-node-40":13, "front-end":10, "kv-node-10":39, "kv-node-30":27}
+40 reply to GetNode
+kv-node-40 {"kv-node-40":14, "front-end":10, "kv-node-10":40, "kv-node-30":27}
+Received GetNode request
+kv-node-40 {"kv-node-40":15, "front-end":10, "kv-node-10":40, "kv-node-30":27}
+40 reply to GetNode
+kv-node-40 {"kv-node-40":16, "front-end":10, "kv-node-10":43, "kv-node-30":27}
+Received GetNode request
+kv-node-40 {"kv-node-40":17, "front-end":10, "kv-node-10":43, "kv-node-30":27}
+40 reply to GetNode
+kv-node-40 {"kv-node-40":18, "front-end":10, "kv-node-10":49, "kv-node-30":31}
+Received GetNode request
+kv-node-40 {"kv-node-40":19, "front-end":10, "kv-node-10":49, "kv-node-30":31}
+40 reply to GetNode
+kv-node-40 {"kv-node-40":20, "front-end":10, "kv-node-10":53, "kv-node-30":36}
+Received GetNode request
+kv-node-40 {"kv-node-40":21, "front-end":10, "kv-node-10":53, "kv-node-30":36}
+40 reply to GetNode
+kv-node-40 {"kv-node-40":22, "front-end":10, "kv-node-10":55, "kv-node-30":39}
+Received GetNode request
+kv-node-40 {"kv-node-40":23, "front-end":10, "kv-node-10":55, "kv-node-30":39}
+40 reply to GetNode
+kv-node-40 {"kv-node-40":24, "front-end":10, "kv-node-10":55, "kv-node-30":39}
+40 getting node info from : 127.0.0.1:13861
+kv-node-40 {"kv-node-40":25, "front-end":10, "kv-node-10":55, "kv-node-30":39}
+Registering with front end
+kv-node-40 {"kv-node-40":26, "front-end":10, "kv-node-10":55, "kv-node-30":39}
+40 getting node info from : localhost:13877
+kv-node-40 {"kv-node-40":27, "front-end":10, "kv-node-10":57, "kv-node-30":46}
+Received reply with node 30
+kv-node-40 {"kv-node-40":28, "front-end":10, "kv-node-10":59, "kv-node-30":46}
+Received reply with node 10
+kv-node-40 {"kv-node-40":29, "front-end":10, "kv-node-10":59, "kv-node-30":46}
+40 getting node info from : 127.0.0.1:13861
+kv-node-40 {"kv-node-40":30, "front-end":10, "kv-node-10":59, "kv-node-30":46}
+40 getting node info from : localhost:13877
+kv-node-40 {"kv-node-40":31, "front-end":10, "kv-node-10":61, "kv-node-30":46}
+Received reply with node 10
+kv-node-40 {"kv-node-40":32, "front-end":10, "kv-node-10":61, "kv-node-30":46}
+Received reply with node 10
+kv-node-40 {"kv-node-40":33, "front-end":10, "kv-node-10":61, "kv-node-30":48}
+Received reply with node 30
+kv-node-40 {"kv-node-40":34, "front-end":10, "kv-node-10":61, "kv-node-30":48}
+40 getting node info from : 127.0.0.1:13861
+kv-node-40 {"kv-node-40":35, "front-end":10, "kv-node-10":61, "kv-node-30":50}
+Received reply with node 30
+kv-node-40 {"kv-node-40":36, "front-end":10, "kv-node-10":61, "kv-node-30":50}
+Received reply with node 30
+kv-node-40 {"kv-node-40":37, "front-end":10, "kv-node-10":65, "kv-node-30":52}
+Received GetNode request
+kv-node-40 {"kv-node-40":38, "front-end":10, "kv-node-10":65, "kv-node-30":52}
+40 reply to GetNode
+kv-node-40 {"kv-node-40":39, "front-end":10, "kv-node-10":67, "kv-node-30":52}
+Received GetNode request
+kv-node-40 {"kv-node-40":40, "front-end":10, "kv-node-10":67, "kv-node-30":52}
+40 reply to GetNode
+kv-node-40 {"kv-node-40":41, "front-end":10, "kv-node-10":72, "kv-node-30":54}
+Received GetNode request
+kv-node-40 {"kv-node-40":42, "front-end":10, "kv-node-10":72, "kv-node-30":54}
+40 reply to GetNode
+kv-node-40 {"kv-node-40":43, "front-end":14, "kv-node-10":82, "kv-node-30":54, "kv-node-60":9}
+Received comp update node request
+kv-node-40 {"kv-node-40":44, "front-end":14, "kv-node-10":82, "kv-node-30":54, "kv-node-60":10}
+Received keys from successor
+kv-node-40 {"kv-node-40":45, "front-end":14, "kv-node-10":82, "kv-node-30":54, "kv-node-60":10}
+Responding to UpdateNode
+kv-node-40 {"kv-node-40":46, "front-end":14, "kv-node-10":84, "kv-node-30":54, "kv-node-60":10}
+Received GetNode request
+kv-node-40 {"kv-node-40":47, "front-end":14, "kv-node-10":84, "kv-node-30":54, "kv-node-60":10}
+40 reply to GetNode
+kv-node-40 {"kv-node-40":48, "front-end":14, "kv-node-10":84, "kv-node-30":54, "kv-node-60":10}
+Sending backups to predecessor 30
+kv-node-40 {"kv-node-40":49, "front-end":14, "kv-node-10":84, "kv-node-30":54, "kv-node-60":10}
+Sending backups to predecessor 10
+kv-node-40 {"kv-node-40":50, "front-end":14, "kv-node-10":92, "kv-node-30":61, "kv-node-60":10}
+Received GetNode request
+kv-node-40 {"kv-node-40":51, "front-end":14, "kv-node-10":92, "kv-node-30":61, "kv-node-60":10}
+40 reply to GetNode
+kv-node-40 {"kv-node-40":52, "front-end":14, "kv-node-10":94, "kv-node-30":65, "kv-node-60":10}
+Received GetNode request
+kv-node-40 {"kv-node-40":53, "front-end":14, "kv-node-10":94, "kv-node-30":65, "kv-node-60":10}
+40 reply to GetNode
+kv-node-40 {"kv-node-40":54, "front-end":14, "kv-node-10":94, "kv-node-30":65, "kv-node-60":10}
+Registering with front end
+kv-node-40 {"kv-node-40":55, "front-end":14, "kv-node-10":94, "kv-node-30":65, "kv-node-60":10}
+40 getting node info from : localhost:13877
+kv-node-40 {"kv-node-40":56, "front-end":14, "kv-node-10":94, "kv-node-30":65, "kv-node-60":10}
+40 getting node info from : 127.0.0.1:13861
+kv-node-40 {"kv-node-40":57, "front-end":14, "kv-node-10":98, "kv-node-30":73, "kv-node-60":14}
+Received reply with node 10
+kv-node-40 {"kv-node-40":58, "front-end":14, "kv-node-10":98, "kv-node-30":77, "kv-node-60":14}
+Received reply with node 30
+kv-node-40 {"kv-node-40":59, "front-end":14, "kv-node-10":98, "kv-node-30":77, "kv-node-60":14}
+40 getting node info from : 127.0.0.1:13861
+kv-node-40 {"kv-node-40":60, "front-end":14, "kv-node-10":98, "kv-node-30":77, "kv-node-60":14}
+40 getting node info from : localhost:13879
+kv-node-40 {"kv-node-40":61, "front-end":14, "kv-node-10":98, "kv-node-30":79, "kv-node-60":14}
+Received reply with node 30
+kv-node-40 {"kv-node-40":62, "front-end":14, "kv-node-10":98, "kv-node-30":79, "kv-node-60":14}
+40 getting node info from : localhost:13879
+kv-node-40 {"kv-node-40":63, "front-end":14, "kv-node-10":98, "kv-node-30":79, "kv-node-60":16}
+Received reply with node 60
+kv-node-40 {"kv-node-40":64, "front-end":14, "kv-node-10":98, "kv-node-30":79, "kv-node-60":16}
+Received reply with node 60
+kv-node-40 {"kv-node-40":65, "front-end":14, "kv-node-10":98, "kv-node-30":79, "kv-node-60":18}
+Received reply with node 60
+kv-node-40 {"kv-node-40":66, "front-end":14, "kv-node-10":98, "kv-node-30":79, "kv-node-60":18}
+40 getting node info from : localhost:13877
+kv-node-40 {"kv-node-40":67, "front-end":14, "kv-node-10":100, "kv-node-30":79, "kv-node-60":18}
+Received reply with node 10
+kv-node-40 {"kv-node-40":68, "front-end":14, "kv-node-10":100, "kv-node-30":79, "kv-node-60":18}
+Received reply with node 10
+kv-node-40 {"kv-node-40":69, "front-end":14, "kv-node-10":100, "kv-node-30":79, "kv-node-60":18}
+40 getting node info from : 127.0.0.1:13861
+kv-node-40 {"kv-node-40":70, "front-end":14, "kv-node-10":100, "kv-node-30":81, "kv-node-60":18}
+Received reply with node 30
+kv-node-40 {"kv-node-40":71, "front-end":14, "kv-node-10":100, "kv-node-30":81, "kv-node-60":18}
+Received reply with node 30
+kv-node-40 {"kv-node-40":72, "front-end":14, "kv-node-10":104, "kv-node-30":83, "kv-node-60":18}
+Received GetNode request
+kv-node-40 {"kv-node-40":73, "front-end":14, "kv-node-10":104, "kv-node-30":83, "kv-node-60":18}
+40 reply to GetNode
+kv-node-40 {"kv-node-40":74, "front-end":14, "kv-node-10":110, "kv-node-30":83, "kv-node-60":22}
+Received GetNode request
+kv-node-40 {"kv-node-40":75, "front-end":14, "kv-node-10":110, "kv-node-30":83, "kv-node-60":22}
+40 reply to GetNode
+kv-node-40 {"kv-node-40":76, "front-end":14, "kv-node-10":116, "kv-node-30":87, "kv-node-60":22}
+Received GetNode request
+kv-node-40 {"kv-node-40":77, "front-end":14, "kv-node-10":116, "kv-node-30":87, "kv-node-60":22}
+40 reply to GetNode
+kv-node-40 {"kv-node-40":78, "front-end":14, "kv-node-10":119, "kv-node-30":87, "kv-node-60":26}
+Received GetNode request
+kv-node-40 {"kv-node-40":79, "front-end":14, "kv-node-10":119, "kv-node-30":87, "kv-node-60":26}
+40 reply to GetNode
+kv-node-40 {"kv-node-40":80, "front-end":14, "kv-node-10":125, "kv-node-30":89, "kv-node-60":36}
+Received GetNode request
+kv-node-40 {"kv-node-40":81, "front-end":14, "kv-node-10":125, "kv-node-30":89, "kv-node-60":36}
+40 reply to GetNode
+kv-node-40 {"kv-node-40":82, "front-end":14, "kv-node-10":125, "kv-node-30":91, "kv-node-60":40}
+Received GetNode request
+kv-node-40 {"kv-node-40":83, "front-end":14, "kv-node-10":125, "kv-node-30":91, "kv-node-60":40}
+40 reply to GetNode
+kv-node-40 {"kv-node-40":84, "front-end":14, "kv-node-10":127, "kv-node-30":95, "kv-node-60":40}
+Received GetNode request
+kv-node-40 {"kv-node-40":85, "front-end":14, "kv-node-10":127, "kv-node-30":95, "kv-node-60":40}
+40 reply to GetNode
+kv-node-40 {"kv-node-40":86, "front-end":14, "kv-node-10":129, "kv-node-30":101, "kv-node-60":44}
+Received GetNode request
+kv-node-40 {"kv-node-40":87, "front-end":14, "kv-node-10":129, "kv-node-30":101, "kv-node-60":44}
+40 reply to GetNode
+kv-node-40 {"kv-node-40":88, "front-end":14, "kv-node-10":129, "kv-node-30":101, "kv-node-60":44}
+Registering with front end
+kv-node-40 {"kv-node-40":89, "front-end":14, "kv-node-10":129, "kv-node-30":101, "kv-node-60":44}
+40 getting node info from : localhost:13877
+kv-node-40 {"kv-node-40":90, "front-end":14, "kv-node-10":133, "kv-node-30":107, "kv-node-60":46}
+Received reply with node 10
+kv-node-40 {"kv-node-40":91, "front-end":14, "kv-node-10":133, "kv-node-30":107, "kv-node-60":46}
+40 getting node info from : 127.0.0.1:13861
+kv-node-40 {"kv-node-40":92, "front-end":14, "kv-node-10":133, "kv-node-30":111, "kv-node-60":46}
+Received reply with node 30
+kv-node-40 {"kv-node-40":93, "front-end":14, "kv-node-10":133, "kv-node-30":111, "kv-node-60":46}
+40 getting node info from : 127.0.0.1:13861
+kv-node-40 {"kv-node-40":94, "front-end":14, "kv-node-10":133, "kv-node-30":111, "kv-node-60":46}
+40 getting node info from : localhost:13879
+kv-node-40 {"kv-node-40":95, "front-end":14, "kv-node-10":133, "kv-node-30":113, "kv-node-60":46}
+Received reply with node 30
+kv-node-40 {"kv-node-40":96, "front-end":14, "kv-node-10":133, "kv-node-30":113, "kv-node-60":48}
+Received reply with node 60
+kv-node-40 {"kv-node-40":97, "front-end":14, "kv-node-10":133, "kv-node-30":113, "kv-node-60":48}
+40 getting node info from : localhost:13879
+kv-node-40 {"kv-node-40":98, "front-end":14, "kv-node-10":133, "kv-node-30":113, "kv-node-60":50}
+Received reply with node 60
+kv-node-40 {"kv-node-40":99, "front-end":14, "kv-node-10":133, "kv-node-30":113, "kv-node-60":50}
+Received reply with node 60
+kv-node-40 {"kv-node-40":100, "front-end":14, "kv-node-10":133, "kv-node-30":113, "kv-node-60":50}
+40 getting node info from : localhost:13877
+kv-node-40 {"kv-node-40":101, "front-end":14, "kv-node-10":135, "kv-node-30":113, "kv-node-60":50}
+Received reply with node 10
+kv-node-40 {"kv-node-40":102, "front-end":14, "kv-node-10":135, "kv-node-30":113, "kv-node-60":50}
+Received reply with node 10
+kv-node-40 {"kv-node-40":103, "front-end":14, "kv-node-10":135, "kv-node-30":113, "kv-node-60":50}
+40 getting node info from : 127.0.0.1:13861
+kv-node-40 {"kv-node-40":104, "front-end":14, "kv-node-10":135, "kv-node-30":115, "kv-node-60":50}
+Received reply with node 30
+kv-node-40 {"kv-node-40":105, "front-end":14, "kv-node-10":135, "kv-node-30":115, "kv-node-60":50}
+Received reply with node 30
+kv-node-40 {"kv-node-40":106, "front-end":14, "kv-node-10":139, "kv-node-30":117, "kv-node-60":50}
+Received GetNode request
+kv-node-40 {"kv-node-40":107, "front-end":14, "kv-node-10":139, "kv-node-30":117, "kv-node-60":50}
+40 reply to GetNode
+kv-node-40 {"kv-node-40":108, "front-end":14, "kv-node-10":148, "kv-node-30":119, "kv-node-60":54}
+Received GetNode request
+kv-node-40 {"kv-node-40":109, "front-end":14, "kv-node-10":148, "kv-node-30":119, "kv-node-60":54}
+40 reply to GetNode
+kv-node-40 {"kv-node-40":110, "front-end":14, "kv-node-10":151, "kv-node-30":119, "kv-node-60":59}
+Received GetNode request
+kv-node-40 {"kv-node-40":111, "front-end":14, "kv-node-10":151, "kv-node-30":119, "kv-node-60":59}
+40 reply to GetNode
+kv-node-40 {"kv-node-40":112, "front-end":14, "kv-node-10":157, "kv-node-30":121, "kv-node-60":68}
+Received GetNode request
+kv-node-40 {"kv-node-40":113, "front-end":14, "kv-node-10":157, "kv-node-30":121, "kv-node-60":68}
+40 reply to GetNode
+kv-node-40 {"kv-node-40":114, "front-end":14, "kv-node-10":157, "kv-node-30":123, "kv-node-60":72}
+Received GetNode request
+kv-node-40 {"kv-node-40":115, "front-end":14, "kv-node-10":157, "kv-node-30":123, "kv-node-60":72}
+40 reply to GetNode
+kv-node-40 {"kv-node-40":116, "front-end":14, "kv-node-10":159, "kv-node-30":127, "kv-node-60":72}
+Received GetNode request
+kv-node-40 {"kv-node-40":117, "front-end":14, "kv-node-10":159, "kv-node-30":127, "kv-node-60":72}
+40 reply to GetNode
+kv-node-40 {"kv-node-40":118, "front-end":14, "kv-node-10":161, "kv-node-30":133, "kv-node-60":76}
+Received GetNode request
+kv-node-40 {"kv-node-40":119, "front-end":14, "kv-node-10":161, "kv-node-30":133, "kv-node-60":76}
+40 reply to GetNode
+kv-node-40 {"kv-node-40":120, "front-end":14, "kv-node-10":161, "kv-node-30":133, "kv-node-60":76}
+Registering with front end
+kv-node-40 {"kv-node-40":121, "front-end":14, "kv-node-10":161, "kv-node-30":133, "kv-node-60":76}
+40 getting node info from : localhost:13877
+kv-node-40 {"kv-node-40":122, "front-end":14, "kv-node-10":165, "kv-node-30":139, "kv-node-60":78}
+Received reply with node 10
+kv-node-40 {"kv-node-40":123, "front-end":14, "kv-node-10":165, "kv-node-30":139, "kv-node-60":78}
+40 getting node info from : 127.0.0.1:13861
+kv-node-40 {"kv-node-40":124, "front-end":14, "kv-node-10":165, "kv-node-30":143, "kv-node-60":78}
+Received reply with node 30
+kv-node-40 {"kv-node-40":125, "front-end":14, "kv-node-10":165, "kv-node-30":143, "kv-node-60":78}
+40 getting node info from : localhost:13879
+kv-node-40 {"kv-node-40":126, "front-end":14, "kv-node-10":165, "kv-node-30":143, "kv-node-60":80}
+Received reply with node 60
+kv-node-40 {"kv-node-40":127, "front-end":14, "kv-node-10":165, "kv-node-30":143, "kv-node-60":80}
+40 getting node info from : 127.0.0.1:13861
+kv-node-40 {"kv-node-40":128, "front-end":14, "kv-node-10":165, "kv-node-30":145, "kv-node-60":80}
+Received reply with node 30
+kv-node-40 {"kv-node-40":129, "front-end":14, "kv-node-10":165, "kv-node-30":145, "kv-node-60":80}
+40 getting node info from : localhost:13879
+kv-node-40 {"kv-node-40":130, "front-end":14, "kv-node-10":165, "kv-node-30":145, "kv-node-60":82}
+Received reply with node 60
+kv-node-40 {"kv-node-40":131, "front-end":14, "kv-node-10":165, "kv-node-30":145, "kv-node-60":82}
+Received reply with node 60
+kv-node-40 {"kv-node-40":132, "front-end":14, "kv-node-10":165, "kv-node-30":145, "kv-node-60":82}
+40 getting node info from : localhost:13877
+kv-node-40 {"kv-node-40":133, "front-end":14, "kv-node-10":167, "kv-node-30":145, "kv-node-60":82}
+Received reply with node 10
+kv-node-40 {"kv-node-40":134, "front-end":14, "kv-node-10":167, "kv-node-30":145, "kv-node-60":82}
+Received reply with node 10
+kv-node-40 {"kv-node-40":135, "front-end":14, "kv-node-10":167, "kv-node-30":145, "kv-node-60":82}
+40 getting node info from : 127.0.0.1:13861
+kv-node-40 {"kv-node-40":136, "front-end":14, "kv-node-10":167, "kv-node-30":147, "kv-node-60":82}
+Received reply with node 30
+kv-node-40 {"kv-node-40":137, "front-end":14, "kv-node-10":167, "kv-node-30":147, "kv-node-60":82}
+Received reply with node 30
+kv-node-40 {"kv-node-40":138, "front-end":14, "kv-node-10":171, "kv-node-30":149, "kv-node-60":82}
+Received GetNode request
+kv-node-40 {"kv-node-40":139, "front-end":14, "kv-node-10":171, "kv-node-30":149, "kv-node-60":82}
+40 reply to GetNode
+kv-node-40 {"kv-node-40":140, "front-end":14, "kv-node-10":180, "kv-node-30":151, "kv-node-60":86}
+Received GetNode request
+kv-node-40 {"kv-node-40":141, "front-end":14, "kv-node-10":180, "kv-node-30":151, "kv-node-60":86}
+40 reply to GetNode
+kv-node-40 {"kv-node-40":142, "front-end":14, "kv-node-10":183, "kv-node-30":151, "kv-node-60":91}
+Received GetNode request
+kv-node-40 {"kv-node-40":143, "front-end":14, "kv-node-10":183, "kv-node-30":151, "kv-node-60":91}
+40 reply to GetNode
+kv-node-40 {"kv-node-40":144, "front-end":14, "kv-node-10":187, "kv-node-30":153, "kv-node-60":97}
+Received GetNode request
+kv-node-40 {"kv-node-40":145, "front-end":14, "kv-node-10":187, "kv-node-30":153, "kv-node-60":97}
+40 reply to GetNode
+kv-node-40 {"kv-node-40":146, "front-end":14, "kv-node-10":189, "kv-node-30":155, "kv-node-60":104}
+Received GetNode request
+kv-node-40 {"kv-node-40":147, "front-end":14, "kv-node-10":189, "kv-node-30":155, "kv-node-60":104}
+40 reply to GetNode
+kv-node-40 {"kv-node-40":148, "front-end":18, "kv-node-10":202, "kv-node-30":155, "kv-node-60":111, "kv-node-70":10}
+Received comp update node request
+kv-node-40 {"kv-node-40":149, "front-end":18, "kv-node-10":202, "kv-node-30":155, "kv-node-60":112, "kv-node-70":10}
+Received keys from successor
+kv-node-40 {"kv-node-40":150, "front-end":18, "kv-node-10":202, "kv-node-30":155, "kv-node-60":112, "kv-node-70":10}
+Responding to UpdateNode
+kv-node-40 {"kv-node-40":151, "front-end":18, "kv-node-10":204, "kv-node-30":155, "kv-node-60":112, "kv-node-70":10}
+Received GetNode request
+kv-node-40 {"kv-node-40":152, "front-end":18, "kv-node-10":204, "kv-node-30":155, "kv-node-60":112, "kv-node-70":10}
+40 reply to GetNode
+kv-node-40 {"kv-node-40":153, "front-end":18, "kv-node-10":204, "kv-node-30":155, "kv-node-60":112, "kv-node-70":10}
+Sending backups to predecessor 30
+kv-node-40 {"kv-node-40":154, "front-end":18, "kv-node-10":211, "kv-node-30":162, "kv-node-60":112, "kv-node-70":10}
+Received GetNode request
+kv-node-40 {"kv-node-40":155, "front-end":18, "kv-node-10":211, "kv-node-30":162, "kv-node-60":112, "kv-node-70":10}
+40 reply to GetNode
+kv-node-40 {"kv-node-40":156, "front-end":18, "kv-node-10":213, "kv-node-30":170, "kv-node-60":114, "kv-node-70":12}
+Received GetNode request
+kv-node-40 {"kv-node-40":157, "front-end":18, "kv-node-10":213, "kv-node-30":170, "kv-node-60":114, "kv-node-70":12}
+40 reply to GetNode
+kv-node-40 {"kv-node-40":158, "front-end":18, "kv-node-10":213, "kv-node-30":170, "kv-node-60":114, "kv-node-70":12}
+Registering with front end
+kv-node-40 {"kv-node-40":159, "front-end":18, "kv-node-10":213, "kv-node-30":170, "kv-node-60":114, "kv-node-70":12}
+40 getting node info from : localhost:13877
+kv-node-40 {"kv-node-40":160, "front-end":18, "kv-node-10":215, "kv-node-30":170, "kv-node-60":114, "kv-node-70":12}
+Received reply with node 10
+kv-node-40 {"kv-node-40":161, "front-end":18, "kv-node-10":215, "kv-node-30":170, "kv-node-60":114, "kv-node-70":12}
+40 getting node info from : 127.0.0.1:13861
+kv-node-40 {"kv-node-40":162, "front-end":18, "kv-node-10":215, "kv-node-30":180, "kv-node-60":116, "kv-node-70":14}
+Received reply with node 30
+kv-node-40 {"kv-node-40":163, "front-end":18, "kv-node-10":215, "kv-node-30":180, "kv-node-60":116, "kv-node-70":14}
+40 getting node info from : localhost:13879
+kv-node-40 {"kv-node-40":164, "front-end":18, "kv-node-10":215, "kv-node-30":180, "kv-node-60":116, "kv-node-70":14}
+40 getting node info from : 127.0.0.1:13861
+kv-node-40 {"kv-node-40":165, "front-end":18, "kv-node-10":215, "kv-node-30":180, "kv-node-60":118, "kv-node-70":14}
+Received reply with node 60
+kv-node-40 {"kv-node-40":166, "front-end":18, "kv-node-10":215, "kv-node-30":182, "kv-node-60":118, "kv-node-70":14}
+Received reply with node 30
+kv-node-40 {"kv-node-40":167, "front-end":18, "kv-node-10":215, "kv-node-30":182, "kv-node-60":118, "kv-node-70":14}
+40 getting node info from : localhost:13897
+kv-node-40 {"kv-node-40":168, "front-end":18, "kv-node-10":215, "kv-node-30":182, "kv-node-60":118, "kv-node-70":14}
+40 getting node info from : localhost:13879
+kv-node-40 {"kv-node-40":169, "front-end":18, "kv-node-10":215, "kv-node-30":182, "kv-node-60":118, "kv-node-70":16}
+Received reply with node 70
+kv-node-40 {"kv-node-40":170, "front-end":18, "kv-node-10":215, "kv-node-30":182, "kv-node-60":120, "kv-node-70":16}
+Received reply with node 60
+kv-node-40 {"kv-node-40":171, "front-end":18, "kv-node-10":215, "kv-node-30":182, "kv-node-60":120, "kv-node-70":16}
+Received reply with node 60
+kv-node-40 {"kv-node-40":172, "front-end":18, "kv-node-10":215, "kv-node-30":182, "kv-node-60":120, "kv-node-70":16}
+40 getting node info from : localhost:13897
+kv-node-40 {"kv-node-40":173, "front-end":18, "kv-node-10":215, "kv-node-30":182, "kv-node-60":120, "kv-node-70":18}
+Received reply with node 70
+kv-node-40 {"kv-node-40":174, "front-end":18, "kv-node-10":215, "kv-node-30":182, "kv-node-60":120, "kv-node-70":18}
+Received reply with node 70
+kv-node-40 {"kv-node-40":175, "front-end":18, "kv-node-10":215, "kv-node-30":182, "kv-node-60":120, "kv-node-70":18}
+40 getting node info from : localhost:13877
+kv-node-40 {"kv-node-40":176, "front-end":18, "kv-node-10":217, "kv-node-30":182, "kv-node-60":120, "kv-node-70":18}
+Received reply with node 10
+kv-node-40 {"kv-node-40":177, "front-end":18, "kv-node-10":217, "kv-node-30":182, "kv-node-60":120, "kv-node-70":18}
+Received reply with node 10
+kv-node-40 {"kv-node-40":178, "front-end":18, "kv-node-10":221, "kv-node-30":184, "kv-node-60":120, "kv-node-70":18}
+Received GetNode request
+kv-node-40 {"kv-node-40":179, "front-end":18, "kv-node-10":221, "kv-node-30":184, "kv-node-60":120, "kv-node-70":18}
+40 reply to GetNode
+kv-node-40 {"kv-node-40":180, "front-end":18, "kv-node-10":232, "kv-node-30":186, "kv-node-60":122, "kv-node-70":22}
+Received GetNode request
+kv-node-40 {"kv-node-40":181, "front-end":18, "kv-node-10":232, "kv-node-30":186, "kv-node-60":122, "kv-node-70":22}
+40 reply to GetNode
+kv-node-40 {"kv-node-40":182, "front-end":18, "kv-node-10":235, "kv-node-30":186, "kv-node-60":126, "kv-node-70":22}
+Received GetNode request
+kv-node-40 {"kv-node-40":183, "front-end":18, "kv-node-10":235, "kv-node-30":186, "kv-node-60":126, "kv-node-70":22}
+40 reply to GetNode
+kv-node-40 {"kv-node-40":184, "front-end":18, "kv-node-10":241, "kv-node-30":188, "kv-node-60":138, "kv-node-70":24}
+Received GetNode request
+kv-node-40 {"kv-node-40":185, "front-end":18, "kv-node-10":241, "kv-node-30":188, "kv-node-60":138, "kv-node-70":24}
+40 reply to GetNode
+kv-node-40 {"kv-node-40":186, "front-end":18, "kv-node-10":245, "kv-node-30":192, "kv-node-60":146, "kv-node-70":38}
+Received GetNode request
+kv-node-40 {"kv-node-40":187, "front-end":18, "kv-node-10":245, "kv-node-30":192, "kv-node-60":146, "kv-node-70":38}
+40 reply to GetNode
+kv-node-40 {"kv-node-40":188, "front-end":18, "kv-node-10":245, "kv-node-30":194, "kv-node-60":146, "kv-node-70":43}
+Received GetNode request
+kv-node-40 {"kv-node-40":189, "front-end":18, "kv-node-10":245, "kv-node-30":194, "kv-node-60":146, "kv-node-70":43}
+40 reply to GetNode
+kv-node-40 {"kv-node-40":190, "front-end":18, "kv-node-10":247, "kv-node-30":199, "kv-node-60":146, "kv-node-70":43}
+Received GetNode request
+kv-node-40 {"kv-node-40":191, "front-end":18, "kv-node-10":247, "kv-node-30":199, "kv-node-60":146, "kv-node-70":43}
+40 reply to GetNode
+kv-node-40 {"kv-node-40":192, "front-end":18, "kv-node-10":249, "kv-node-30":203, "kv-node-60":146, "kv-node-70":43}
+Received GetNode request
+kv-node-40 {"kv-node-40":193, "front-end":18, "kv-node-10":249, "kv-node-30":203, "kv-node-60":146, "kv-node-70":43}
+40 reply to GetNode
+kv-node-40 {"kv-node-40":194, "front-end":21, "kv-node-10":249, "kv-node-30":203, "kv-node-60":146, "kv-node-70":43, "client-testGetEveryNSeconds":2}
+Received put request
+kv-node-40 {"kv-node-40":195, "front-end":21, "kv-node-10":249, "kv-node-30":203, "kv-node-60":146, "kv-node-70":43, "client-testGetEveryNSeconds":2}
+Responding to put
+kv-node-40 {"kv-node-40":196, "front-end":21, "kv-node-10":249, "kv-node-30":203, "kv-node-60":146, "kv-node-70":43, "client-testGetEveryNSeconds":2}
+Sending request to backup bucket 36 2 times
+kv-node-40 {"kv-node-40":197, "front-end":21, "kv-node-10":249, "kv-node-30":203, "kv-node-60":146, "kv-node-70":43, "client-testGetEveryNSeconds":2}
+Sending along request to backup bucket 36 2 more times
+kv-node-40 {"kv-node-40":198, "front-end":21, "kv-node-10":249, "kv-node-30":208, "kv-node-60":154, "kv-node-70":43, "client-testGetEveryNSeconds":2}
+Received replication reply
+kv-node-40 {"kv-node-40":199, "front-end":25, "kv-node-10":249, "kv-node-30":208, "kv-node-60":154, "kv-node-70":43, "client-testGetEveryNSeconds":4}
+Received get request
+kv-node-40 {"kv-node-40":200, "front-end":25, "kv-node-10":249, "kv-node-30":208, "kv-node-60":154, "kv-node-70":43, "client-testGetEveryNSeconds":4}
+Responding to get
+kv-node-40 {"kv-node-40":201, "front-end":25, "kv-node-10":249, "kv-node-30":208, "kv-node-60":154, "kv-node-70":43, "client-testGetEveryNSeconds":4}
+Registering with front end
+kv-node-40 {"kv-node-40":202, "front-end":25, "kv-node-10":249, "kv-node-30":208, "kv-node-60":154, "kv-node-70":43, "client-testGetEveryNSeconds":4}
+40 getting node info from : localhost:13877
+kv-node-40 {"kv-node-40":203, "front-end":25, "kv-node-10":249, "kv-node-30":208, "kv-node-60":154, "kv-node-70":43, "client-testGetEveryNSeconds":4}
+40 getting node info from : 127.0.0.1:13861
+kv-node-40 {"kv-node-40":204, "front-end":25, "kv-node-10":253, "kv-node-30":212, "kv-node-60":155, "kv-node-70":53, "client-testGetEveryNSeconds":4}
+Received reply with node 10
+kv-node-40 {"kv-node-40":205, "front-end":25, "kv-node-10":253, "kv-node-30":212, "kv-node-60":155, "kv-node-70":53, "client-testGetEveryNSeconds":4}
+40 getting node info from : 127.0.0.1:13861
+kv-node-40 {"kv-node-40":206, "front-end":25, "kv-node-10":253, "kv-node-30":216, "kv-node-60":155, "kv-node-70":53, "client-testGetEveryNSeconds":4}
+Received reply with node 30
+kv-node-40 {"kv-node-40":207, "front-end":25, "kv-node-10":253, "kv-node-30":218, "kv-node-60":155, "kv-node-70":53, "client-testGetEveryNSeconds":4}
+Received reply with node 30
+kv-node-40 {"kv-node-40":208, "front-end":25, "kv-node-10":253, "kv-node-30":218, "kv-node-60":155, "kv-node-70":53, "client-testGetEveryNSeconds":4}
+40 getting node info from : localhost:13879
+kv-node-40 {"kv-node-40":209, "front-end":25, "kv-node-10":253, "kv-node-30":218, "kv-node-60":155, "kv-node-70":53, "client-testGetEveryNSeconds":4}
+40 getting node info from : localhost:13879
+kv-node-40 {"kv-node-40":210, "front-end":25, "kv-node-10":253, "kv-node-30":218, "kv-node-60":158, "kv-node-70":53, "client-testGetEveryNSeconds":4}
+Received reply with node 60
+kv-node-40 {"kv-node-40":211, "front-end":25, "kv-node-10":253, "kv-node-30":218, "kv-node-60":158, "kv-node-70":53, "client-testGetEveryNSeconds":4}
+Received reply with node 60
+kv-node-40 {"kv-node-40":212, "front-end":25, "kv-node-10":253, "kv-node-30":218, "kv-node-60":160, "kv-node-70":53, "client-testGetEveryNSeconds":4}
+Received reply with node 60
+kv-node-40 {"kv-node-40":213, "front-end":25, "kv-node-10":253, "kv-node-30":218, "kv-node-60":160, "kv-node-70":53, "client-testGetEveryNSeconds":4}
+40 getting node info from : localhost:13897
+kv-node-40 {"kv-node-40":214, "front-end":25, "kv-node-10":253, "kv-node-30":218, "kv-node-60":160, "kv-node-70":53, "client-testGetEveryNSeconds":4}
+40 getting node info from : localhost:13897
+kv-node-40 {"kv-node-40":215, "front-end":25, "kv-node-10":253, "kv-node-30":218, "kv-node-60":160, "kv-node-70":56, "client-testGetEveryNSeconds":4}
+Received reply with node 70
+kv-node-40 {"kv-node-40":216, "front-end":25, "kv-node-10":253, "kv-node-30":218, "kv-node-60":160, "kv-node-70":56, "client-testGetEveryNSeconds":4}
+Received reply with node 70
+kv-node-40 {"kv-node-40":217, "front-end":25, "kv-node-10":253, "kv-node-30":218, "kv-node-60":160, "kv-node-70":58, "client-testGetEveryNSeconds":4}
+Received reply with node 70
+kv-node-40 {"kv-node-40":218, "front-end":25, "kv-node-10":253, "kv-node-30":218, "kv-node-60":160, "kv-node-70":58, "client-testGetEveryNSeconds":4}
+40 getting node info from : localhost:13877
+kv-node-40 {"kv-node-40":219, "front-end":25, "kv-node-10":255, "kv-node-30":218, "kv-node-60":160, "kv-node-70":58, "client-testGetEveryNSeconds":4}
+Received reply with node 10
+kv-node-40 {"kv-node-40":220, "front-end":25, "kv-node-10":255, "kv-node-30":218, "kv-node-60":160, "kv-node-70":58, "client-testGetEveryNSeconds":4}
+Received reply with node 10
+kv-node-40 {"kv-node-40":221, "front-end":25, "kv-node-10":259, "kv-node-30":220, "kv-node-60":160, "kv-node-70":58, "client-testGetEveryNSeconds":4}
+Received GetNode request
+kv-node-40 {"kv-node-40":222, "front-end":25, "kv-node-10":259, "kv-node-30":220, "kv-node-60":160, "kv-node-70":58, "client-testGetEveryNSeconds":4}
+40 reply to GetNode
+kv-node-40 {"kv-node-40":223, "front-end":25, "kv-node-10":270, "kv-node-30":222, "kv-node-60":162, "kv-node-70":62, "client-testGetEveryNSeconds":4}
+Received GetNode request
+kv-node-40 {"kv-node-40":224, "front-end":25, "kv-node-10":270, "kv-node-30":222, "kv-node-60":162, "kv-node-70":62, "client-testGetEveryNSeconds":4}
+40 reply to GetNode
+kv-node-40 {"kv-node-40":225, "front-end":25, "kv-node-10":273, "kv-node-30":222, "kv-node-60":166, "kv-node-70":62, "client-testGetEveryNSeconds":4}
+Received GetNode request
+kv-node-40 {"kv-node-40":226, "front-end":25, "kv-node-10":273, "kv-node-30":222, "kv-node-60":166, "kv-node-70":62, "client-testGetEveryNSeconds":4}
+40 reply to GetNode
+kv-node-40 {"kv-node-40":227, "front-end":25, "kv-node-10":279, "kv-node-30":224, "kv-node-60":179, "kv-node-70":64, "client-testGetEveryNSeconds":4}
+Received GetNode request
+kv-node-40 {"kv-node-40":228, "front-end":25, "kv-node-10":279, "kv-node-30":224, "kv-node-60":179, "kv-node-70":64, "client-testGetEveryNSeconds":4}
+40 reply to GetNode
+kv-node-40 {"kv-node-40":229, "front-end":25, "kv-node-10":283, "kv-node-30":228, "kv-node-60":186, "kv-node-70":78, "client-testGetEveryNSeconds":4}
+Received GetNode request
+kv-node-40 {"kv-node-40":230, "front-end":25, "kv-node-10":283, "kv-node-30":228, "kv-node-60":186, "kv-node-70":78, "client-testGetEveryNSeconds":4}
+40 reply to GetNode
+kv-node-40 {"kv-node-40":231, "front-end":25, "kv-node-10":283, "kv-node-30":230, "kv-node-60":186, "kv-node-70":82, "client-testGetEveryNSeconds":4}
+Received GetNode request
+kv-node-40 {"kv-node-40":232, "front-end":25, "kv-node-10":283, "kv-node-30":230, "kv-node-60":186, "kv-node-70":82, "client-testGetEveryNSeconds":4}
+40 reply to GetNode
+kv-node-40 {"kv-node-40":233, "front-end":25, "kv-node-10":287, "kv-node-30":236, "kv-node-60":186, "kv-node-70":82, "client-testGetEveryNSeconds":4}
+Received GetNode request
+kv-node-40 {"kv-node-40":234, "front-end":25, "kv-node-10":287, "kv-node-30":236, "kv-node-60":186, "kv-node-70":82, "client-testGetEveryNSeconds":4}
+40 reply to GetNode
+kv-node-40 {"kv-node-40":235, "front-end":25, "kv-node-10":287, "kv-node-30":237, "kv-node-60":186, "kv-node-70":82, "client-testGetEveryNSeconds":4}
+Received GetNode request
+kv-node-40 {"kv-node-40":236, "front-end":25, "kv-node-10":287, "kv-node-30":237, "kv-node-60":186, "kv-node-70":82, "client-testGetEveryNSeconds":4}
+40 reply to GetNode
+kv-node-40 {"kv-node-40":237, "front-end":25, "kv-node-10":287, "kv-node-30":237, "kv-node-60":186, "kv-node-70":82, "client-testGetEveryNSeconds":4}
+Registering with front end
+kv-node-40 {"kv-node-40":238, "front-end":25, "kv-node-10":287, "kv-node-30":237, "kv-node-60":186, "kv-node-70":82, "client-testGetEveryNSeconds":4}
+40 getting node info from : localhost:13877
+kv-node-40 {"kv-node-40":239, "front-end":25, "kv-node-10":287, "kv-node-30":237, "kv-node-60":186, "kv-node-70":82, "client-testGetEveryNSeconds":4}
+40 getting node info from : 127.0.0.1:13861
+kv-node-40 {"kv-node-40":240, "front-end":25, "kv-node-10":289, "kv-node-30":237, "kv-node-60":186, "kv-node-70":82, "client-testGetEveryNSeconds":4}
+Received reply with node 10
+kv-node-40 {"kv-node-40":241, "front-end":25, "kv-node-10":289, "kv-node-30":237, "kv-node-60":186, "kv-node-70":82, "client-testGetEveryNSeconds":4}
+40 getting node info from : 127.0.0.1:13861
+kv-node-40 {"kv-node-40":242, "front-end":25, "kv-node-10":289, "kv-node-30":252, "kv-node-60":192, "kv-node-70":90, "client-testGetEveryNSeconds":4}
+Received reply with node 30
+kv-node-40 {"kv-node-40":243, "front-end":25, "kv-node-10":289, "kv-node-30":254, "kv-node-60":192, "kv-node-70":90, "client-testGetEveryNSeconds":4}
+Received reply with node 30
+kv-node-40 {"kv-node-40":244, "front-end":25, "kv-node-10":289, "kv-node-30":254, "kv-node-60":192, "kv-node-70":90, "client-testGetEveryNSeconds":4}
+40 getting node info from : localhost:13879
+kv-node-40 {"kv-node-40":245, "front-end":25, "kv-node-10":289, "kv-node-30":254, "kv-node-60":192, "kv-node-70":90, "client-testGetEveryNSeconds":4}
+40 getting node info from : localhost:13879
+kv-node-40 {"kv-node-40":246, "front-end":25, "kv-node-10":289, "kv-node-30":254, "kv-node-60":194, "kv-node-70":90, "client-testGetEveryNSeconds":4}
+Received reply with node 60
+kv-node-40 {"kv-node-40":247, "front-end":25, "kv-node-10":289, "kv-node-30":254, "kv-node-60":196, "kv-node-70":90, "client-testGetEveryNSeconds":4}
+Received reply with node 60
+kv-node-40 {"kv-node-40":248, "front-end":25, "kv-node-10":289, "kv-node-30":254, "kv-node-60":196, "kv-node-70":90, "client-testGetEveryNSeconds":4}
+Received reply with node 60
+kv-node-40 {"kv-node-40":249, "front-end":25, "kv-node-10":289, "kv-node-30":254, "kv-node-60":196, "kv-node-70":90, "client-testGetEveryNSeconds":4}
+40 getting node info from : localhost:13897
+kv-node-40 {"kv-node-40":250, "front-end":25, "kv-node-10":289, "kv-node-30":254, "kv-node-60":196, "kv-node-70":90, "client-testGetEveryNSeconds":4}
+40 getting node info from : localhost:13897
+kv-node-40 {"kv-node-40":251, "front-end":25, "kv-node-10":289, "kv-node-30":254, "kv-node-60":196, "kv-node-70":92, "client-testGetEveryNSeconds":4}
+Received reply with node 70
+kv-node-40 {"kv-node-40":252, "front-end":25, "kv-node-10":289, "kv-node-30":254, "kv-node-60":196, "kv-node-70":94, "client-testGetEveryNSeconds":4}
+Received reply with node 70
+kv-node-40 {"kv-node-40":253, "front-end":25, "kv-node-10":289, "kv-node-30":254, "kv-node-60":196, "kv-node-70":94, "client-testGetEveryNSeconds":4}
+Received reply with node 70
+kv-node-40 {"kv-node-40":254, "front-end":25, "kv-node-10":289, "kv-node-30":254, "kv-node-60":196, "kv-node-70":94, "client-testGetEveryNSeconds":4}
+40 getting node info from : localhost:13877
+kv-node-40 {"kv-node-40":255, "front-end":25, "kv-node-10":291, "kv-node-30":254, "kv-node-60":196, "kv-node-70":94, "client-testGetEveryNSeconds":4}
+Received reply with node 10
+kv-node-40 {"kv-node-40":256, "front-end":25, "kv-node-10":291, "kv-node-30":254, "kv-node-60":196, "kv-node-70":94, "client-testGetEveryNSeconds":4}
+Received reply with node 10
+kv-node-40 {"kv-node-40":257, "front-end":25, "kv-node-10":295, "kv-node-30":256, "kv-node-60":196, "kv-node-70":94, "client-testGetEveryNSeconds":4}
+Received GetNode request
+kv-node-40 {"kv-node-40":258, "front-end":25, "kv-node-10":295, "kv-node-30":256, "kv-node-60":196, "kv-node-70":94, "client-testGetEveryNSeconds":4}
+40 reply to GetNode
+kv-node-40 {"kv-node-40":259, "front-end":25, "kv-node-10":306, "kv-node-30":258, "kv-node-60":198, "kv-node-70":98, "client-testGetEveryNSeconds":4}
+Received GetNode request
+kv-node-40 {"kv-node-40":260, "front-end":25, "kv-node-10":306, "kv-node-30":258, "kv-node-60":198, "kv-node-70":98, "client-testGetEveryNSeconds":4}
+40 reply to GetNode
+kv-node-40 {"kv-node-40":261, "front-end":25, "kv-node-10":309, "kv-node-30":258, "kv-node-60":202, "kv-node-70":98, "client-testGetEveryNSeconds":4}
+Received GetNode request
+kv-node-40 {"kv-node-40":262, "front-end":25, "kv-node-10":309, "kv-node-30":258, "kv-node-60":202, "kv-node-70":98, "client-testGetEveryNSeconds":4}
+40 reply to GetNode
+kv-node-40 {"kv-node-40":263, "front-end":25, "kv-node-10":313, "kv-node-30":260, "kv-node-60":212, "kv-node-70":100, "client-testGetEveryNSeconds":4}
+Received GetNode request
+kv-node-40 {"kv-node-40":264, "front-end":25, "kv-node-10":313, "kv-node-30":260, "kv-node-60":212, "kv-node-70":100, "client-testGetEveryNSeconds":4}
+40 reply to GetNode
+kv-node-40 {"kv-node-40":265, "front-end":25, "kv-node-10":319, "kv-node-30":264, "kv-node-60":222, "kv-node-70":114, "client-testGetEveryNSeconds":4}
+Received GetNode request
+kv-node-40 {"kv-node-40":266, "front-end":25, "kv-node-10":319, "kv-node-30":264, "kv-node-60":222, "kv-node-70":114, "client-testGetEveryNSeconds":4}
+40 reply to GetNode
+kv-node-40 {"kv-node-40":267, "front-end":25, "kv-node-10":319, "kv-node-30":266, "kv-node-60":222, "kv-node-70":119, "client-testGetEveryNSeconds":4}
+Received GetNode request
+kv-node-40 {"kv-node-40":268, "front-end":25, "kv-node-10":319, "kv-node-30":266, "kv-node-60":222, "kv-node-70":119, "client-testGetEveryNSeconds":4}
+40 reply to GetNode
+kv-node-60 {"kv-node-60":1}
+Initialization Complete
+kv-node-60 {"kv-node-60":2}
+Registering with front end
+kv-node-60 {"kv-node-60":3, "front-end":12, "kv-node-10":35, "kv-node-30":25, "kv-node-40":11}
+Received initialize request
+kv-node-60 {"kv-node-60":4, "front-end":12, "kv-node-10":35, "kv-node-30":25, "kv-node-40":11}
+Respond to initialize request
+kv-node-60 {"kv-node-60":5, "front-end":14, "kv-node-10":76, "kv-node-30":54, "kv-node-40":42}
+Received comp update node request
+kv-node-60 {"kv-node-60":6, "front-end":14, "kv-node-10":77, "kv-node-30":54, "kv-node-40":42}
+Received keys from successor
+kv-node-60 {"kv-node-60":7, "front-end":14, "kv-node-10":77, "kv-node-30":54, "kv-node-40":42}
+Responding to UpdateNode
+kv-node-60 {"kv-node-60":8, "front-end":14, "kv-node-10":79, "kv-node-30":54, "kv-node-40":42}
+Received GetNode request
+kv-node-60 {"kv-node-60":9, "front-end":14, "kv-node-10":79, "kv-node-30":54, "kv-node-40":42}
+60 reply to GetNode
+kv-node-60 {"kv-node-60":10, "front-end":14, "kv-node-10":79, "kv-node-30":54, "kv-node-40":42}
+Sending backups to predecessor 40
+kv-node-60 {"kv-node-60":11, "front-end":14, "kv-node-10":94, "kv-node-30":66, "kv-node-40":51}
+Received GetNode request
+kv-node-60 {"kv-node-60":12, "front-end":14, "kv-node-10":94, "kv-node-30":66, "kv-node-40":51}
+60 reply to GetNode
+kv-node-60 {"kv-node-60":13, "front-end":14, "kv-node-10":94, "kv-node-30":70, "kv-node-40":53}
+Received GetNode request
+kv-node-60 {"kv-node-60":14, "front-end":14, "kv-node-10":94, "kv-node-30":70, "kv-node-40":53}
+60 reply to GetNode
+kv-node-60 {"kv-node-60":15, "front-end":14, "kv-node-10":98, "kv-node-30":77, "kv-node-40":60}
+Received GetNode request
+kv-node-60 {"kv-node-60":16, "front-end":14, "kv-node-10":98, "kv-node-30":77, "kv-node-40":60}
+60 reply to GetNode
+kv-node-60 {"kv-node-60":17, "front-end":14, "kv-node-10":98, "kv-node-30":79, "kv-node-40":62}
+Received GetNode request
+kv-node-60 {"kv-node-60":18, "front-end":14, "kv-node-10":98, "kv-node-30":79, "kv-node-40":62}
+60 reply to GetNode
+kv-node-60 {"kv-node-60":19, "front-end":14, "kv-node-10":106, "kv-node-30":83, "kv-node-40":73}
+Received GetNode request
+kv-node-60 {"kv-node-60":20, "front-end":14, "kv-node-10":106, "kv-node-30":83, "kv-node-40":73}
+60 reply to GetNode
+kv-node-60 {"kv-node-60":21, "front-end":14, "kv-node-10":108, "kv-node-30":83, "kv-node-40":73}
+Received GetNode request
+kv-node-60 {"kv-node-60":22, "front-end":14, "kv-node-10":108, "kv-node-30":83, "kv-node-40":73}
+60 reply to GetNode
+kv-node-60 {"kv-node-60":23, "front-end":14, "kv-node-10":119, "kv-node-30":87, "kv-node-40":77}
+Received GetNode request
+kv-node-60 {"kv-node-60":24, "front-end":14, "kv-node-10":119, "kv-node-30":87, "kv-node-40":77}
+60 reply to GetNode
+kv-node-60 {"kv-node-60":26, "front-end":14, "kv-node-10":119, "kv-node-30":87, "kv-node-40":77}
+60 getting node info from : 127.0.0.1:13867
+kv-node-60 {"kv-node-60":25, "front-end":14, "kv-node-10":119, "kv-node-30":87, "kv-node-40":77}
+Registering with front end
+kv-node-60 {"kv-node-60":27, "front-end":14, "kv-node-10":119, "kv-node-30":87, "kv-node-40":77}
+60 getting node info from : localhost:13877
+kv-node-60 {"kv-node-60":28, "front-end":14, "kv-node-10":119, "kv-node-30":87, "kv-node-40":79}
+Received reply with node 40
+kv-node-60 {"kv-node-60":29, "front-end":14, "kv-node-10":123, "kv-node-30":87, "kv-node-40":79}
+Received reply with node 10
+kv-node-60 {"kv-node-60":30, "front-end":14, "kv-node-10":123, "kv-node-30":87, "kv-node-40":79}
+60 getting node info from : 127.0.0.1:13861
+kv-node-60 {"kv-node-60":31, "front-end":14, "kv-node-10":123, "kv-node-30":87, "kv-node-40":79}
+60 getting node info from : localhost:13877
+kv-node-60 {"kv-node-60":32, "front-end":14, "kv-node-10":123, "kv-node-30":89, "kv-node-40":79}
+Received reply with node 30
+kv-node-60 {"kv-node-60":33, "front-end":14, "kv-node-10":125, "kv-node-30":89, "kv-node-40":79}
+Received reply with node 10
+kv-node-60 {"kv-node-60":34, "front-end":14, "kv-node-10":125, "kv-node-30":89, "kv-node-40":79}
+Received reply with node 10
+kv-node-60 {"kv-node-60":35, "front-end":14, "kv-node-10":125, "kv-node-30":89, "kv-node-40":79}
+60 getting node info from : 127.0.0.1:13861
+kv-node-60 {"kv-node-60":36, "front-end":14, "kv-node-10":125, "kv-node-30":89, "kv-node-40":79}
+60 getting node info from : 127.0.0.1:13867
+kv-node-60 {"kv-node-60":37, "front-end":14, "kv-node-10":125, "kv-node-30":89, "kv-node-40":81}
+Received reply with node 40
+kv-node-60 {"kv-node-60":38, "front-end":14, "kv-node-10":125, "kv-node-30":91, "kv-node-40":81}
+Received reply with node 30
+kv-node-60 {"kv-node-60":39, "front-end":14, "kv-node-10":125, "kv-node-30":91, "kv-node-40":81}
+Received reply with node 30
+kv-node-60 {"kv-node-60":40, "front-end":14, "kv-node-10":125, "kv-node-30":91, "kv-node-40":81}
+60 getting node info from : localhost:13867
+kv-node-60 {"kv-node-60":41, "front-end":14, "kv-node-10":125, "kv-node-30":91, "kv-node-40":83}
+Received reply with node 40
+kv-node-60 {"kv-node-60":42, "front-end":14, "kv-node-10":125, "kv-node-30":91, "kv-node-40":83}
+Received reply with node 40
+kv-node-60 {"kv-node-60":43, "front-end":14, "kv-node-10":127, "kv-node-30":98, "kv-node-40":85}
+Received GetNode request
+kv-node-60 {"kv-node-60":44, "front-end":14, "kv-node-10":127, "kv-node-30":98, "kv-node-40":85}
+60 reply to GetNode
+kv-node-60 {"kv-node-60":45, "front-end":14, "kv-node-10":129, "kv-node-30":104, "kv-node-40":87}
+Received GetNode request
+kv-node-60 {"kv-node-60":46, "front-end":14, "kv-node-10":129, "kv-node-30":104, "kv-node-40":87}
+60 reply to GetNode
+kv-node-60 {"kv-node-60":47, "front-end":14, "kv-node-10":133, "kv-node-30":111, "kv-node-40":94}
+Received GetNode request
+kv-node-60 {"kv-node-60":48, "front-end":14, "kv-node-10":133, "kv-node-30":111, "kv-node-40":94}
+60 reply to GetNode
+kv-node-60 {"kv-node-60":49, "front-end":14, "kv-node-10":133, "kv-node-30":113, "kv-node-40":97}
+Received GetNode request
+kv-node-60 {"kv-node-60":50, "front-end":14, "kv-node-10":133, "kv-node-30":113, "kv-node-40":97}
+60 reply to GetNode
+kv-node-60 {"kv-node-60":51, "front-end":14, "kv-node-10":141, "kv-node-30":117, "kv-node-40":107}
+Received GetNode request
+kv-node-60 {"kv-node-60":52, "front-end":14, "kv-node-10":141, "kv-node-30":117, "kv-node-40":107}
+60 reply to GetNode
+kv-node-60 {"kv-node-60":53, "front-end":14, "kv-node-10":143, "kv-node-30":117, "kv-node-40":107}
+Received GetNode request
+kv-node-60 {"kv-node-60":54, "front-end":14, "kv-node-10":143, "kv-node-30":117, "kv-node-40":107}
+60 reply to GetNode
+kv-node-60 {"kv-node-60":55, "front-end":14, "kv-node-10":151, "kv-node-30":119, "kv-node-40":109}
+Received GetNode request
+kv-node-60 {"kv-node-60":56, "front-end":14, "kv-node-10":151, "kv-node-30":119, "kv-node-40":109}
+60 reply to GetNode
+kv-node-60 {"kv-node-60":57, "front-end":14, "kv-node-10":151, "kv-node-30":119, "kv-node-40":109}
+Registering with front end
+kv-node-60 {"kv-node-60":58, "front-end":14, "kv-node-10":151, "kv-node-30":119, "kv-node-40":109}
+60 getting node info from : localhost:13877
+kv-node-60 {"kv-node-60":59, "front-end":14, "kv-node-10":151, "kv-node-30":119, "kv-node-40":109}
+60 getting node info from : 127.0.0.1:13867
+kv-node-60 {"kv-node-60":60, "front-end":14, "kv-node-10":151, "kv-node-30":119, "kv-node-40":111}
+Received reply with node 40
+kv-node-60 {"kv-node-60":61, "front-end":14, "kv-node-10":155, "kv-node-30":119, "kv-node-40":111}
+Received reply with node 10
+kv-node-60 {"kv-node-60":62, "front-end":14, "kv-node-10":155, "kv-node-30":119, "kv-node-40":111}
+60 getting node info from : 127.0.0.1:13861
+kv-node-60 {"kv-node-60":63, "front-end":14, "kv-node-10":155, "kv-node-30":119, "kv-node-40":111}
+60 getting node info from : localhost:13877
+kv-node-60 {"kv-node-60":64, "front-end":14, "kv-node-10":155, "kv-node-30":121, "kv-node-40":111}
+Received reply with node 30
+kv-node-60 {"kv-node-60":65, "front-end":14, "kv-node-10":157, "kv-node-30":121, "kv-node-40":111}
+Received reply with node 10
+kv-node-60 {"kv-node-60":66, "front-end":14, "kv-node-10":157, "kv-node-30":121, "kv-node-40":111}
+Received reply with node 10
+kv-node-60 {"kv-node-60":67, "front-end":14, "kv-node-10":157, "kv-node-30":121, "kv-node-40":111}
+60 getting node info from : 127.0.0.1:13867
+kv-node-60 {"kv-node-60":68, "front-end":14, "kv-node-10":157, "kv-node-30":121, "kv-node-40":111}
+60 getting node info from : 127.0.0.1:13861
+kv-node-60 {"kv-node-60":69, "front-end":14, "kv-node-10":157, "kv-node-30":121, "kv-node-40":113}
+Received reply with node 40
+kv-node-60 {"kv-node-60":70, "front-end":14, "kv-node-10":157, "kv-node-30":123, "kv-node-40":113}
+Received reply with node 30
+kv-node-60 {"kv-node-60":71, "front-end":14, "kv-node-10":157, "kv-node-30":123, "kv-node-40":113}
+Received reply with node 30
+kv-node-60 {"kv-node-60":72, "front-end":14, "kv-node-10":157, "kv-node-30":123, "kv-node-40":113}
+60 getting node info from : localhost:13867
+kv-node-60 {"kv-node-60":73, "front-end":14, "kv-node-10":157, "kv-node-30":123, "kv-node-40":115}
+Received reply with node 40
+kv-node-60 {"kv-node-60":74, "front-end":14, "kv-node-10":157, "kv-node-30":123, "kv-node-40":115}
+Received reply with node 40
+kv-node-60 {"kv-node-60":75, "front-end":14, "kv-node-10":159, "kv-node-30":129, "kv-node-40":117}
+Received GetNode request
+kv-node-60 {"kv-node-60":76, "front-end":14, "kv-node-10":159, "kv-node-30":129, "kv-node-40":117}
+60 reply to GetNode
+kv-node-60 {"kv-node-60":77, "front-end":14, "kv-node-10":161, "kv-node-30":136, "kv-node-40":119}
+Received GetNode request
+kv-node-60 {"kv-node-60":78, "front-end":14, "kv-node-10":161, "kv-node-30":136, "kv-node-40":119}
+60 reply to GetNode
+kv-node-60 {"kv-node-60":79, "front-end":14, "kv-node-10":165, "kv-node-30":143, "kv-node-40":125}
+Received GetNode request
+kv-node-60 {"kv-node-60":80, "front-end":14, "kv-node-10":165, "kv-node-30":143, "kv-node-40":125}
+60 reply to GetNode
+kv-node-60 {"kv-node-60":81, "front-end":14, "kv-node-10":165, "kv-node-30":145, "kv-node-40":129}
+Received GetNode request
+kv-node-60 {"kv-node-60":82, "front-end":14, "kv-node-10":165, "kv-node-30":145, "kv-node-40":129}
+60 reply to GetNode
+kv-node-60 {"kv-node-60":83, "front-end":14, "kv-node-10":173, "kv-node-30":149, "kv-node-40":139}
+Received GetNode request
+kv-node-60 {"kv-node-60":84, "front-end":14, "kv-node-10":173, "kv-node-30":149, "kv-node-40":139}
+60 reply to GetNode
+kv-node-60 {"kv-node-60":85, "front-end":14, "kv-node-10":175, "kv-node-30":149, "kv-node-40":139}
+Received GetNode request
+kv-node-60 {"kv-node-60":86, "front-end":14, "kv-node-10":175, "kv-node-30":149, "kv-node-40":139}
+60 reply to GetNode
+kv-node-60 {"kv-node-60":87, "front-end":14, "kv-node-10":183, "kv-node-30":151, "kv-node-40":141}
+Received GetNode request
+kv-node-60 {"kv-node-60":88, "front-end":14, "kv-node-10":183, "kv-node-30":151, "kv-node-40":141}
+60 reply to GetNode
+kv-node-60 {"kv-node-60":89, "front-end":14, "kv-node-10":183, "kv-node-30":151, "kv-node-40":141}
+Registering with front end
+kv-node-60 {"kv-node-60":90, "front-end":14, "kv-node-10":183, "kv-node-30":151, "kv-node-40":141}
+60 getting node info from : localhost:13877
+kv-node-60 {"kv-node-60":91, "front-end":14, "kv-node-10":183, "kv-node-30":151, "kv-node-40":141}
+60 getting node info from : 127.0.0.1:13867
+kv-node-60 {"kv-node-60":92, "front-end":14, "kv-node-10":187, "kv-node-30":151, "kv-node-40":141}
+Received reply with node 10
+kv-node-60 {"kv-node-60":93, "front-end":14, "kv-node-10":187, "kv-node-30":151, "kv-node-40":143}
+Received reply with node 40
+kv-node-60 {"kv-node-60":94, "front-end":14, "kv-node-10":187, "kv-node-30":151, "kv-node-40":143}
+60 getting node info from : 127.0.0.1:13861
+kv-node-60 {"kv-node-60":95, "front-end":14, "kv-node-10":187, "kv-node-30":151, "kv-node-40":143}
+60 getting node info from : localhost:13877
+kv-node-60 {"kv-node-60":96, "front-end":14, "kv-node-10":187, "kv-node-30":153, "kv-node-40":143}
+Received reply with node 30
+kv-node-60 {"kv-node-60":97, "front-end":14, "kv-node-10":187, "kv-node-30":153, "kv-node-40":143}
+60 getting node info from : 127.0.0.1:13867
+kv-node-60 {"kv-node-60":98, "front-end":14, "kv-node-10":189, "kv-node-30":153, "kv-node-40":143}
+Received reply with node 10
+kv-node-60 {"kv-node-60":99, "front-end":14, "kv-node-10":189, "kv-node-30":153, "kv-node-40":143}
+Received reply with node 10
+kv-node-60 {"kv-node-60":100, "front-end":14, "kv-node-10":189, "kv-node-30":153, "kv-node-40":145}
+Received reply with node 40
+kv-node-60 {"kv-node-60":101, "front-end":14, "kv-node-10":189, "kv-node-30":153, "kv-node-40":145}
+60 getting node info from : 127.0.0.1:13861
+kv-node-60 {"kv-node-60":102, "front-end":14, "kv-node-10":189, "kv-node-30":155, "kv-node-40":145}
+Received reply with node 30
+kv-node-60 {"kv-node-60":103, "front-end":14, "kv-node-10":189, "kv-node-30":155, "kv-node-40":145}
+Received reply with node 30
+kv-node-60 {"kv-node-60":104, "front-end":14, "kv-node-10":189, "kv-node-30":155, "kv-node-40":145}
+60 getting node info from : localhost:13867
+kv-node-60 {"kv-node-60":105, "front-end":14, "kv-node-10":189, "kv-node-30":155, "kv-node-40":147}
+Received reply with node 40
+kv-node-60 {"kv-node-60":106, "front-end":14, "kv-node-10":189, "kv-node-30":155, "kv-node-40":147}
+Received reply with node 40
+kv-node-60 {"kv-node-60":107, "front-end":18, "kv-node-10":197, "kv-node-30":155, "kv-node-40":147, "kv-node-70":9}
+Received comp update node request
+kv-node-60 {"kv-node-60":108, "front-end":18, "kv-node-10":197, "kv-node-30":155, "kv-node-40":147, "kv-node-70":10}
+Received keys from successor
+kv-node-60 {"kv-node-60":109, "front-end":18, "kv-node-10":197, "kv-node-30":155, "kv-node-40":147, "kv-node-70":10}
+Responding to UpdateNode
+kv-node-60 {"kv-node-60":110, "front-end":18, "kv-node-10":199, "kv-node-30":155, "kv-node-40":147, "kv-node-70":10}
+Received GetNode request
+kv-node-60 {"kv-node-60":111, "front-end":18, "kv-node-10":199, "kv-node-30":155, "kv-node-40":147, "kv-node-70":10}
+60 reply to GetNode
+kv-node-60 {"kv-node-60":112, "front-end":18, "kv-node-10":199, "kv-node-30":155, "kv-node-40":147, "kv-node-70":10}
+Sending backups to predecessor 40
+kv-node-60 {"kv-node-60":113, "front-end":18, "kv-node-10":211, "kv-node-30":164, "kv-node-40":155, "kv-node-70":10}
+Received GetNode request
+kv-node-60 {"kv-node-60":114, "front-end":18, "kv-node-10":211, "kv-node-30":164, "kv-node-40":155, "kv-node-70":10}
+60 reply to GetNode
+kv-node-60 {"kv-node-60":115, "front-end":18, "kv-node-10":213, "kv-node-30":173, "kv-node-40":157, "kv-node-70":12}
+Received GetNode request
+kv-node-60 {"kv-node-60":116, "front-end":18, "kv-node-10":213, "kv-node-30":173, "kv-node-40":157, "kv-node-70":12}
+60 reply to GetNode
+kv-node-60 {"kv-node-60":117, "front-end":18, "kv-node-10":215, "kv-node-30":180, "kv-node-40":163, "kv-node-70":14}
+Received GetNode request
+kv-node-60 {"kv-node-60":118, "front-end":18, "kv-node-10":215, "kv-node-30":180, "kv-node-40":163, "kv-node-70":14}
+60 reply to GetNode
+kv-node-60 {"kv-node-60":119, "front-end":18, "kv-node-10":215, "kv-node-30":182, "kv-node-40":168, "kv-node-70":14}
+Received GetNode request
+kv-node-60 {"kv-node-60":120, "front-end":18, "kv-node-10":215, "kv-node-30":182, "kv-node-40":168, "kv-node-70":14}
+60 reply to GetNode
+kv-node-60 {"kv-node-60":121, "front-end":18, "kv-node-10":223, "kv-node-30":184, "kv-node-40":179, "kv-node-70":18}
+Received GetNode request
+kv-node-60 {"kv-node-60":122, "front-end":18, "kv-node-10":223, "kv-node-30":184, "kv-node-40":179, "kv-node-70":18}
+60 reply to GetNode
+kv-node-60 {"kv-node-60":123, "front-end":18, "kv-node-10":235, "kv-node-30":186, "kv-node-40":181, "kv-node-70":22}
+Received GetNode request
+kv-node-60 {"kv-node-60":124, "front-end":18, "kv-node-10":235, "kv-node-30":186, "kv-node-40":181, "kv-node-70":22}
+60 reply to GetNode
+kv-node-60 {"kv-node-60":125, "front-end":18, "kv-node-10":235, "kv-node-30":186, "kv-node-40":181, "kv-node-70":22}
+Registering with front end
+kv-node-60 {"kv-node-60":126, "front-end":18, "kv-node-10":235, "kv-node-30":186, "kv-node-40":181, "kv-node-70":22}
+60 getting node info from : 127.0.0.1:13867
+kv-node-60 {"kv-node-60":127, "front-end":18, "kv-node-10":235, "kv-node-30":186, "kv-node-40":181, "kv-node-70":22}
+60 getting node info from : localhost:13877
+kv-node-60 {"kv-node-60":128, "front-end":18, "kv-node-10":235, "kv-node-30":186, "kv-node-40":183, "kv-node-70":22}
+Received reply with node 40
+kv-node-60 {"kv-node-60":129, "front-end":18, "kv-node-10":235, "kv-node-30":186, "kv-node-40":183, "kv-node-70":22}
+60 getting node info from : localhost:13897
+kv-node-60 {"kv-node-60":130, "front-end":18, "kv-node-10":239, "kv-node-30":186, "kv-node-40":183, "kv-node-70":22}
+Received reply with node 10
+kv-node-60 {"kv-node-60":131, "front-end":18, "kv-node-10":239, "kv-node-30":186, "kv-node-40":183, "kv-node-70":24}
+Received reply with node 70
+kv-node-60 {"kv-node-60":132, "front-end":18, "kv-node-10":239, "kv-node-30":186, "kv-node-40":183, "kv-node-70":24}
+Received reply with node 70
+kv-node-60 {"kv-node-60":133, "front-end":18, "kv-node-10":239, "kv-node-30":186, "kv-node-40":183, "kv-node-70":24}
+60 getting node info from : 127.0.0.1:13861
+kv-node-60 {"kv-node-60":134, "front-end":18, "kv-node-10":239, "kv-node-30":186, "kv-node-40":183, "kv-node-70":24}
+60 getting node info from : localhost:13877
+kv-node-60 {"kv-node-60":135, "front-end":18, "kv-node-10":241, "kv-node-30":186, "kv-node-40":183, "kv-node-70":24}
+Received reply with node 10
+kv-node-60 {"kv-node-60":137, "front-end":18, "kv-node-10":241, "kv-node-30":188, "kv-node-40":183, "kv-node-70":24}
+Received reply with node 10
+kv-node-60 {"kv-node-60":136, "front-end":18, "kv-node-10":241, "kv-node-30":188, "kv-node-40":183, "kv-node-70":24}
+Received reply with node 30
+kv-node-60 {"kv-node-60":138, "front-end":18, "kv-node-10":241, "kv-node-30":188, "kv-node-40":183, "kv-node-70":24}
+60 getting node info from : 127.0.0.1:13867
+kv-node-60 {"kv-node-60":139, "front-end":18, "kv-node-10":241, "kv-node-30":188, "kv-node-40":183, "kv-node-70":24}
+60 getting node info from : 127.0.0.1:13861
+kv-node-60 {"kv-node-60":140, "front-end":18, "kv-node-10":241, "kv-node-30":188, "kv-node-40":185, "kv-node-70":24}
+Received reply with node 40
+kv-node-60 {"kv-node-60":141, "front-end":18, "kv-node-10":241, "kv-node-30":190, "kv-node-40":185, "kv-node-70":24}
+Received reply with node 30
+kv-node-60 {"kv-node-60":142, "front-end":18, "kv-node-10":241, "kv-node-30":190, "kv-node-40":185, "kv-node-70":24}
+Received reply with node 30
+kv-node-60 {"kv-node-60":143, "front-end":18, "kv-node-10":241, "kv-node-30":190, "kv-node-40":185, "kv-node-70":24}
+60 getting node info from : localhost:13897
+kv-node-60 {"kv-node-60":144, "front-end":18, "kv-node-10":241, "kv-node-30":190, "kv-node-40":185, "kv-node-70":26}
+Received reply with node 70
+kv-node-60 {"kv-node-60":145, "front-end":18, "kv-node-10":241, "kv-node-30":190, "kv-node-40":185, "kv-node-70":29}
+Received GetNode request
+kv-node-60 {"kv-node-60":146, "front-end":18, "kv-node-10":241, "kv-node-30":190, "kv-node-40":185, "kv-node-70":29}
+60 reply to GetNode
+kv-node-60 {"kv-node-60":147, "front-end":18, "kv-node-10":245, "kv-node-30":194, "kv-node-40":187, "kv-node-70":42}
+Received GetNode request
+kv-node-60 {"kv-node-60":148, "front-end":18, "kv-node-10":245, "kv-node-30":194, "kv-node-40":187, "kv-node-70":42}
+60 reply to GetNode
+kv-node-60 {"kv-node-60":149, "front-end":18, "kv-node-10":249, "kv-node-30":202, "kv-node-40":191, "kv-node-70":43}
+Received GetNode request
+kv-node-60 {"kv-node-60":150, "front-end":18, "kv-node-10":249, "kv-node-30":202, "kv-node-40":191, "kv-node-70":43}
+60 reply to GetNode
+kv-node-60 {"kv-node-60":151, "front-end":18, "kv-node-10":249, "kv-node-30":208, "kv-node-40":193, "kv-node-70":43}
+Received GetNode request
+kv-node-60 {"kv-node-60":152, "front-end":18, "kv-node-10":249, "kv-node-30":208, "kv-node-40":193, "kv-node-70":43}
+60 reply to GetNode
+kv-node-60 {"kv-node-60":153, "front-end":21, "kv-node-10":249, "kv-node-30":208, "kv-node-40":197, "kv-node-70":43, "client-testGetEveryNSeconds":2}
+Received replicate request for 36
+kv-node-60 {"kv-node-60":154, "front-end":21, "kv-node-10":249, "kv-node-30":208, "kv-node-40":197, "kv-node-70":43, "client-testGetEveryNSeconds":2}
+Responding to replication request
+kv-node-60 {"kv-node-60":155, "front-end":21, "kv-node-10":249, "kv-node-30":208, "kv-node-40":197, "kv-node-70":43, "client-testGetEveryNSeconds":2}
+Sending along request to backup bucket 36 1 more times
+kv-node-60 {"kv-node-60":156, "front-end":21, "kv-node-10":249, "kv-node-30":212, "kv-node-40":197, "kv-node-70":52, "client-testGetEveryNSeconds":2}
+Received replication reply
+kv-node-60 {"kv-node-60":157, "front-end":25, "kv-node-10":253, "kv-node-30":218, "kv-node-40":208, "kv-node-70":53, "client-testGetEveryNSeconds":4}
+Received GetNode request
+kv-node-60 {"kv-node-60":158, "front-end":25, "kv-node-10":253, "kv-node-30":218, "kv-node-40":208, "kv-node-70":53, "client-testGetEveryNSeconds":4}
+60 reply to GetNode
+kv-node-60 {"kv-node-60":159, "front-end":25, "kv-node-10":253, "kv-node-30":218, "kv-node-40":209, "kv-node-70":53, "client-testGetEveryNSeconds":4}
+Received GetNode request
+kv-node-60 {"kv-node-60":160, "front-end":25, "kv-node-10":253, "kv-node-30":218, "kv-node-40":209, "kv-node-70":53, "client-testGetEveryNSeconds":4}
+60 reply to GetNode
+kv-node-60 {"kv-node-60":161, "front-end":25, "kv-node-10":261, "kv-node-30":220, "kv-node-40":222, "kv-node-70":58, "client-testGetEveryNSeconds":4}
+Received GetNode request
+kv-node-60 {"kv-node-60":162, "front-end":25, "kv-node-10":261, "kv-node-30":220, "kv-node-40":222, "kv-node-70":58, "client-testGetEveryNSeconds":4}
+60 reply to GetNode
+kv-node-60 {"kv-node-60":163, "front-end":25, "kv-node-10":273, "kv-node-30":222, "kv-node-40":224, "kv-node-70":62, "client-testGetEveryNSeconds":4}
+Received GetNode request
+kv-node-60 {"kv-node-60":164, "front-end":25, "kv-node-10":273, "kv-node-30":222, "kv-node-40":224, "kv-node-70":62, "client-testGetEveryNSeconds":4}
+60 reply to GetNode
+kv-node-60 {"kv-node-60":165, "front-end":25, "kv-node-10":273, "kv-node-30":222, "kv-node-40":224, "kv-node-70":62, "client-testGetEveryNSeconds":4}
+Registering with front end
+kv-node-60 {"kv-node-60":166, "front-end":25, "kv-node-10":273, "kv-node-30":222, "kv-node-40":224, "kv-node-70":62, "client-testGetEveryNSeconds":4}
+60 getting node info from : 127.0.0.1:13867
+kv-node-60 {"kv-node-60":167, "front-end":25, "kv-node-10":273, "kv-node-30":222, "kv-node-40":224, "kv-node-70":62, "client-testGetEveryNSeconds":4}
+60 getting node info from : localhost:13877
+kv-node-60 {"kv-node-60":168, "front-end":25, "kv-node-10":273, "kv-node-30":222, "kv-node-40":226, "kv-node-70":62, "client-testGetEveryNSeconds":4}
+Received reply with node 40
+kv-node-60 {"kv-node-60":169, "front-end":25, "kv-node-10":273, "kv-node-30":222, "kv-node-40":226, "kv-node-70":62, "client-testGetEveryNSeconds":4}
+60 getting node info from : localhost:13897
+kv-node-60 {"kv-node-60":170, "front-end":25, "kv-node-10":273, "kv-node-30":222, "kv-node-40":226, "kv-node-70":64, "client-testGetEveryNSeconds":4}
+Received reply with node 70
+kv-node-60 {"kv-node-60":171, "front-end":25, "kv-node-10":273, "kv-node-30":222, "kv-node-40":226, "kv-node-70":64, "client-testGetEveryNSeconds":4}
+Received reply with node 70
+kv-node-60 {"kv-node-60":172, "front-end":25, "kv-node-10":277, "kv-node-30":222, "kv-node-40":226, "kv-node-70":64, "client-testGetEveryNSeconds":4}
+Received reply with node 10
+kv-node-60 {"kv-node-60":173, "front-end":25, "kv-node-10":277, "kv-node-30":222, "kv-node-40":226, "kv-node-70":64, "client-testGetEveryNSeconds":4}
+60 getting node info from : localhost:13877
+kv-node-60 {"kv-node-60":174, "front-end":25, "kv-node-10":277, "kv-node-30":222, "kv-node-40":226, "kv-node-70":64, "client-testGetEveryNSeconds":4}
+60 getting node info from : 127.0.0.1:13861
+kv-node-60 {"kv-node-60":175, "front-end":25, "kv-node-10":279, "kv-node-30":222, "kv-node-40":226, "kv-node-70":64, "client-testGetEveryNSeconds":4}
+Received reply with node 10
+kv-node-60 {"kv-node-60":176, "front-end":25, "kv-node-10":279, "kv-node-30":222, "kv-node-40":226, "kv-node-70":64, "client-testGetEveryNSeconds":4}
+Received reply with node 10
+kv-node-60 {"kv-node-60":177, "front-end":25, "kv-node-10":279, "kv-node-30":222, "kv-node-40":226, "kv-node-70":64, "client-testGetEveryNSeconds":4}
+60 getting node info from : 127.0.0.1:13861
+kv-node-60 {"kv-node-60":178, "front-end":25, "kv-node-10":279, "kv-node-30":224, "kv-node-40":226, "kv-node-70":64, "client-testGetEveryNSeconds":4}
+Received reply with node 30
+kv-node-60 {"kv-node-60":179, "front-end":25, "kv-node-10":279, "kv-node-30":224, "kv-node-40":226, "kv-node-70":64, "client-testGetEveryNSeconds":4}
+60 getting node info from : 127.0.0.1:13867
+kv-node-60 {"kv-node-60":180, "front-end":25, "kv-node-10":279, "kv-node-30":226, "kv-node-40":226, "kv-node-70":64, "client-testGetEveryNSeconds":4}
+Received reply with node 30
+kv-node-60 {"kv-node-60":181, "front-end":25, "kv-node-10":279, "kv-node-30":226, "kv-node-40":226, "kv-node-70":64, "client-testGetEveryNSeconds":4}
+Received reply with node 30
+kv-node-60 {"kv-node-60":182, "front-end":25, "kv-node-10":279, "kv-node-30":226, "kv-node-40":228, "kv-node-70":64, "client-testGetEveryNSeconds":4}
+Received reply with node 40
+kv-node-60 {"kv-node-60":183, "front-end":25, "kv-node-10":279, "kv-node-30":226, "kv-node-40":228, "kv-node-70":64, "client-testGetEveryNSeconds":4}
+60 getting node info from : localhost:13897
+kv-node-60 {"kv-node-60":184, "front-end":25, "kv-node-10":279, "kv-node-30":226, "kv-node-40":228, "kv-node-70":66, "client-testGetEveryNSeconds":4}
+Received reply with node 70
+kv-node-60 {"kv-node-60":185, "front-end":25, "kv-node-10":279, "kv-node-30":226, "kv-node-40":228, "kv-node-70":68, "client-testGetEveryNSeconds":4}
+Received GetNode request
+kv-node-60 {"kv-node-60":186, "front-end":25, "kv-node-10":279, "kv-node-30":226, "kv-node-40":228, "kv-node-70":68, "client-testGetEveryNSeconds":4}
+60 reply to GetNode
+kv-node-60 {"kv-node-60":187, "front-end":25, "kv-node-10":283, "kv-node-30":230, "kv-node-40":230, "kv-node-70":83, "client-testGetEveryNSeconds":4}
+Received GetNode request
+kv-node-60 {"kv-node-60":188, "front-end":25, "kv-node-10":283, "kv-node-30":230, "kv-node-40":230, "kv-node-70":83, "client-testGetEveryNSeconds":4}
+60 reply to GetNode
+kv-node-60 {"kv-node-60":189, "front-end":25, "kv-node-10":287, "kv-node-30":241, "kv-node-40":236, "kv-node-70":83, "client-testGetEveryNSeconds":4}
+Received GetNode request
+kv-node-60 {"kv-node-60":190, "front-end":25, "kv-node-10":287, "kv-node-30":241, "kv-node-40":236, "kv-node-70":83, "client-testGetEveryNSeconds":4}
+60 reply to GetNode
+kv-node-60 {"kv-node-60":191, "front-end":25, "kv-node-10":287, "kv-node-30":242, "kv-node-40":236, "kv-node-70":83, "client-testGetEveryNSeconds":4}
+Received GetNode request
+kv-node-60 {"kv-node-60":192, "front-end":25, "kv-node-10":287, "kv-node-30":242, "kv-node-40":236, "kv-node-70":83, "client-testGetEveryNSeconds":4}
+60 reply to GetNode
+kv-node-60 {"kv-node-60":193, "front-end":25, "kv-node-10":289, "kv-node-30":254, "kv-node-40":244, "kv-node-70":90, "client-testGetEveryNSeconds":4}
+Received GetNode request
+kv-node-60 {"kv-node-60":194, "front-end":25, "kv-node-10":289, "kv-node-30":254, "kv-node-40":244, "kv-node-70":90, "client-testGetEveryNSeconds":4}
+60 reply to GetNode
+kv-node-60 {"kv-node-60":195, "front-end":25, "kv-node-10":289, "kv-node-30":254, "kv-node-40":245, "kv-node-70":90, "client-testGetEveryNSeconds":4}
+Received GetNode request
+kv-node-60 {"kv-node-60":196, "front-end":25, "kv-node-10":289, "kv-node-30":254, "kv-node-40":245, "kv-node-70":90, "client-testGetEveryNSeconds":4}
+60 reply to GetNode
+kv-node-60 {"kv-node-60":197, "front-end":25, "kv-node-10":297, "kv-node-30":256, "kv-node-40":258, "kv-node-70":94, "client-testGetEveryNSeconds":4}
+Received GetNode request
+kv-node-60 {"kv-node-60":198, "front-end":25, "kv-node-10":297, "kv-node-30":256, "kv-node-40":258, "kv-node-70":94, "client-testGetEveryNSeconds":4}
+60 reply to GetNode
+kv-node-60 {"kv-node-60":199, "front-end":25, "kv-node-10":309, "kv-node-30":258, "kv-node-40":260, "kv-node-70":98, "client-testGetEveryNSeconds":4}
+Received GetNode request
+kv-node-60 {"kv-node-60":200, "front-end":25, "kv-node-10":309, "kv-node-30":258, "kv-node-40":260, "kv-node-70":98, "client-testGetEveryNSeconds":4}
+60 reply to GetNode
+kv-node-60 {"kv-node-60":201, "front-end":25, "kv-node-10":309, "kv-node-30":258, "kv-node-40":260, "kv-node-70":98, "client-testGetEveryNSeconds":4}
+Registering with front end
+kv-node-60 {"kv-node-60":202, "front-end":25, "kv-node-10":309, "kv-node-30":258, "kv-node-40":260, "kv-node-70":98, "client-testGetEveryNSeconds":4}
+60 getting node info from : 127.0.0.1:13867
+kv-node-60 {"kv-node-60":203, "front-end":25, "kv-node-10":309, "kv-node-30":258, "kv-node-40":260, "kv-node-70":98, "client-testGetEveryNSeconds":4}
+60 getting node info from : localhost:13877
+kv-node-60 {"kv-node-60":204, "front-end":25, "kv-node-10":313, "kv-node-30":258, "kv-node-40":260, "kv-node-70":98, "client-testGetEveryNSeconds":4}
+Received reply with node 10
+kv-node-60 {"kv-node-60":205, "front-end":25, "kv-node-10":313, "kv-node-30":258, "kv-node-40":262, "kv-node-70":98, "client-testGetEveryNSeconds":4}
+Received reply with node 40
+kv-node-60 {"kv-node-60":206, "front-end":25, "kv-node-10":313, "kv-node-30":258, "kv-node-40":262, "kv-node-70":98, "client-testGetEveryNSeconds":4}
+60 getting node info from : 127.0.0.1:13861
+kv-node-60 {"kv-node-60":207, "front-end":25, "kv-node-10":313, "kv-node-30":258, "kv-node-40":262, "kv-node-70":98, "client-testGetEveryNSeconds":4}
+60 getting node info from : localhost:13897
+kv-node-60 {"kv-node-60":208, "front-end":25, "kv-node-10":313, "kv-node-30":258, "kv-node-40":262, "kv-node-70":100, "client-testGetEveryNSeconds":4}
+Received reply with node 70
+kv-node-60 {"kv-node-60":209, "front-end":25, "kv-node-10":313, "kv-node-30":258, "kv-node-40":262, "kv-node-70":100, "client-testGetEveryNSeconds":4}
+Received reply with node 70
+kv-node-60 {"kv-node-60":210, "front-end":25, "kv-node-10":313, "kv-node-30":260, "kv-node-40":262, "kv-node-70":100, "client-testGetEveryNSeconds":4}
+Received reply with node 30
+kv-node-60 {"kv-node-60":211, "front-end":25, "kv-node-10":313, "kv-node-30":260, "kv-node-40":262, "kv-node-70":100, "client-testGetEveryNSeconds":4}
+60 getting node info from : localhost:13877
+kv-node-60 {"kv-node-60":212, "front-end":25, "kv-node-10":313, "kv-node-30":260, "kv-node-40":262, "kv-node-70":100, "client-testGetEveryNSeconds":4}
+60 getting node info from : 127.0.0.1:13867
+kv-node-60 {"kv-node-60":213, "front-end":25, "kv-node-10":313, "kv-node-30":260, "kv-node-40":264, "kv-node-70":100, "client-testGetEveryNSeconds":4}
+Received reply with node 40
+kv-node-60 {"kv-node-60":214, "front-end":25, "kv-node-10":315, "kv-node-30":260, "kv-node-40":264, "kv-node-70":100, "client-testGetEveryNSeconds":4}
+Received reply with node 10
+kv-node-60 {"kv-node-60":215, "front-end":25, "kv-node-10":315, "kv-node-30":260, "kv-node-40":264, "kv-node-70":100, "client-testGetEveryNSeconds":4}
+Received reply with node 10
+kv-node-60 {"kv-node-60":216, "front-end":25, "kv-node-10":315, "kv-node-30":260, "kv-node-40":264, "kv-node-70":100, "client-testGetEveryNSeconds":4}
+60 getting node info from : 127.0.0.1:13861
+kv-node-60 {"kv-node-60":217, "front-end":25, "kv-node-10":315, "kv-node-30":260, "kv-node-40":264, "kv-node-70":100, "client-testGetEveryNSeconds":4}
+60 getting node info from : localhost:13897
+kv-node-60 {"kv-node-60":218, "front-end":25, "kv-node-10":315, "kv-node-30":262, "kv-node-40":264, "kv-node-70":100, "client-testGetEveryNSeconds":4}
+Received reply with node 30
+kv-node-60 {"kv-node-60":219, "front-end":25, "kv-node-10":315, "kv-node-30":262, "kv-node-40":264, "kv-node-70":100, "client-testGetEveryNSeconds":4}
+Received reply with node 30
+kv-node-60 {"kv-node-60":220, "front-end":25, "kv-node-10":315, "kv-node-30":262, "kv-node-40":264, "kv-node-70":102, "client-testGetEveryNSeconds":4}
+Received reply with node 70
+kv-node-60 {"kv-node-60":221, "front-end":25, "kv-node-10":315, "kv-node-30":262, "kv-node-40":264, "kv-node-70":104, "client-testGetEveryNSeconds":4}
+Received GetNode request
+kv-node-60 {"kv-node-60":222, "front-end":25, "kv-node-10":315, "kv-node-30":262, "kv-node-40":264, "kv-node-70":104, "client-testGetEveryNSeconds":4}
+60 reply to GetNode
+kv-node-60 {"kv-node-60":223, "front-end":25, "kv-node-10":319, "kv-node-30":266, "kv-node-40":266, "kv-node-70":119, "client-testGetEveryNSeconds":4}
+Received GetNode request
+kv-node-60 {"kv-node-60":224, "front-end":25, "kv-node-10":319, "kv-node-30":266, "kv-node-40":266, "kv-node-70":119, "client-testGetEveryNSeconds":4}
+60 reply to GetNode
+kv-node-70 {"kv-node-70":1}
+Initialization Complete
+kv-node-70 {"kv-node-70":2}
+Registering with front end
+kv-node-70 {"kv-node-70":3, "front-end":16, "kv-node-10":90, "kv-node-30":57, "kv-node-40":49, "kv-node-60":10}
+Received initialize request
+kv-node-70 {"kv-node-70":4, "front-end":16, "kv-node-10":90, "kv-node-30":57, "kv-node-40":49, "kv-node-60":10}
+Respond to initialize request
+kv-node-70 {"kv-node-70":5, "front-end":18, "kv-node-10":191, "kv-node-30":151, "kv-node-40":143, "kv-node-60":95}
+Received comp update node request
+kv-node-70 {"kv-node-70":6, "front-end":18, "kv-node-10":192, "kv-node-30":151, "kv-node-40":143, "kv-node-60":95}
+Received keys from successor
+kv-node-70 {"kv-node-70":7, "front-end":18, "kv-node-10":192, "kv-node-30":151, "kv-node-40":143, "kv-node-60":95}
+Responding to UpdateNode
+kv-node-70 {"kv-node-70":8, "front-end":18, "kv-node-10":194, "kv-node-30":151, "kv-node-40":143, "kv-node-60":95}
+Received GetNode request
+kv-node-70 {"kv-node-70":9, "front-end":18, "kv-node-10":194, "kv-node-30":151, "kv-node-40":143, "kv-node-60":95}
+70 reply to GetNode
+kv-node-70 {"kv-node-70":10, "front-end":18, "kv-node-10":194, "kv-node-30":151, "kv-node-40":143, "kv-node-60":95}
+Sending backups to predecessor 60
+kv-node-70 {"kv-node-70":11, "front-end":18, "kv-node-10":211, "kv-node-30":166, "kv-node-40":155, "kv-node-60":114}
+Received GetNode request
+kv-node-70 {"kv-node-70":12, "front-end":18, "kv-node-10":211, "kv-node-30":166, "kv-node-40":155, "kv-node-60":114}
+70 reply to GetNode
+kv-node-70 {"kv-node-70":13, "front-end":18, "kv-node-10":213, "kv-node-30":176, "kv-node-40":157, "kv-node-60":116}
+Received GetNode request
+kv-node-70 {"kv-node-70":14, "front-end":18, "kv-node-10":213, "kv-node-30":176, "kv-node-40":157, "kv-node-60":116}
+70 reply to GetNode
+kv-node-70 {"kv-node-70":15, "front-end":18, "kv-node-10":215, "kv-node-30":182, "kv-node-40":167, "kv-node-60":118}
+Received GetNode request
+kv-node-70 {"kv-node-70":16, "front-end":18, "kv-node-10":215, "kv-node-30":182, "kv-node-40":167, "kv-node-60":118}
+70 reply to GetNode
+kv-node-70 {"kv-node-70":17, "front-end":18, "kv-node-10":215, "kv-node-30":182, "kv-node-40":172, "kv-node-60":120}
+Received GetNode request
+kv-node-70 {"kv-node-70":18, "front-end":18, "kv-node-10":215, "kv-node-30":182, "kv-node-40":172, "kv-node-60":120}
+70 reply to GetNode
+kv-node-70 {"kv-node-70":19, "front-end":18, "kv-node-10":225, "kv-node-30":184, "kv-node-40":179, "kv-node-60":122}
+Received GetNode request
+kv-node-70 {"kv-node-70":20, "front-end":18, "kv-node-10":225, "kv-node-30":184, "kv-node-40":179, "kv-node-60":122}
+70 reply to GetNode
+kv-node-70 {"kv-node-70":21, "front-end":18, "kv-node-10":227, "kv-node-30":184, "kv-node-40":179, "kv-node-60":122}
+Received GetNode request
+kv-node-70 {"kv-node-70":22, "front-end":18, "kv-node-10":227, "kv-node-30":184, "kv-node-40":179, "kv-node-60":122}
+70 reply to GetNode
+kv-node-70 {"kv-node-70":23, "front-end":18, "kv-node-10":235, "kv-node-30":186, "kv-node-40":183, "kv-node-60":129}
+Received GetNode request
+kv-node-70 {"kv-node-70":24, "front-end":18, "kv-node-10":235, "kv-node-30":186, "kv-node-40":183, "kv-node-60":129}
+70 reply to GetNode
+kv-node-70 {"kv-node-70":25, "front-end":18, "kv-node-10":241, "kv-node-30":190, "kv-node-40":185, "kv-node-60":143}
+Received GetNode request
+kv-node-70 {"kv-node-70":26, "front-end":18, "kv-node-10":241, "kv-node-30":190, "kv-node-40":185, "kv-node-60":143}
+70 reply to GetNode
+kv-node-70 {"kv-node-70":27, "front-end":18, "kv-node-10":241, "kv-node-30":190, "kv-node-40":185, "kv-node-60":143}
+Registering with front end
+kv-node-70 {"kv-node-70":28, "front-end":18, "kv-node-10":241, "kv-node-30":190, "kv-node-40":185, "kv-node-60":143}
+70 getting node info from : 127.0.0.1:13879
+kv-node-70 {"kv-node-70":29, "front-end":18, "kv-node-10":241, "kv-node-30":190, "kv-node-40":185, "kv-node-60":143}
+70 getting node info from : localhost:13877
+kv-node-70 {"kv-node-70":30, "front-end":18, "kv-node-10":241, "kv-node-30":190, "kv-node-40":185, "kv-node-60":146}
+Received reply with node 60
+kv-node-70 {"kv-node-70":31, "front-end":18, "kv-node-10":243, "kv-node-30":190, "kv-node-40":185, "kv-node-60":146}
+Received reply with node 10
+kv-node-70 {"kv-node-70":32, "front-end":18, "kv-node-10":243, "kv-node-30":190, "kv-node-40":185, "kv-node-60":146}
+70 getting node info from : localhost:13877
+kv-node-70 {"kv-node-70":33, "front-end":18, "kv-node-10":243, "kv-node-30":190, "kv-node-40":185, "kv-node-60":146}
+70 getting node info from : 127.0.0.1:13861
+kv-node-70 {"kv-node-70":34, "front-end":18, "kv-node-10":245, "kv-node-30":190, "kv-node-40":185, "kv-node-60":146}
+Received reply with node 10
+kv-node-70 {"kv-node-70":35, "front-end":18, "kv-node-10":245, "kv-node-30":190, "kv-node-40":185, "kv-node-60":146}
+Received reply with node 10
+kv-node-70 {"kv-node-70":36, "front-end":18, "kv-node-10":245, "kv-node-30":192, "kv-node-40":185, "kv-node-60":146}
+Received reply with node 30
+kv-node-70 {"kv-node-70":37, "front-end":18, "kv-node-10":245, "kv-node-30":192, "kv-node-40":185, "kv-node-60":146}
+70 getting node info from : 127.0.0.1:13861
+kv-node-70 {"kv-node-70":38, "front-end":18, "kv-node-10":245, "kv-node-30":192, "kv-node-40":185, "kv-node-60":146}
+70 getting node info from : localhost:13867
+kv-node-70 {"kv-node-70":39, "front-end":18, "kv-node-10":245, "kv-node-30":194, "kv-node-40":185, "kv-node-60":146}
+Received reply with node 30
+kv-node-70 {"kv-node-70":40, "front-end":18, "kv-node-10":245, "kv-node-30":194, "kv-node-40":185, "kv-node-60":146}
+Received reply with node 30
+kv-node-70 {"kv-node-70":41, "front-end":18, "kv-node-10":245, "kv-node-30":194, "kv-node-40":187, "kv-node-60":146}
+Received reply with node 40
+kv-node-70 {"kv-node-70":42, "front-end":18, "kv-node-10":245, "kv-node-30":194, "kv-node-40":187, "kv-node-60":146}
+70 getting node info from : 127.0.0.1:13879
+kv-node-70 {"kv-node-70":43, "front-end":18, "kv-node-10":245, "kv-node-30":194, "kv-node-40":187, "kv-node-60":146}
+70 getting node info from : localhost:13867
+kv-node-70 {"kv-node-70":44, "front-end":18, "kv-node-10":245, "kv-node-30":194, "kv-node-40":187, "kv-node-60":148}
+Received reply with node 60
+kv-node-70 {"kv-node-70":45, "front-end":18, "kv-node-10":245, "kv-node-30":194, "kv-node-40":189, "kv-node-60":148}
+Received reply with node 40
+kv-node-70 {"kv-node-70":46, "front-end":18, "kv-node-10":245, "kv-node-30":194, "kv-node-40":189, "kv-node-60":148}
+Received reply with node 40
+kv-node-70 {"kv-node-70":47, "front-end":18, "kv-node-10":249, "kv-node-30":208, "kv-node-40":193, "kv-node-60":150}
+Received GetNode request
+kv-node-70 {"kv-node-70":48, "front-end":18, "kv-node-10":249, "kv-node-30":208, "kv-node-40":193, "kv-node-60":150}
+70 reply to GetNode
+kv-node-70 {"kv-node-70":49, "front-end":18, "kv-node-10":249, "kv-node-30":212, "kv-node-40":193, "kv-node-60":152}
+Received GetNode request
+kv-node-70 {"kv-node-70":50, "front-end":18, "kv-node-10":249, "kv-node-30":212, "kv-node-40":193, "kv-node-60":152}
+70 reply to GetNode
+kv-node-70 {"kv-node-70":51, "front-end":21, "kv-node-10":249, "kv-node-30":212, "kv-node-40":197, "kv-node-60":155, "client-testGetEveryNSeconds":2}
+Received replicate request for 36
+kv-node-70 {"kv-node-70":52, "front-end":21, "kv-node-10":249, "kv-node-30":212, "kv-node-40":197, "kv-node-60":155, "client-testGetEveryNSeconds":2}
+Responding to replication request
+kv-node-70 {"kv-node-70":53, "front-end":21, "kv-node-10":249, "kv-node-30":212, "kv-node-40":197, "kv-node-60":155, "client-testGetEveryNSeconds":2}
+Sending along request to backup bucket 36 0 more times
+kv-node-70 {"kv-node-70":54, "front-end":21, "kv-node-10":251, "kv-node-30":212, "kv-node-40":197, "kv-node-60":155, "client-testGetEveryNSeconds":2}
+Received replication reply
+kv-node-70 {"kv-node-70":55, "front-end":25, "kv-node-10":253, "kv-node-30":218, "kv-node-40":213, "kv-node-60":160, "client-testGetEveryNSeconds":4}
+Received GetNode request
+kv-node-70 {"kv-node-70":56, "front-end":25, "kv-node-10":253, "kv-node-30":218, "kv-node-40":213, "kv-node-60":160, "client-testGetEveryNSeconds":4}
+70 reply to GetNode
+kv-node-70 {"kv-node-70":57, "front-end":25, "kv-node-10":253, "kv-node-30":218, "kv-node-40":214, "kv-node-60":160, "client-testGetEveryNSeconds":4}
+Received GetNode request
+kv-node-70 {"kv-node-70":58, "front-end":25, "kv-node-10":253, "kv-node-30":218, "kv-node-40":214, "kv-node-60":160, "client-testGetEveryNSeconds":4}
+70 reply to GetNode
+kv-node-70 {"kv-node-70":59, "front-end":25, "kv-node-10":263, "kv-node-30":220, "kv-node-40":222, "kv-node-60":162, "client-testGetEveryNSeconds":4}
+Received GetNode request
+kv-node-70 {"kv-node-70":60, "front-end":25, "kv-node-10":263, "kv-node-30":220, "kv-node-40":222, "kv-node-60":162, "client-testGetEveryNSeconds":4}
+70 reply to GetNode
+kv-node-70 {"kv-node-70":61, "front-end":25, "kv-node-10":265, "kv-node-30":220, "kv-node-40":222, "kv-node-60":162, "client-testGetEveryNSeconds":4}
+Received GetNode request
+kv-node-70 {"kv-node-70":62, "front-end":25, "kv-node-10":265, "kv-node-30":220, "kv-node-40":222, "kv-node-60":162, "client-testGetEveryNSeconds":4}
+70 reply to GetNode
+kv-node-70 {"kv-node-70":63, "front-end":25, "kv-node-10":273, "kv-node-30":222, "kv-node-40":226, "kv-node-60":169, "client-testGetEveryNSeconds":4}
+Received GetNode request
+kv-node-70 {"kv-node-70":64, "front-end":25, "kv-node-10":273, "kv-node-30":222, "kv-node-40":226, "kv-node-60":169, "client-testGetEveryNSeconds":4}
+70 reply to GetNode
+kv-node-70 {"kv-node-70":65, "front-end":25, "kv-node-10":279, "kv-node-30":226, "kv-node-40":228, "kv-node-60":183, "client-testGetEveryNSeconds":4}
+Received GetNode request
+kv-node-70 {"kv-node-70":66, "front-end":25, "kv-node-10":279, "kv-node-30":226, "kv-node-40":228, "kv-node-60":183, "client-testGetEveryNSeconds":4}
+70 reply to GetNode
+kv-node-70 {"kv-node-70":67, "front-end":25, "kv-node-10":279, "kv-node-30":226, "kv-node-40":228, "kv-node-60":183, "client-testGetEveryNSeconds":4}
+Registering with front end
+kv-node-70 {"kv-node-70":68, "front-end":25, "kv-node-10":279, "kv-node-30":226, "kv-node-40":228, "kv-node-60":183, "client-testGetEveryNSeconds":4}
+70 getting node info from : 127.0.0.1:13879
+kv-node-70 {"kv-node-70":69, "front-end":25, "kv-node-10":279, "kv-node-30":226, "kv-node-40":228, "kv-node-60":183, "client-testGetEveryNSeconds":4}
+70 getting node info from : localhost:13877
+kv-node-70 {"kv-node-70":70, "front-end":25, "kv-node-10":281, "kv-node-30":226, "kv-node-40":228, "kv-node-60":183, "client-testGetEveryNSeconds":4}
+Received reply with node 10
+kv-node-70 {"kv-node-70":71, "front-end":25, "kv-node-10":281, "kv-node-30":226, "kv-node-40":228, "kv-node-60":186, "client-testGetEveryNSeconds":4}
+Received reply with node 60
+kv-node-70 {"kv-node-70":72, "front-end":25, "kv-node-10":281, "kv-node-30":226, "kv-node-40":228, "kv-node-60":186, "client-testGetEveryNSeconds":4}
+70 getting node info from : 127.0.0.1:13861
+kv-node-70 {"kv-node-70":73, "front-end":25, "kv-node-10":281, "kv-node-30":226, "kv-node-40":228, "kv-node-60":186, "client-testGetEveryNSeconds":4}
+70 getting node info from : localhost:13877
+kv-node-70 {"kv-node-70":74, "front-end":25, "kv-node-10":281, "kv-node-30":228, "kv-node-40":228, "kv-node-60":186, "client-testGetEveryNSeconds":4}
+Received reply with node 30
+kv-node-70 {"kv-node-70":75, "front-end":25, "kv-node-10":283, "kv-node-30":228, "kv-node-40":228, "kv-node-60":186, "client-testGetEveryNSeconds":4}
+Received reply with node 10
+kv-node-70 {"kv-node-70":76, "front-end":25, "kv-node-10":283, "kv-node-30":228, "kv-node-40":228, "kv-node-60":186, "client-testGetEveryNSeconds":4}
+Received reply with node 10
+kv-node-70 {"kv-node-70":77, "front-end":25, "kv-node-10":283, "kv-node-30":228, "kv-node-40":228, "kv-node-60":186, "client-testGetEveryNSeconds":4}
+70 getting node info from : 127.0.0.1:13861
+kv-node-70 {"kv-node-70":78, "front-end":25, "kv-node-10":283, "kv-node-30":228, "kv-node-40":228, "kv-node-60":186, "client-testGetEveryNSeconds":4}
+70 getting node info from : localhost:13867
+kv-node-70 {"kv-node-70":79, "front-end":25, "kv-node-10":283, "kv-node-30":230, "kv-node-40":228, "kv-node-60":186, "client-testGetEveryNSeconds":4}
+Received reply with node 30
+kv-node-70 {"kv-node-70":80, "front-end":25, "kv-node-10":283, "kv-node-30":230, "kv-node-40":228, "kv-node-60":186, "client-testGetEveryNSeconds":4}
+Received reply with node 30
+kv-node-70 {"kv-node-70":81, "front-end":25, "kv-node-10":283, "kv-node-30":230, "kv-node-40":230, "kv-node-60":186, "client-testGetEveryNSeconds":4}
+Received reply with node 40
+kv-node-70 {"kv-node-70":82, "front-end":25, "kv-node-10":283, "kv-node-30":230, "kv-node-40":230, "kv-node-60":186, "client-testGetEveryNSeconds":4}
+70 getting node info from : localhost:13867
+kv-node-70 {"kv-node-70":83, "front-end":25, "kv-node-10":283, "kv-node-30":230, "kv-node-40":230, "kv-node-60":186, "client-testGetEveryNSeconds":4}
+70 getting node info from : 127.0.0.1:13879
+kv-node-70 {"kv-node-70":84, "front-end":25, "kv-node-10":283, "kv-node-30":230, "kv-node-40":232, "kv-node-60":186, "client-testGetEveryNSeconds":4}
+Received reply with node 40
+kv-node-70 {"kv-node-70":85, "front-end":25, "kv-node-10":283, "kv-node-30":230, "kv-node-40":232, "kv-node-60":186, "client-testGetEveryNSeconds":4}
+Received reply with node 40
+kv-node-70 {"kv-node-70":86, "front-end":25, "kv-node-10":283, "kv-node-30":230, "kv-node-40":232, "kv-node-60":188, "client-testGetEveryNSeconds":4}
+Received reply with node 60
+kv-node-70 {"kv-node-70":87, "front-end":25, "kv-node-10":287, "kv-node-30":246, "kv-node-40":236, "kv-node-60":192, "client-testGetEveryNSeconds":4}
+Received GetNode request
+kv-node-70 {"kv-node-70":88, "front-end":25, "kv-node-10":287, "kv-node-30":246, "kv-node-40":236, "kv-node-60":192, "client-testGetEveryNSeconds":4}
+70 reply to GetNode
+kv-node-70 {"kv-node-70":89, "front-end":25, "kv-node-10":287, "kv-node-30":247, "kv-node-40":236, "kv-node-60":192, "client-testGetEveryNSeconds":4}
+Received GetNode request
+kv-node-70 {"kv-node-70":90, "front-end":25, "kv-node-10":287, "kv-node-30":247, "kv-node-40":236, "kv-node-60":192, "client-testGetEveryNSeconds":4}
+70 reply to GetNode
+kv-node-70 {"kv-node-70":91, "front-end":25, "kv-node-10":289, "kv-node-30":254, "kv-node-40":249, "kv-node-60":196, "client-testGetEveryNSeconds":4}
+Received GetNode request
+kv-node-70 {"kv-node-70":92, "front-end":25, "kv-node-10":289, "kv-node-30":254, "kv-node-40":249, "kv-node-60":196, "client-testGetEveryNSeconds":4}
+70 reply to GetNode
+kv-node-70 {"kv-node-70":93, "front-end":25, "kv-node-10":289, "kv-node-30":254, "kv-node-40":250, "kv-node-60":196, "client-testGetEveryNSeconds":4}
+Received GetNode request
+kv-node-70 {"kv-node-70":94, "front-end":25, "kv-node-10":289, "kv-node-30":254, "kv-node-40":250, "kv-node-60":196, "client-testGetEveryNSeconds":4}
+70 reply to GetNode
+kv-node-70 {"kv-node-70":95, "front-end":25, "kv-node-10":299, "kv-node-30":256, "kv-node-40":258, "kv-node-60":198, "client-testGetEveryNSeconds":4}
+Received GetNode request
+kv-node-70 {"kv-node-70":96, "front-end":25, "kv-node-10":299, "kv-node-30":256, "kv-node-40":258, "kv-node-60":198, "client-testGetEveryNSeconds":4}
+70 reply to GetNode
+kv-node-70 {"kv-node-70":97, "front-end":25, "kv-node-10":301, "kv-node-30":256, "kv-node-40":258, "kv-node-60":198, "client-testGetEveryNSeconds":4}
+Received GetNode request
+kv-node-70 {"kv-node-70":98, "front-end":25, "kv-node-10":301, "kv-node-30":256, "kv-node-40":258, "kv-node-60":198, "client-testGetEveryNSeconds":4}
+70 reply to GetNode
+kv-node-70 {"kv-node-70":99, "front-end":25, "kv-node-10":313, "kv-node-30":258, "kv-node-40":262, "kv-node-60":207, "client-testGetEveryNSeconds":4}
+Received GetNode request
+kv-node-70 {"kv-node-70":100, "front-end":25, "kv-node-10":313, "kv-node-30":258, "kv-node-40":262, "kv-node-60":207, "client-testGetEveryNSeconds":4}
+70 reply to GetNode
+kv-node-70 {"kv-node-70":101, "front-end":25, "kv-node-10":315, "kv-node-30":260, "kv-node-40":264, "kv-node-60":217, "client-testGetEveryNSeconds":4}
+Received GetNode request
+kv-node-70 {"kv-node-70":102, "front-end":25, "kv-node-10":315, "kv-node-30":260, "kv-node-40":264, "kv-node-60":217, "client-testGetEveryNSeconds":4}
+70 reply to GetNode
+kv-node-70 {"kv-node-70":103, "front-end":25, "kv-node-10":315, "kv-node-30":260, "kv-node-40":264, "kv-node-60":217, "client-testGetEveryNSeconds":4}
+Registering with front end
+kv-node-70 {"kv-node-70":104, "front-end":25, "kv-node-10":315, "kv-node-30":260, "kv-node-40":264, "kv-node-60":217, "client-testGetEveryNSeconds":4}
+70 getting node info from : 127.0.0.1:13879
+kv-node-70 {"kv-node-70":105, "front-end":25, "kv-node-10":315, "kv-node-30":260, "kv-node-40":264, "kv-node-60":217, "client-testGetEveryNSeconds":4}
+70 getting node info from : localhost:13877
+kv-node-70 {"kv-node-70":106, "front-end":25, "kv-node-10":315, "kv-node-30":262, "kv-node-40":264, "kv-node-60":222, "client-testGetEveryNSeconds":4}
+Received reply with node 60
+kv-node-70 {"kv-node-70":107, "front-end":25, "kv-node-10":317, "kv-node-30":262, "kv-node-40":264, "kv-node-60":222, "client-testGetEveryNSeconds":4}
+Received reply with node 10
+kv-node-70 {"kv-node-70":108, "front-end":25, "kv-node-10":317, "kv-node-30":262, "kv-node-40":264, "kv-node-60":222, "client-testGetEveryNSeconds":4}
+70 getting node info from : 127.0.0.1:13861
+kv-node-70 {"kv-node-70":109, "front-end":25, "kv-node-10":317, "kv-node-30":262, "kv-node-40":264, "kv-node-60":222, "client-testGetEveryNSeconds":4}
+70 getting node info from : localhost:13877
+kv-node-70 {"kv-node-70":110, "front-end":25, "kv-node-10":317, "kv-node-30":264, "kv-node-40":264, "kv-node-60":222, "client-testGetEveryNSeconds":4}
+Received reply with node 30
+kv-node-70 {"kv-node-70":111, "front-end":25, "kv-node-10":319, "kv-node-30":264, "kv-node-40":264, "kv-node-60":222, "client-testGetEveryNSeconds":4}
+Received reply with node 10
+kv-node-70 {"kv-node-70":112, "front-end":25, "kv-node-10":319, "kv-node-30":264, "kv-node-40":264, "kv-node-60":222, "client-testGetEveryNSeconds":4}
+Received reply with node 10
+kv-node-70 {"kv-node-70":113, "front-end":25, "kv-node-10":319, "kv-node-30":264, "kv-node-40":264, "kv-node-60":222, "client-testGetEveryNSeconds":4}
+70 getting node info from : 127.0.0.1:13861
+kv-node-70 {"kv-node-70":114, "front-end":25, "kv-node-10":319, "kv-node-30":264, "kv-node-40":264, "kv-node-60":222, "client-testGetEveryNSeconds":4}
+70 getting node info from : localhost:13867
+kv-node-70 {"kv-node-70":115, "front-end":25, "kv-node-10":319, "kv-node-30":266, "kv-node-40":264, "kv-node-60":222, "client-testGetEveryNSeconds":4}
+Received reply with node 30
+kv-node-70 {"kv-node-70":116, "front-end":25, "kv-node-10":319, "kv-node-30":266, "kv-node-40":264, "kv-node-60":222, "client-testGetEveryNSeconds":4}
+Received reply with node 30
+kv-node-70 {"kv-node-70":117, "front-end":25, "kv-node-10":319, "kv-node-30":266, "kv-node-40":266, "kv-node-60":222, "client-testGetEveryNSeconds":4}
+Received reply with node 40
+kv-node-70 {"kv-node-70":118, "front-end":25, "kv-node-10":319, "kv-node-30":266, "kv-node-40":266, "kv-node-60":222, "client-testGetEveryNSeconds":4}
+70 getting node info from : localhost:13867
+kv-node-70 {"kv-node-70":119, "front-end":25, "kv-node-10":319, "kv-node-30":266, "kv-node-40":266, "kv-node-60":222, "client-testGetEveryNSeconds":4}
+70 getting node info from : 127.0.0.1:13879
+kv-node-70 {"kv-node-70":120, "front-end":25, "kv-node-10":319, "kv-node-30":266, "kv-node-40":266, "kv-node-60":224, "client-testGetEveryNSeconds":4}
+Received reply with node 60
+kv-node-70 {"kv-node-70":121, "front-end":25, "kv-node-10":319, "kv-node-30":266, "kv-node-40":268, "kv-node-60":224, "client-testGetEveryNSeconds":4}
+Received reply with node 40
+kv-node-70 {"kv-node-70":122, "front-end":25, "kv-node-10":319, "kv-node-30":266, "kv-node-40":268, "kv-node-60":224, "client-testGetEveryNSeconds":4}
+Received reply with node 40
