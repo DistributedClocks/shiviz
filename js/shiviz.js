@@ -46,7 +46,7 @@ function Shiviz() {
                 response = atob(response.content);
                 handleResponse(response, e);
             }).fail(function() {
-                Shiviz.getInstance().handleException(new Exception("unable to retrieve example log from: " + url, true));
+                Shiviz.getInstance().handleException(new Exception("Unable to retrieve example log from:\n" + url + "\n\n Note: to use ShiViz example logs offline in Chrome, start Chrome with:\n $ open -n -a '/Applications/Google Chrome.app/' --args --allow-file-access-from-files", true));
             });  
         });
     });
