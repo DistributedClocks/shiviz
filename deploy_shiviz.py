@@ -68,11 +68,11 @@ def minify(branch, info):
     ('output_format', 'text'),
     ('output_info', info)
     ]
+    url = 'https://bitbucket.org/bestchai/shiviz/raw/' + branch + '/'
     #Include dependencies
     for r, d, f in os.walk('local_scripts'):
         for f in f:
                 params += [('code_url', url + os.path.join(r, f))]
-    url = 'https://bitbucket.org/bestchai/shiviz/raw/' + branch + '/'
     # Traverse all of the files underneath the js/ dir
     for root, dirs, files in os.walk('js'):
         for file in files:
