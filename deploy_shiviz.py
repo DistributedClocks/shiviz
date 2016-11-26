@@ -64,13 +64,14 @@ def minify(branch, info):
     returns the minified resulting js code.
     '''
     params = [
-    ('code_url', 'http://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.js'),
-    ('code_url', 'http://d3js.org/d3.v3.min.js'),
     ('compilation_level', 'SIMPLE_OPTIMIZATIONS'),
     ('output_format', 'text'),
     ('output_info', info)
     ]
-
+    #Include dependencies
+    for r, d, f in os.walk('local_scripts'):
+        for f in f:
+                params += [('code_url', url + os.path.join(r, f))]
     url = 'https://bitbucket.org/bestchai/shiviz/raw/' + branch + '/'
     # Traverse all of the files underneath the js/ dir
     for root, dirs, files in os.walk('js'):
