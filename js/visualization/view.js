@@ -223,9 +223,22 @@ View.prototype.draw = function(viewPosition) {
             view.$hostSVG.append(svg);
             arr.push(svg[0]);
         });
+
         
         // Bind the hosts
         view.controller.bindHosts(d3.selectAll(arr).data(startNodes));
+
+        labelHosts(arr);
+        
+    }
+
+    function labelHosts(g_hosts) {
+        view.$hostSVG.attr("overflow", "visible");
+        d3.selectAll(g_hosts)
+            .append("text")
+            .text(function(node) {
+                return node.getText();
+            });
     }
 
     function drawLogLines() {
