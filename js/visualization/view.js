@@ -228,17 +228,29 @@ View.prototype.draw = function(viewPosition) {
         // Bind the hosts
         view.controller.bindHosts(d3.selectAll(arr).data(startNodes));
 
-        labelHosts(arr);
+        drawHostLabels(arr);
         
     }
 
-    function labelHosts(g_hosts) {
+    function drawHostLabels(g_hosts) {
         view.$hostSVG.attr("overflow", "visible");
-        d3.selectAll(g_hosts)
-            .append("text")
+        //var totalWidth = view.$hostSVG.attr("width");
+        //var hostWidth = totalWidth / g_hosts.length;
+        var hosts = d3.selectAll(g_hosts);
+        var x_offset = hosts.select("rect").attr("width") / 2;
+        hosts.append("text")
             .text(function(node) {
-                return node.getText();
-            });
+                var abbrevName = abbreviate(node.getText());
+                return abbrevName;
+            })
+            .attr("x", x_offset)
+            .attr("text-anchor", "middle")
+            .attr("font-size", "x-small");
+    }
+
+    function abbreviate(text) {
+        // TODO
+        return text;
     }
 
     function drawLogLines() {
