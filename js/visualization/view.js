@@ -240,21 +240,30 @@ View.prototype.draw = function(viewPosition) {
         var hosts = d3.selectAll(g_hosts);
         var x_offset = hosts.select("rect").attr("width") / 3;
         hosts.append("text")
-            .text(function(node) {
-                var abbrevName = abbreviate(node.getText());
-                return abbrevName;
-            })
+            .text(function(node) { return node.getText(); })
             .attr("x", x_offset)
             .attr("y", "1em")
             .attr("font-size", "x-small")
             .attr("transform", "rotate(-45)");
 
-            
-    }
+        // Must truncate after timeout so that the text elements will have
+        // been drawn. Otherwise they will have no computed text length.
+        setTimeout(function() {
+            hosts.selectAll("text")
+                .each(truncateHostLabelEnd);
+        });
 
-    function abbreviate(text) {
-        // TODO
-        return text;
+        // Adapted from http://stackoverflow.com/a/27723725 
+        function truncateHostLabelEnd() {
+            var self = d3.select(this),
+                textLength = self.node().getComputedTextLength(),
+                text = self.text();
+            while (textLength > Global.HOST_LABEL_WIDTH && text.length > 0) {
+                text = text.slice(0, -1);
+                self.text(text + '...');
+                textLength = self.node().getComputedTextLength();
+            }
+        } 
     }
 
     function drawLogLines() {
