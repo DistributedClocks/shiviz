@@ -78,6 +78,11 @@ Global.HOST_SIZE = 25;
  * @static
  * @const
  */
+Global.HOST_LABEL_WIDTH = 64;
+/**
+ * @static
+ * @const
+ */
 Global.HIDDEN_EDGE_LENGTH = 40;
 
 /**
