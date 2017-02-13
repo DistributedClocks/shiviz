@@ -234,18 +234,22 @@ View.prototype.draw = function(viewPosition) {
 
     function drawHostLabels(g_hosts) {
         view.$hostSVG.attr("overflow", "visible");
+
         //var totalWidth = view.$hostSVG.attr("width");
         //var hostWidth = totalWidth / g_hosts.length;
         var hosts = d3.selectAll(g_hosts);
-        var x_offset = hosts.select("rect").attr("width") / 2;
+        var x_offset = hosts.select("rect").attr("width") / 3;
         hosts.append("text")
             .text(function(node) {
                 var abbrevName = abbreviate(node.getText());
                 return abbrevName;
             })
             .attr("x", x_offset)
-            .attr("text-anchor", "middle")
-            .attr("font-size", "x-small");
+            .attr("y", "1em")
+            .attr("font-size", "x-small")
+            .attr("transform", "rotate(-45)");
+
+            
     }
 
     function abbreviate(text) {

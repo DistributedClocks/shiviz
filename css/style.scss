@@ -558,7 +558,7 @@ section.input {
     position: fixed;
     top: 0;
     height: 2em;
-    padding: 2em 0;
+    padding: 2em 0 0 0;
     background: #fff;
     z-index: 4;
 }
@@ -872,6 +872,8 @@ svg {
     position: fixed;
     background: white;
     z-index: 2;
+    top: 4em;
+    padding-top: 2em;
 }
 
 #hostBarSeparator {
