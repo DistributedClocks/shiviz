@@ -95,3 +95,17 @@ Util.removeFromArray = function(arr, arg) {
 Util.svgElement = function(tag) {
     return $(document.createElementNS("http://www.w3.org/2000/svg", tag));
 };
+
+/**
+ * Produce a new string that is the revese of the given string.
+ *
+ * @param  {String} string to be reversed
+ * @return {String} reverse of input string 
+ */
+Util.reverseString = function(string) {
+    var stringArray = string.split("");
+    stringArray.reverse();
+    var reversedString = stringArray.join("");
+    return reversedString;
+}
+
