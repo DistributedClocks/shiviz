@@ -224,7 +224,6 @@ View.prototype.draw = function(viewPosition) {
             arr.push(svg[0]);
         });
 
-        
         // Bind the hosts
         view.controller.bindHosts(d3.selectAll(arr).data(startNodes));
 
@@ -235,35 +234,55 @@ View.prototype.draw = function(viewPosition) {
     function drawHostLabels(g_hosts) {
         view.$hostSVG.attr("overflow", "visible");
 
-        //var totalWidth = view.$hostSVG.attr("width");
-        //var hostWidth = totalWidth / g_hosts.length;
         var hosts = d3.selectAll(g_hosts);
         var x_offset = hosts.select("rect").attr("width") / 3;
-        hosts.append("text")
-            .text(function(node) { return node.getText(); })
+        var hostLabels = hosts.append("text")
+            .text(node => node.getText())
             .attr("x", x_offset)
             .attr("y", "1em")
             .attr("font-size", "x-small")
             .attr("transform", "rotate(-45)");
 
-        // Must truncate after timeout so that the text elements will have
+        // Must abbreviate after timeout so that the text elements will have
         // been drawn. Otherwise they will have no computed text length.
         setTimeout(function() {
-            hosts.selectAll("text")
-                .each(truncateHostLabelEnd);
+            abbreviateText(hostLabels);
         });
 
-        // Adapted from http://stackoverflow.com/a/27723725 
-        function truncateHostLabelEnd() {
-            var self = d3.select(this),
-                textLength = self.node().getComputedTextLength(),
-                text = self.text();
-            while (textLength > Global.HOST_LABEL_WIDTH && text.length > 0) {
-                text = text.slice(0, -1);
-                self.text(text + '...');
-                textLength = self.node().getComputedTextLength();
+    }
+
+    function abbreviateText(d3Texts) {
+        var texts = new Map();
+        d3Texts.each(function() {
+            var d3Text = d3.select(this);
+            var self = this;
+            texts.set(d3Text.text(), {
+                setText: (str) => d3Text.text(str),
+                //getText: () => d3Text.text(),
+                isFit: () => self.getComputedTextLength() < 
+                    Global.HOST_LABEL_WIDTH,
+            });
+        });
+
+        var affixGroups = AffixGrouper.groupLongestAffixes(texts.keys()); 
+        for (var [string, textObj] of texts.entries()) {
+            if (!textObj.isFit()) {
+                abbreviate(textObj, affixGroups[string]);
+            } 
+        }
+
+        function abbreviate(textObj, affixString) {
+            var omitLen = 3;
+            if (affixString.complete().length >= omitLen) {
+                while (!textObj.isFit()) {
+                    textObj.setText(affixString.ellipsify(omitLen));
+                    omitLen++;
+                }
             }
-        } 
+            // Post condition: the display text should fit in the text element 
+            console.assert(textObj.isFit(), "text element is too small",
+                textObj, affixString);
+        }
     }
 
     function drawLogLines() {

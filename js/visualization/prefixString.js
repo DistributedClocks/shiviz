@@ -8,7 +8,10 @@
  * @param {String} root
  */
 function PrefixString(prefix, root) {
+    // @private
     this.prefix = prefix;
+
+    // @private
     this.root = root;
 }
 
