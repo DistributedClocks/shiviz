@@ -97,7 +97,7 @@ Util.svgElement = function(tag) {
 };
 
 /**
- * Produce a new string that is the revese of the given string.
+ * Produce a new string that is the reverse of the given string.
  *
  * @param  {String} string to be reversed
  * @return {String} reverse of input string 
