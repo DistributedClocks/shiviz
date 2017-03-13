@@ -238,50 +238,63 @@ View.prototype.draw = function(viewPosition) {
         var x_offset = hosts.select("rect").attr("width") / 3;
         var hostLabels = hosts.append("text")
             .text(node => node.getText())
+            //.attr("text-anchor", "middle")
+            .attr("transform", "rotate(-45)")
             .attr("x", x_offset)
             .attr("y", "1em")
-            .attr("font-size", "x-small")
-            .attr("transform", "rotate(-45)");
+            .attr("font-size", "x-small");
 
         // Must abbreviate after timeout so that the text elements will have
         // been drawn. Otherwise they will have no computed text length.
         setTimeout(function() {
-            abbreviateText(hostLabels);
+            abbreviateD3Texts(hostLabels);
         });
 
     }
 
-    function abbreviateText(d3Texts) {
-        var texts = new Map();
-        d3Texts.each(function() {
-            var d3Text = d3.select(this);
-            var self = this;
-            texts.set(d3Text.text(), {
-                setText: (str) => d3Text.text(str),
-                //getText: () => d3Text.text(),
-                isFit: () => self.getComputedTextLength() < 
-                    Global.HOST_LABEL_WIDTH,
-            });
-        });
+    function abbreviateD3Texts(d3Texts) {
+        const textsToFitter = getD3FitterMap(d3Texts, Global.HOST_LABEL_WIDTH);
+        const textsToSetter = getD3SetterMap(d3Texts);
 
-        var affixGroups = AffixGrouper.groupLongestAffixes(texts.keys()); 
-        for (var [string, textObj] of texts.entries()) {
-            if (!textObj.isFit()) {
-                abbreviate(textObj, affixGroups[string]);
-            } 
+        // Must come after after creating the textsTo... Maps, since it mutates
+        // the d3Texts
+        const abbrevs = Abbreviation.generateFromStrings(textsToFitter);
+
+        for (let abbrev of abbrevs) {
+            let setText = textsToSetter.get(abbrev.getOriginal());
+            setText(abbrev);
         }
 
-        function abbreviate(textObj, affixString) {
-            var omitLen = 3;
-            if (affixString.complete().length >= omitLen) {
-                while (!textObj.isFit()) {
-                    textObj.setText(affixString.ellipsify(omitLen));
-                    omitLen++;
-                }
-            }
-            // Post condition: the display text should fit in the text element 
-            console.assert(textObj.isFit(), "text element is too small",
-                textObj, affixString);
+        function getD3FitterMap(d3Texts, svgWidth) {
+            const textsToFitter = new Map();
+            d3Texts.each(function() {
+                const d3Text = d3.select(this);
+                const self = this;
+                textsToFitter.set(d3Text.text(),
+                    function (str) {
+                        d3Text.text(str);
+                        return self.getComputedTextLength() < svgWidth;
+                    });
+            });
+            return textsToFitter;
+        }
+        
+        function getD3SetterMap(d3Texts) {
+            const textsToSetter = new Map();
+            d3Texts.each(function() {
+                const d3Text = d3.select(this);
+                const setAbbrevText = makeAbbrevTextSetter(this);
+                textsToSetter.set(d3Text.text(), setAbbrevText);
+                    
+            });
+            return textsToSetter;
+        }
+
+        function makeAbbrevTextSetter(svgText) {
+            const d3Text = d3.select(svgText);
+            return function(abbrev) {
+                d3Text.text(abbrev.getEllipsesString());
+            };
         }
     }
 
