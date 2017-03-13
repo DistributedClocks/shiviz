@@ -91,7 +91,6 @@ Global.HIDDEN_EDGE_LENGTH = 40;
  */
 Global.MIN_HOST_WIDTH = 40;
 
-
 /**
  * Redraws the global.
  */
