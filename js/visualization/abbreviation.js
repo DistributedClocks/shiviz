@@ -10,19 +10,35 @@
  * 
  */
 function Abbreviation(prefix, root, suffix) {
-    this.prefix = prefix.slice(-Abbreviation.ABBREV_CHARS);
-    this.root = root;
-    this.suffix = suffix.slice(0,Abbreviation.ABBREV_CHARS);
     this.original = prefix + root + suffix;
+    if (root !== "") {
+        this.prefix = prefix.slice(-Abbreviation.ABBREV_CHARS);
+        this.root = root;
+        this.suffix = suffix.slice(0,Abbreviation.ABBREV_CHARS);
+    } else if (prefix !== "") {
+        this.prefix = "";
+        this.root = prefix
+        this.suffix = suffix.slice(0,Abbreviation.ABBREV_CHARS);
+    } else {
+        this.prefix = "";
+        this.root = suffix
+        this.suffix = "";
+    }
+    console.assert(this.root !== "" || this.original === "",
+        "this.root assigned an empty string when a non-empty is available");
 }
 
 Abbreviation.ABBREV_CHARS = 3;
+Abbreviation.ELLIPSIS = "..";
 
 /**
  * Returns an abbreviation of the prefixes and suffixes of this string
  */
 Abbreviation.prototype.getString = function () {
-    return this.prefix + this.root + this.suffix;
+    if (this.string !== "") {
+        this.string = this.prefix + this.root + this.suffix;
+    }
+    return this.string;
 }
 
 /**
@@ -50,7 +66,7 @@ Abbreviation.prototype.getEllipsesString = function () {
         if (string.length < Abbreviation.ABBREV_CHARS) {
             return string;
         } else {
-            return "...";
+            return Abbreviation.ELLIPSIS;   
         }
     }
 }
@@ -60,9 +76,9 @@ Abbreviation.prototype.getEllipsesString = function () {
  * the root as its rightmost, if available. 
  */
 Abbreviation.prototype.shiftPrefix = function () {
-    if (this.prefix === "..." || this.prefix === "") {
+    if (this.prefix === Abbreviation.ELLIPSIS || this.prefix === "") {
         this.root = this.root.slice(1);
-        this.prefix = "...";
+        this.prefix = Abbreviation.ELLIPSIS;
     } else {
         this.prefix = this.prefix.slice(1)
         if (this.root !== "") {
@@ -77,9 +93,9 @@ Abbreviation.prototype.shiftPrefix = function () {
  * the root as its leftmost, if available. 
  */
 Abbreviation.prototype.shiftSuffix = function () {
-    if (this.suffix === "..." || this.suffix === "") {
+    if (this.suffix === Abbreviation.ELLIPSIS || this.suffix === "") {
         this.root = this.root.slice(1);
-        this.suffix = "...";
+        this.suffix = Abbreviation.ELLIPSIS;
     } else {
         this.suffix = this.suffix.slice(0, Abbreviation.ABBREV_CHARS-1);
         if (this.root !== "") {
