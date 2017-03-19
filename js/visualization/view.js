@@ -261,7 +261,7 @@ View.prototype.draw = function(viewPosition) {
         const abbrevs = Abbreviation.generateFromStrings(textsToFitter);
 
         for (let abbrev of abbrevs) {
-            let setText = textsToSetter.get(abbrev.getOriginal());
+            let setText = textsToSetter.get(abbrev.getOriginalString());
             setText(abbrev);
         }
 

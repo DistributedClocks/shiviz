@@ -10,21 +10,20 @@
  * 
  */
 function Abbreviation(prefix, root, suffix) {
-    this.original = prefix + root + suffix;
     if (root !== "") {
-        this.prefix = prefix.slice(-Abbreviation.ABBREV_CHARS);
+        this.prefix = prefix;
         this.root = root;
-        this.suffix = suffix.slice(0,Abbreviation.ABBREV_CHARS);
+        this.suffix = suffix;
     } else if (prefix !== "") {
         this.prefix = "";
         this.root = prefix
-        this.suffix = suffix.slice(0,Abbreviation.ABBREV_CHARS);
+        this.suffix = suffix;
     } else {
         this.prefix = "";
         this.root = suffix
         this.suffix = "";
     }
-    console.assert(this.root !== "" || this.original === "",
+    console.assert(this.root !== "" || this.getOriginalString() === "",
         "this.root assigned an empty string when a non-empty is available");
 }
 
@@ -32,32 +31,19 @@ Abbreviation.ABBREV_CHARS = 3;
 Abbreviation.ELLIPSIS = "..";
 
 /**
- * Returns an abbreviation of the prefixes and suffixes of this string
- */
-Abbreviation.prototype.getString = function () {
-    if (this.string !== "") {
-        this.string = this.prefix + this.root + this.suffix;
-    }
-    return this.string;
-}
-
-/**
- * Returns an abbreviation of the prefixes and suffixes of this string
- */
-Abbreviation.prototype.getString = function () {
-    return this.prefix + this.root + this.suffix;
-}
-
-/**
  * Returns the original, unabbreviated string
  */
-Abbreviation.prototype.getOriginal = function () {
-    return this.original;
+Abbreviation.prototype.getOriginalString = function () {
+    return this.prefix + this.root + this.suffix;
 }
 /**
- * Returns the abbreviated string with ellispes in place of affixes.
+ * Returns the abbreviated string with ellipses in place of affixes.
  */
 Abbreviation.prototype.getEllipsesString = function () {
+    if (this.root === "") {
+        return Abbreviation.ELLIPSIS;
+    }
+
     const pre = ellipsify(this.prefix);
     const suf = ellipsify(this.suffix);
     return pre + this.root + suf;
@@ -76,16 +62,10 @@ Abbreviation.prototype.getEllipsesString = function () {
  * the root as its rightmost, if available. 
  */
 Abbreviation.prototype.shiftPrefix = function () {
-    if (this.prefix === Abbreviation.ELLIPSIS || this.prefix === "") {
-        this.root = this.root.slice(1);
-        this.prefix = Abbreviation.ELLIPSIS;
-    } else {
-        this.prefix = this.prefix.slice(1)
-        if (this.root !== "") {
-            this.prefix += this.root.charAt(0);
-            this.root = this.root.slice(1);
-        }
+    if (this.root !== "") {
+        this.prefix += this.root.charAt(0);
     }
+    this.root = this.root.slice(1);
 }
 
 /*
@@ -93,16 +73,11 @@ Abbreviation.prototype.shiftPrefix = function () {
  * the root as its leftmost, if available. 
  */
 Abbreviation.prototype.shiftSuffix = function () {
-    if (this.suffix === Abbreviation.ELLIPSIS || this.suffix === "") {
-        this.root = this.root.slice(1);
-        this.suffix = Abbreviation.ELLIPSIS;
-    } else {
-        this.suffix = this.suffix.slice(0, Abbreviation.ABBREV_CHARS-1);
-        if (this.root !== "") {
-            this.suffix = this.root.charAt(-1) + this.suffix;
-            this.root = this.root.slice(0, -1);
-        }
+    if (this.root !== "") {
+        const lastRootChar = this.root.charAt(this.root.length - 1);
+        this.suffix = lastRootChar + this.suffix;
     }
+    this.root = this.root.slice(0, -1);
 }
 
 
@@ -121,7 +96,7 @@ Abbreviation.generateFromStrings = function (stringsToFitter) {
     // phase, affix character positions may not line up properly
     const abbrevs = abbrevStrings(Array.from(stringsToFitter.keys()));
     for (let abbrev of abbrevs) {
-        truncate(abbrev, stringsToFitter.get(abbrev.getOriginal()));
+        truncate(abbrev, stringsToFitter.get(abbrev.getOriginalString()));
     }
     return abbrevs;
 
@@ -211,7 +186,7 @@ Abbreviation.generateFromStrings = function (stringsToFitter) {
         const leftAlways = abbrev.prefix !== "";
         const rightAlways = abbrev.suffix !== "";
         let isLeftNext = leftAlways;
-        while (!isFit(abbrev.getString())) {
+        while (!isFit(abbrev.getEllipsesString())) {
             if (isLeftNext) {
                 abbrev.shiftPrefix();
             } else {
@@ -221,8 +196,8 @@ Abbreviation.generateFromStrings = function (stringsToFitter) {
                 isLeftNext = !isLeftNext :
                 isLeftNext = leftAlways;
         }
-        console.assert(abbrev.getString().length !== 0,
-            "text size is too small for '" + abbrev.getOriginal() + "'");
+        console.assert(abbrev.getEllipsesString() !== Abbreviation.ELLIPSIS_STRING,
+            "text size is too small for '" + abbrev.getOriginalString() + "'");
     }
 
 }
