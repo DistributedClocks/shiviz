@@ -1105,7 +1105,8 @@ svg#defs {
     background: #eee;
     font-family: sans-serif;
     position: absolute;
-    z-index: 2;
+    z-index: 2; // Currently 2 so that it doesn't get hidden when displaying
+    // in narrow spaces that cause it to leak into right-side data
     display: none;
 
     &.host {
