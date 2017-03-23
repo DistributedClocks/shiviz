@@ -1,7 +1,8 @@
 /**
  * 
  * <p>
- * Manages suffixes and prefixes of a string.
+ * Manages suffixes and prefixes of a string. A string can have either
+ * a prefix or a suffix, but not both.
  * </p>
  *
  * @param prefix String
@@ -10,6 +11,9 @@
  * 
  */
 function Abbreviation(prefix, root, suffix) {
+    console.assert(!((prefix !== "") && (suffix !== "")),
+        "Abbreviation cannot have both prefix and suffix");
+
     if (root !== "") {
         this.prefix = prefix;
         this.root = root;
@@ -104,9 +108,20 @@ Abbreviation.generateFromStrings = function (stringsToFitter) {
     function abbrevStrings(strings) {
         const abbrevs = [];
 
-        const prefix = findPrefix(strings);
-        const suffix = findSuffix(strings);
+        const prefixInfo = findPrefix(strings);
+        const suffixInfo = findSuffix(strings);
 
+        // Can only have prefix OR suffix, not both.
+        // Choosing between them by selecting affix which is more common.
+        let prefix, suffix;
+        if (prefixInfo.count > suffixInfo.count) {
+            prefix = prefixInfo.prefix; 
+            suffix = "";
+        } else {
+            prefix = "";
+            suffix = suffixInfo.suffix; 
+        }
+        
         for (let str of strings) {
             let pre = "";
             let root = str;
@@ -126,15 +141,18 @@ Abbreviation.generateFromStrings = function (stringsToFitter) {
         return abbrevs;
 
 
-        // [String] => String
+        // [String] => {suffix: String; count: Number}
         function findSuffix(strings) {
             let revStrings = strings.map(Util.reverseString);
-            let revSuffix = findPrefix(revStrings);
-            let suffix = Util.reverseString(revSuffix);
-            return suffix;
+            let revSuffixInfo = findPrefix(revStrings);
+            let suffix = Util.reverseString(revSuffixInfo.prefix);
+            return {
+                suffix: suffix,
+                count: revSuffixInfo.count,
+            };
         }
 
-        // [String] => String
+        // [String] => {prefix: String; count: Number}
         function findPrefix(strings) {
             let more = true;
             let i = 0;
@@ -177,7 +195,10 @@ Abbreviation.generateFromStrings = function (stringsToFitter) {
             if (prevMaxBucket.length > 1) {
                 prefix = prevMaxBucket[0].slice(0, i); 
             }
-            return prefix;
+            return {
+                prefix: prefix,
+                count: prevMaxBucket,
+            };
         }
     }
 
