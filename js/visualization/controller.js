@@ -602,8 +602,6 @@ Controller.prototype.onScroll = function(e) {
  * @param {DOMElement} elem The SVG node element
  */
 Controller.prototype.showDialog = function(e, type, elem) {
-    const self = this;
-
     // Remove existing selection highlights
     d3.select("circle.sel").each(function(d) {
         $(this).remove();
@@ -806,7 +804,6 @@ Controller.prototype.showDialog = function(e, type, elem) {
             $dialog.show();
         }
     });
-    self.bindScroll();
 }
 
 Controller.prototype.bindScroll = function(){
