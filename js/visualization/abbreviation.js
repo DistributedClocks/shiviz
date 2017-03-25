@@ -2,7 +2,8 @@
  * 
  * <p>
  * Manages suffixes and prefixes of a string. A string can have either
- * a prefix or a suffix, but not both.
+ * a prefix or a suffix, but not both. However, an Abbreviation can be mutated
+ * during truncation to have both.
  * </p>
  *
  * @param prefix String
@@ -11,8 +12,9 @@
  * 
  */
 function Abbreviation(prefix, root, suffix) {
-    console.assert(!((prefix !== "") && (suffix !== "")),
-        "Abbreviation cannot have both prefix and suffix");
+    // Since it cannot have both, at least one must be empty
+    console.assert(prefix === "" || suffix === "",
+        "Abbreviation cannot be created with both prefix and suffix");
 
     if (root !== "") {
         this.prefix = prefix;
@@ -29,6 +31,8 @@ function Abbreviation(prefix, root, suffix) {
     }
     console.assert(this.root !== "" || this.getOriginalString() === "",
         "this.root assigned an empty string when a non-empty is available");
+    console.assert(this.prefix === "" || this.suffix === "",
+        "Abbreviation cannot be created with both prefix and suffix");
 }
 
 Abbreviation.ABBREV_CHARS = 3;
@@ -62,8 +66,7 @@ Abbreviation.prototype.getEllipsesString = function () {
 }
 
 /*
- * The prefix drops its leftmost character, and gains one more character from
- * the root as its rightmost, if available. 
+ * The prefix gains one more character from root as its rightmost, if available. 
  */
 Abbreviation.prototype.shiftPrefix = function () {
     if (this.root !== "") {
@@ -73,8 +76,7 @@ Abbreviation.prototype.shiftPrefix = function () {
 }
 
 /*
- * The suffix drops its rightmost character, and gains one more character from
- * the root as its leftmost, if available. 
+ * The suffix gains one more character from the root as its leftmost, if available. 
  */
 Abbreviation.prototype.shiftSuffix = function () {
     if (this.root !== "") {
