@@ -340,6 +340,114 @@ assert("draw: component count", function () {
     return h && c && l;
 });
 
+/**
+ * View Subsection: Abbreviation
+ */
+
+/**
+ * Aids in testing Abbreviation.generateFromStrings.
+ * Supply a Map where keys are the input strings and the values are the
+ * ellipsified output strings assuming there is a maximum string length of 8
+ * non-Ellipsis characters.
+ *
+ * @param {Map(String:String) => }
+ */
+function testAbbreviation(testName, inputStringsToAbbrevStringMap) {
+
+    // Return true when the string has fewer than 8 characters, or 8 characters
+    // plus two ellipses. (Note: isFit can be any predicate function, including
+    // one dependent on the DOM.)
+    function testIsFit(string) {
+        let maxLen = 8;
+        if (string.startsWith(Abbreviation.ELLIPSIS)) {
+            maxLen += Abbreviation.ELLIPSIS.length;
+        }
+        if (string.endsWith(Abbreviation.ELLIPSIS)) {
+            maxLen += Abbreviation.ELLIPSIS.length;
+        }
+        const isFit = string.length <= maxLen;
+        return isFit;
+    }
+
+    const stringsToFitter = new Map();
+    for (let [string,abbrev] of inputStringsToAbbrevStringMap) {
+        stringsToFitter.set(string, testIsFit);    
+    }
+
+    const abbreviations = Abbreviation.generateFromStrings(stringsToFitter);
+
+    let isPass = true;
+    for (let abbrev of abbreviations) {
+        let string = abbrev.getOriginalString();
+        let abbrevString = abbrev.getEllipsesString();
+        if (inputStringsToAbbrevStringMap.get(string) !== abbrevString) {
+            isPass = false;
+            console.log("Abbreviation failure for '" + string +
+                "'. Expected: '" + inputStringsToAbbrevStringMap.get(string) +
+                "'; Actual: '" + abbrevString + "'");
+            console.log("   Failed Abbreviation: ", abbrev);
+            console.log("   inputStringsToAbbrevStringMap:", inputStringsToAbbrevStringMap);
+        }
+    }
+
+    assert("Abbreviation: " + testName, function() { return isPass; });
+}
+
+testAbbreviation("empty", new Map());
+testAbbreviation("short one", new Map([["a", "a"]])); 
+testAbbreviation("obvious prefix", new Map([
+    ["node1", "..1"],
+    ["node2", "..2"],
+    ["node3", "..3"],
+]));
+testAbbreviation("obvious suffix", new Map([
+    ["a-node", "a.."],
+    ["b-node", "b.."],
+    ["c-node", "c.."],
+]));
+//testAbbreviation("equal commonplace suffix and prefix", new Map([
+    //["hello-1234-node", "..1234-node"],
+    //["hello-5678-node", "..5678-node"],
+    //["hello-9012-node", "..9012-node"],
+//])); // There can only be one affix, so it the prefix is chosen arbitrarily
+//testAbbreviation("more prefixes than suffixes", new Map([
+    //["hello-1234", "..1234"],
+    //["hello-5678", "..5678"],
+    //["hello-9012", "..9012"],
+    //["hello-3456", "..3456"],
+    //["abcd-node", "..bcd-node"],
+    //["efgh-node", "..fgh-node"],
+    //["ijkl-node", "..jkl-node"],
+    //["burns", "burns"],
+    //["smithers", "smithers"],
+    //["lenny", "lenny"],
+//]));
+//testAbbreviation("more suffixes than prefixes", new Map([
+    //["hello-1234", "..ello-123.."],
+    //["hello-5678", "..ello-567.."],
+    //["hello-9012", "..ello-901.."],
+    //["abcd-node", "abcd.."],
+    //["efgh-node", "efgh.."],
+    //["ijkl-node", "ijkl.."],
+    //["mnop-node", "mnop.."],
+    //["burns", "burns"],
+    //["smithers", "smithers"],
+    //["lenny", "lenny"],
+    //["defhijklmnopqrstuvwxyzabc", "..mnopqrst.."],
+//]));
+testAbbreviation("one name IS prefix", new Map([
+    ["hello-1234", "..-1234"],
+    ["hello-5678", "..-5678"],
+    ["hello-9012", "..-9012"],
+    ["hello", "hello"],
+]));
+testAbbreviation("long, un-affixed strings", new Map([
+    ["abcdefhijklmnopqrstuvwxyz", "..jklmnopq.."],
+    ["bcdefhijklmnopqrstuvwxyza", "..klmnopqr.."],
+    ["cdefhijklmnopqrstuvwxyzab", "..lmnopqrs.."],
+    ["defhijklmnopqrstuvwxyzabc", "..mnopqrst.."],
+]));
+
 
 /**
  * Global
