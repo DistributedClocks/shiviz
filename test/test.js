@@ -405,36 +405,29 @@ testAbbreviation("obvious suffix", new Map([
     ["b-node", "b.."],
     ["c-node", "c.."],
 ]));
-//testAbbreviation("equal commonplace suffix and prefix", new Map([
-    //["hello-1234-node", "..1234-node"],
-    //["hello-5678-node", "..5678-node"],
-    //["hello-9012-node", "..9012-node"],
-//])); // There can only be one affix, so it the prefix is chosen arbitrarily
-//testAbbreviation("more prefixes than suffixes", new Map([
-    //["hello-1234", "..1234"],
-    //["hello-5678", "..5678"],
-    //["hello-9012", "..9012"],
-    //["hello-3456", "..3456"],
-    //["abcd-node", "..bcd-node"],
-    //["efgh-node", "..fgh-node"],
-    //["ijkl-node", "..jkl-node"],
-    //["burns", "burns"],
-    //["smithers", "smithers"],
-    //["lenny", "lenny"],
-//]));
-//testAbbreviation("more suffixes than prefixes", new Map([
-    //["hello-1234", "..ello-123.."],
-    //["hello-5678", "..ello-567.."],
-    //["hello-9012", "..ello-901.."],
-    //["abcd-node", "abcd.."],
-    //["efgh-node", "efgh.."],
-    //["ijkl-node", "ijkl.."],
-    //["mnop-node", "mnop.."],
-    //["burns", "burns"],
-    //["smithers", "smithers"],
-    //["lenny", "lenny"],
-    //["defhijklmnopqrstuvwxyzabc", "..mnopqrst.."],
-//]));
+testAbbreviation("equal commonplace suffix and prefix", new Map([
+    ["hello-1234node", "..1234node"],
+    ["hello-5678node", "..5678node"],
+    ["hello-9012node", "..9012node"],
+])); // There can only be one affix, so it the prefix is chosen arbitrarily
+testAbbreviation("more prefixes than suffixes", new Map([
+    ["hello-1234", "..1234"],
+    ["hello-5678", "..5678"],
+    ["hello-9012", "..9012"],
+    ["hello-3456", "..3456"],
+    ["a-node", "a-node"],
+    ["b-node", "b-node"],
+    ["c-node", "c-node"],
+]));
+testAbbreviation("more suffixes than prefixes", new Map([
+    ["hello-1", "hello-1"],
+    ["hello-2", "hello-2"],
+    ["hello-3", "hello-3"],
+    ["a-node", "a.."], 
+    ["b-node", "b.."], 
+    ["c-node", "c.."], 
+    ["d-node", "d.."], 
+]));
 testAbbreviation("one name IS prefix", new Map([
     ["hello-1234", "..-1234"],
     ["hello-5678", "..-5678"],
@@ -447,6 +440,98 @@ testAbbreviation("long, un-affixed strings", new Map([
     ["cdefhijklmnopqrstuvwxyzab", "..lmnopqrs.."],
     ["defhijklmnopqrstuvwxyzabc", "..mnopqrst.."],
 ]));
+testAbbreviation("right truncation", new Map([
+    ["abcdefghijklmnopqrstuvwxyz-node", "abcdefgh.."],
+    ["bcdefghijklmnopqrstuvwxyza-node", "bcdefghi.."],
+    ["cdefghijklmnopqrstuvwxyzab-node", "cdefghij.."],
+    ["defghijklmnopqrstuvwxyzabc-node", "defghijk.."],
+]));
+testAbbreviation("left truncation", new Map([
+    ["node-abcdefhijklmnopqrstuvwxyz", "..stuvwxyz"],
+    ["node-bcdefhijklmnopqrstuvwxyza", "..tuvwxyza"],
+    ["node-cdefhijklmnopqrstuvwxyzab", "..uvwxyzab"],
+    ["node-defhijklmnopqrstuvwxyzabc", "..vwxyzabc"],
+]));
+testAbbreviation("several prefix contenders", new Map([
+    ["hello-1234", "..1234"],
+    ["hello-5678", "..5678"],
+    ["hello-9012", "..9012"],
+    ["hello-3456", "..3456"],
+    ["node-xxx", "node-xxx"],
+    ["node-yyy", "node-yyy"], 
+    ["node-zzz", "node-zzz"], 
+    ["test-aaa", "test-aaa"], 
+    ["test-bbb", "test-bbb"], 
+    ["test-ccc", "test-ccc"], 
+]));
+testAbbreviation("complex", new Map([
+    ["hello", "hello"],
+    ["hello-1234", "..-1234"],
+    ["hello-3456", "..-3456"],
+    ["hello-3456789012", "..56789012"],
+    ["hello-5678", "..-5678"],
+    ["hello-9012", "..-9012"],
+
+    ["node", "node"],
+    ["a-node", "a-node"], 
+    ["b-node", "b-node"], 
+    ["c-node", "c-node"], 
+
+    ["test-aaa", "test-aaa"], 
+    ["test-bbb", "test-bbb"], 
+
+    ["abcdefhijklmnopqrstuvwxyz", "..jklmnopq.."],
+    ["lenny", "lenny"],
+    ["carl", "carl"],
+]));
+testAbbreviation("complex, shuffled", new Map([
+    ["a-node", "a-node"], 
+    ["hello-1234", "..-1234"],
+    ["test-bbb", "test-bbb"], 
+    ["c-node", "c-node"], 
+    ["b-node", "b-node"], 
+    ["hello-9012", "..-9012"],
+    ["hello", "hello"],
+    ["carl", "carl"],
+    ["abcdefhijklmnopqrstuvwxyz", "..jklmnopq.."],
+    ["node", "node"],
+    ["test-aaa", "test-aaa"], 
+    ["hello-3456", "..-3456"],
+    ["hello-3456789012", "..56789012"],
+    ["hello-5678", "..-5678"],
+    ["lenny", "lenny"],
+]));
+testAbbreviation("an algorithmic weakness (1)", new Map([
+    // Note that this algorithm can easily be thrown off if the best
+    // affix has its starting characters the same as some others
+    ["hello-1", "hello-1"],
+    ["hello-2", "hello-2"],
+    ["test-aaa", "test-aaa"], // ideally "..aaa"
+    ["test-bbb", "test-bbb"], // ideally "..bbb" 
+    ["test-ccc", "test-ccc"], // ideally "..ccc" 
+    ["harry", "harry"], 
+    ["hermione", "hermione"],
+    // In this case, the last two entries begin with 'h', making 'h' the
+    // dominant prefix. However, it the similarities end there, and since
+    // a prefix must be at least Abbreviation.MIN_AFFIX_LEN long, so
+    // ultimately no affix is chosen.
+]));
+testAbbreviation("an algorithmic weakness (2)", new Map([
+    // Continuing the example from the previous test....
+    ["hello-1", "..lo-1"],    // ideally "hello-1"
+    ["hello-2", "..lo-2"],    // ideally "hello-2"
+    ["test-aaa", "test-aaa"], // ideally "..aaa"
+    ["test-bbb", "test-bbb"], // ideally "..bbb" 
+    ["test-ccc", "test-ccc"], // ideally "..ccc" 
+    ["helsinki", "..sinki"],  // ideally "helsinki"
+    ["help", "..p"],          // ideally "help"
+    // In this case, the last two entries begin with 'hel', making 'hel' the
+    // dominant prefix, which is long enough to be a prefix. However, the
+    // similarities end there, and 'hel' hijacks the legitimate prefix of
+    // 'test-'.
+]));
+
+
 
 
 /**
