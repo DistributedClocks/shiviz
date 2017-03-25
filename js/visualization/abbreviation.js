@@ -2,8 +2,7 @@
  * 
  * <p>
  * Manages suffixes and prefixes of a string. A string can have either
- * a prefix or a suffix, but not both. However, an Abbreviation can be mutated
- * during truncation to have both.
+ * a prefix or a suffix, but not both.
  * </p>
  *
  * @param prefix String
@@ -12,9 +11,7 @@
  * 
  */
 function Abbreviation(prefix, root, suffix) {
-    // Since it cannot have both, at least one must be empty
-    console.assert(prefix === "" || suffix === "",
-        "Abbreviation cannot be created with both prefix and suffix");
+    this.originalString = prefix + root + suffix;
 
     if (root !== "") {
         this.prefix = prefix;
@@ -29,68 +26,137 @@ function Abbreviation(prefix, root, suffix) {
         this.root = suffix
         this.suffix = "";
     }
+
+    this.displayRoot = this.root; // what is displayed during Ellipsification
+    this.truncateLeftNext = false; // flag to keep track of truncation state
+
     console.assert(this.root !== "" || this.getOriginalString() === "",
         "this.root assigned an empty string when a non-empty is available");
-    console.assert(this.prefix === "" || this.suffix === "",
-        "Abbreviation cannot be created with both prefix and suffix");
 }
 
-Abbreviation.ABBREV_CHARS = 3;
+Abbreviation.MIN_AFFIX_LEN = 3;
 Abbreviation.ELLIPSIS = "..";
 
 /**
  * Returns the original, unabbreviated string
  */
 Abbreviation.prototype.getOriginalString = function () {
-    return this.prefix + this.root + this.suffix;
+    return this.originalString;
 }
 /**
  * Returns the abbreviated string with ellipses in place of affixes.
  */
 Abbreviation.prototype.getEllipsesString = function () {
-    if (this.root === "") {
+    if (this.displayRoot === "") {
+        // Since the affixes are always ellipsified, this prevents two
+        // ellipses from appearing next to each other.
         return Abbreviation.ELLIPSIS;
     }
+    const pre = this.isLeftTruncated() ? Abbreviation.ELLIPSIS : "";
+    const suf = this.isRightTruncated() ? Abbreviation.ELLIPSIS : "";
+    return pre + this.displayRoot + suf;
+}
 
-    const pre = ellipsify(this.prefix);
-    const suf = ellipsify(this.suffix);
-    return pre + this.root + suf;
+/*
+ * @returns boolean
+ */
+Abbreviation.prototype.hasPrefix = function () {
+    return this.prefix !== "";
+}
 
-    function ellipsify(string) {
-        if (string.length < Abbreviation.ABBREV_CHARS) {
-            return string;
+/*
+ * @returns boolean
+ */
+Abbreviation.prototype.hasSuffix = function () {
+    return this.suffix !== "";
+}
+
+/**
+ * The length of the string, without ellispses, that would be returned on a call
+ * to getEllipsesString().
+ *
+ * @returns number
+ */
+Abbreviation.prototype.getDisplayLength = function() {
+    return this.displayRoot.length;
+}
+
+/**
+ * Returns true if the left side of the Abbreviation will be truncated on a call
+ * to getEllipsesString (either via a prefix or a direct truncation of the root)
+ *
+ * @returns boolean
+ */
+Abbreviation.prototype.isLeftTruncated = function () {
+    if (this.hasPrefix()) {
+        return true;
+    }
+    if (this.root.length > 0) {
+        const displayExists = this.displayRoot.length > 0;
+        const firstCharactersAreSame =
+            this.root.charAt(0) === this.displayRoot.charAt(0);
+        return !(displayExists && firstCharactersAreSame);
+    }
+    return false;
+}
+
+/**
+ * Returns true if the right side of the Abbreviation will be truncated on a call
+ * to getEllipsesString (either via a suffix or a direct truncation of the root)
+ *
+ * @returns boolean
+ */
+Abbreviation.prototype.isRightTruncated = function () {
+    if (this.hasSuffix()) {
+        return true;
+    }
+    if (this.root.length > 0) {
+        const displayExists = this.displayRoot.length > 0;
+        const lastCharactersAreSame =
+            this.root.charAt(this.root.length-1) ===
+                this.displayRoot.charAt(this.displayRoot.length-1);
+        return !(displayExists && lastCharactersAreSame);
+    }
+    return false;
+}
+
+    
+
+/**
+ * Reduces the displayed length of the Abbreviation by 1 character, inserting
+ * ellipses where necessary.
+ */
+Abbreviation.prototype.truncate = function() {
+    if (this.hasPrefix()) {
+        this.displayRoot = this.displayRoot.slice(1);
+    } else if (this.hasSuffix()) {
+        this.displayRoot = this.displayRoot.slice(0, -1);
+    } else {
+        if (this.truncateLeftNext) {
+            this.displayRoot = this.displayRoot.slice(1);
         } else {
-            return Abbreviation.ELLIPSIS;   
+            this.displayRoot = this.displayRoot.slice(0, -1);
         }
+        this.truncateLeftNext = !this.truncateLeftNext;
     }
 }
-
-/*
- * The prefix gains one more character from root as its rightmost, if available. 
- */
-Abbreviation.prototype.shiftPrefix = function () {
-    if (this.root !== "") {
-        this.prefix += this.root.charAt(0);
-    }
-    this.root = this.root.slice(1);
-}
-
-/*
- * The suffix gains one more character from the root as its leftmost, if available. 
- */
-Abbreviation.prototype.shiftSuffix = function () {
-    if (this.root !== "") {
-        const lastRootChar = this.root.charAt(this.root.length - 1);
-        this.suffix = lastRootChar + this.suffix;
-    }
-    this.root = this.root.slice(0, -1);
-}
-
 
 /**
  * Generates a the truncated, affix-matched Abbreviations for the given strings
- * Static method
+ * There will be one chosen affix, either a prefix or a suffix, which is
+ * determined by looking at the characters in common at the beginning or end
+ * of the string. Whichever character is the most common will be the start of
+ * the affix for this group of strings. Note, that a prefix must be at least
+ * Abbreviation.MIN_AFFIX_LEN characters long to become a prefix.
  *
+ * After choosing that, the supplied fitter predicate functions will be used
+ * to set to further truncate the strings so that they will fit in the given
+ * display.
+ *
+ * See /test/test.js for some examples on how the abbreviation algorithm behaves,
+ * including some possible weaknesses.
+ *
+ * @static
  * @param stringsToFitter Map(String : (string) => Boolean
  *                        A function that, given a string, returns true if it
  *                        isn't too long, and false if it is too long.
@@ -102,7 +168,13 @@ Abbreviation.generateFromStrings = function (stringsToFitter) {
     // phase, affix character positions may not line up properly
     const abbrevs = abbrevStrings(Array.from(stringsToFitter.keys()));
     for (let abbrev of abbrevs) {
-        truncate(abbrev, stringsToFitter.get(abbrev.getOriginalString()));
+        const isFit = stringsToFitter.get(abbrev.getOriginalString());
+        while (!isFit(abbrev.getEllipsesString()) && abbrev.getDisplayLength() > 0) {
+            abbrev.truncate();
+        }
+        console.assert(isFit(abbrev.getEllipsesString()),
+            "Text box is too small to hold string '" +
+            abbrev.getOriginalString() + "'");
     }
     return abbrevs;
 
@@ -116,7 +188,7 @@ Abbreviation.generateFromStrings = function (stringsToFitter) {
         // Can only have prefix OR suffix, not both.
         // Choosing between them by selecting affix which is more common.
         let prefix, suffix;
-        if (prefixInfo.count > suffixInfo.count) {
+        if (prefixInfo.count >= suffixInfo.count) {
             prefix = prefixInfo.prefix; 
             suffix = "";
         } else {
@@ -193,34 +265,19 @@ Abbreviation.generateFromStrings = function (stringsToFitter) {
             }
             
             let prefix = "";
-            // Must be > 1, or else it will find unique prefixes
             if (prevMaxBucket.length > 1) {
+                // Must be > 1, or else it will find unique prefixes
                 prefix = prevMaxBucket[0].slice(0, i); 
+            }
+            if (prefix.length < Abbreviation.MIN_AFFIX_LEN) {
+                prefix = "";
             }
             return {
                 prefix: prefix,
-                count: prevMaxBucket,
+                count: prevMaxBucket.length,
             };
         }
     }
 
-
-    function truncate(abbrev, isFit) {
-        const leftAlways = abbrev.prefix !== "";
-        const rightAlways = abbrev.suffix !== "";
-        let isLeftNext = leftAlways;
-        while (!isFit(abbrev.getEllipsesString())) {
-            if (isLeftNext) {
-                abbrev.shiftPrefix();
-            } else {
-                abbrev.shiftSuffix();
-            }
-            isLeftNext = leftAlways === rightAlways ?  
-                isLeftNext = !isLeftNext :
-                isLeftNext = leftAlways;
-        }
-        console.assert(abbrev.getEllipsesString() !== Abbreviation.ELLIPSIS_STRING,
-            "text size is too small for '" + abbrev.getOriginalString() + "'");
-    }
 
 }
