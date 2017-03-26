@@ -239,7 +239,7 @@ View.prototype.draw = function(viewPosition) {
         view.$hostSVG.attr("overflow", "visible");
 
         var hosts = d3.selectAll(g_hosts);
-        var x_offset = hosts.select("rect").attr("width") / 3;
+        var x_offset = Global.HOST_SIZE / 3;
         var hostLabels = hosts.append("text")
             .text(function(node) {
                 const label = view.getAbbreviatedHostname(node.getHost());
