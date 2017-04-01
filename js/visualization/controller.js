@@ -695,18 +695,23 @@ Controller.prototype.showDialog = function(e, type, elem) {
         }).removeClass("right").addClass("left").show();
 
     // Set fill color, etc.
-    if (type)
+    if (type) {
+        const rectOffset = $(elem).children("rect").offset().top;
+        const scrollOffset = $(window).scrollTop(); 
+        const hostAdjust = Global.HOST_SIZE / 2;
+        const top = rectOffset - scrollOffset + hostAdjust;
         $dialog.css({
-            "top": $(elem).offset().top - $(window).scrollTop() + Global.HOST_SIZE / 2,
+            "top": top,
             "background": type == 2 ? $(elem).css("fill") : e.getFillColor(),
             "border-color": type == 2 ? $(elem).css("fill") : e.getFillColor()
         }).data("element", type == 2 ? e : e.getHost());
-    else
+    } else {
         $dialog.css({
             "top": e.getY() + $svg.offset().top,
             "background": e.getFillColor(),
             "border-color": e.getFillColor()
         }).data("element", e.getNode());
+    }
 
     // Set class "host" if host (hidden or not) is selected
     if (type) {
