@@ -785,30 +785,41 @@ Controller.prototype.showDialog = function(e, type, elem) {
         // Hide collapse button
         $dialog.find(".collapse").hide();
     }
+
+    // This is necessary to set so that host dialogs can be identified.
+    // Dialog visibility toggling should ignore host dialogs only.
+    if (type === 1) {
+        // It is a host dialog
+        $dialog.attr("id", Global.HOST_DIALOG_ID);
+    } else {
+        $dialog.attr("id", "");
+    }
+
+    // The dialogtop doesn't change while scrolling, but it does get set
+    // to 0 by JS when hidden, so must keep track of its location 
+    const visibleDialogTop = $dialog.offset().top;
     
-    // keep a copy of the dialog box's top coordinate
-    var copyOfDialogTop = $dialog.offset().top;
-    
-    $(window).scroll(function() {
-        // get the current top coordinate of the dialog box and the current bottom coordinate of the hostbar 
-        // (both values change with scrolling)
-        var dialogTop = $dialog.offset().top;
-        var hostBarBottom = $("#hostBar").offset().top + $("#hostBar").height();
-        // get the vertical position of the scrollbar (position = 0 when scrollbar at very top)
-        var scrollbarTop = $(window).scrollTop();
-        
-        // when a dialog box is hidden, its top coordinate is set to 0 so dialogTop starts having the same value as scrollbarTop
-        // we don't want it to be hidden forever after the first time it's hidden so we check for this condition below. We also check
-        // if we've scrolled past the distance between the dialog box and host bar, this is when we want to hide it. 
-        // Note: the 20 in the second condition is hardcoded for host dialog boxes so that they're never hidden when scrolling
-        if ((scrollbarTop != dialogTop) && (scrollbarTop - 20 > (dialogTop - (hostBarBottom - scrollbarTop)))) { 
+    $(window).scroll(toggleDialogVisibility);
+
+    function toggleDialogVisibility() {
+        const $hostbar = $("#hostBar");
+        // After scrolling, the hostbarbottom offset will have changed. We
+        // will use this latest version to determine if the dialog
+        // is above it or not.
+        const scrolledHostbarBottom = $hostbar.offset().top + $hostbar.height()
+            + parseInt($hostbar.css('padding-top'));
+        const isHostDialog = $dialog.attr("id") === Global.HOST_DIALOG_ID;
+
+        if (isHostDialog) {
+            // do nothing
+        } else if (scrolledHostbarBottom > visibleDialogTop) {
+            // dialog is above hostbar
             $dialog.hide();
-        // otherwise, if we haven't scrolled past the distance, show the dialog. Note: we use copyOfDialogTop here
-        // because dialogTop has already changed with scrolling and we want the original distance
-        } else if ($(window).scrollTop() <= (copyOfDialogTop - (hostBarBottom - $(window).scrollTop()))){
+        } else {
+            // dialog is below hostbar
             $dialog.show();
         }
-    });
+    }
 }
 
 Controller.prototype.bindScroll = function(){

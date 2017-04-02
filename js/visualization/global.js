@@ -68,6 +68,11 @@ function Global($vizContainer, $sidebar, $hostBar, $logTable, views) {
  * @static
  * @const
  */
+Global.HOST_DIALOG_ID = "hostdialog";
+/**
+ * @static
+ * @const
+ */
 Global.SIDE_BAR_WIDTH = 240;
 /**
  * @static
