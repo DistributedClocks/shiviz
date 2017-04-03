@@ -195,9 +195,11 @@ AbstractNode.prototype.isDummy = function() {
 
 /**
  * Gets the next node. The next node is the node having the same host as the
- * current one that comes directly after the current node.
+ * current one that comes directly after the current node. Note: the next node
+ * may be a dummy node (e.g., an isTail node).
  * 
- * @returns {AbstractNode} the next node or null if there is no next node.
+ * @returns {AbstractNode} the next node or null if there is no next node
+ *
  */
 AbstractNode.prototype.getNext = function() {
     return this.next;

@@ -426,6 +426,18 @@ VisualNode.prototype.isStart = function() {
 };
 
 /**
+ * Determines if this VisualNode is the last node of its host.
+ * The last node will have an event handler on it for grey-ing out its host.
+ * 
+ * @returns {Boolean} True if this is the last VisualNode
+ */
+VisualNode.prototype.isLast = function() {
+    const nextNode = this.node.getNext();
+    return nextNode === null || nextNode.isTail();
+};
+
+
+/**
  * Determines if this should be drawn with an edge to a hidden parent.
  * 
  * @returns {Boolean} True if edge should be drawn
