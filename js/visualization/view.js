@@ -45,7 +45,11 @@ function View(model, hostPermutation, label) {
     /** @private */
     // Cache a mapping of hostnames to abbreviated hostnames
     this.abbreviatedHostnames = null; // {String} -> {String}
-   
+
+    /** @private
+    * Used to determine if a tailnode is scrolling out of view
+    */
+    this.tailNodes = [];
 }
 
 /**
@@ -197,6 +201,9 @@ View.prototype.draw = function(viewPosition) {
             var svg = visualNode.getSVG();
             view.$svg.append(svg);
             arr.push(svg[0]);
+            if (visualNode.isLast()) {
+                view.tailNodes.push(visualNode);
+            }
         });
 
         // Bind the nodes
@@ -232,7 +239,6 @@ View.prototype.draw = function(viewPosition) {
         view.controller.bindHosts(d3.selectAll(arr).data(startNodes));
 
         drawHostLabels(arr);
-        
     }
 
     function drawHostLabels(g_hosts) {
@@ -417,3 +423,18 @@ View.prototype.setAbbreviatedHostname = function(hostname, abbrev) {
     }
     this.abbreviatedHostnames.set(hostname, abbrev);
 }
+
+// If isScrolledPast is true, changes colour of visualNode's host to grey.
+// If it is false, changes host node back to the original colour
+// VisualNode, Boolean => ()
+View.prototype.setGreyHost = function(visualNode, isScrolledPast) {
+    console.log(visualNode.getHost(), isScrolledPast);
+}
+
+/**
+ * Return the tail nodes of each host in this view's graph
+ */
+View.prototype.getTailNodes = function() {
+    return this.tailNodes;
+};
+

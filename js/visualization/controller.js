@@ -587,10 +587,13 @@ Controller.prototype.onScroll = function(e) {
     $("#hostBar, .dialog.host:not(.hidden)").css("margin-left", -x);
     $(".log").css("margin-left", x);
 
-    if ($(".line.focus").length)
+    if ($(".line.focus").length) {
         $(".highlight").css({
             "left": $(".line.focus").offset().left - parseFloat($(".line.focus").css("margin-left")) - $(".visualization .left").offset().left
         });
+    }
+
+    this.toggleGreyHostNodes();
 };
 
 /**
@@ -602,6 +605,8 @@ Controller.prototype.onScroll = function(e) {
  * @param {DOMElement} elem The SVG node element
  */
 Controller.prototype.showDialog = function(e, type, elem) {
+    const controller = this;
+
     // Remove existing selection highlights
     d3.select("circle.sel").each(function(d) {
         $(this).remove();
@@ -799,15 +804,19 @@ Controller.prototype.showDialog = function(e, type, elem) {
     // to 0 by JS when hidden, so must keep track of its location 
     const visibleDialogTop = $dialog.offset().top;
     
-    $(window).scroll(toggleDialogVisibility);
+    $(window).scroll(function() {
+        toggleDialogVisibility();
+        controller.toggleGreyHostNodes();
+    });
 
+    // Makes the dialog disappear if it scrolls above the bottom of the
+    // hostbar; or reappear if scrolls lower than it. Does nothing
+    // to host node dialogs
     function toggleDialogVisibility() {
-        const $hostbar = $("#hostBar");
         // After scrolling, the hostbarbottom offset will have changed. We
         // will use this latest version to determine if the dialog
         // is above it or not.
-        const scrolledHostbarBottom = $hostbar.offset().top + $hostbar.height()
-            + parseInt($hostbar.css('padding-top'));
+        const scrolledHostbarBottom = getHostbarBottomOffset();
         const isHostDialog = $dialog.attr("id") === Global.HOST_DIALOG_ID;
 
         if (isHostDialog) {
@@ -822,9 +831,43 @@ Controller.prototype.showDialog = function(e, type, elem) {
     }
 }
 
+// If scrolling past a host's last process, grey out host
+Controller.prototype.toggleGreyHostNodes = function () {
+    // Note since this searches through each host on each scroll, we will
+    // put a delay on it, so that it only runs ever .1 or .2 seconds at max
+    // TODO
+    for (let view of this.global.getViews()) {
+        for (let visualNode of view.getTailNodes()) {
+            const isScrolledPast = isAboveHostbar(visualNode);
+            view.setGreyHost(visualNode, isScrolledPast);
+        }
+    }
+ 
+    // VisualNode => Boolean
+    function isAboveHostbar(visualNode) {
+        const $circle = visualNode.getSVG().find("circle");
+        const circleTop = $circle.offset().top;
+        const hostBarBottom = getHostbarBottomOffset();
+        return circleTop < hostBarBottom;
+    }
+
+};
+
 Controller.prototype.bindScroll = function(){
     var self = this;
     $(window).unbind("scroll");
-    $(window).bind("scroll", self.onScroll);
+    $(window).bind("scroll", function(e) {
+        self.onScroll(e);
+    });
     $(window).scroll();
 }
+
+// Return current offset of the hostbar. This gets larger the lower down we
+// scroll
+function getHostbarBottomOffset() {
+    const $hostbar = $("#hostBar");
+    const hostbarBottom = $hostbar.offset().top + $hostbar.height()
+        + parseFloat($hostbar.css('padding-top'));
+    return hostbarBottom;
+}
+
