@@ -833,9 +833,6 @@ Controller.prototype.showDialog = function(e, type, elem) {
 
 // If scrolling past a host's last process, grey out host
 Controller.prototype.toggleGreyHostNodes = function () {
-    // Note since this searches through each host on each scroll, we will
-    // put a delay on it, so that it only runs ever .1 or .2 seconds at max
-    // TODO
     for (let view of this.global.getViews()) {
         for (let visualNode of view.getTailNodes()) {
             const isScrolledPast = isAboveHostbar(visualNode);

@@ -50,6 +50,11 @@ function View(model, hostPermutation, label) {
     * Used to determine if a tailnode is scrolling out of view
     */
     this.tailNodes = [];
+
+    /** @private
+    * A mapping of hostnode names to their visual nodes
+    */
+    this.hostNodes = new Map();
 }
 
 /**
@@ -230,6 +235,7 @@ View.prototype.draw = function(viewPosition) {
         var startNodes = view.visualGraph.getStartVisualNodes();
         var arr = [];
         startNodes.forEach(function(visualNode) {
+            view.hostNodes.set(visualNode.getHost(), visualNode);
             var svg = visualNode.getSVG();
             view.$hostSVG.append(svg);
             arr.push(svg[0]);
@@ -428,7 +434,16 @@ View.prototype.setAbbreviatedHostname = function(hostname, abbrev) {
 // If it is false, changes host node back to the original colour
 // VisualNode, Boolean => ()
 View.prototype.setGreyHost = function(visualNode, isScrolledPast) {
-    console.log(visualNode.getHost(), isScrolledPast);
+    const view = this;
+    const visualHostNode = this.hostNodes.get(visualNode.getHost());
+    if (isScrolledPast) {
+        // set to grey
+        visualHostNode.setFillColor("lightgrey");
+    } else {
+        // reset to original colour
+        const fillColor = this.hostPermutation.getHostColor(visualNode.getHost());
+        visualHostNode.setFillColor(fillColor);
+    }
 }
 
 /**
