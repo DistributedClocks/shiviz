@@ -2,7 +2,7 @@
 
 This site contains the documentation for **ShiViz**, a tool for visualizing executions of distributed systems.
 
-* [Try out the web deployment!](http://bestchai.bitbucket.org/shiviz/)
+* [Try out the web deployment!](http://bestchai.bitbucket.io/shiviz/)
 
 * [Read more](https://bitbucket.org/bestchai/shiviz/wiki/) about how ShiViz works.
 
