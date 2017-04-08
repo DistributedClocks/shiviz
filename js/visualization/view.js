@@ -42,17 +42,21 @@ function View(model, hostPermutation, label) {
     /** @private */
     this.controller = null;
     
-    /** @private */
-    // Cache a mapping of hostnames to abbreviated hostnames
+    /**
+     * Cacheed mapping of hostnames to abbreviated hostnames
+     * @private
+     */
     this.abbreviatedHostnames = null; // {String} -> {String}
 
-    /** @private
+    /** 
     * Used to determine if a tailnode is scrolling out of view
+    * @private
     */
     this.tailNodes = [];
 
-    /** @private
+    /**
     * A mapping of hostnode names to their visual nodes
+    * @private
     */
     this.hostNodes = new Map();
 }
@@ -421,7 +425,8 @@ View.prototype.getAbbreviatedHostname = function(hostname) {
 
 /**
  * Caches the abbreviated hostname, creating the cache if necessary
- * @param {string, string}
+ * @param {string} hostname Complete hostname
+ * @param {string} abbrev Abbreviated, ellipsified hostname
  */
 View.prototype.setAbbreviatedHostname = function(hostname, abbrev) {
     if (!this.hasAbbreviatedHostnames()) {
@@ -430,9 +435,12 @@ View.prototype.setAbbreviatedHostname = function(hostname, abbrev) {
     this.abbreviatedHostnames.set(hostname, abbrev);
 }
 
-// If isScrolledPast is true, changes colour of visualNode's host to grey.
-// If it is false, changes host node back to the original colour
-// VisualNode, Boolean => ()
+/**
+ * If isScrolledPast is true, changes colour of visualNode's host to grey.
+ * If it is false, changes host node back to the original colour
+ * @param {VisualNode} 
+ * @param {Boolean}
+ */
 View.prototype.setGreyHost = function(visualNode, isScrolledPast) {
     const view = this;
     const visualHostNode = this.hostNodes.get(visualNode.getHost());
@@ -448,6 +456,7 @@ View.prototype.setGreyHost = function(visualNode, isScrolledPast) {
 
 /**
  * Return the tail nodes of each host in this view's graph
+ * @return {VisualNode[]}
  */
 View.prototype.getTailNodes = function() {
     return this.tailNodes;
