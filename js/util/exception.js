@@ -104,7 +104,6 @@ Exception.prototype.getHTMLMessage = function() {
  * @private
  * @param string
  * @param style
- * @returns
  */
 Exception.prototype.getHTML = function(string, style) {
     string = string.replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/\n/g, "<br/>");
