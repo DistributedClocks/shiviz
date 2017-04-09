@@ -679,14 +679,15 @@ Controller.prototype.showDialog = function(e, type, elem) {
         }
     }
 
+    const $rect = $(elem).is("rect") ? $(elem) : $(elem).find("rect");
+    var $svg = $rect.parents("svg");
     var $dialog = $(".dialog");
-    var $svg = $(elem).parents("svg");
     var $graph = $("#graph");
 
     // Set properties for dialog, and show
     if (type == 2)
         $dialog.css({
-            "left": $(elem).offset().left - $dialog.width() - 40
+            "left": $rect.offset().left - $dialog.width() - 40
         }).removeClass("left").addClass("right").show();
     else if (e.getX() - $(window).scrollLeft() > $graph.width() / 2)
         $dialog.css({
@@ -701,14 +702,14 @@ Controller.prototype.showDialog = function(e, type, elem) {
 
     // Set fill color, etc.
     if (type) {
-        const rectOffset = $(elem).children("rect").offset().top;
+        const rectOffset = $rect.offset().top;
         const scrollOffset = $(window).scrollTop(); 
         const hostAdjust = Global.HOST_SIZE / 2;
         const top = rectOffset - scrollOffset + hostAdjust;
         $dialog.css({
             "top": top,
-            "background": type == 2 ? $(elem).css("fill") : e.getFillColor(),
-            "border-color": type == 2 ? $(elem).css("fill") : e.getFillColor()
+            "background": type == 2 ? $rect.css("fill") : e.getFillColor(),
+            "border-color": type == 2 ? $rect.css("fill") : e.getFillColor()
         }).data("element", type == 2 ? e : e.getHost());
     } else {
         $dialog.css({
