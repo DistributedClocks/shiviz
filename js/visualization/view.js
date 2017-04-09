@@ -446,14 +446,14 @@ View.prototype.setGreyHost = function(visualNode, isScrolledPast) {
     const visualHostNode = this.hostNodes.get(visualNode.getHost());
     if (isScrolledPast) {
         // set to grey
-        visualHostNode.setFillColor("white");
+        const isTemporary = true;
+        visualHostNode.setFillColor("white", isTemporary);
         visualHostNode.setStrokeColor("lightgrey");
         visualHostNode.setHostLabelColor("grey");
         visualHostNode.setStrokeWidth(1);
     } else {
         // reset to original colour
-        const fillColor = this.hostPermutation.getHostColor(visualNode.getHost());
-        visualHostNode.setFillColor(fillColor);
+        visualHostNode.resetFillColor();
         visualHostNode.setHostLabelColor("black");
         visualHostNode.setStrokeColor(Global.NODE_STROKE_COLOR);
         visualHostNode.setStrokeWidth(Global.NODE_STROKE_WIDTH);

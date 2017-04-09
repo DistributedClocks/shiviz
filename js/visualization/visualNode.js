@@ -282,13 +282,29 @@ VisualNode.prototype.getFillColor = function() {
  * @param {String} newFillColor The new fill color. The color must be a string
  *            that parses to a valid SVG color as defined in
  *            http://www.w3.org/TR/SVG/types.html#WSP
+ * @param {Boolean} isTemporary When true, this VisualNode will still produce
+ *            its previous colour when calling getFillColor, and calling
+ *            resetFillColor will set it.
+ *            When false, the record of the previous colour is lost (default).
  */
-VisualNode.prototype.setFillColor = function(newFillColor) {
-    this.fillColor = newFillColor;
+VisualNode.prototype.setFillColor = function(newFillColor, isTemporary=false) {
+    if (!isTemporary) {
+        this.fillColor = newFillColor;
+    }
     this.$circle.attr("fill", newFillColor);
     this.$rect.attr("fill", newFillColor);
     this.$diamond.attr("fill", newFillColor);
 };
+
+/**
+ * Sets the fillcolour to what was previously recorded prior to last
+ * non-temporary call to setFillColor.
+ *
+ */
+VisualNode.prototype.resetFillColor = function() {
+    this.setFillColor(this.fillColor);
+};
+
 
 /**
  * Sets the hostlabel colour of this node.

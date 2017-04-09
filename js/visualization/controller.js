@@ -560,14 +560,7 @@ Controller.prototype.bindLines = function(lines) {
 Controller.prototype.bindHiddenHosts = function(host, node) {
     var controller = this;
     node.on("dblclick", function(e) {
-
-        $(window).unbind("scroll");
-        var views = controller.global.getViews();
-        views.forEach(function(view) {
-            view.getTransformer().unhideHost(host);
-        });
-        controller.global.drawAll();
-
+        controller.unhideHost(host);
     }).on("mouseover", function(e) {
         $(".event").text(host);
         $(".fields").children().remove();
