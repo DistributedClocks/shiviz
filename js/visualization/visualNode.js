@@ -61,11 +61,11 @@ function VisualNode(node) {
 
     /** @private */
     this.strokeColor;
-    this.setStrokeColor("#fff");
+    this.setStrokeColor(Global.NODE_STROKE_COLOR);
 
     /** @private */
     this.strokeWidth;
-    this.setStrokeWidth(2);
+    this.setStrokeWidth(Global.NODE_STROKE_WIDTH);
 
     /** @private */
     this.opacity;
@@ -288,6 +288,20 @@ VisualNode.prototype.setFillColor = function(newFillColor) {
     this.$circle.attr("fill", newFillColor);
     this.$rect.attr("fill", newFillColor);
     this.$diamond.attr("fill", newFillColor);
+};
+
+/**
+ * Sets the hostlabel colour of this node.
+ * Precondition: this VisualNode represents a host node
+ *
+ * 
+ * @param {String} newTextColor The new text color. The color must be a string
+ *            that parses to a valid SVG color as defined in
+ *            http://www.w3.org/TR/SVG/types.html#WSP
+ */
+VisualNode.prototype.setHostLabelColor = function(newTextColor) {
+    const $text = this.$rect.siblings("text");
+    $text.attr("fill", newTextColor);
 };
 
 /**

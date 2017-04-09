@@ -97,6 +97,18 @@ Global.HIDDEN_EDGE_LENGTH = 40;
 Global.MIN_HOST_WIDTH = 40;
 
 /**
+ * @static
+ * @const
+ */
+Global.NODE_STROKE_COLOR = "white";
+
+/**
+ * @static
+ * @const
+ */
+Global.NODE_STROKE_WIDTH = 2;
+
+/**
  * Redraws the global.
  */
 Global.prototype.drawAll = function() {
