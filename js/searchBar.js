@@ -81,7 +81,7 @@ function SearchBar() {
             context.hidePanel();
             break;
         }
-        context.global.getController.bindScroll();
+        context.global.getController().bindScroll();
     });
 
     $("#searchbar #bar input").on("input", function() {
