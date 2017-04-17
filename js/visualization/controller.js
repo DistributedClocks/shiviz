@@ -837,9 +837,13 @@ Controller.prototype.toggleGreyHostNodes = function () {
     // VisualNode => Boolean
     function isAboveHostbar(visualNode) {
         const $circle = visualNode.getSVG().find("circle");
-        const circleTop = $circle.offset().top;
-        const hostBarBottom = getHostbarBottomOffset();
-        return circleTop < hostBarBottom;
+        if ($circle.length > 0) {
+            const circleTop = $circle.offset().top;
+            const hostBarBottom = getHostbarBottomOffset();
+            return circleTop < hostBarBottom;
+        } else {
+            return true;
+        }
     }
 
 };
@@ -857,8 +861,12 @@ Controller.prototype.bindScroll = function(){
 // scroll
 function getHostbarBottomOffset() {
     const $hostbar = $("#hostBar");
-    const hostbarBottom = $hostbar.offset().top + $hostbar.height()
-        + parseFloat($hostbar.css('padding-top'));
-    return hostbarBottom;
+    if ($hostbar.length > 0) {
+        const hostbarBottom = $hostbar.offset().top + $hostbar.height()
+            + parseFloat($hostbar.css('padding-top'));
+        return hostbarBottom;
+    } else {
+        return 0;
+    }
 }
 
