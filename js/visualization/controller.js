@@ -409,27 +409,22 @@ Controller.prototype.bindNodes = function(nodes) {
             controller.showDialog(e, 0, this);
         }
     }).on("mouseover", function(e) {
-        d3.selectAll("g.focus .sel").transition().duration(100).attr({
-            "r": function(d) {
+        d3.selectAll("g.focus .sel").transition().duration(100)
+            .attr("r", function(d) {
                 return d.getRadius() + 4;
-            }
-        });
-        d3.selectAll("g.focus").classed("focus", false).select("circle:not(.sel)").transition().duration(100).attr({
-            "r": function(d) {
+            });
+        d3.selectAll("g.focus").classed("focus", false).select("circle:not(.sel)").transition().duration(100)
+            .attr("r", function(d) {
                 return d.getRadius();
-            }
-        });
-
-        d3.select(this).classed("focus", true).select("circle:not(.sel)").transition().duration(100).attr({
-            "r": function(d) {
+            });
+        d3.select(this).classed("focus", true).select("circle:not(.sel)").transition().duration(100)
+            .attr("r", function(d) {
                 return d.getRadius() + 2;
-            }
-        });
-        d3.selectAll("g.focus .sel").transition().duration(100).attr({
-            "r": function(d) {
+            });
+        d3.selectAll("g.focus .sel").transition().duration(100)
+            .attr("r", function(d) {
                 return d.getRadius() + 6;
-            }
-        });
+            });
 
         $(".event").text(e.getText());
         $(".fields").children().remove();
@@ -626,49 +621,43 @@ Controller.prototype.showDialog = function(e, type, elem) {
           // If this node is not a unique event, highlight the node with a circular outline
           if (uniqueEventsL.indexOf(id) == -1 && uniqueEventsR.indexOf(id) == -1) {
             var selcirc = d3.select("#node" + e.getId()).insert("circle", "circle");
-            selcirc.style({
-               "fill": function(d) {
+            selcirc.style("fill", function(d) {
                   return d.getFillColor();
-                }
-            });
-            selcirc.attr({
-               "class": "sel",
-               "r": function(d) {
+                });
+            selcirc
+                .attr("class", "sel")
+                .attr("r", function(d) {
                   return d.getRadius() + 6;
-                }
-            });
+                });
           // If this node is a unique event, highlight it with a rhombus outline
           } else {
             var selrhombus = d3.select("#node" + e.getId()).insert("polygon", "polygon");
-            selrhombus.style({
-              "stroke": function(d) { return d.getFillColor(); },
-              "stroke-width": 2,
-              "fill": "white"
-            });
-            selrhombus.attr({
-              "class": "sel",
-              "points": function(d) {
-                  var points = d.getPoints();
-                  var newPoints = [points[0], points[1]-3, points[2]+3, points[3], points[4], points[5]+3, points[6]-3, points[7]];
-                  return newPoints.join();
-               }
-            });
+            selrhombus
+                .style("stroke", function(d) { return d.getFillColor(); })
+                .style("stroke-width", 2)
+                .style("fill", "white");
+            selrhombus
+                .attr("class", "sel")
+                .attr("points", function(d) {
+                    var points = d.getPoints();
+                    var newPoints = [points[0], points[1]-3, points[2]+3,
+                            points[3], points[4], points[5]+3, points[6]-3, points[7]];
+                    return newPoints.join();
+               });
           }
 
         // If showDiff is false, all node outlines are circular
         } else {
             var selcirc = d3.select("#node" + e.getId()).insert("circle", "circle");
-            selcirc.style({
-                "fill": function(d) {
+            selcirc
+                .style("fill", function(d) {
                    return d.getFillColor();
-                }
-            });
-            selcirc.attr({
-               "class": "sel",
-               "r": function(d) {
+                });
+            selcirc
+                .attr("class", "sel")
+                .attr("r", function(d) {
                   return d.getRadius() + 6;
-                }
-            });
+                });
         }
     }
 
