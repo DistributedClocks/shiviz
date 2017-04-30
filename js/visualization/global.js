@@ -621,11 +621,10 @@ Global.prototype.drawSideBar = function() {
     var hiddenHostsSVG = hiddenHostsSelection.append("svg");
   
     var hostsPerLine = Math.floor((Global.SIDE_BAR_WIDTH + 5) / (Global.HOST_SIZE + 5));
-    hiddenHostsSVG.attr({
-        "width": this.$sidebar.width(),
-        "height": Math.ceil(hh.length / hostsPerLine) * (Global.HOST_SIZE + 5) - 5,
-        "class": "hidden-hosts"
-    });
+    hiddenHostsSVG
+        .attr("width", this.$sidebar.width())
+        .attr("height", Math.ceil(hh.length / hostsPerLine) * (Global.HOST_SIZE + 5) - 5)
+        .attr("class", "hidden-hosts");
 
     var hiddenHostsGroup = hiddenHostsSVG.append("g");
     hiddenHostsGroup.append("title").text("Double click to view");
