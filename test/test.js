@@ -55,10 +55,13 @@ var graph = new ModelGraph(parser.getLogEvents(""));
 hostPermutation.addGraph(graph);
 hostPermutation.update();
 
-$("body").append("<div id='vizContainer'></div>");
-$("body").append("<div id='sideBar'></div>");
-$("body").append("<div id='hostBar'></div>");
-$("body").append("<div id='logTable'></div>");
+$("body").append("<div class='visualization'><header></header></div>");
+$(".visualization").append("<div id='graph'></div>");
+$("#graph").append("<div id='hostBar'></div>");
+$("#graph").append("<div id='vizContainer'></div>");
+$(".visualization").append("<div id='sidebar'></div>");
+$(".visualization").append("<div id='logTable'></div>");
+
 
 /**
  * Graph.js
