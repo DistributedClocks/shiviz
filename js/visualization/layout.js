@@ -104,7 +104,10 @@ SpaceTimeLayout.prototype.start = function(visualGraph, hostPermutation) {
     }
 
     
-     var widthPerHost = Math.max(this.width / hosts.length, Global.MIN_HOST_WIDTH);
+    var widthPerHost = Global.MIN_HOST_WIDTH;
+    if (hosts.length > 0) {
+        widthPerHost = Math.max(this.width / hosts.length, Global.MIN_HOST_WIDTH);
+    }
     var leftMargin = widthPerHost / 2;
 
     while (noParents.length > 0) {
