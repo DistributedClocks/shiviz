@@ -6,9 +6,7 @@ ShiViz is a tool for studying executions of distributed systems.
 
 * [JS docs](http://bestchai.bitbucket.io/shiviz/docs/): documentation extracted from code
 
-* [ShiVector](https://bitbucket.org/bestchai/shivector/wiki/): instruments Java programs to output logs in ShiViz format
-
-* [GoVector](https://github.com/arcaneiceman/GoVector): instruments Go programs to output logs in ShiViz format
+* [DistributedClocks](https://distributedclocks.github.io/): ShiViz-compatible vector-clock instrumentation libraries for C/C++/Java/Go
 
 * [Sass](http://sass-lang.com/): a CSS preprocessor for easier and more intuitive styling
 
