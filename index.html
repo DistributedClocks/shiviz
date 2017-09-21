@@ -221,27 +221,21 @@
               name the capture groups afterwards.
             </p>
 
-            <h3>How can I generate logs to use in ShiViz?</h3>
+            <h3>How can I generate logs to use with ShiViz?</h3>
             <p>
-                You can study the execution of any system that
-                produces logs in a format that can be parsed using the
-                RegExp mechanism above.
+              We developed several ShiViz-compatible vector-clock
+              instrumentation <a href="https://distributedclocks.github.io/">libraries</a>
+              for C/C++/Java/Go systems.
             </p>
             <p>
-              We recommend two instrumentation libraries that output
-              ShiViz-compatible logs:
-              <ul>
-                <li><a href="http://bitbucket.org/bestchai/shivector/wiki/Home">ShiVector</a>:
-                  instruments Java programs</li>
-                <li><a href="https://github.com/arcaneiceman/GoVector">GoVector</a>:
-                  instruments Go programs</li>
-              </ul>
+              In general, you can study the execution of any system
+              that produces logs in a format that can be parsed using
+              the RegExp mechanism above.
             </p>
 
             <h3>More information</h3>
               <ul>
                 <li><a href="https://bitbucket.org/bestchai/shiviz/src">ShiViz source code</a></li>
-                <li><a href="https://bitbucket.org/bestchai/shiviz/wiki/Home">ShiViz wiki</a></li>
                 <li>Contact: <a href="http://www.cs.ubc.ca/~bestchai/">Ivan Beschastnikh</a>, bestchai@cs.ubc.ca</li>
                 <li><a href="http://homes.cs.washington.edu/~mernst/pubs/debug-distributed-cacm2016-abstract.html">How to cite</a></li>
               </ul>
