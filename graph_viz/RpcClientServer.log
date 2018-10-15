@@ -1,0 +1,23 @@
+(?<host>\S*) (?<clock>{.*})\n(?<event>.*)
+
+
+client {"client":1}
+Initialization Complete
+client {"client":2}
+Making RPC call
+client {"client":3, "server":3}
+Received RPC Call response from server
+client {"client":4, "server":3}
+Making RPC call
+client {"client":5, "server":5}
+Received RPC Call response from server
+server {"server":1}
+Initialization Complete
+server {"client":2, "server":2}
+Received RPC request
+server {"server":3, "client":2}
+Sending response to RPC request
+server {"server":4, "client":4}
+Received RPC request
+server {"server":5, "client":4}
+Sending response to RPC request
