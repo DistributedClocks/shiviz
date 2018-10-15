@@ -1,1 +1,181 @@
-{"nodes": [{"id": "server", "description": ""}, {"id": "client", "description": ""}], "links": []}
+{
+    "nodes": [
+        {
+            "description": "",
+            "id": "server"
+        },
+        {
+            "description": "",
+            "id": "client"
+        }
+    ],
+    "links": [
+        {
+            "destination": "server",
+            "description": "Initialization Complete",
+            "source": "server",
+            "clock": {
+                "server": 1
+            },
+            "timestamp": 1
+        },
+        {
+            "destination": "server",
+            "description": "Received RPC request",
+            "source": "server",
+            "clock": {
+                "server": 2,
+                "client": 2
+            },
+            "timestamp": 2
+        },
+        {
+            "destination": "server",
+            "description": "Sending response to RPC request",
+            "source": "server",
+            "clock": {
+                "server": 3,
+                "client": 2
+            },
+            "timestamp": 3
+        },
+        {
+            "destination": "server",
+            "description": "Received RPC request",
+            "source": "server",
+            "clock": {
+                "server": 4,
+                "client": 4
+            },
+            "timestamp": 4
+        },
+        {
+            "destination": "server",
+            "description": "Sending response to RPC request",
+            "source": "server",
+            "clock": {
+                "server": 5,
+                "client": 4
+            },
+            "timestamp": 5
+        },
+        {
+            "destination": "client",
+            "description": "Initialization Complete",
+            "source": "client",
+            "clock": {
+                "client": 1
+            },
+            "timestamp": 1
+        },
+        {
+            "destination": "client",
+            "description": "Making RPC call",
+            "source": "client",
+            "clock": {
+                "client": 2
+            },
+            "timestamp": 2
+        },
+        {
+            "destination": "client",
+            "description": "Received RPC Call response from server",
+            "source": "client",
+            "clock": {
+                "server": 3,
+                "client": 3
+            },
+            "timestamp": 3
+        },
+        {
+            "destination": "client",
+            "description": "Making RPC call",
+            "source": "client",
+            "clock": {
+                "server": 3,
+                "client": 4
+            },
+            "timestamp": 4
+        },
+        {
+            "destination": "client",
+            "description": "Received RPC Call response from server",
+            "source": "client",
+            "clock": {
+                "server": 5,
+                "client": 5
+            },
+            "timestamp": 5
+        },
+        {
+            "destination": "server",
+            "description": "Received RPC request",
+            "source": "client",
+            "clock": {
+                "server": 2,
+                "client": 2
+            },
+            "timestamp": 2
+        },
+        {
+            "destination": "server",
+            "description": "Sending response to RPC request",
+            "source": "client",
+            "clock": {
+                "server": 3,
+                "client": 2
+            },
+            "timestamp": 3
+        },
+        {
+            "destination": "server",
+            "description": "Received RPC request",
+            "source": "client",
+            "clock": {
+                "server": 4,
+                "client": 4
+            },
+            "timestamp": 4
+        },
+        {
+            "destination": "server",
+            "description": "Sending response to RPC request",
+            "source": "client",
+            "clock": {
+                "server": 5,
+                "client": 4
+            },
+            "timestamp": 5
+        },
+        {
+            "destination": "client",
+            "description": "Received RPC Call response from server",
+            "source": "server",
+            "clock": {
+                "server": 3,
+                "client": 3
+            },
+            "timestamp": 3
+        },
+        {
+            "destination": "client",
+            "description": "Making RPC call",
+            "source": "server",
+            "clock": {
+                "server": 3,
+                "client": 4
+            },
+            "timestamp": 4
+        },
+        {
+            "destination": "client",
+            "description": "Received RPC Call response from server",
+            "source": "server",
+            "clock": {
+                "server": 5,
+                "client": 5
+            },
+            "timestamp": 5
+        }
+    ]
+}

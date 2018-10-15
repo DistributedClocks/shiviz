@@ -26,12 +26,12 @@ class Node:
         self.description = description
 
 class Link:
-    def __init__(self, source, destination, source_timestamp, destination_timestamp, clock):
+    def __init__(self, source, destination, timestamp, clock, description):
         self.source = source
         self.destination = destination
-        self.source_timestamp = source_timestamp
-        self.destination_timestamp = destination_timestamp
+        self.timestamp = timestamp
         self.clock = clock
+        self.description =description
 
 def parse_clock(clock):
     hosts = set()
@@ -47,9 +47,42 @@ def parse_clock(clock):
     new_clock = Clock(hosts, host_value_map)
     return new_clock
 
-def get_links(events):
-    #TODO
-    return []
+def get_self_links(host, events):
+    links = []
+    for e in events:
+        link = Link(host, host, e.clock.host_value_map[host], e.clock.host_value_map, e.description)
+        links += [link]
+    return links
+
+def get_links(hosts, events):
+    links = []
+    for host in hosts:
+        host_specific_events = []
+        for e in events:
+            if e.host == host:
+                host_specific_events += [e]
+        self_links = get_self_links(host, host_specific_events)
+        links = links + self_links
+
+    for e1 in events:
+        for e2 in events:
+            if e1.host != e2.host:
+                clock1 = e1.clock.host_value_map
+                clock2 = e2.clock.host_value_map
+                if e1.host in clock2:
+                    if clock1[e1.host] == clock2[e1.host]:
+                        #e1 is the source
+                        source = e1.host
+                        destination = e2.host
+                        num_diffs = 0
+                        for host, val in clock1.items():
+                            if host in clock2:
+                                if clock2[host] != val:
+                                    num_diffs += 1
+                        if num_diffs <= 1:
+                            link = Link(source, e2.host, clock2[e2.host], clock2, e2.description)
+                            links += [link]
+    return links
 
 def get_graph_object(hosts, links):
     nodes = []
@@ -63,6 +96,7 @@ def get_graph_object(hosts, links):
 def write_graph(json_file, hosts, links):
     graph = get_graph_object(hosts, links)
     with open(json_file, 'w+') as outf:
+        jsonpickle.set_encoder_options('json', indent=4)
         obj = jsonpickle.encode(graph, unpicklable=False)
         outf.write(obj)
 
@@ -83,7 +117,7 @@ def convert_log(regex, log_filename, graph_filename):
             clock = parse_clock(match[clock_index])
             event = Event(match[host_index], clock, match[event_index])
             events += [event]
-    links = get_links(events)
+    links = get_links(hosts, events)
     write_graph(graph_filename, hosts, links)
 
 def main():
