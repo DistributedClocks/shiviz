@@ -1,3 +1,5 @@
+# Works only with Python3
+# Requires jsonpickle to be installed
 import jsonpickle
 from pathlib import Path
 import re
