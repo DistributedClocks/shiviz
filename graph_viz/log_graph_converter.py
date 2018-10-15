@@ -1,3 +1,5 @@
+import jsonpickle
+from pathlib import Path
 import re
 import sys
 
@@ -18,14 +20,51 @@ class Event:
     def __str__(self):
         return self.host + " " + self.clock + " " + self.description
 
+class Node:
+    def __init__(self, id, description):
+        self.id = id
+        self.description = description
+
+class Link:
+    def __init__(self, source, destination, source_timestamp, destination_timestamp, clock):
+        self.source = source
+        self.destination = destination
+        self.source_timestamp = source_timestamp
+        self.destination_timestamp = destination_timestamp
+        self.clock = clock
+
 def parse_clock(clock):
-    #TODO
-    print(re.split(",|\{|\}", clock))
-    return clock
+    hosts = set()
+    host_value_map = {}
+    clock_vals = re.split(",|\{|\}", clock)
+    for host_val_pair in clock_vals:
+        if host_val_pair != '':
+            val_array = host_val_pair.split(':')
+            host = val_array[0].strip(' ').strip('"')
+            val = int(val_array[1])
+            hosts.add(host)
+            host_value_map[host] = val
+    new_clock = Clock(hosts, host_value_map)
+    return new_clock
 
 def get_links(events):
     #TODO
-    return
+    return []
+
+def get_graph_object(hosts, links):
+    nodes = []
+    for host in hosts:
+        nodes += [Node(host, "")]
+    graph = {}
+    graph['nodes'] = nodes
+    graph['links'] = links
+    return graph
+
+def write_graph(json_file, hosts, links):
+    graph = get_graph_object(hosts, links)
+    with open(json_file, 'w+') as outf:
+        obj = jsonpickle.encode(graph, unpicklable=False)
+        outf.write(obj)
 
 def convert_log(regex, log_filename, graph_filename):
     tag_pattern = re.compile(r"\?\<(\w+)\>")
@@ -44,8 +83,8 @@ def convert_log(regex, log_filename, graph_filename):
             clock = parse_clock(match[clock_index])
             event = Event(match[host_index], clock, match[event_index])
             events += [event]
-    print(hosts)
-    # links = get_links(events)
+    links = get_links(events)
+    write_graph(graph_filename, hosts, links)
 
 def main():
     if len(sys.argv) != 3:
@@ -53,7 +92,9 @@ def main():
         sys.exit(1)
     re = sys.argv[1]
     log_file = sys.argv[2]
-    convert_log(re, log_file, "")
+    filename = Path(log_file)
+    json_file = filename.with_suffix('.json').name
+    convert_log(re, log_file, json_file)
 
 if __name__ == '__main__':
     main()
