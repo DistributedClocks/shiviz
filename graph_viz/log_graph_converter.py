@@ -6,6 +6,12 @@ import re
 import sys
 
 class Clock:
+    """Object that represents a single vector clock timestamp
+
+    Attributes:
+        hosts (set[str]) : Set of all nodes in the timestamp
+        host_value_map (map[str]int) : Map of hosts to their individual timestamp valuess
+    """
     def __init__(self, hosts, host_value_map):
         self.hosts = hosts
         self.host_value_map = host_value_map
@@ -14,6 +20,13 @@ class Clock:
         return str(self.host_value_map)
 
 class Event:
+    """Object that represents an event in the log
+    
+    Attributes:
+        host (str) : Name of the node at which the event was recorded
+        clock (map[str]int) : Vector clock timestamp when the event was recorded
+        description (str) : Description of the event.
+    """
     def __init__(self, host, clock, description):
         self.host = host
         self.clock = clock
@@ -23,19 +36,46 @@ class Event:
         return self.host + " " + self.clock + " " + self.description
 
 class Node:
+    """Object that represents a Node in a ShiViz log
+
+    Attributes:
+        id (str) : Unique name of the specific node
+        description (str) : A brief description of the role of the node
+    """
     def __init__(self, id, description):
         self.id = id
         self.description = description
 
 class Link:
-    def __init__(self, source, destination, timestamp, clock, description):
+    """Object which represents an edge in the graph version of the ShiViz log
+
+    Note:
+        For a link, an event can be either single-node (i.e. local to a node) or double-node (i.e. comprised of 2 events - 1 send, 1 receive)
+
+    Attributes:
+        source (str) : Name of the node at which the event started
+        target (str) : Name of the node at which the event ended
+        timestamp (str) : Timestamp of the node at which the event ended.
+        clock (map[str]int) : Vector clock timestamp when the event ended
+        description (str) : Description at the end of the event
+    """
+    def __init__(self, source, target, timestamp, clock, description):
         self.source = source
-        self.destination = destination
+        self.target = target
         self.timestamp = timestamp
         self.clock = clock
         self.description =description
 
 def parse_clock(clock):
+    """Parses a vector clock timestamp into a Clock object
+
+    Args:
+        clock (str) : A vector clock timestamp
+
+    Returns:
+        new_clock (Clock) : A Clock object which contains a set of hosts 
+                            and a map of host to their respective timestamp
+    """
     hosts = set()
     host_value_map = {}
     clock_vals = re.split(",|\{|\}", clock)
@@ -50,6 +90,18 @@ def parse_clock(clock):
     return new_clock
 
 def get_self_links(host, events):
+    """Constructs local events for a host into a list of 'self links' 
+    Note : 
+        A self-link is a link where the source and target of the graph is the same.
+        It is just a convenient way of representing local events in the graph format which is consistent with inter-node links.
+
+    Args:
+        host (str) : Name of the host at which the local events took place
+        events (Event[]) : List of all events that took place at 'host'
+
+    Returns:
+        links (Link[]) : List of all self-links for the specified host
+    """
     links = []
     for e in events:
         link = Link(host, host, e.clock.host_value_map[host], e.clock.host_value_map, e.description)
@@ -75,7 +127,7 @@ def get_links(hosts, events):
                     if clock1[e1.host] == clock2[e1.host]:
                         #e1 is the source
                         source = e1.host
-                        destination = e2.host
+                        target = e2.host
                         num_diffs = 0
                         for host, val in clock1.items():
                             if host in clock2:
@@ -87,6 +139,16 @@ def get_links(hosts, events):
     return links
 
 def get_graph_object(hosts, links):
+    """Constructs a graph object that can be represented as a json object
+
+    Args:
+        hosts (Node[]) : Array of Nodes that were part of the log
+        links (Link[]) : Array of Links in the log
+
+    Return:
+        graph (map[str]Object) : A map which has 2 keys, 'nodes' and 'links',
+                                 and their respective values
+    """
     nodes = []
     for host in hosts:
         nodes += [Node(host, "")]
@@ -96,6 +158,14 @@ def get_graph_object(hosts, links):
     return graph
 
 def write_graph(json_file, hosts, links):
+    """Writes the graph representation of the execution to a file
+
+    Args:
+        json_file (str) : Name of the file to which the graph should be written
+        hosts (Node[]): Array of Nodes that were part of the log
+        links (Link[]): Array of Links in the log
+
+    """
     graph = get_graph_object(hosts, links)
     with open(json_file, 'w+') as outf:
         jsonpickle.set_encoder_options('json', indent=4)
@@ -103,6 +173,14 @@ def write_graph(json_file, hosts, links):
         outf.write(obj)
 
 def convert_log(regex, log_filename, graph_filename):
+    """Converts an existing shiviz log into a graph representation and writes it to a file
+
+    Args:
+        regex (str) : Regular Expression which denotes the event in the original ShiViz log
+        log_filename (str) : Name of the ShiViz log file
+        graph_filename (str) : Name of the file to which the graph should be written
+
+    """
     tag_pattern = re.compile(r"\?\<(\w+)\>")
     tags = tag_pattern.findall(regex)
     host_index = tags.index('host')
