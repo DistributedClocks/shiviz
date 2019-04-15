@@ -38,7 +38,15 @@ function VisualEdge(sourceVisualNode, targetVisualNode) {
 
     /** @private */
     this.color;
-    this.setColor("#999");
+
+    // If sameHost is true then this edge is between two nodes
+    // belonging to the same host (i.e., representing the local
+    // happens-before, or sequential time).
+    if (sourceVisualNode.getHost() == targetVisualNode.getHost()) {
+        this.setColor("#999");
+    } else {
+        this.setColor("#333333");
+    }
 
     /** @private */
     this.opacity;

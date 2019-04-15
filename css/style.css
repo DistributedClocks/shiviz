@@ -592,9 +592,13 @@ section.input .left {
   stroke-width: 2px;
 }
 
-.visualization table.motifResults td line, #searchbar #panel line, #vizContainer svg line {
+.visualization table.motifResults td line, #searchbar #panel line {
   stroke: #999;
   stroke-opacity: 0.6;
+}
+
+#vizContainer svg line {
+  stroke-opacity: 1.0;
 }
 
 #searchbar #panel {
