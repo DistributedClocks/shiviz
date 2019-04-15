@@ -87,12 +87,14 @@ function VisualGraph(graph, layout, hostPermutation) {
 
         var prev = node.getPrev();
         var linkId = this.getEdgeId(node, prev);
+        // These are edges between nodes along a host's timeline
         this.links[linkId] = new VisualEdge(this.nodeIdToVisualNode[prev.getId()], visualNode);
 
         var connect = node.getChildren();
         for (var j = 0; j < connect.length; j++) {
             var child = connect[j];
             var childLinkId = this.getEdgeId(node, child);
+            // These are edges between nodes on different host timelines
             this.links[childLinkId] = new VisualEdge(visualNode, this.nodeIdToVisualNode[child.getId()]);
         }
 

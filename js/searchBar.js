@@ -109,7 +109,7 @@ function SearchBar() {
         context.update();
         context.updateLocked = false;
         context.clearMotifsTab();
-        context.global.getController.bindScroll();
+        context.global.getController().bindScroll();
     });
 
     $("#searchbar .predefined button").on("click", function() {
