@@ -160,17 +160,24 @@ function ExecutionParser(rawString, label, regexp) {
 
     function parseTimestamp(clockString, hostString, line) {
         try {
+            // Attempt to parse a clockString as plain JSON
             clock = JSON.parse(clockString);
+        } catch (err1) {
+            try {
+                // Corner-case, attempt to interpret as JSON escaped with quotes
+                // Added to support TLA+ syntax: {\"w1\":1,\"w2\":1}
+                clockString = clockString.replace(/\\\"/g, "\"")
+                clock = JSON.parse(clockString);
+            } catch (err2) {
+                var exception = new Exception("An error occured while trying to parse the vector timestamp on line " + (line + 1) + ":");
+                exception.append(clockString, "code");
+                exception.append("The error message from the JSON parser reads:\n");
+                exception.append(err2.toString(), "italic");
+                exception.setUserFriendly(true);
+                throw exception;
+            }
         }
-        catch (err) {
-            var exception = new Exception("An error occured while trying to parse the vector timestamp on line " + (line + 1) + ":");
-            exception.append(clockString, "code");
-            exception.append("The error message from the JSON parser reads:\n");
-            exception.append(err.toString(), "italic");
-            exception.setUserFriendly(true);
-            throw exception;
-        }
-
+        
         try {
             var ret = new VectorTimestamp(clock, hostString);
             return ret;
