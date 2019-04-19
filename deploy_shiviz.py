@@ -176,9 +176,8 @@ def main():
         # Replace dev.js import in index.html with deployed.js import
         runcmd("sed -i '' -e 's/\"js\/dev.js\"/\"js\/deployed.js\"/g' " + dist_dir + "index.html")
         
-        # TODO
         # Change the contents of deployed.js to include correct hg revision id
-        runcmd("sed -i '' -e 's/revision: ZZZ/revision: " + revid + "/g'" + dist_dir + "/js/deployed.js")
+        runcmd("sed -i '' -e 's/revision: ZZZ/revision: " + revid + "/g' " + dist_dir + "/js/deployed.js")
         
     # Add any files that are new and remove any files that no longer exist
     runcmd("cd " + dist_dir + " && hg addremove")
