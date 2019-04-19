@@ -36,6 +36,9 @@ import httplib
 import urllib
 import subprocess
 
+# Whether to minify the code or not
+MINIFY = False
+
 
 def get_cmd_output(cmd, args):
     '''
@@ -114,8 +117,9 @@ def main():
     # Copy over the source.
     if (os.path.exists(src_dir)):
         runcmd("cp -R " + src_dir + "* " + dist_dir)
-        # Remove js source code since we will be using a minified version (see below).
-        runcmd("rm -rf " + dist_dir + "/js/*")
+        if MINIFY:
+            # Remove js source code since we will be using a minified version (see below).
+            runcmd("rm -rf " + dist_dir + "/js/*")
     else:
         print "Error: source dir is not where it is expected."
         sys.exit(-1)
@@ -144,30 +148,38 @@ def main():
     # Remove any files containing '~'
     runcmd("cd " + dist_dir + " && find . | grep '.orig' | xargs rm")
 
-    # Minify the code
-    print "Minifying... please wait"
-    data = minify(branch, 'compiled_code')
-    print "Minified size: %i" % len(data)
+    if MINIFY:
+        # Minify the code
+        print "Minifying... please wait"
+        data = minify(branch, 'compiled_code')
+        print "Minified size: %i" % len(data)
+        
+        if len(data) < 500:
+            print "Minification failed!"
+            print minify(branch, 'errors')
+            return
+        
+        print "Minification successful!"
+        # Add hg revision id to the minified code.
+        data = data.replace("revision: ZZZ", "revision: %s" % revid)
 
-    if len(data) < 500:
-        print "Minification failed!"
-        print minify(branch, 'errors')
-        return
+        # Save the minified code into js/min.js
+        minified = open(dist_dir + 'js/min.js', 'w')
+        minified.write(data)
+        minified.close()
 
-    print "Minification successful!"
-    # Add hg revision id to the minified code.
-    data = data.replace("revision: ZZZ", "revision: %s" % revid)
-
-    # Save the minified code into js/min.js
-    minified = open(dist_dir + 'js/min.js', 'w')
-    minified.write(data)
-    minified.close()
-
-    # Replace reference to js files with minified js in deployed version
-    # of index.html.
-    runcmd("sed -i '' -e 's/<script[^>]*><\/script>//g' " + dist_dir + "index.html")
-    runcmd("sed -i '' -e 's/<\/body>/<script src=\"js\/min.js\"><\/script><\/body>/g' " + dist_dir + "index.html")
-    
+        # Replace reference to js files with minified js in deployed version
+        # of index.html.
+        runcmd("sed -i '' -e 's/<script[^>]*><\/script>//g' " + dist_dir + "index.html")
+        runcmd("sed -i '' -e 's/<\/body>/<script src=\"js\/min.js\"><\/script><\/body>/g' " + dist_dir + "index.html")
+    else:
+        # Replace dev.js import in index.html with deployed.js import
+        runcmd("sed -i '' -e 's/\"js\/dev.js\"/\"js\/deployed.js\"/g' " + dist_dir + "index.html")
+        
+        # TODO
+        # Change the contents of deployed.js to include correct hg revision id
+        runcmd("sed -i '' -e 's/revision: ZZZ/revision: " + revid + "/g'" + dist_dir + "/js/deployed.js")
+        
     # Add any files that are new and remove any files that no longer exist
     runcmd("cd " + dist_dir + " && hg addremove")
 
@@ -175,7 +187,7 @@ def main():
     runcmd("cd " + dist_dir + " && hg commit -m 'shiviz auto-deployment'")
     
     # Push the deployed dir.
-    runcmd("cd " + dist_dir + " && hg push")
+    # runcmd("cd " + dist_dir + " && hg push")
     
     print
     print "Done."
