@@ -5,7 +5,7 @@ Purpose:
 =========
 
 This script packages and deploys the shiviz project to:
-http://bestchai.bitbucket.org/shiviz/
+https://bestchai.bitbucket.io/shiviz/
 
 
 Usage:
@@ -24,9 +24,9 @@ Usage:
   3. Adds google analytics tracking.
 
   4. Copies over the entire d3/ source tree over to a destination that
-     is assumed to be the http://bestchai.bitbucket.org/shiviz/ repo.
+     is assumed to be the https://bitbucket.org/bestchai/shiviz/src/default/ repo.
   
-  5. Commits and pushes the http://bestchai.bitbucket.org/shiviz/ repo.
+  5. Commits and pushes the https://bitbucket.org/bestchai/bestchai.bitbucket.org/src/default/ repo.
 '''
 
 
@@ -73,6 +73,7 @@ def minify(branch, info):
     for r, d, f in os.walk('local_scripts'):
         for f in f:
                 params += [('code_url', url + os.path.join(r, f))]
+
     # Traverse all of the files underneath the js/ dir
     for root, dirs, files in os.walk('js'):
         for file in files:
