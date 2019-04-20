@@ -186,7 +186,7 @@ def main():
     runcmd("cd " + dist_dir + " && hg commit -m 'shiviz auto-deployment'")
     
     # Push the deployed dir.
-    # runcmd("cd " + dist_dir + " && hg push")
+    runcmd("cd " + dist_dir + " && hg push")
     
     print
     print "Done."
