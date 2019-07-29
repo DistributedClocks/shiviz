@@ -208,7 +208,7 @@ func generate_variable_procs_log(config Config) []Event {
 func generate_variable_events_log(config Config) []Event {
 	num_procs := config.Num_processes
 	proc_clock_map:= initialize_proc_clocks(num_procs)
-	num_events := (r1.Intn(6) + 6) * 1000
+	num_events := (r1.Intn(7) + 6) * 1000
 	ratio := config.Event_ratio
 	return generate_events(num_procs, num_events, ratio, proc_clock_map)
 }
