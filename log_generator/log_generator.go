@@ -1,13 +1,13 @@
 package main
 
 import (
-	"os"
-	"io/ioutil"
 	"encoding/json"
+	"fmt"
 	"github.com/DistributedClocks/GoVector/govec/vclock"
+	"io/ioutil"
 	"log"
 	"math/rand"
-	"fmt"
+	"os"
 	"time"
 )
 
@@ -16,17 +16,17 @@ var (
 )
 
 type Config struct {
-	Log_type string `json:"type"`
-	Event_ratio float64 `json:"ratio"`
-	Num_events int `json:"num_events"`
-	Num_processes int `json:"num_procs"`
+	Log_type      string  `json:"type"`
+	Event_ratio   float64 `json:"ratio"`
+	Num_events    int     `json:"num_events"`
+	Num_processes int     `json:"num_procs"`
 }
 
 type Event struct {
 	Hostname string
-	Clock string
-	Message string
-	ProcId int
+	Clock    string
+	Message  string
+	ProcId   int
 }
 
 func (e *Event) String() string {
@@ -95,7 +95,7 @@ func generate_random_log_event(max_events_per_proc int, event_count map[int]int)
 	return chosen_proc
 }
 
-func generate_events(num_procs int, num_events int, ratio float64,clocks map[int]vclock.VClock) []Event {
+func generate_events(num_procs int, num_events int, ratio float64, clocks map[int]vclock.VClock) []Event {
 	var events []Event
 	current_events := 0
 	approx_log_events := int((1.0 - ratio) * float64(num_events))
@@ -135,8 +135,8 @@ func generate_events(num_procs int, num_events int, ratio float64,clocks map[int
 				src_clock.Tick(src_name)
 				dst_clock.Tick(dst_name)
 				dst_clock.Merge(src_clock)
-				src_event := NewEvent(src, src_clock.ReturnVCString(), "Sending message to " + src_name)
-				dst_event := NewEvent(dst, dst_clock.ReturnVCString(), "Received message from " + dst_name)
+				src_event := NewEvent(src, src_clock.ReturnVCString(), "Sending message to "+src_name)
+				dst_event := NewEvent(dst, dst_clock.ReturnVCString(), "Received message from "+dst_name)
 				events = append(events, src_event)
 				events = append(events, dst_event)
 				current_net_events += 2
@@ -164,8 +164,8 @@ func generate_events(num_procs int, num_events int, ratio float64,clocks map[int
 			src_clock.Tick(src_name)
 			dst_clock.Tick(dst_name)
 			dst_clock.Merge(src_clock)
-			src_event := NewEvent(src, src_clock.ReturnVCString(), "Sending message to " + src_name)
-			dst_event := NewEvent(dst, dst_clock.ReturnVCString(), "Received message from " + dst_name)
+			src_event := NewEvent(src, src_clock.ReturnVCString(), "Sending message to "+src_name)
+			dst_event := NewEvent(dst, dst_clock.ReturnVCString(), "Received message from "+dst_name)
 			events = append(events, src_event)
 			events = append(events, dst_event)
 			current_net_events += 2
@@ -193,7 +193,7 @@ func generate_variable_ratio_log(config Config) []Event {
 	num_procs := config.Num_processes
 	proc_clock_map := initialize_proc_clocks(num_procs)
 	num_events := config.Num_events
-	ratio := float64(r1.Intn(10) + 1) / 10.0
+	ratio := float64(r1.Intn(10)+1) / 10.0
 	return generate_events(num_procs, num_events, ratio, proc_clock_map)
 }
 
@@ -207,7 +207,7 @@ func generate_variable_procs_log(config Config) []Event {
 
 func generate_variable_events_log(config Config) []Event {
 	num_procs := config.Num_processes
-	proc_clock_map:= initialize_proc_clocks(num_procs)
+	proc_clock_map := initialize_proc_clocks(num_procs)
 	num_events := (r1.Intn(7) + 6) * 1000
 	ratio := config.Event_ratio
 	return generate_events(num_procs, num_events, ratio, proc_clock_map)
@@ -231,7 +231,7 @@ func write_log_file(events []Event, log_filename string) {
 			log.Fatal(err)
 		}
 
-		if i % 1000 == 0 {
+		if i%1000 == 0 {
 			log.Println("Wrote ", i, " events")
 		}
 	}
@@ -246,6 +246,12 @@ func generate_log_file(config Config, log_file string) {
 		events = generate_variable_procs_log(config)
 	} else if config.Log_type == "var_events" {
 		events = generate_variable_events_log(config)
+	} else if config.Log_type == "const" {
+		num_procs := config.Num_processes
+		proc_clock_map := initialize_proc_clocks(num_procs)
+		num_events := config.Num_events
+		ratio := config.Event_ratio
+		events = generate_events(num_procs, num_events, ratio, proc_clock_map)
 	} else {
 		log.Fatal("Invalid log type specified in the config file")
 	}
@@ -259,7 +265,7 @@ func main() {
 	}
 
 	s1 := rand.NewSource(time.Now().UnixNano())
-    r1 = rand.New(s1)
+	r1 = rand.New(s1)
 
 	config_filename := os.Args[1]
 	log_filename := os.Args[2]
