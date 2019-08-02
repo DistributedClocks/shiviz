@@ -103,6 +103,9 @@ func generate_events(num_procs int, num_events int, ratio float64, clocks map[in
 	current_log_events := 0
 	current_net_events := 0
 	max_events_per_process := num_events / num_procs
+	log.Println("Total Events :", num_events)
+	log.Println("Approx Log Events :", approx_log_events)
+	log.Println("Approx Net Events :", approx_net_events)
 	event_count := make(map[int]int)
 	for i := 0; i < num_procs; i++ {
 		event_count[i] = 0
@@ -122,7 +125,7 @@ func generate_events(num_procs int, num_events int, ratio float64, clocks map[in
 				events = append(events, event)
 				current_events += 1
 			}
-		} else if current_log_events != approx_log_events && current_net_events != approx_net_events {
+		} else if current_log_events < approx_log_events && current_net_events < approx_net_events {
 			choice := r1.Intn(2)
 			if choice == 0 {
 				src, dst := generate_random_net_event(max_events_per_process, event_count)
@@ -153,7 +156,7 @@ func generate_events(num_procs int, num_events int, ratio float64, clocks map[in
 					clocks[proc_id] = clock
 				}
 			}
-		} else if current_log_events == approx_log_events && current_net_events != approx_net_events {
+		} else if current_log_events >= approx_log_events && current_net_events < approx_net_events {
 			src, dst := generate_random_net_event(max_events_per_process, event_count)
 			event_count[src] += 1
 			event_count[dst] += 1
@@ -170,7 +173,7 @@ func generate_events(num_procs int, num_events int, ratio float64, clocks map[in
 			events = append(events, dst_event)
 			current_net_events += 2
 			current_events += 2
-		} else if current_log_events != approx_log_events && current_net_events == approx_net_events {
+		} else if current_log_events < approx_log_events && current_net_events >= approx_net_events {
 			proc_id := generate_random_log_event(max_events_per_process, event_count)
 			if clock, ok := clocks[proc_id]; ok {
 				clock.Tick(get_proc_name(proc_id))
@@ -185,6 +188,10 @@ func generate_events(num_procs int, num_events int, ratio float64, clocks map[in
 			fmt.Println("Something went wrong. Vaas' math sucks")
 		}
 	}
+
+	
+	log.Println("Final Log Events :", current_log_events)
+	log.Println("Final Net Events :", current_net_events)
 
 	return events
 }
@@ -231,8 +238,8 @@ func write_log_file(events []Event, log_filename string) {
 			log.Fatal(err)
 		}
 
-		if i%1000 == 0 {
-			log.Println("Wrote ", i, " events")
+		if (i+1)%1000 == 0 || (i+1) == len(events) {
+			log.Println("Wrote ", i+1, " events")
 		}
 	}
 	log.Println("Finished writing log file")

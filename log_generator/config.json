@@ -1,6 +1,6 @@
 {
-    "type" : "var_ratio",
-    "ratio" : 0.5,
-    "num_events" : 12000,
-    "num_procs" : 12
+    "type" : "const",
+    "ratio" : 0.001,
+    "num_events" : 1000,
+    "num_procs" : 2
 }
