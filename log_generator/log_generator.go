@@ -189,7 +189,6 @@ func generate_events(num_procs int, num_events int, ratio float64, clocks map[in
 		}
 	}
 
-	
 	log.Println("Final Log Events :", current_log_events)
 	log.Println("Final Net Events :", current_net_events)
 
@@ -267,7 +266,7 @@ func generate_log_file(config Config, log_file string) {
 }
 
 func main() {
-	if len(os.Args) != 3 {
+	if len(os.Args) != 2 && len(os.Args) != 3 {
 		log.Fatal("Usage: go run log_generator.go <config.json> <outfile>")
 	}
 
@@ -275,7 +274,11 @@ func main() {
 	r1 = rand.New(s1)
 
 	config_filename := os.Args[1]
-	log_filename := os.Args[2]
+	log_filename := config_filename + ".log"
+	if len(os.Args) == 3 {
+		log_filename = os.Args[2]
+	}
+
 	config_file, err := os.Open(config_filename)
 	if err != nil {
 		log.Fatal(err)
