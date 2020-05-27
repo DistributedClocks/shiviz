@@ -1,4 +1,4 @@
-ShiViz is a tool for studying executions of distributed systems.
+## ShiViz is a tool for studying executions of distributed systems.
 
 * [**Try the tool!**](https://bestchai.bitbucket.io/shiviz/)
 
