@@ -2,7 +2,7 @@ ShiViz is a tool for studying executions of distributed systems.
 
 * [**Try the tool!**](https://bestchai.bitbucket.io/shiviz/)
 
-* [Wiki](https://bitbucket.org/bestchai/shiviz/wiki/): explains ShiViz in more detail
+* [Wiki](https://github.com/DistributedClocks/shiviz/wiki): explains ShiViz in more detail
 
 * [JS docs](http://bestchai.bitbucket.io/shiviz/docs/): documentation extracted from code
 
