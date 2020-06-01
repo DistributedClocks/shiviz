@@ -1,6 +1,25 @@
-## ShiViz is a tool for studying executions of distributed systems.
+## ShiViz is a visualization tool to study executions of distributed systems.
 
-* [**Try the tool!**](https://bestchai.bitbucket.io/shiviz/)
+* [**Try the tool in your browser!**](https://bestchai.bitbucket.io/shiviz/)
+
+* ShiViz is described in several publications:
+
+  * [Visualizing Distributed System Executions](https://homes.cs.washington.edu/~mernst/pubs/visualize-distributed-tosem2020.pdf), TOSEM 2020
+    ```
+    @article{BeschastnikhLXWBE2020,
+       author  = {Ivan Beschastnikh and Perry Liu and Albert Xing
+                  and Patty Wang and Yuriy Brun and Michael D. Ernst},
+       title   = {{Visualizing Distributed System Executions}},
+       journal = {ACM Transactions on Software Engineering and Methodology (TOSEM)},
+       volume  = {29},
+       number  = {2},
+       pages   = {9:1--9:38},
+       month   = Mar,
+       year    = {2020}
+    }
+    ```
+  * A previous version appeared as *[“Debugging distributed systems: Challenges and options for validation and debugging”](https://homes.cs.washington.edu/~mernst/pubs/debug-distributed-cacm2016.pdf)* by Ivan Beschastnikh, Patty Wang, Yuriy Brun, and Michael D. Ernst. Communications of the ACM, vol. 59, no. 8, Aug. 2016, pp. 32-37.
+
 
 * [Wiki](https://github.com/DistributedClocks/shiviz/wiki): explains ShiViz in more detail
 
