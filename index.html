@@ -308,7 +308,8 @@
                       <a class="log-link" href="" data-log="facebook.log" data-parser="(?<ip>(\d{1,3}\.){3}\d{1,3}) (?<date>(\d{1,2}/){2}\d{4} (\d{2}:){2}\d{2} (AM|PM)) (?<action>(INFO|GET|POST)) (?<event>.*)\n(?<host>\w*) (?<clock>.*)">Data-center lad balancer (synth)</a>
                       <a class="log-link" href="" data-log="facebook-multiple.log" data-delimiter="^=== (?<trace>.*) ===$" data-parser="(?<ip>(\d{1,3}\.){3}\d{1,3}) (?<date>(\d{1,2}/){2}\d{4} (\d{2}:){2}\d{2} (AM|PM)) (?<action>(INFO|GET|POST)) (?<event>.*)\n(?<host>\w*) (?<clock>.*)">Multi-execution (synth)</a>
                       <a class="log-link" href="" data-log="multiple-comparison.log" data-delimiter="^=== (?<trace>.*) ===$" data-parser="(?<ip>(\d{1,3}\.){3}\d{1,3}) (?<date>(\d{1,2}/){2}\d{4} (\d{2}:){2}\d{2} (AM|PM)) (?<action>(INFO|GET|POST)) (?<event>.*)\n(?<host>\w*) (?<clock>.*)">Comparison log (synth)</a>
-                    </div>
+                      <a class="log-link" href="" data-log="ewd998.log" data-delimiter="^=== (?<trace>.*) ===$" data-parser='^State [0-9]+: <(?<event>\w*) .*>\n\/\\ Host = (?<host>.*)\n\/\\ Clock = "(?<clock>.*)"\n\/\\ active = (?<active>.*)\n\/\\ color = (?<color>.*)\n\/\\ counter = (?<counter>.*)'>EWD998 from TLA+</a>
+                        </div>
                     <textarea id="input" spellcheck="false"></textarea>
                 </td>
             </tr>
