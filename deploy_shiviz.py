@@ -129,11 +129,17 @@ def main():
         sys.exit(-1)
 
     # Find out the current revision id:
-    revid = get_cmd_output('hg', ['id', '-i']);
+    # hg:
+    # revid = get_cmd_output('hg', ['id', '-i']);
+    # git:
+    revid = get_cmd_output('git', ['rev-parse', '--short', 'HEAD']);
     revid = revid.rstrip()
 
     # Find out the current branch:
-    branch = get_cmd_output('hg', ['branch']);
+    # hg:
+    # branch = get_cmd_output('hg', ['branch']);
+    # git:
+    branch = get_cmd_output('git', ['rev-parse', '--abbrev-ref', 'HEAD']);
     branch = branch.rstrip();
 
     print "Revid is : " + revid
