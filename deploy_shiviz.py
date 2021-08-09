@@ -186,13 +186,16 @@ def main():
         runcmd("sed -i '' -e 's/revision: ZZZ/revision: " + revid + "/g' " + dist_dir + "/js/deployed.js")
         
     # Add any files that are new and remove any files that no longer exist
-    runcmd("cd " + dist_dir + " && hg addremove")
+    # hg:
+    # runcmd("cd " + dist_dir + " && hg addremove")
+    # git:
+    runcmd("cd " + dist_dir + " && git add -A")
 
     # Commit the deployed dir.
-    runcmd("cd " + dist_dir + " && hg commit -m 'shiviz auto-deployment'")
+    runcmd("cd " + dist_dir + " && git commit -m 'shiviz auto-deployment'")
     
     # Push the deployed dir.
-    runcmd("cd " + dist_dir + " && hg push")
+    runcmd("cd " + dist_dir + " && git push")
     
     print
     print "Done."
