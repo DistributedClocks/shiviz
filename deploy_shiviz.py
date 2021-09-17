@@ -35,6 +35,7 @@ import os
 import httplib
 import urllib
 import subprocess
+import argparse
 
 # Whether to minify the code or not
 MINIFY = False
@@ -93,14 +94,36 @@ def minify(branch, info):
 
     return data
     
+def parse_args():
+    '''
+    Method to process the command line arguments. Expects only one of the two following options:
+    -d or --dev to deploy to bestchai.bitbucket.org/shiviz-dev/
+    -p or --prod to deploy to bestchai.bitbucket.org/shiviz/
 
-def main():
+    If no flag specified or the specified flag is invalid, outputs the help dialogue.  
+    '''
+
+    parser = argparse.ArgumentParser()
+    argument_group = parser.add_mutually_exclusive_group(required=True)
+
+    argument_group.add_argument("-d", "--dev", help="Deploys ShiViz to development environment.", action="store_true")
+    argument_group.add_argument("-p", "--prod", help="Deploys ShiViz to production environment.", action="store_true")
+
+    return parser.parse_args()
+
+
+def main(args):
     '''
     Workhorse method to execute all the of the steps described in the file header.
     '''
     
     src_dir = "./"
-    dist_dir = "../bestchai.bitbucket.org/shiviz/"
+
+    if args.prod:
+        dist_dir = "../bestchai.bitbucket.org/shiviz/"
+    elif args.dev:
+        dist_dir = "../bestchai.bitbucket.org/shiviz-dev/" 
+     
 
     print "Deploying to: " + dist_dir
     print "from: " + src_dir
@@ -203,4 +226,5 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    args = parse_args()
+    main(args)
