@@ -70,7 +70,7 @@ $(".visualization").append("<div id='logTable'></div>");
 beginSection("Graph.js");
 
 assert("getHead for existent hosts", function () {
-    return graph.getHead("x") && graph.getHead("b");
+    return graph.getHead("a") && graph.getHead("b");
 });
 
 assert("getHead for non-existent host", function () {
