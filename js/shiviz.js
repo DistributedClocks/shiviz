@@ -117,14 +117,19 @@ function Shiviz() {
           var defaultOrdering = "descending";
          
           // If the first line is not empty and not just white space, 
-          // set it as the 'log parsing regular expression' value.
-          // Otherwise, use the default log parsing regular expression
-          if (lines[0].trim()) { $("#parser").val(lines[0]);}
+          // set it as the 'log parsing regular expression' value  by 
+          // inserting ^ to beginning and $ to consider the leading characters 
+          // and garbage between entries. Otherwise, use the default log parsing 
+          // regular expression
+          if (lines[0].trim()) { $("#parser").val("^" + lines[0] + "$");}
           else { $("#parser").val(defaultParser);}
           
           // Set the 'multiple executions regular expression delimiter' field
-          // to the second line and set the ordering of the processes to descending
-          $("#delimiter").val(lines[1].trim());
+          // to the second line if there exists a delimeter, else pass an empty string
+          if (lines[1].trim()) {$("#delimiter").val("^" + lines[1].trim() + "$");}
+          else {$("#delimiter").val("");}
+          
+          // Set the ordering of the processes to descending
           $("#ordering").val(defaultOrdering);
           
           // Get the position of the new line character that occurs at the end of the second line
