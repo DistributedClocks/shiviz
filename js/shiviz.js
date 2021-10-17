@@ -125,7 +125,9 @@ function Shiviz() {
           else { $("#parser").val(defaultParser);}
           
           // Set the 'multiple executions regular expression delimiter' field
-          // to the second line if there exists a delimeter, else pass an empty string
+          // to the second line if there exists a delimeter by inserting ^ to
+          // beginning and $ to consider the leading characters and garbage between 
+          // entries. Otherwise, pass an empty string.
           if (lines[1].trim()) {$("#delimiter").val("^" + lines[1].trim() + "$");}
           else {$("#delimiter").val("");}
           
