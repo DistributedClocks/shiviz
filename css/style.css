@@ -228,6 +228,40 @@ section.input .left {
   padding-bottom: 1em;
 }
 
+.regex-input {
+  display: inline-flex;
+  width: 100%;
+  flex-wrap: nowrap;
+  align-items: center;
+}
+
+/* Inserted characters */
+
+.inserted-char {
+  border: 1px solid #ddd;
+  background-color: #f6f6f6;
+  padding: 3.5px;
+  position: relative;
+  cursor: pointer;
+  display: none;
+}
+.inserted-char:hover ~ #inserted-char-desc {
+  display: block;
+  border: 1px solid #aaa;
+  width: 20%;
+  font-size: 11pt;
+}
+
+#inserted-char-desc {
+  display: none;
+  position: absolute;
+  right: 55%;
+  background-color: #fff;
+  margin-left: 0.2em;
+  padding: 0.5em;
+  z-index: 1;
+}
+
 /* File input */
 #file_input {
   position: relative;
@@ -263,6 +297,7 @@ section.input .left {
   left: 90%;
   background-color: #fff;
   padding: .5em;
+  z-index: 1;
 }
 
 /* Visualization */
