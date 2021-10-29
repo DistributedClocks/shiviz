@@ -50,9 +50,9 @@ function Shiviz() {
             });  
         });
 
-        // Hide inserted character buttons when switching to examples
-        if ( $(".inserted-char")[0] ) {
-            $(".inserted-char").hide();
+        // Hide the notification text when switching to examples
+        if ( $(".notification_text")[0] ) {
+            $(".notification_text").hide();
         }
     });
 
@@ -101,34 +101,23 @@ function Shiviz() {
     $("#visualize").on("click", function() {
         context.go(2, true, true);
     });
-    
-    // Removes the corresponding auto-inserted character from the 
-    // corresponding textbox when a inserted character button is clicked
-    $(".inserted-char").on("click", function(e) {
-        var insertedChar = jQuery(this).text();
 
-        // Determine the textbox to remove the character and get its value
-        var isMultiExec = e.target.id == "multi-exec";
-        var idToEditContent = isMultiExec ? "#delimiter" : "#parser"; 
-        var currentParserVal = $(idToEditContent).val();      
-
-        if (insertedChar == "^") {
-            $(idToEditContent).val(currentParserVal.substr(1, currentParserVal.length));
-        } else if (insertedChar == "$") {
-            $(idToEditContent).val(currentParserVal.substr(0, currentParserVal.length-1));
-        }
-        
-        // Hide the button for the removed character
-        $(e.target).hide();
-    })
+    // Listener for regex input changes
+    $("#parser").on("input", function() {
+        $("#log-parsing.notification_text").hide();
+    });
     
+    $("#delimiter").on("input", function() {
+        $("#multi-exec.notification_text").hide();
+    });
+
     // Clears the file input value whenever 'Choose File' is clicked
     $("#file").on("click", function() {
        this.value = "";
     });
     
     $("#file").on("change", function(e) {
-        $(".inserted-char").hide();
+        $(".notification_text").hide();
        var file = e.target.files[0];
        var reader = new FileReader();
        
@@ -145,11 +134,10 @@ function Shiviz() {
           // set it as the 'log parsing regular expression' value  by 
           // inserting ^ to beginning and $ to consider the leading characters 
           // and garbage between entries. If the character is inserted, then show the
-          // corresponding character button. Otherwise, use the default log parsing 
-          // regular expression
+          // notification message.
           if (lines[0].trim()) { 
                 $("#parser").val("^" + lines[0] + "$");
-                $("#log-parsing.inserted-char").show();
+                $("#log-parsing.notification_text").show();
             } else { 
                 $("#parser").val(defaultParser);
             }
@@ -158,11 +146,11 @@ function Shiviz() {
           // Set the 'multiple executions regular expression delimiter' field
           // to the second line if there exists a delimeter by inserting ^ to
           // beginning and $ to consider the leading characters and garbage between 
-          // entries. If the character is inserted, then show the
-          // corresponding character button. Otherwise, pass an empty string.
+          // entries. If the character is inserted, then show the notification message.
+          // Otherwise, pass an empty string.
           if (lines[1].trim()) {
                 $("#delimiter").val("^" + lines[1].trim() + "$");
-                $("#multi-exec.inserted-char").show();
+                $("#multi-exec.notification_text").show();
             } else {
                 $("#delimiter").val("");
             }

@@ -277,38 +277,24 @@
                     </div>                    
                     <div class="option">
                         <label>Log parsing regular expression:
-                            <div class="regex-input">
-                                <span class="inserted-char" id="log-parsing">^</span>
-                                <div id="file_desc">Upload a log by selecting a file with the following format: <br><br>
-                                    <li> The first line of the file is the log parsing regular expression. If left empty, the default regular expression 
-                                    <span class="regex">"(?&ltevent&gt.*)\n(?&lthost&gt\S*) (?&ltclock&gt{.*})"</span> will be used.<br>
-                                    <li> The second line of the file is the multiple executions regular expression delimiter. This can be left empty if the log does not contain multiple executions. <br>
-                                    <li> The rest of the file is the log.
-                                </div>
-                                <input class="mono" type="text" id="parser">
-                                <span class="inserted-char" id="log-parsing">$</span>
-                                <div id="inserted-char-desc">
-                                    <p>
-                                        We automatically inserted the "^" character to the beginning and "$" to the end of the provided regular expressions. 
-                                        To remove those characters, you can click on the character buttons in the left and right of the corresponding text boxes.
-                                    </p>                                   
-                                </div>
+                            <div id="file_desc">Upload a log by selecting a file with the following format: <br><br>
+                                <li> The first line of the file is the log parsing regular expression. If left empty, the default regular expression 
+                                <span class="regex">"(?&ltevent&gt.*)\n(?&lthost&gt\S*) (?&ltclock&gt{.*})"</span> will be used.<br>
+                                <li> The second line of the file is the multiple executions regular expression delimiter. This can be left empty if the log does not contain multiple executions. <br>
+                                <li> The rest of the file is the log.
                             </div>
+                            <input class="mono" type="text" id="parser">
+                            <p class="notification_text" id="log-parsing">	
+                                &#9888; We automatically added "^" to the start and "$" to the end of the expression.
+                            </p>                           
                         </label>
                     </div>
                     <div class="option">
                         <label>Multiple executions regular expression delimiter:
-                            <div class="regex-input">
-                                <span class="inserted-char" id="multi-exec">^</span>
-                                <input class="mono" type="text" id="delimiter">
-                                <span class="inserted-char" id="multi-exec">$</span>
-                                <div id="inserted-char-desc">
-                                    <p>
-                                        We automatically inserted the "^" character to the beginning and "$" to the end of the provided regular expressions. 
-                                        To remove those characters, you can click on the character buttons in the left and right of the corresponding text boxes.
-                                    </p>
-                                </div>
-                            </div> 
+                            <input class="mono" type="text" id="delimiter">
+                            <p class="notification_text" id="multi-exec">	
+                                &#9888; We automatically added "^" to the start and "$" to the end of the expression.
+                            </p>     
                         </label>
                     </div>
                     <div class="option">
