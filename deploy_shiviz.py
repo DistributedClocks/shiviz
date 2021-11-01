@@ -65,10 +65,6 @@ def minify(revid):
     '''
 
     exit_code = runcmd("google-closure-compiler js/**.js !dev.js local_scripts/**.js --js_output_file js/min.js")
-    
-    # Wait some time to make sure that minification is completed and min.js is created.
-    time.sleep(15)
-    
     if exit_code != 0:
         print("Minification failed!")
         sys.exit(-1)
