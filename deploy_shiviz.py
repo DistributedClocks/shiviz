@@ -32,14 +32,10 @@ Usage:
 
 import sys
 import os
-import httplib
-import urllib
+import fileinput
 import subprocess
 import argparse
-
-# Whether to minify the code or not
-MINIFY = False
-
+import time
 
 def get_cmd_output(cmd, args):
     '''
@@ -62,37 +58,22 @@ def runcmd(s):
     return os.system(s)
 
 
-def minify(branch, info):
+def minify(revid):
     '''
-    Minifies all of the js code under js/ using Google's API and
-    returns the minified resulting js code.
+    Minifies all of the js code under js/ using Google Closure Compiler  and
+    writes the minified resulting js code to js/min.js.
     '''
-    params = [
-    ('compilation_level', 'SIMPLE_OPTIMIZATIONS'),
-    ('output_format', 'text'),
-    ('output_info', info)
-    ]
-    url = 'https://bitbucket.org/bestchai/shiviz/raw/' + branch + '/'
-    #Include dependencies
-    for r, d, f in os.walk('local_scripts'):
-        for f in f:
-                params += [('code_url', url + os.path.join(r, f))]
 
-    # Traverse all of the files underneath the js/ dir
-    for root, dirs, files in os.walk('js'):
-        for file in files:
-            if not ('dev.js' in file):
-                params += [('code_url', url + os.path.join(root, file))]
+    exit_code = runcmd("google-closure-compiler js/**.js !dev.js local_scripts/**.js --js_output_file js/min.js")
+    if exit_code != 0:
+        print("Minification failed!")
+        sys.exit(-1)
 
-    urlparams = urllib.urlencode(params)
-    headers = {'Content-type': 'application/x-www-form-urlencoded'}
-    conn = httplib.HTTPConnection('closure-compiler.appspot.com')
-    conn.request('POST', '/compile', urlparams, headers)
-    response = conn.getresponse()
-    data = response.read() 
-    conn.close()
+    minified_file = fileinput.input("js/min.js", inplace=True)
+    # Add hg revision id to the minified code.
+    for line in minified_file:
+        sys.stdout.write(line.replace("revision: ZZZ", "revision: %s" % revid))
 
-    return data
     
 def parse_args():
     '''
@@ -137,10 +118,22 @@ def main(args):
         print "Error: deployment dir is not where it is expected."
         sys.exit(-1)
 
+    do_minification = raw_input("Do you want to minify the code? (Y/N) ") == "Y"
+    if do_minification:
+        # Check if google-closure-compiler is installed.
+        if (runcmd("google-closure-compiler --version") != 0):
+            print("You need to install google-closure-compiler for minification.")
+            print("The easiest way to install the compiler is with NPM or Yarn.")
+
+            continue_without_modification = raw_input("Do you want to continue without modification? (Y/N)") == "Y"
+            if not continue_without_modification:
+                sys.exit(-1)
+            do_minification = False
+
     # Copy over the source.
     if (os.path.exists(src_dir)):
         runcmd("cp -R " + src_dir + "* " + dist_dir)
-        if MINIFY:
+        if do_minification:
             # Remove js source code since we will be using a minified version (see below).
             runcmd("rm -rf " + dist_dir + "/js/*")
     else:
@@ -177,25 +170,19 @@ def main(args):
     # Remove any files containing '~'
     runcmd("cd " + dist_dir + " && find . | grep '.orig' | xargs rm")
 
-    if MINIFY:
+    if do_minification:
         # Minify the code
         print "Minifying... please wait"
-        data = minify(branch, 'compiled_code')
-        print "Minified size: %i" % len(data)
+        minify(revid)
+
+        minified_size = os.path.getsize('js/min.js')
+        print "Minified size: %i" % minified_size
         
-        if len(data) < 500:
+        if minified_size < 500:
             print "Minification failed!"
-            print minify(branch, 'errors')
             return
         
         print "Minification successful!"
-        # Add hg revision id to the minified code.
-        data = data.replace("revision: ZZZ", "revision: %s" % revid)
-
-        # Save the minified code into js/min.js
-        minified = open(dist_dir + 'js/min.js', 'w')
-        minified.write(data)
-        minified.close()
 
         # Replace reference to js files with minified js in deployed version
         # of index.html.
