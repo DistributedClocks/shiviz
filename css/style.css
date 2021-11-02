@@ -228,6 +228,13 @@ section.input .left {
   padding-bottom: 1em;
 }
 
+/* Notification text */
+.notification_text{
+  display: none;
+  font-size: 12px;
+  color: #626262;
+}
+
 /* File input */
 #file_input {
   position: relative;
