@@ -696,5 +696,33 @@ $("#hostBar").remove();
 $("#sideBar").remove();
 $("#logTable").remove();
 
+/**
+ * Parser.js
+ */
+
+ beginSection("Parser.js");
+
+// Spesific test case for the bug in Issue #168
+function testParserException() {
+    let isPass = true;
+    try {
+        var testNamedRegExp = new NamedRegExp("^.* Event = \"(?<event>.*)\"(.|\\n)*?Host = (?<host>.*)(.|\\n)*?VectorClock = \"(?<clock>.*)\"(.|\\n)*?value = \\((?<values>.*)\\)$", "m");
+        var testParser = new LogParser(testLog, null, testNamedRegExp);
+        
+        // If no exception is thrown, fail
+        isPass = false;
+    } catch (e) {
+
+        // If it is not the expected exception, fail
+        if(e.isUserFriendly()) {
+            isPass = false;
+        }
+        
+    }
+    assert("RegExp with escape characters throws exception", function() { return isPass; });
+}
+
+testParserException();
+
 console.log(Date.now() - start);
 console.log("All tests pass:", all_tests_pass);
