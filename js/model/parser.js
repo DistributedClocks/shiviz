@@ -170,10 +170,18 @@ function ExecutionParser(rawString, label, regexp) {
                 clock = JSON.parse(clockString);
             } catch (err2) {
                 var exception = new Exception("An error occured while trying to parse the vector timestamp on line " + (line + 1) + ":");
-                exception.append(clockString, "code");
+
+                // Checks if clockString has a string value
+                // if not, the error message is not user-friendly 
+                // and we can't append it to the exception.
+                var isUserFriendly = clockString ? true : false;
+                if (isUserFriendly) {
+                    exception.append(clockString, "code");
+                }
+                
                 exception.append("The error message from the JSON parser reads:\n");
                 exception.append(err2.toString(), "italic");
-                exception.setUserFriendly(true);
+                exception.setUserFriendly(isUserFriendly);
                 throw exception;
             }
         }
