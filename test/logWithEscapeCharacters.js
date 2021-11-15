@@ -1,6 +1,6 @@
 /**
  * Log to test the bug mentioned in Issue 168. Log contains named capture 
- * groups and it's regular expression contains escape characters, which leads to 
+ * groups and its regular expression contains escape characters, which leads to 
  * the mentioned bug. This log is going to be used to test the improved error handling
  * for the mentioned bug in the issue.
  * 

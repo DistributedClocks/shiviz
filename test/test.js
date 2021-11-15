@@ -702,7 +702,7 @@ $("#logTable").remove();
 
  beginSection("Parser.js");
 
-// Spesific test case for the bug in Issue #168
+// Specific test case for the bug in Issue #168
 function testParserException() {
     let isPass = true;
     try {
