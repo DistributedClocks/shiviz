@@ -1,4 +1,14 @@
-const testLog = ".* Event = \"(?<event>.*)\"(.|\\n)*?Host = (?<host>.*)(.|\\n)*?VectorClock = \"(?<clock>.*)\"(.|\\n)*?value = \\((?<values>.*)\\)\n" +
+/**
+ * Log to test the bug mentioned in Issue 168. Log contains named capture 
+ * groups and it's regular expression contains escape characters, which leads to 
+ * the mentioned bug. This log is going to be used to test the improved error handling
+ * for the mentioned bug in the issue.
+ * 
+ * Issue link:
+ * https://github.com/DistributedClocks/shiviz/issues/168
+ */
+
+const logWithEscapeCharacters = ".* Event = \"(?<event>.*)\"(.|\\n)*?Host = (?<host>.*)(.|\\n)*?VectorClock = \"(?<clock>.*)\"(.|\\n)*?value = \\((?<values>.*)\\)\n" +
 "\n" +
 "@!@!@ENDMSG 2264 @!@!@\n" +
 "@!@!@STARTMSG 2217:4 @!@!@\n" +

@@ -707,7 +707,7 @@ function testParserException() {
     let isPass = true;
     try {
         var testNamedRegExp = new NamedRegExp("^.* Event = \"(?<event>.*)\"(.|\\n)*?Host = (?<host>.*)(.|\\n)*?VectorClock = \"(?<clock>.*)\"(.|\\n)*?value = \\((?<values>.*)\\)$", "m");
-        var testParser = new LogParser(testLog, null, testNamedRegExp);
+        var testParser = new LogParser(logWithEscapeCharacters, null, testNamedRegExp);
         
         // If no exception is thrown, fail
         isPass = false;
