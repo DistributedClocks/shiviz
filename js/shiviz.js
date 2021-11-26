@@ -294,7 +294,7 @@ Shiviz.prototype.visualize = function(log, regexpString, delimiterString, sortTy
         $(".pairwiseButton").removeClass("fade");
 
         // reset search tabs
-        $("#textTab").show().siblings("div").hide();
+        $("#searchHistoryTab").show().siblings("div").hide();
         $(".searchTabLinks li").first().addClass("default").siblings("li").removeClass("default");
 
         // reset left sidebar tabs

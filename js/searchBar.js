@@ -71,6 +71,7 @@ function SearchBar() {
         // Return
         case 13:
             if (context.getValue().trim().length > 0) {
+                context.addToSearchHistory(context.getValue());
                 context.query();
                 context.hidePanel();
             }
@@ -89,6 +90,7 @@ function SearchBar() {
         context.update();
     }).on("focus", function() {
         context.showPanel();
+        context.showSearchHistory();
     });
 
     $("#searchButton").on("click", function(e) { 
@@ -148,6 +150,11 @@ function SearchBar() {
         // prevent id of div from being added to URL
         e.preventDefault();
     });
+
+    // Even handler for showing search history
+    $("#searchbar #searchHistoryTab").on("click", function(e) {
+        
+    })
 
     // Event handler for motif selection in network motifs tab
     $("#motifOption input").on("change", function() {
@@ -381,6 +388,27 @@ SearchBar.prototype.showPanel = function() {
         if (!$target.parents("#searchbar").length)
             context.hidePanel();
     });
+};
+
+/**
+ * Shows search history in its tab
+ */
+ SearchBar.prototype.showSearchHistory = function() {
+    if (this.storageAvailable()) {
+        // Remove the existing content
+        var searchHistoryTab =  $("#searchbar #searchHistoryTab");
+        searchHistoryTab.empty();
+
+        // Parse the serach history and add it to the tab
+        var history = [];
+        history = JSON.parse(localStorage.getItem(SearchBar.SEARCH_HISTORY_KEY));
+        history.forEach((previousSearch) => {
+            searchHistoryTab.append('<dt class="historyItem">' + previousSearch + '<code></code></dt>')
+        })
+    } else {
+        // TODO: Hide search history button
+    }
+    
 };
 
 /**
