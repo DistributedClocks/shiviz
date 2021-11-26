@@ -120,7 +120,7 @@ function SearchBar() {
     $("#searchbar .predefined button").on("click", function() {
         context.clearStructure();
         context.setValue("#" + this.name);
-        context.addToSearchHistory(this.name)
+        context.addToSearchHistory("#" + this.name)
         context.hidePanel();
         context.query();
     });
@@ -403,7 +403,7 @@ SearchBar.prototype.showPanel = function() {
         var history = [];
         history = JSON.parse(localStorage.getItem(SearchBar.SEARCH_HISTORY_KEY));
         history.forEach((previousSearch) => {
-            searchHistoryTab.append('<dt class="historyItem">' + previousSearch + '<code></code></dt>')
+            searchHistoryTab.append('<dt class="historyItem"><code>' + previousSearch + '</code></dt>');
         })
     } else {
         // TODO: Hide search history button

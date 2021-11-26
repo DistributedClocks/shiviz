@@ -712,6 +712,15 @@ section.input .left {
   margin: 1em 0 .2em;
 }
 
+.historyItem {
+    color: #04a;
+    white-space: nowrap;
+    cursor: pointer;
+    margin-bottom: 0.8em;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
 svg {
   user-select: none;
   -ms-user-select: none;
