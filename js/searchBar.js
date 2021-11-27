@@ -151,11 +151,6 @@ function SearchBar() {
         e.preventDefault();
     });
 
-    // Even handler for showing search history
-    $("#searchbar #searchHistoryTab").on("click", function(e) {
-        
-    })
-
     // Event handler for motif selection in network motifs tab
     $("#motifOption input").on("change", function() {
         if ($(this).is(":checked") || $(this).siblings("input:checkbox:checked").length > 0) {
@@ -394,7 +389,8 @@ SearchBar.prototype.showPanel = function() {
  * Shows search history in its tab
  */
  SearchBar.prototype.showSearchHistory = function() {
-    if (this.storageAvailable()) {
+    var context = this;
+    if (context.storageAvailable()) {
         // Remove the existing content
         var searchHistoryTab =  $("#searchbar #searchHistoryTab");
         searchHistoryTab.empty();
@@ -405,10 +401,15 @@ SearchBar.prototype.showPanel = function() {
         history.forEach((previousSearch) => {
             searchHistoryTab.append('<dt class="historyItem"><code>' + previousSearch + '</code></dt>');
         })
-    } else {
-        // TODO: Hide search history button
-    }
-    
+
+        // Event handler for items added above
+        $("#searchbar .historyItem").on("click", function(e) {
+            var clickedText = jQuery(this).text();
+            context.setValue(clickedText)
+            context.query();
+            context.hidePanel();
+        });
+    } 
 };
 
 /**
