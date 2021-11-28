@@ -210,7 +210,7 @@ SearchBar.SEARCH_HISTORY_KEY = "searchHistory";
  * @static
  * @const
  */
-SearchBar.MAX_NUM_OF_ELEMENTS_IN_HISTORY = 5;
+SearchBar.MAX_NUM_OF_ELEMENTS_IN_HISTORY = 64;
 
 /**
  * Gets the SearchBar instance.
@@ -398,7 +398,7 @@ SearchBar.prototype.showPanel = function() {
         // Parse the serach history and add it to the tab
         var history = [];
         history = JSON.parse(localStorage.getItem(SearchBar.SEARCH_HISTORY_KEY));
-        history.forEach((previousSearch) => {
+        history.reverse().forEach((previousSearch) => {
             searchHistoryTab.append('<dt class="historyItem"><code>' + previousSearch + '</code></dt>');
         })
 

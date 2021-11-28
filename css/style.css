@@ -697,6 +697,11 @@ section.input .left {
 #searchbar #panel .tab {
   margin-left: .5em;
 }
+#searchbar #panel .searchHistoryTab {
+  margin-left: .5em;
+  max-height: 100px;
+  overflow-y: scroll;
+}
 #searchbar #panel .predefined {
   margin: .5em 0 0 0;
 }
@@ -714,13 +719,23 @@ section.input .left {
 
 .historyItem {
     color: #04a;
+    font-size: 10pt;
     white-space: nowrap;
     cursor: pointer;
-    margin-bottom: 0.8em;
+    margin-bottom: 0.4em;
     overflow: hidden;
     text-overflow: ellipsis;
 }
 
+.historyItem:hover {
+  color: #676767;
+  font-size: 10pt;
+  white-space: nowrap;
+  cursor: pointer;
+  margin-bottom: 0.4em;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
 svg {
   user-select: none;
   -ms-user-select: none;
