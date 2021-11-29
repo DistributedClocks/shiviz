@@ -728,7 +728,8 @@ section.input .left {
 }
 
 .historyItem:hover {
-  color: #676767;
+  color: #04a;
+  background-color: rgba(176,176,176,0.5);
   font-size: 10pt;
   white-space: nowrap;
   cursor: pointer;

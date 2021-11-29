@@ -788,6 +788,7 @@ section.input {
                 a {
                     color: #fff;
                 }
+                
             }       
         }
     }
@@ -843,7 +844,7 @@ section.input {
     overflow: hidden;
     text-overflow: ellipsis;
     :hover {
-        color: #676767;
+        background-color: rgba(176,176,176,0.5);
     }
 }
 
