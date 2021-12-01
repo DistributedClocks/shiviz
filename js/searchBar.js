@@ -71,6 +71,7 @@ function SearchBar() {
         // Return
         case 13:
             if (context.getValue().trim().length > 0) {
+                context.addToSearchHistory(context.getValue());
                 context.query();
                 context.hidePanel();
             }
@@ -89,9 +90,13 @@ function SearchBar() {
         context.update();
     }).on("focus", function() {
         context.showPanel();
+        context.showSearchHistory();
     });
 
-    $("#searchButton").on("click", function(e) {
+    $("#searchButton").on("click", function(e) { 
+
+        context.addToSearchHistory(context.getValue());
+
         if (e.ctrlKey && e.altKey) {
             var regexp = '(?<event>){"host":"(?<host>[^}]+)","clock":(?<clock>{[^}]*})}';
             Shiviz.getInstance().visualize(context.getValue(), regexp, "", "order", false);
@@ -115,6 +120,7 @@ function SearchBar() {
     $("#searchbar .predefined button").on("click", function() {
         context.clearStructure();
         context.setValue("#" + this.name);
+        context.addToSearchHistory("#" + this.name)
         context.hidePanel();
         context.query();
     });
@@ -193,6 +199,18 @@ SearchBar.MODE_MOTIF = 4;
  * @static
  */
 SearchBar.instance = null;
+
+/**
+ * @static
+ * @const
+ */
+SearchBar.SEARCH_HISTORY_KEY = "searchHistory";
+    
+/**
+ * @static
+ * @const
+ */
+SearchBar.MAX_NUM_OF_ELEMENTS_IN_HISTORY = 64;
 
 /**
  * Gets the SearchBar instance.
@@ -365,6 +383,33 @@ SearchBar.prototype.showPanel = function() {
         if (!$target.parents("#searchbar").length)
             context.hidePanel();
     });
+};
+
+/**
+ * Shows search history in its tab
+ */
+ SearchBar.prototype.showSearchHistory = function() {
+    var context = this;
+    if (context.storageAvailable()) {
+        // Remove the existing content
+        var searchHistoryTab =  $("#searchbar #searchHistoryTab");
+        searchHistoryTab.empty();
+
+        // Parse the serach history and add it to the tab
+        var history = [];
+        history = JSON.parse(localStorage.getItem(SearchBar.SEARCH_HISTORY_KEY));
+        history.reverse().forEach((previousSearch) => {
+            searchHistoryTab.append('<dt class="historyItem"><code>' + previousSearch + '</code></dt>');
+        })
+
+        // Event handler for items added above
+        $("#searchbar .historyItem").on("click", function(e) {
+            var clickedText = jQuery(this).text();
+            context.setValue(clickedText)
+            context.query();
+            context.hidePanel();
+        });
+    } 
 };
 
 /**
@@ -648,4 +693,64 @@ SearchBar.prototype.resetMotifResults = function() {
     }
     $("#motifIcon").remove();
     $(".motifResults a").removeClass("indent");
+}
+
+/** 
+ * Checks if local storage is supported by the browser 
+ */
+SearchBar.prototype.storageAvailable = function() {
+    var storage;
+    try {
+        storage = window["localStorage"];
+        var x = '__storage_test__';
+        storage.setItem(x, x);
+        storage.removeItem(x);
+        return true;
+    }
+    catch(e) {
+        return e instanceof DOMException && (
+            // everything except Firefox
+            e.code === 22 ||
+            // Firefox
+            e.code === 1014 ||
+            // test name field too, because code might not be present
+            // everything except Firefox
+            e.name === 'QuotaExceededError' ||
+            // Firefox
+            e.name === 'NS_ERROR_DOM_QUOTA_REACHED') &&
+            // acknowledge QuotaExceededError only if there's something already stored
+            (storage && storage.length !== 0);
+    }
+}
+
+/**
+ * Adds the given value to the seatch history.
+ */
+SearchBar.prototype.addToSearchHistory = function(item) {
+    // Check if storage is available, if not, search history is not possible
+    if (this.storageAvailable()) {
+
+        // history is a queue
+        var history = [];
+
+        // Check if any item exists in the search history
+        if (!localStorage.getItem(SearchBar.SEARCH_HISTORY_KEY)) {
+            localStorage.setItem(SearchBar.SEARCH_HISTORY_KEY, JSON.stringify(history));
+        }
+
+        history = JSON.parse(localStorage.getItem(SearchBar.SEARCH_HISTORY_KEY));
+
+        // Check if the value is already in the history, if true, return
+        if (history.includes(item)) {
+            return;
+        }
+
+        // If search history reaches limit, remove the oldest value
+        if (history.length == SearchBar.MAX_NUM_OF_ELEMENTS_IN_HISTORY) {
+            history.shift();
+        }
+
+        history.push(item);
+        localStorage.setItem(SearchBar.SEARCH_HISTORY_KEY, JSON.stringify(history));
+    }
 }
